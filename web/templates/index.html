@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    {% block title %}
+        <title>Seoul Soft MES</title>
+    {% endblock title %} {% include 'header.html' %}
+</head>
+<body>
+<div class="wrapper" style="overflow-y:hidden;">
+    <div id="header-menu" style="position:static;left:0px;top:0px;">
+        <div class="w-100" style="background: #f3faff">
+            {% include 'header-menu.html' %}
+        </div>
+    </div>
+
+    <div id="header-menu-mobile" class="d-flex d-lg-none">
+        {% include 'header-menu-mobile.html' %}
+    </div>
+
+    <div id="body" style="margin-top:0px;height:1450px;"> {# hjlim : 이중스크롤 문제로 임시.. 생산일정등록이 현재 가장 김 #}
+        <div class="row no-gutters">
+            <div id="sub-menu" class="d-none d-lg-flex col-2">
+                {% include 'sub-menu.html' %}
+            </div>
+            <div id="content" class="col-lg-10 col-md-12" style="height:900px;">
+                <div class="row no-gutters m-2"></div>
+                <div class="row no-gutters h-100">
+                    <!-- tab header -->
+                    <ul
+                            class="nav nav-tabs col-11"
+                            id="tab_header-list"
+                            role="tablist"
+                    ></ul>
+                    <button
+                            type="button"
+                            class="btn btn-outline-secondary col-1 rounded-0"
+                            onclick="tab_delete_all();"
+                    >
+                        tab 전체삭제
+                    </button>
+
+                    <!-- tab contents -->
+                    <div class="tab-content col-12 w-100 " id="tab_content-list" style="height:1400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+<script>
+
+    // hjlim : Session, Changed Event, Broadcast 가 제대로 동작 안하는 문제가 있어서 Interval 사용
+    var oldValue = $("#mes_toggle").val();
+    setInterval(function () {
+        var currentValue = $("#mes_toggle").val();
+        if (currentValue !== oldValue) {
+            {#$("#txt2").trigger("change");#}
+
+            let msg = currentValue.split(',');
+            console.log("msg_cmd : ", msg[1]);
+
+            if (msg[1] === 'fold') {
+                $("#sub-menu").removeClass("col-2");
+                $("#content").removeClass("col-lg-10");
+            } else if (msg[1] === 'spread') {
+                $("#sub-menu").addClass("col-2");
+                $("#content").addClass("col-lg-10");
+            }
+
+            oldValue = currentValue;
+            console.log("changed");
+        }
+    }, 100); // 0.1초
+
+
+    const TAB_CNT_MAX = 23;  // hjlim new-module : 수정 시 전체 검색, 상단이나 사이드의 메뉴 상단 버튼 최대 갯수
+    const AUTH_CNT_MAX = 73 + 1;  // idx 마지막 수 + 1 을 해줘야 함
+
+    if (get_token() === "") {
+        window.location.href = "/accounts/login/";
+    }
+
+    // table click highlight
+    $(".content-table tbody tr").on("click", function () {
+        $(this).parent().find("tr").removeClass("clicked");
+        $(this).addClass("clicked");
+    });
+
+    //
+    let dom_store = {};
+
+    function url_click(url, _title) {
+        let target = null;
+
+        let tabs = $("#tab_header-list .nav-item .nav-link");
+        for (let i = 0; i < tabs.length; i++) {
+            // to get already-loaded one.
+
+            if (_title.substring(0, 2) == 'sm') {
+                let tab_title_num = tabs[i].id.replace("tab_header-", "");
+                let _title_num = _title.replace("sm-", "");
+
+                if (tab_title_num === _title_num) {
+                    target = tabs[i];
+                    break;
+                }
+            } else {
+                let tab_title = tabs[i].text.replace("×", "").trim();
+                if (tab_title === _title) {
+                    target = tabs[i];
+                    break;
+                }
+            }
+        }
+        if (target === null) {
+            // else tab_add() with new content
+            detach_all();
+            //$(tab_add(url ,title)).load(url);
+            $(tab_add(url, _title)).append(
+                // '<div id="spinner" style="position:relative;top:30%;left:45%;">'+
+                //         '<img src="../../../static/img/spinner.gif" />'+
+                // '</div>' +
+                '<iframe src="' +
+                url +
+                '" class="w-100 h-100" style="border:none;" ></iframe>'
+            );
+            // $('#tab_content-' + title2num(title)).bind("attach", function () { });
+        } else {
+            // if title 검사 => 있으면 그쪽으로 focus
+            $("#" + target.id).click();
+        }
+    }
+
+    // function spinner(){
+    //   console.log('iframe loaded');
+    //   setTimeout(() => {
+    //     $("#spinner").remove();
+    //   }, 3000); 
+    // }
+
+    function detach_all() {
+        let tabs = $("#tab_header-list .nav-item .nav-link");
+
+        for (let i = 0; i < tabs.length; i++) {
+            let tab_title = tabs[i].text.replace("×", "").trim();
+            let idx = title2num(tab_title);
+            let dom = $("#container-" + idx);
+
+            dom.css("display", "none");
+            // if (dom.length > 0) dom_store[idx] = dom.detach();
+        }
+    }
+
+    function load_detached(url, title) {
+        detach_all();
+
+        let idx = title2num(title);
+        $("#container-" + idx).css("display", "block");
+        // $('#tab_content-' + idx).append(dom_store[idx]);
+        // delete dom_store[idx];
+
+        // call reload function of attached content. no way...
+        let target = $("#tab_content-" + idx + " iframe");
+        if (target.length === 1) target[0].contentWindow.location.reload(true);
+    }
+
+    <!-- 넘버링 규칙 : Tab 생성시 사용됨. 권한 쪽과 동일하도록 사용하는게 좋을 듯, 지금은 매칭 안되어있음-->
+    function title2num(title) {
+        let num;
+        switch (title) {
+            case "sm-0": // 코드 마스터
+                num = 0;
+                break;
+            case "sm-1": // 거래처 기준정보관리
+                num = 1;
+                break;
+            case "사용자 기준정보관리": // 사용자 기준정보관리
+                num = 2;
+                break;
+            case "sm-3": // 설비 기준정보관리
+                num = 3;
+                break;
+            case "sm-4": // 품목 기준정보관리
+                num = 4;
+                break;
+            case "사용자 권한관리": // 사용자 권한관리
+                num = 5;
+                break;
+            case "업체별 권한관리":
+                num = 101;  // 100번 대는 현재 sm- 형식으로 안되어있는 것들
+                break;
+            case "sm-42": // 납품기업
+                num = 42;
+                break;
+            case "sm-57": // 내 정보 관리
+                num = 57;
+                break;
+            case "sm-6": // BOM 형식 생성
+                num = 6;
+                break;
+            case "sm-7": // BOM 관리
+                num = 7;
+                break;
+            case "sm-8": // BOM 조회
+                num = 8;
+                break;
+            case "sm-9": // 생산계획 대비 재고현황 조회
+                num = 9;
+                break;
+
+            case "sm-10": // 자재입고
+                num = 10;
+                break;
+            case "sm-61": // 출고지시서
+                num = 61;
+                break;
+            case "sm-62": // 출고지시대비 출고
+                num = 62;
+                break;
+            case "sm-11": // 자재출고
+                num = 11;
+                break;
+            case "sm-12": // 자재반입
+                num = 12;
+                break;
+            case "sm-13": // 자재현황 조회
+                num = 13;
+                break;
+            case "sm-59": // 자재현황 조회(TV)
+                num = 59;
+                break;
+            case "sm-14": // 자재재고실사 조정
+                num = 14;
+                break;
+
+            case "sm-15": // 공정명 등록 관리
+                num = 15;
+                break;
+            case "sm-16": // 세부공정관리
+                num = 16;
+                break;
+            case "sm-17": // 공정진행현황 등록
+                num = 17;
+                break;
+            case "sm-58": // 공정진행현황 등록(tablet)
+                num = 58;
+                break;
+            case "sm-18": // 공정진행현황 조회(PC)
+                num = 18;
+                break;
+            case "sm-56": // 공정진행현황 조회(TV)
+                num = 56;
+                break;
+
+            case "sm-63": // 불량사유 등록
+                num = 63;
+                break;
+            case "sm-64": // 불량사유 조회
+                num = 64;
+                break;
+            case "sm-65": // 불량그래프 조회(TV)
+                num = 65;
+                break;
+
+            case "sm-19": // 대여품목 관리
+                num = 19;
+                break;
+            case "sm-20": // 대여 등록/회수 관리
+                num = 20;
+                break;
+            case "sm-21": // 대여현황 조회
+                num = 21;
+                break;
+
+            case "sm-22": // 온습도 모니터링 장비관리
+                num = 22;
+                break;
+            case "sm-23": // 온습도 현황 조회(PC)
+                num = 23;
+                break;
+            case "sm-39": // 온습도 모니터링 장비관리 H2
+                num = 39;
+                break;
+            case "sm-40": // 온습도 현황 조회(PC) H2
+                num = 40;
+                break;
+
+            <!-- hjlim new-module -->
+            case "sm-36": // 주문서등록
+                num = 36;
+                break;
+            case "sm-37": // 주문현황조회
+                num = 37;
+                break;
+            case "sm-38": // 주문량통계
+                num = 38;
+                break;
+            case "sm-60": // 온습도_현황_조회_전광판_H2
+                num = 60;
+                break;
+
+            case "sm-28":
+                num = 28;
+                break;
+            case "sm-29":
+                num = 29;
+                break;
+            case "sm-30":
+                num = 30;
+                break;
+
+            case "sm-31":
+                num = 31;
+                break;
+            case "sm-32":
+                num = 32;
+                break;
+            case "sm-33":
+                num = 33;
+                break;
+
+            case "sm-66": // 외주출고
+                num = 66;
+                break;
+            case "sm-67": // 외주출고 입고등록
+               num = 67;
+                break;
+            case "sm-68": // 외주제품 수불부
+                num = 68;
+                break;
+
+            case "sm-34":  // 스마트 HACCP
+                num = 34;
+                break;
+
+            case "sm-43": // 출하등록
+                num = 43;
+                break;
+            case "sm-44": // 출하내역조회
+                num = 44;
+                break;
+            case "sm-45": // 제품별원가
+                num = 45;
+                break;
+            case "sm-46": // 주문대비원가
+                num = 46;
+                break;
+
+            case "sm-47": // 의뢰서작성
+                num = 47;
+                break;
+            case "sm-48": // 의뢰서조회
+                num = 48;
+                break;
+            case "sm-49": // 견적서작성
+                num = 49;
+                break;
+            case "sm-50": // 견적서조회
+                num = 50;
+                break;
+
+            case "sm-51": // UNBALANCE_등록
+                num = 51;
+                break;
+            case "sm-52": // UNBALANCE_조회
+                num = 52;
+                break;
+            case "sm-53": // 회전자검사_관리
+                num = 53;
+                break;
+            case "sm-55": // 고정자검사_관리
+                num = 55;
+                break;
+            case "sm-69":  // 매입관리
+                num = 69;
+                break;
+            case "sm-70":  // 매출관리
+                num = 70
+                break;
+            case "sm-71":  // 생산설비관리
+                num = 71
+                break;
+            case "sm-72":
+                num = 72
+                break;
+
+            // shalom
+            case "sm-901": // shalom - 라벨프린트 관리
+                num = 901;
+                break;
+            case "sm-902": // shalom - 라벨프린트 제품 관리
+                num = 902;
+                break;
+            case "sm-903": // shalom - 라벨프린트 납품처 관리
+                num = 903;
+                break;
+
+            default:
+                num = 999;
+                break;
+        }
+        return num;
+    }
+
+
+    function tab_add(url, title) {
+        let tab_now_add = title2num(title);
+        let title_name = '';
+
+        if (title.substring(0, 2) == 'sm') {
+            title_name = $("." + title + ":first").text();
+        } else {
+            title_name = title;
+        }
+
+        let tab_header =
+            '<li class="nav-item" id="tab_' +
+            tab_now_add +
+            '">\n' +
+            '    <a class="nav-link" id="tab_header-' +
+            tab_now_add +
+            '" data-toggle="tab" href="#tab_content-' +
+            tab_now_add +
+            '"\n' +
+            '         role="tab" aria-controls="tab_' +
+            tab_now_add +
+            '" aria-selected="false"' +
+            "         onclick=\"load_detached('" +
+            url +
+            "', '" +
+            title +
+            "');\">" +
+            title_name +
+            '<span class="tab_closer">&emsp;&times;</span>\n' +
+            "    </a>\n" +
+            "</li>";
+        let tab_content =
+            '<div class="tab-pane fade w-100 h-100" id="tab_content-' +
+            tab_now_add +
+            '" role="tabpanel" aria-labelledby="tab_content-' +
+            tab_now_add +
+            '">\n' +
+            '    <div id="container-' +
+            tab_now_add +
+            '" class="w-100 h-100"></div>' +
+            "</div>";
+        $("#tab_header-list").append(tab_header);
+        $("#tab_content-list").append(tab_content);
+        $("#tab_header-" + tab_now_add + " span.tab_closer").click(() => {
+            tab_delete(tab_now_add);
+        });
+        $("#tab_header-" + tab_now_add).click();
+        return "#container-" + tab_now_add;
+    }
+
+    function tab_delete(tab_num) {
+        $("#tab_" + tab_num).remove("#tab_header-list .nav-item");
+        $("#tab_content-" + tab_num).remove("#tab_content-list .tab-pane");
+
+        delete dom_store[tab_num];
+    }
+
+    function tab_delete_all() {
+        $("#tab_header-list").empty();
+        $("#tab_content-list").empty();
+        dom_store = {};
+        console.log("All tabs are deleted");
+    }
+
+    // let not_active_setting_time = 10 * 60;
+    // let time_checker = null;
+
+    // init_timer = function () {
+    //   if (window.event) {
+    //     not_active_setting_time = 10 * 60 * 600000;
+    //     // console.log("사용자 작업중")
+    //     clearTimeout(time_checker);
+    //   }
+    //   if (not_active_setting_time > 0) {
+    //     not_active_setting_time--;
+    //     time_checker = setTimeout("init_timer()", 1000);
+
+    //     // console.log("not_active_time :: ", not_active_setting_time);
+    //     // console.log("time_checker :: ",time_checker);
+    //   } else {
+    //     clearTimeout(time_checker);
+    //     flush_token();
+    //     alert("장시간 미사용으로 자동 로그아웃 처리되었습니다.");
+    //     top.location.replace("/");
+    //   }
+    // };
+
+    // onload = init_timer;
+    // document.onclick = init_timer;
+    // document.onkeypress = init_timer;
+    const dragArea = document.querySelector("#tab_header-list");
+    new Sortable(dragArea, {
+        animation: 350
+    });
+</script>
+</html>

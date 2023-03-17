@@ -1,0 +1,783 @@
+{% load static %}
+<div class="header-menu">
+    <div class="row no-gutters">
+        <!--            나중에 업체별 로고 이미지 받아서 띄우는거 검토-->
+        <!--        <img src="{% static 'img/logo.png' %}" width="36" height="36">-->
+        <div class="col title row no-gutters">
+            <div class="col-4 row justify-content-start ml-3" >
+                <span style="font-size: 0.9em">MES21-MAIN</span>
+            </div>
+            <div class="col-4">
+                <span id="e-name">SEOULSOFT</span> 간이생산공정시스템
+            </div>
+            <div class="col-4 row justify-content-end" style="right:0;">
+                {#<span style="font-size: 0.9em">release : 21.10.25.A</span>#}
+                {#<span style="font-size: 0.9em">release : 21.11.05.A</span>#}
+                {#<span style="font-size: 0.9em">release : 21.11.15.A</span>#}
+                {#<span style="font-size: 0.9em">release : 21.11.25.B</span>#}
+                {#<span style="font-size: 0.9em">release : 21.12.06.C</span>#}
+                <span style="font-size: 0.9em">release : 22.03.04.D</span>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row no-gutters">
+        <div class="col-md-2 col-sm-6 pl-1 pr-1 py-1 pr-0">
+            <table class="table mb-0 information">
+                <thead>
+                <tr>
+                    <th class="p-0" scope="col" colspan="2" id="enterprise_name">유니로보틱스</th>
+                </tr>
+                </thead>
+                <colgroup>
+                    <col style="width:50%;">
+                    <col style="width:50%;">
+                </colgroup>
+                <tr>
+                    <td class="pl-2 py-0 user-inf">사용자 코드</td>
+                    <td id="usercode" class="p-0 user-text">123456</td>
+                </tr>
+                <tr>
+                    <td class="pl-2 py-0 user-inf">사용자 명</td>
+                    <td id="username" class="p-0 user-text">홍길동</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-10 col-sm-6 pt-2 px-0">
+            <div class="row my-auto no-gutters">
+                <!-- {# <a href="#" class="col-1 text-center">#}
+{#                    <img src="{% static 'img/i_search.png' %}" width="38" height="38">#}
+{#                    <p class="mb-0">검 색</p>#}
+{#                </a>#} -->
+
+                <a href="#" id="excel-export" class="col-1 text-center">
+                    <img src="{% static 'img/i_excel_c.png' %}" width="38" height="38">
+                    <p class="mb-0">엑셀 변환</p>
+                </a>
+
+                <!-- {# <a href="#" class="col-1 text-center">#}
+{#                <a href="#" class="col-1 text-center">#}
+{#                    <img src="{% static 'img/i_excel_u.png' %}" width="38" height="38">#}
+{#                    <p class="mb-0">엑셀 업로드</p>#}
+{#                </a>#} -->
+
+                <a href="#" class="col-1 text-center" id="content-print">
+                    <img src="{% static 'img/i_print.png' %}" width="38" height="38">
+                    <p class="mb-0">내용 인쇄</p>
+                </a>
+
+                <a href="#" class="col-1 text-center" id="screen-print">
+                    <img src="{% static 'img/i_screen.png' %}" width="38" height="38">
+                    <p class="mb-0">화면 인쇄</p>
+                </a>
+
+                <!-- change "a href" to javascript-based method -->
+                <!--<a href="/accounts/login">-->
+                <a href="#" id="logout" class="col-1 text-center">
+                    <img src="{% static 'img/i_logout.png' %}" width="38" height="38">
+                    <p class="mb-0">로그 아웃</p>
+                </a>
+
+                <a href="#" id="help" class="col-1 text-center">
+                    <img src="{% static 'img/i_help.png' %}" width="38" height="38">
+                    <p class="mb-0">도움말</p>
+                </a>
+
+                <a href="#" id="graph" class="col-1 text-center">
+                    <img src="{% static 'img/i_graph.png' %}" width="38" height="38">
+                    <p class="mb-0">그래프</p>
+                </a>
+
+                <a href="#" id="alert" class="col-1 text-center">
+                    <img src="{% static 'img/m_alert_icon.png' %}" width="38" height="38">
+                    <p class="mb-0">알림</p>
+                </a>
+
+                <a href="#" id="kpi" class="col-1 text-center">
+                    <img src="{% static 'img/i_kpi_icon.png' %}" width="38" height="38">
+                    <p class="mb-0">KPI 조회</p>
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="header-submenu">
+    <div class="row h-100 no-gutters">
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-15">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-15-button" onclick="Location.href=''">의뢰서관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-47 dropdown-item" onclick="url_click('/request/request_input/', 'sm-47');">의뢰서작성</a>#}
+{#                <a style="display: none;" class="sm-48 dropdown-item" onclick="url_click('/request/request_status/', 'sm-48');">의뢰서조회</a>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-16">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-16-button" onclick="Location.href=''">견적서관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-49 dropdown-item" onclick="url_click('/estimate/estimate_input/', 'sm-49');">견적서작성</a>#}
+{#                <a style="display: none;" class="sm-50 dropdown-item" onclick="url_click('/estimate/estimate_status/', 'sm-50');">견적서조회</a>#}
+{#            </div>#}
+{#        </div>#}
+        <!-- hjlim new-module -->
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-12">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-12-button" onclick="Location.href=''">주문관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-36 dropdown-item" onclick="url_click('/ordering/ordering_input/', 'sm-36');">주문서등록</a>
+                <a style="display: none;" class="sm-37 dropdown-item" onclick="url_click('/ordering/ordering_status/', 'sm-37');">주문현황조회</a>
+                {% if request.COOKIES.enterprise_manage == '(주)샛별식품' %}
+                    <a class="sm-901 dropdown-item" onclick="url_click('/ordering/label_print/', 'sm-901');">라벨프린트 관리</a>
+                    <a class="sm-902 dropdown-item" onclick="url_click('/ordering/label_print/', 'sm-902');">라벨프린트 제품 관리</a>
+                    <a class="sm-903 dropdown-item" onclick="url_click('/ordering/label_print/', 'sm-903');">라벨프린트 납품처 관리</a>
+                {% endif %}
+{#                <a style="display: none;" class="sm-38 dropdown-item" onclick="url_click('/ordering/ordering_stats/', 'sm-38');">주문량통계</a>#}
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-10">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-10-button" onclick="Location.href=''">발주관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-31 dropdown-item" onclick="url_click('/order/manage/', 'sm-31');">발주서 등록</a>
+                <a style="display: none;" class="sm-32 dropdown-item" onclick="url_click('/order/input/', 'sm-32');">발주대비 입고등록</a>
+                <a style="display: none;" class="sm-33 dropdown-item" onclick="url_click('/order/status/', 'sm-33');">발주대비 입고현황</a>
+            </div>
+        </div>
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-19">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-19-button" onclick="Location.href=''">외주관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-66 dropdown-item" onclick="url_click('/outsourcing/manage/', 'sm-66');">외주출고</a>#}
+{#                <a style="display: none;" class="sm-67 dropdown-item" onclick="url_click('/outsourcing/input/', 'sm-67');">외주출고 입고등록</a>#}
+{#                <a style="display: none;" class="sm-68 dropdown-item" onclick="url_click('/outsourcing/status/', 'sm-68');">외주제품 수불부</a>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-2">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-2-button" onclick="Location.href=''">BOM 관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-6 dropdown-item" onclick="url_click('/basic_information/BOM/', 'sm-6');">BOM 형식 생성</a>
+                <!-- *핵심기술><-->
+                <a style="display: none;" class="sm-7 dropdown-item" onclick="url_click('/BOM/manage/', 'sm-7');">BOM 관리</a>
+                <a style="display: none;" class="sm-8 dropdown-item" onclick="url_click('/BOM/lookup/', 'sm-8');">BOM 조회</a>
+                <a style="display: none;" class="sm-9 dropdown-item" onclick="url_click('/BOM/inventory_status/', 'sm-9');">생산계획 대비 재고현황 조회</a>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-3">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-3-button" onclick="Location.href=''">재고 관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-10 dropdown-item" onclick="url_click('/material/input/', 'sm-10');">재고입고</a>
+{#                <a style="display: none;" class="sm-61 dropdown-item" onclick="url_click('/material/outorder/', 'sm-61');">출고지시서</a>#}
+{#                <a style="display: none;" class="sm-62 dropdown-item" onclick="url_click('/material/outout/', 'sm-62');">출고지시대비 출고</a>#}
+                <a style="display: none;" class="sm-11 dropdown-item" onclick="url_click('/material/output/', 'sm-11');">재고출고</a>
+                <a style="display: none;" class="sm-12 dropdown-item" onclick="url_click('/material/import/', 'sm-12');">재고반입</a>
+                <a style="display: none;" class="sm-13 dropdown-item" onclick="url_click('/material/status/', 'sm-13');">재고현황</a>
+                <a style="display: none;" class="sm-59 dropdown-item" onclick="location.href='/material/status/tv/';">재고현황(TV)</a>
+                <a style="display: none;" class="sm-14 dropdown-item" onclick="url_click('/material/adjust/', 'sm-14');">재고조정</a>
+                <a style="display: none;" class="sm-57 dropdown-item" onclick="url_click('/material/adjust_status/', 'sm-57');">재고조정현황</a>
+            </div>
+        </div>
+         <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-22">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-22-button" onclick="Location.href=''">재고알림</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-72 dropdown-item" onclick="url_click('/material/inform/', 'sm-72');">재고부족알림</a>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-4">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-4-button" onclick="Location.href=''">생산 관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-16 dropdown-item" onclick="url_click('/process/detail/', 'sm-16');">생산일정등록</a>
+                <a style="display: none;" class="sm-17 dropdown-item" onclick="url_click('/process/progress_manage/', 'sm-17');">생산진행현황등록</a>
+                <a style="display: none;" class="sm-18 dropdown-item" onclick="url_click('/process/progress_lookup/', 'sm-18');">생산진행현황조회</a>
+            </div>
+        </div>
+
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-18">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-18-button" onclick="Location.href=''">불량 관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-63 dropdown-item" onclick="url_click('/process/fault_manage', 'sm-63');">불량사유 등록</a>#}
+{#                <a style="display: none;" class="sm-64 dropdown-item" onclick="url_click('/process/fault_lookup', 'sm-64');">불량사유 조회</a>#}
+{#                <a style="display: none;" class="sm-65 dropdown-item" onclick="url_click('/process/fault_graph', 'sm-65');">불량률그래프 조회</a>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-13">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-13-button" onclick="Location.href=''">출하관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-43 dropdown-item" onclick="url_click('/ordering_ex/ordering_export_input/', 'sm-43');">출하등록</a>
+                <a style="display: none;" class="sm-44 dropdown-item" onclick="url_click('/ordering_ex/ordering_export_status/', 'sm-44');">출하내역조회</a>
+            </div>
+        </div>
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-14">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-14-button" onclick="Location.href=''">원가관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-45 dropdown-item" onclick="url_click('/cost/cost_by_product/', 'sm-45');">제품별원가</a>#}
+{#                <a style="display: none;" class="sm-46 dropdown-item" onclick="url_click('/cost/cost_by_export/', 'sm-46');">주문대비원가</a>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-20">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-20-button" onclick="Location.href=''">매입매출</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-69 dropdown-item" onclick="url_click('/order/purchase/', 'sm-69');">매입관리</a>#}
+{#                <a style="display: none;" class="sm-70 dropdown-item" onclick="url_click('/order/sales/', 'sm-70');">매출관리</a>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-6">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-6-button" onclick="Location.href=''">온습도 모니터링</button>#}
+{#            <div class="dropdown-menu">#}
+{##}
+{#                <a style="display: none;" class="sm-22 dropdown-item" onclick="url_click('/monitoring/manage/', 'sm-22');">온습도 모니터링 장비관리</a>#}
+{#                <a style="display: none;" class="sm-23 dropdown-item" onclick="url_click('/monitoring/pc/', 'sm-23');">온습도 현황 조회(PC)</a>#}
+{#                <a style="display: none;" class="sm-24 dropdown-item" onclick="location.href='/monitoring/tv/';">온습도 현황 조회(TV)</a>#}
+{##}
+{#                <a style="display: none;" class="sm-39 dropdown-item" onclick="url_click('/monitoring/manage_h2/', 'sm-39');">온습도 모니터링 장비관리 H2</a>#}
+{#                <a style="display: none;" class="sm-40 dropdown-item" onclick="url_click('/monitoring/pc_h2/', 'sm-40');">온습도 현황 조회(PC) H2</a>#}
+{#                <a style="display: none;" class="sm-41 dropdown-item" onclick="location.href='/monitoring/tv_h2/';">온습도 현황 조회(TV) H2</a>#}
+{#                <a style="display: none;" class="sm-60 dropdown-item" onclick="location.href='/monitoring/led_h2/';">온습도 현황 조회 전광판 H2</a>#}
+{##}
+{#            </div>#}
+{#        </div>#}
+        {% comment %}
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-8">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-8-button" onclick="Location.href=''">실적 관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-27 dropdown-item" onclick="url_click('/process/manage/?s=1', '공정명 등록 관리');">공정명 등록 관리</a>
+                <a style="display: none;" class="sm-27 dropdown-item" onclick="url_click('/result/detail/?s=1', '세부공정관리');">세부공정관리</a>
+                <a style="display: none;" class="sm-27 dropdown-item" onclick="url_click('/result/progress_manage/?s=1', '작업실적등록');">작업실적등록</a>
+                <a style="display: none;" class="sm-27 dropdown-item" onclick="url_click('/process/progress_lookup/?s=1', '공정진행현황 조회');">공정진행현황 조회</a>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-7">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-7-button" onclick="Location.href=''">창고관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-25 dropdown-item" onclick="url_click('/warehouse/status/?code=100', '(원)자재현황 조회');">원부자재현황 조회</a>
+                <a style="display: none;" class="sm-25 dropdown-item" onclick="url_click('/warehouse/status/?code=200', '(반)자재현황 조회');">반제품현황 조회</a>
+                <a style="display: none;" class="sm-25 dropdown-item" onclick="url_click('/warehouse/status/?code=300', '(공)자재현황 조회');">공정현황 조회</a>
+                <a style="display: none;" class="sm-25 dropdown-item" onclick="url_click('/warehouse/status/?code=400', '(외)자재현황 조회');">외주현황 조회</a>
+                <a style="display: none;" class="sm-25 dropdown-item" onclick="url_click('/warehouse/status/?code=500', '(완)자재현황 조회');">완제품현황 조회</a>
+            </div>
+        </div>
+        {% endcomment %}
+
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-9">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-9-button" onclick="Location.href=''">온도전압관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-28 dropdown-item" onclick="url_click('/temp_volt_monitoring/manage/', 'sm-28');">온도전압 장비관리</a>#}
+{#                <a style="display: none;" class="sm-29 dropdown-item" onclick="url_click('/temp_volt_monitoring/status/', 'sm-29');">온도전압 현황조회(모바일 지원)</a>#}
+{#                <a style="display: none;" class="sm-30 dropdown-item" onclick="url_click('/temp_volt_monitoring/lookup/', 'sm-30');">온도전압 이력조회</a>#}
+{#            </div>#}
+{#        </div>#}
+
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-5">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-5-button" onclick="Location.href=''">대여 관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-19 dropdown-item" onclick="url_click('/rental/item/', 'sm-19');">대여품목 관리</a>#}
+{#                <a style="display: none;" class="sm-20 dropdown-item" onclick="url_click('/rental/manage/', 'sm-20');">대여 등록/회수 관리</a>#}
+{#                <a style="display: none;" class="sm-21 dropdown-item" onclick="url_click('/rental/status/', 'sm-21');">대여현황 조회</a>#}
+{#            </div>#}
+{#        </div>#}
+
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-11">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-11-button" onclick="Location.href=''">HACPP 관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-34 dropdown-item" onclick="url_click('/haccp/manage/', 'sm-34');">스마트 HACCP</a>#}
+{#                <a style="display: none;" class="sm-35 dropdown-item" onclick=window.open("http://smarthaccp.seoulsoft.kr/login.do")>스마트 HACCP(새탭)</a>#}
+{#            </div>#}
+{#        </div>#}
+
+{#        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-17">#}
+{#            <button class="btn btn-block px-1 dropdown-toggle" id="menu-17-button" onclick="Location.href=''">품질측정관리</button>#}
+{#            <div class="dropdown-menu">#}
+{#                <a style="display: none;" class="sm-51 dropdown-item" onclick="url_click('/quality/UnbalanceAdd/', 'sm-51');">UNBALANCE 등록</a>#}
+{#                <a style="display: none;" class="sm-52 dropdown-item" onclick="url_click('/quality/UnbalanceSearch/', 'sm-52');">UNBALANCE 조회</a>#}
+{#                <a style="display: none;" class="sm-53 dropdown-item" onclick="url_click('/quality/RotatorAdd/', 'sm-53');">회전자검사 관리</a>#}
+{#                <a style="display: none;" class="sm-55 dropdown-item" onclick="url_click('/quality/StatorAdd/', 'sm-55');">고정자검사 관리</a>#}
+{#            </div>#}
+{#        </div>#}
+
+        <div class="col-md-1 col-sm-6 pl-1 p-0 mt-1 mb-1 dropdown-div" id="menu-1">
+            <button class="btn btn-block px-1 dropdown-toggle" id="menu-1-button" onclick="Location.href=''">기준정보 관리</button>
+            <div class="dropdown-menu">
+                <a style="display: none;" class="sm-0 dropdown-item" onclick="url_click('/basic_information/codemaster/', 'sm-0');">코드 마스터</a>
+                <a style="display: none;" class="sm-1 dropdown-item" onclick="url_click('/basic_information/customer/', 'sm-1');">거래처 기준정보관리</a>
+                <a style="display: none;" class="sm-73 dropdown-item" onclick="url_click('/basic_information/customer_unitprice/', 'sm-73');">거래처 단가관리</a>
+                <a style="display: none;" class="sm-en dropdown-item" onclick="url_click('/basic_information/user/', '사용자 기준정보관리');">사용자 기준정보관리</a>
+{#                <a style="display: none;" class="sm-3 dropdown-item" onclick="url_click('/basic_information/equipment/', 'sm-3');">설비 기준정보관리</a>#}
+                <a style="display: none;" class="sm-4 dropdown-item" onclick="url_click('/basic_information/item/', 'sm-4');">품목 기준정보관리</a>
+                <!-- {# <a class="dropdown-item" onclick="location.href='/basic_information/process/';">공정 기준정보관리</a>#} -->
+                <a style="display: none;" class="sm-en dropdown-item" onclick="url_click('/basic_information/auth/user/', '사용자 권한관리');">사용자 권한관리</a>
+                <!-- *핵심기술><-->
+{#                <a style="display: none;" class="sm-su dropdown-item" onclick="url_click('/basic_information/auth/customer/', '업체별 권한관리');">업체별 권한관리</a>#}
+                <!-- *핵심기술><-->
+{#                <a style="display: none;" class="sm-su dropdown-item" onclick="url_click('/basic_information/enterprise/', '신규 업체 등록');">신규 업체 등록</a>#}
+{#                <a style="display: none;" class="sm-42 dropdown-item" onclick="url_click('/basic_information/order/company/', 'sm-42');">납품기업</a>#}
+                <a style="display: none;" class="sm-57 dropdown-item" onclick="url_click('/basic_information/myinfo/', 'sm-57');">내 정보 관리</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    {#let enterprise_name = get_userinfo().enterprise_name;#}
+    let enterprise_manage = get_userinfo().enterprise_manage;
+
+    $(".dropdown-item").on('contextmenu', function(ev) {
+        ev.preventDefault();
+        var button_url = this.getAttribute("href");
+        window.open(button_url);
+    })
+
+    // logout action
+    $("#logout").click(function() {
+        flush_token();
+        window.location.href = "/accounts/login/" // TODO:
+    });
+
+    // help 도움말
+    $("#help").click(function() {
+        if (enterprise_manage == '할랄푸드코리아') {
+            var url = "/KPI/kpi_pop";
+            var name = "KPI";
+            var option = "width=1000, height=417, location=no";
+            window.open(url, name, option);
+        }else if (enterprise_manage == '(주)건강생활연구소'){
+            var url = "/basic_information/health";
+            var name = "health";
+            var option = "width=1920, height=1080, location=no";
+            {#var option = "width=600, height=600, location=no";#}
+            {#window.open(url, name, option);#}
+        }
+    });
+
+    if (enterprise_manage !== '(주)건강생활연구소'){
+        $("#graph").addClass('d-none');
+        $("#alert").addClass('d-none');
+        $("#kpi").addClass('d-none');
+    }
+
+    $("#graph").click(function () {
+        if (enterprise_manage == '(주)건강생활연구소'){
+            var url = "/basic_information/graph";
+            var name = "graph";
+            var option = "width=1920, height=1080, location=no";
+            {#var option = "width=600, height=600, location=no";#}
+            window.open(url, name, option);
+        }
+    })
+
+    $("#alert").click(function () {
+        if (enterprise_manage == '(주)건강생활연구소'){
+            var url = "/basic_information/alert";
+            var name = "alert";
+            var option = "width=1920, height=700, location=no";
+            {#var option = "width=600, height=600, location=no";#}
+            window.open(url, name, option);
+        }
+    })
+
+    $("#kpi").click(function () {
+        if (enterprise_manage == '(주)건강생활연구소'){
+            var url = "/basic_information/rest_kpi";
+            var name = "rest_kpi";
+            var option = "width=1920, height=800, location=no";
+            {#var option = "width=600, height=600, location=no";#}
+            window.open(url, name, option);
+        }
+    })
+
+    if (enterprise_manage == '한빛테크랩'){
+        $('button.sm-6').attr("onclick", "url_click('/basic_information/BOM_hanvit/', 'sm-6');")
+        $('button .sm-7').attr("onclick", "url_click('/BOM/manage_hanvit/', 'sm-7');")
+        $('button .sm-8').attr("onclick", "url_click('/BOM/lookup_hanvit/', 'sm-8');")
+    }
+
+    // for screen-print
+    $("#screen-print").click(function() {
+        $('.tab-content .show iframe').contents().find("body").printThis();
+    });
+
+    $("#content-print").click(function() {
+        var title_text = $("title").text();
+
+        $('.tab-content .show iframe').contents().find("table").printThis({
+            header: '<h3 class="mb-2" id=title">' + title_text + '</h3>'
+        });
+    });
+
+    $(() => {
+        let permissions = get_userinfo().permissions;
+
+        for (let i = 0; i < AUTH_CNT_MAX; i++) {
+            let enabled = (permissions[i]) == '1';
+            if (enabled == true) $('.sm-' + i).css('display', 'block');
+        }
+
+        if (get_userinfo().is_superuser === 'true') {
+            $('.sm-su').css('display', 'block');
+            $(".sm-en").css("display", "block");
+        }
+
+        if (get_userinfo().is_master === "true") {
+          $(".sm-en").css("display", "block");
+        }
+
+        for (let i = 1; i <= TAB_CNT_MAX; i++) {
+            let checkDisplay = 1;
+            let check_this = '#menu-' + i;
+            $(check_this).find('a').each(function() {
+                if (!($(this).css('display') == 'none')) {
+                    checkDisplay = 0;
+                }
+            })
+            if (checkDisplay) {
+                $(check_this).css('display', 'none');
+            }
+        }
+
+        let userinfo = get_userinfo();
+        $("#usercode").text(userinfo.code);
+        $("#username").text(userinfo.name);
+        $("#enterprise_name").text(userinfo.enterprise_name);
+        $("#e-name").text(userinfo.enterprise_name);
+    });
+
+    // 업체별 NickName 변경
+    api_gp('/enterprises/?name=' + get_userinfo().enterprise_name, 'GET', {}, (data) => {
+        // 기준정보
+        if (data[0].nickBase != null && data[0].nickBase != '') {
+            $("#menu-1-button").text(data[0].nickBase);
+        }
+        if (data[0].nCodeMaster != null && data[0].nCodeMaster != '') {
+            $(".sm-0").text(data[0].nCodeMaster);
+        }
+        if (data[0].nCustomer != null && data[0].nCustomer != '') {
+            $(".sm-1").text(data[0].nCustomer);
+        }
+        {% comment %}
+        if (data[0].nUser != null && data[0].nUser != '') {
+            $(".sm-2").text(data[0].nUser);
+        }
+        {% endcomment %}
+        if (data[0].nFacilities != null && data[0].nFacilities != '') {
+            $(".sm-3").text(data[0].nFacilities);
+        }
+        if (data[0].nItem != null && data[0].nItem != '') {
+            $(".sm-4").text(data[0].nItem);
+        }
+        {% comment %}
+        if (data[0].nAuthUser != null && data[0].nAuthUser != '') {
+            $(".sm-5").text(data[0].nAuthUser);
+        }
+        {% endcomment %}
+        if (data[0].nOrderCompany != null && data[0].nOrderCompany != '') {
+            $(".sm-42").text(data[0].nOrderCompany);
+        }
+        if (data[0].nMyInfo != null && data[0].nMyInfo != '') {
+            $(".sm-57").text(data[0].nMyInfo);
+        }
+
+        // BOM 관리
+        if (data[0].nickBom != null && data[0].nickBom != '') {
+            $("#menu-2-button").text(data[0].nickBom);
+        }
+        if (data[0].nBomForm != null && data[0].nBomForm != '') {
+            $(".sm-6").text(data[0].nBomForm);
+        }
+        if (data[0].nBomManage != null && data[0].nBomManage != '') {
+            $(".sm-7").text(data[0].nBomManage);
+        }
+        if (data[0].nBomSearch != null && data[0].nBomSearch != '') {
+            $(".sm-8").text(data[0].nBomSearch);
+        }
+        if (data[0].nBomPlan != null && data[0].nBomPlan != '') {
+            $(".sm-9").text(data[0].nBomPlan);
+        }
+
+        // 자재관리
+        if (data[0].nickMaterial != null && data[0].nickMaterial != '') {
+            $("#menu-3-button").text(data[0].nickMaterial);
+        }
+        if (data[0].nMaterialImport != null && data[0].nMaterialImport != '') {
+            $(".sm-10").text(data[0].nMaterialImport);
+        }
+        if (data[0].nMaterialOutOrder != null && data[0].nMaterialOutOrder != '') {
+            $(".sm-61").text(data[0].nMaterialOutOrder);
+        }
+        if (data[0].nMaterialOutOut != null && data[0].nMaterialOutOut != '') {
+            $(".sm-62").text(data[0].nMaterialOutOut);
+        }
+        if (data[0].nMaterialOutput != null && data[0].nMaterialOutput != '') {
+            $(".sm-11").text(data[0].nMaterialOutput);
+        }
+        if (data[0].nMaterialCarry != null && data[0].nMaterialCarry != '') {
+            $(".sm-12").text(data[0].nMaterialCarry);
+        }
+        if (data[0].nMaterialSearch != null && data[0].nMaterialSearch != '') {
+            $(".sm-13").text(data[0].nMaterialSearch);
+        }
+        if (data[0].nMaterialSearchT != null && data[0].nMaterialSearchT != '') {
+            $(".sm-59").text(data[0].nMaterialSearchT);
+        }
+        if (data[0].nMaterialAdjust != null && data[0].nMaterialAdjust != '') {
+            $(".sm-14").text(data[0].nMaterialAdjust);
+        }
+
+        // 공정관리
+        if (data[0].nickProcess != null && data[0].nickProcess != '') {
+            $("#menu-4-button").text(data[0].nickProcess);
+        }
+
+        {% comment %}
+        if (data[0].nickProcess != null && data[0].nickProcess != '') {
+            $(".sm-15").text(data[0].nickProcess);
+        }
+        {% endcomment %}
+
+        if (data[0].nProcessNameAdd != null && data[0].nProcessNameAdd != '') {
+            $(".sm-15").text(data[0].nProcessNameAdd);
+        }
+        if (data[0].nProcessDetail != null && data[0].nProcessDetail != '') {
+            $(".sm-16").text(data[0].nProcessDetail);
+        }
+        if (data[0].nProcessStatsAdd != null && data[0].nProcessStatsAdd != '') {
+            $(".sm-17").text(data[0].nProcessStatsAdd);
+        }
+        if (data[0].nProcessStatsAddT != null && data[0].nProcessStatsAddT != '') {
+            $(".sm-58").text(data[0].nProcessStatsAddT);
+        }
+        if (data[0].nProcessStatsSearch != null && data[0].nProcessStatsSearch != '') {
+            $(".sm-18").text(data[0].nProcessStatsSearch);
+        }
+        if (data[0].nProcessStatsSearchTV != null && data[0].nProcessStatsSearchTV != '') {
+            $(".sm-56").text(data[0].nProcessStatsSearchTV);
+        }
+
+        //불량 관리
+        if (data[0].nickFaulty != null && data[0].nickFaulty != '') {
+            $("#menu-18-button").text(data[0].nickFaulty);
+        }
+
+        if (data[0].nFaultyAdd != null && data[0].nFaultyAdd != '') {
+            $(".sm-63").text(data[0].nFaultyAdd);
+        }
+        if (data[0].nFaultyLookUp != null && data[0].nFaultyLookUp != '') {
+            $(".sm-64").text(data[0].nFaultyLookUp);
+        }
+        if (data[0].nFaultyGraph != null && data[0].nFaultyGraph != '') {
+            $(".sm-65").text(data[0].nFaultyGraph);
+        }
+
+        // 실적관리 - 변경 시 sm 번호 재 설정해놔야함
+        if (data[0].nickResult != null && data[0].nickResult != '') {
+            $("#menu-8-button").text(data[0].nickResult);
+        }
+
+        if (data[0].nProcessStatsSearch != null && data[0].nProcessStatsSearch != '') {
+            $(".sm-27").text(data[0].nProcessStatsSearch);
+        }
+        if (data[0].nProcessStatsSearch != null && data[0].nProcessStatsSearch != '') {
+            $(".sm-27").text(data[0].nProcessStatsSearch);
+        }
+        if (data[0].nProcessStatsSearch != null && data[0].nProcessStatsSearch != '') {
+            $(".sm-27").text(data[0].nProcessStatsSearch);
+        }
+        if (data[0].nProcessStatsSearch != null && data[0].nProcessStatsSearch != '') {
+            $(".sm-27").text(data[0].nProcessStatsSearch);
+        }
+
+        // 창고관리 - 변경 시 sm 번호 재 설정해놔야함
+        if (data[0].nickWarehouse != null && data[0].nickWarehouse != '') {
+            $("#menu-7-button").text(data[0].nickWarehouse);
+        }
+
+
+        // 대여관리
+        if (data[0].nickRental != null && data[0].nickRental != '') {
+            $("#menu-5-button").text(data[0].nickRental);
+        }
+        if (data[0].nRentalManage != null && data[0].nRentalManage != '') {
+            $(".sm-19").text(data[0].nRentalManage);
+        }
+        if (data[0].nRentalAdd != null && data[0].nRentalAdd != '') {
+            $(".sm-20").text(data[0].nRentalAdd);
+        }
+        if (data[0].nRentalSearch != null && data[0].nRentalSearch != '') {
+            $(".sm-21").text(data[0].nRentalSearch);
+        }
+
+        // 온습도 모니터링
+        if (data[0].nickSensor != null && data[0].nickSensor != '') {
+            $("#menu-6-button").text(data[0].nickSensor);
+        }
+
+        if (data[0].nSensor != null && data[0].nSensor != '') {
+            $(".sm-22").text(data[0].nSensor);
+        }
+        if (data[0].nSensorPC != null && data[0].nSensorPC != '') {
+            $(".sm-23").text(data[0].nSensorPC);
+        }
+        if (data[0].nSensorTV != null && data[0].nSensorTV != '') {
+            $(".sm-24").text(data[0].nSensorTV);
+        }
+        if (data[0].nSensorH2 != null && data[0].nSensorH2 != '') {
+            $(".sm-39").text(data[0].nSensorH2);
+        }
+        if (data[0].nSensorPCH2 != null && data[0].nSensorPCH2 != '') {
+            $(".sm-40").text(data[0].nSensorPCH2);
+        }
+        if (data[0].nSensorTVH2 != null && data[0].nSensorTVH2 != '') {
+            $(".sm-41").text(data[0].nSensorTVH2);
+        }
+        if (data[0].nSensorLEDH2 != null && data[0].nSensorLEDH2 != '') {
+            $(".sm-60").text(data[0].nSensorLEDH2);
+        }
+
+        // 온도전압 관리 - 변경 시 sm 번호 재 설정해놔야함
+        if (data[0].nickTempVolt != null && data[0].nickTempVolt != '') {
+            $("#menu-9-button").text(data[0].nickTempVolt);
+        }
+        if (data[0].nTempVoltManage != null && data[0].nTempVoltManage != '') {
+            $(".sm-28").text(data[0].nTempVoltManage);
+        }
+        if (data[0].nTempVoltStatsSearch != null && data[0].nTempVoltStatsSearch != '') {
+            $(".sm-29").text(data[0].nTempVoltStatsSearch);
+        }
+        if (data[0].nTempVoltBgSearch != null && data[0].nTempVoltBgSearch != '') {
+            $(".sm-30").text(data[0].nTempVoltBgSearch);
+        }
+
+
+        if (data[0].nickOrder != null && data[0].nickOrder != '') {
+            $("#menu-10-button").text(data[0].nickOrder);
+        }
+        if (data[0].nOrderAdd != null && data[0].nOrderAdd != '') {
+            $(".sm-31").text(data[0].nOrderAdd);
+        }
+        if (data[0].nOrderCtAdd != null && data[0].nOrderCtAdd != '') {
+            $(".sm-32").text(data[0].nOrderCtAdd);
+        }
+        if (data[0].nOrderCtStats != null && data[0].nOrderCtStats != '') {
+            $(".sm-33").text(data[0].nOrderCtStats);
+        }
+
+        //외주 관리
+        if (data[0].nickOutsourcing != null && data[0].nickOutsourcing != '') {
+            $("#menu-19-button").text(data[0].nickOutsourcing);
+        }
+        if (data[0].nOutsourcingOut != null && data[0].nOutsourcingOut != '') {
+            $(".sm-66").text(data[0].nOutsourcingOut);
+        }
+        if (data[0].nOutsourcingCtAdd != null && data[0].nOutsourcingCtAdd != '') {
+            $(".sm-67").text(data[0].nOutsourcingCtAdd);
+        }
+        if (data[0].nOutsourcingCtStats != null && data[0].nOutsourcingCtStats != '') {
+            $(".sm-68").text(data[0].nOutsourcingCtStats);
+        }
+
+        // HACCP 관리
+        if (data[0].nickHaccp != null && data[0].nickHaccp != '') {
+            $("#menu-11-button").text(data[0].nickHaccp);
+        }
+        if (data[0].nHaccp != null && data[0].nHaccp != '') {
+            $(".sm-34").text(data[0].nHaccp);
+        }
+        if (data[0].nHaccpNew != null && data[0].nHaccpNew != '') {
+            $(".sm-35").text(data[0].nHaccpNew);
+        }
+
+        // 주문관리
+        if (data[0].nickOrdering != null && data[0].nickOrdering != '') {
+            $("#menu-12-button").text(data[0].nickOrdering);
+        }
+        if (data[0].nOrderingAdd != null && data[0].nOrderingAdd != '') {
+            $(".sm-36").text(data[0].nOrderingAdd);
+        }
+        if (data[0].nOrderingStatsSearch != null && data[0].nOrderingStatsSearch != '') {
+            $(".sm-37").text(data[0].nOrderingStatsSearch);
+        }
+        if (data[0].nOrderingStatsAdd != null && data[0].nOrderingStatsAdd != '') {
+            $(".sm-38").text(data[0].nOrderingStatsAdd);
+        }
+
+        // 출하관리
+        if (data[0].nickOrderingEx != null && data[0].nickOrderingEx != '') {
+            $("#menu-13-button").text(data[0].nickOrderingEx);
+        }
+        if (data[0].nOrderingExAdd != null && data[0].nOrderingExAdd != '') {
+            $(".sm-43").text(data[0].nOrderingExAdd);
+        }
+        if (data[0].nOrderingExStatus != null && data[0].nOrderingExStatus != '') {
+            $(".sm-44").text(data[0].nOrderingExStatus);
+        }
+
+        // 원가관리
+        if (data[0].nickCost != null && data[0].nickCost != '') {
+            $("#menu-14-button").text(data[0].nickCost);
+        }
+        if (data[0].nCostByProduct != null && data[0].nCostByProduct != '') {
+            $(".sm-45").text(data[0].nCostByProduct);
+        }
+        if (data[0].nCostByExpert != null && data[0].nCostByExpert != '') {
+            $(".sm-46").text(data[0].nCostByExpert);
+        }
+
+        // 의뢰서관리
+        if (data[0].nickRequest != null && data[0].nickRequest != '') {
+            $("#menu-15-button").text(data[0].nickRequest);
+        }
+        if (data[0].nRequestAdd != null && data[0].nRequestAdd != '') {
+            $(".sm-47").text(data[0].nRequestAdd);
+        }
+        if (data[0].nRequestSearch != null && data[0].nRequestSearch != '') {
+            $(".sm-48").text(data[0].nRequestSearch);
+        }
+
+        // 견적서관리
+        if (data[0].nickEstimate != null && data[0].nickEstimate != '') {
+            $("#menu-16-button").text(data[0].nickEstimate);
+        }
+        if (data[0].nEstimateAdd != null && data[0].nEstimateAdd != '') {
+            $(".sm-49").text(data[0].nEstimateAdd);
+        }
+        if (data[0].nEstimateSearch != null && data[0].nEstimateSearch != '') {
+            $(".sm-50").text(data[0].nEstimateSearch);
+        }
+
+        // 품질측정관리
+        if (data[0].nickQuality != null && data[0].nickQuality != '') {
+            $("#menu-17-button").text(data[0].nickQuality);
+        }
+        if (data[0].nQualityUnbalanceAdd != null && data[0].nQualityUnbalanceAdd != '') {
+            $(".sm-51").text(data[0].nQualityUnbalanceAdd);
+        }
+        if (data[0].nQualityUnbalanceSearch != null && data[0].nQualityUnbalanceSearch != '') {
+            $(".sm-52").text(data[0].nQualityUnbalanceSearch);
+        }
+        if (data[0].nQualityRotatorAdd != null && data[0].nQualityRotatorAdd != '') {
+            $(".sm-53").text(data[0].nQualityRotatorAdd);
+        }
+        if (data[0].nQualityStatorAdd != null && data[0].nQualityStatorAdd != '') {
+            $(".sm-55").text(data[0].nQualityStatorAdd);
+        }
+        // 매인 매출
+        if (data[0].nOrderPurchaseOrSales != null && data[0].nOrderPurchaseOrSales != '') {
+            $("#menu-20-button").text(data[0].nOrderPurchaseOrSales);
+        }
+        if (data[0].nOrderPurchase != null && data[0].nOrderPurchase != '') {
+            $(".sm-69").text(data[0].nOrderPurchase);
+        }
+        if (data[0].nOrderSales != null && data[0].nOrderSales != '') {
+            $(".sm-70").text(data[0].nOrderSales);
+        }
+        if (data[0].nProduction != null && data[0].nProduction != '') {
+            $("#menu-21-button").text(data[0].nProduction);
+        }
+        if (data[0].nProductionDevice != null && data[0].nProductionDevice != '') {
+            $(".sm-71").text(data[0].nProductionDevice);
+        }
+            if (data[0].nickMaterialInform != null && data[0].nickMaterialInform != '') {
+            $("#menu-22-button").text(data[0].nickMaterialInform);
+        }
+        if (data[0].nMaterialInform != null && data[0].nMaterialInform != '') {
+            $(".sm-72").text(data[0].nMaterialInform);
+        }
+    });
+</script>
