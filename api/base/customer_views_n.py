@@ -120,6 +120,10 @@ class CustomerMaster_read(View):
 
         qs = CustomerMaster.objects.filter(enterprise__name=request.COOKIES['enterprise_name']).order_by('-id')
 
+        custom_id = request.GET.get('custom_id', '')
+        if custom_id :
+           qs = qs.filter(id=custom_id)
+
         # 슈퍼 유저 구분 필요 없단다... ###
         # if is_superuser == 'true':
         #     qs = CustomerMaster.objects.all().order_by('-id')

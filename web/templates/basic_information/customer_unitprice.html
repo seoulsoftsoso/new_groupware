@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <header>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -8,6 +10,14 @@
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="{% static 'js/api_adapter.js' %}" type="text/javascript"></script>
+
+
+    <!-- Popper.js 라이브러리 로드 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 JavaScript 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
 
     <style>
         tr.selected {
@@ -24,6 +34,8 @@
 </header>
 
 <body style="overflow: hidden;">
+
+{{ cu.media }}
 
 <div class="row">
   <div class="col-sm-6">
@@ -43,16 +55,19 @@
                       </th>
                       <th class="th-sm">모델
                       </th>
+                      <th class="th-sm">품목아이디
+                      </th>
                     </tr>
                     </thead>
                 <tbody>
                 {% for item in data %}
                     <tr>
-                        <td style="word-wrap: break-word;">{{ item.id }}</td>
+                        <td></td>
                         <td style="word-wrap: break-word;">{{ item.code }}</td>
                         <td style="word-wrap: break-word;">{{ item.name }}</td>
                         <td style="word-wrap: break-word;">{{ item.detail }}</td>
                         <td style="word-wrap: break-word;">{{ item.model }}</td>
+                        <td style="word-wrap: break-word;">{{ item.id }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -64,24 +79,117 @@
   <div class="col-sm-6">
     <div class="card m-2">
         <div class="card border-info m-2">
-            <div class="card-header" style="text-align: center">매출처
+            <div class="card-header" style="text-align: center">
+                <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          거래처 단가 관리
+        </button>
+      </h5>
             </div>
-            <div class="card-body">
-                <button id="addRow" class="btn button-custom w-100">Add Row</button>
-                <button id="editRow">Edit Row</button>
-                <button id="deleteRow">Delete Row</button>
-                <table id="sub_sup_table" class="table table-hover table-striped table-bordered">
 
-                </table>
+            <div class="card m-2 collapse" id="collapseOne">
+                <div class="form-row m-2">
+                    <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-sm">거래처명</label>
+                    <div class="col-sm-6">
+                          {{ cu.cu_name_sch }}
+                    </div>
+                </div>
 
+                <form id="custom_info_form">
+                    <div class="form-row">
+                    <div class="col-md-4 mb-3 p-2">
+                        <label>거래처 코드</label>
+                        <input type="text" class="form-control" id="cus_code" placeholder="" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3 p-2">
+                        <label>거래처 이름</label>
+                        <input type="text" class="form-control" id="cus_name" placeholder="" readonly>
+                    </div>
+                    <div class="col-md-4 mb-3 p-2">
+                        <label>사업자번호</label>
+                        <input type="text" class="form-control" id="cus_number" placeholder="" readonly>
+                    </div>
+                    </div>
+                    <div class="form-row p-4">
+                        <div class="col-md-6">
+                            <label>거래구분</label>
+                        <div class="col-sm-12">
+                          {{ cu.cu_division_add }}
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>단가</label>
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" id="unit_price_sm_73" name="unit_price" placeholder="" required>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>수수료</label>
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" id="fee_rate_sm_73" name="fee_rate" placeholder="" required>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>비고</label>
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" id="etc_sm_73" name="etc" placeholder="" required>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters w-100 mt-3 justify-content-end">
+                        <div class="col-1 px-0 mr-2">
+                        <button type="button" class="btn button-custom2 w-100 " id="add_btn_sm_73">추가</button>
+                        </div>
+                        <div class="col-1 px-0 mr-2">
+                            <button type="button" class="btn button-custom2 w-100" id="edit_btn_sm_73">수정</button>
+                        </div>
+                        <div class="col-1 px-0 mr-2">
+                            <button type="button" class="btn button-custom2 w-100 " id="del_btn_sm_73">삭제</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
 
+
+
+        </div>
+
         <div class="card border-info m-2">
-            <div class="card-header" style="text-align: center">매입처
+            <div class="card-header" style="text-align: center">단가 정보
             </div>
             <div class="card-body">
-                <table id="sub_cus_table" class="table table-hover table-striped table-bordered">
+                <table id="sub_table_sm-73" class="table table-hover table-striped table-bordered">
+                    <thead>
+                    <tr class="table-active">
+                      <th class="th-sm">거래처코드
+                      </th>
+                      <th class="th-sm">거래처명
+                      </th>
+                      <th class="th-sm">사업자번호
+                      </th>
+                      <th class="th-sm">거래구분
+                      </th>
+                      <th class="th-sm">단가
+                      </th>
+                      <th class="th-sm">수수료
+                      </th>
+                      <th class="th-sm">비고
+                      </th>
+                    </tr>
+                    </thead>
+                <tbody>
+                {% comment %}{% for item in data %}
+                    <tr>
+                        <td style="word-wrap: break-word;">{{ item.id }}</td>
+                        <td style="word-wrap: break-word;">{{ item.code }}</td>
+                        <td style="word-wrap: break-word;">{{ item.name }}</td>
+                        <td style="word-wrap: break-word;">{{ item.detail }}</td>
+                        <td style="word-wrap: break-word;">{{ item.model }}</td>
+                    </tr>
+                {% endfor %}{% endcomment %}
+                </tbody>
 
                 </table>
             </div>
@@ -90,17 +198,39 @@
   </div>
 
 </div>
+
+
+
 </body>
 
 </html>
 
 <script>
-    $(document).ready(function () {
+    // 전역변수 설정
+    let item_id = null;
+    let customer_id = null;
 
+    $(document).ready(function () {
         let selected_row = null;
 
         let table = $('#main_item_table').DataTable(
             {
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    }
+                ],
+                columns: [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        { "data" : "id", "title" : "id", visible: false },
+                        ],
                 "rowCallback": function(row, data) {
                     $(row).on('click', function() {
                         if (selected_row !== null) {
@@ -108,8 +238,8 @@
                           }
                           $(this).addClass('selected');
                           selected_row = this;
-
-                          set_subtables();
+                          item_id = data.id
+                          set_subtables(item_id);
                     });
                 }
             }
@@ -122,8 +252,117 @@
         // });
     });
 
-    function set_subtables(){
+    function set_subtables(itemId){
+        api_gp("/unitprice/sub/", "GET", {"item_id": itemId}, (done) => {
+            console.log(done);
+            // $('#sub_table_sm-73').DataTable().rows.add(done).draw();
+        });
 
+        {% comment %}$('#sub_table_sm-73').DataTable( {
+            "ajax": {
+                "url": "/unitprice/sub/",
+                "type": "GET",
+                "data": {"item_id" : itemId,
+                        "Authorization": get_token()
+                    }
+            },
+            "columns": [
+                { "data": "code" },
+                { "data": "name" },
+                { "data": "licensee_number" },
+                { "data": "type" },
+                { "data": "unit_price" },
+                { "data": "fee_rate" },
+                { "data": "etc" }
+            ],
+            "success": function(data) {
+                  // 데이터를 Datatables에 추가
+                  $('#sub_table_sm-73').DataTable().rows.add(data).draw();
+               }
+            } );{% endcomment %}
+        }
+    // 거래처 코드 선택시 아래 input 채우기
+    $('#id_cu_name_sch').on('select2:select', function (e) {
+          customer_id = e.params.data.id;
+
+          console.log(item_id);
+
+          api_gp("/basic_information/customers_read/", "GET", {"custom_id": customer_id}, (done) => {
+            console.log(done.results[0].name);
+            let item = done.results[0]
+              $('#cus_code').val(item.code)
+              $('#cus_name').val(item.name)
+              $('#cus_number').val(item.licensee_number)
+
+            });
+        });
+
+    function validation_check(){
+        var formData = $('form').serialize();
+
+        if (formData == null){
+            alert("데이터를 정확하게 입력해주세요")
+            return false
+        }else if (item_id == null){
+            alert("품목을 선택해주세요")
+            return false
+        }else if(customer_id == null){
+            alert("거래처를 선택해주세요")
+            return false
+        }
+        else {
+            return true
+        }
     }
+
+    function get_data(){
+        // form 데이터 가져오기
+      let formData =$('#custom_info_form').serialize()
+      let customer_division = $('#id_cu_division_add').val();
+      console.log(formData);
+      formData.append('customer_division', customer_division)
+      formData.append('item_id', item_id);
+      formData.append('customer_id', customer_id);
+
+      return {
+
+            pk: unitprice_id,
+
+            code: customer_code,
+            name: customer_name,
+            division: customer_division,
+            licensee_number: licensee_number,
+            owner_name: customer_owner_name,
+            business_conditions: business_conditions,
+            business_event: business_event,
+            postal_code: office_post_code,
+            address: office_address,
+            office_phone: office_phone,
+            office_fax: office_fax_number,
+            charge_name: person_in_charge,
+            charge_level: charge_level,
+            charge_phone: charge_phone,
+            email: email,
+            {#enable: customer_use_division,#}
+            etc: customer_note,
+        };
+    }
+
+    $('#add_btn_sm_73').click(function() {
+
+      let allData = get_data()
+
+      let val_check = validation_check()
+      if (val_check){
+          api_gp("/unitprice/sub/", "POST", formData, (done) => {
+            console.log(done);
+            });
+      }
+
+
+
+
+    });
+
 
 </script>

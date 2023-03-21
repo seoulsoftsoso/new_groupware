@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'seoulsoft_mes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mes_yuseong',
+        'NAME': 'mes_smart',
         'USER': 'root',
         'PASSWORD': 'root00',
         'HOST': '127.0.0.1',
@@ -235,9 +235,9 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 
 # url
-MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
+# MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
 # MEDIA_URL = 'http://mes.seoulsoft.kr/data/'  # For debug
-# MEDIA_URL = 'http://127.0.0.1:8002/data/'  # For debug
+MEDIA_URL = 'http://127.0.0.1:8002/data/'  # For debug
 # MEDIA_URL = 'http://192.168.0.12:9000/data/'  # For debug
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 

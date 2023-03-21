@@ -48,26 +48,6 @@ def customer(request):
 def customerg1(request):
     return render(request, 'basic_information/customer_g1.html', {})
 
-
-def customer_unitprice(request):
-    try:
-        results = ItemMaster.objects.all().filter(enterprise__id=request.COOKIES.get('enterprise_id')).order_by('-id')
-        data = {
-            'data': [{
-                'id': re.id,
-                'code': re.code,
-                'name': re.name,
-                'detail': re.detail,
-                'model': re.model
-            } for re in results]
-        }
-    except Exception as ex:
-
-        print(ex)
-
-    return render(request, 'basic_information/customer_unitprice.html', data)
-
-
 def user(request):
     context = {}
     context['us'] = user_fm(request.GET, request.COOKIES['enterprise_name'])

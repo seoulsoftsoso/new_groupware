@@ -57,6 +57,7 @@ from api.base.myinfo_views_n import MyInfoMaster_in, MyInfoMaster_create, MyInfo
 from api.base.order_company import OrderCompanyViewSet
 from api.base.order_company_n import OrderCompany_in, OrderCompany_create, OrderCompany_read, OrderCompany_update, \
     OrderCompany_delete
+from api.base.unitprice_views import customer_unitprice, UnitPriceSubViewSet
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 from api.base.item_views import ItemMasterViewSet, ItemMasterSelectViewSet, ItemMasterPartViewSet, ItemMasterViewSet5, \
     ItemMasterLedViewSet
@@ -284,6 +285,8 @@ router.register(r'facilities/files', FacilitiesFilesViewSet)       # TODO: 'faci
 router.register(r'facilities', FacilitiesMasterViewSet)
 router.register(r'order/company', OrderCompanyViewSet)
 router.register(r'myinfo', MyInfoViewSet)
+
+router.register(r'unitprice/sub', UnitPriceSubViewSet) #거래처별 단가관리 업체등록/수정/삭제
 
 # 주문관리
 router.register(r'ordering_input', OrderingViewSet)

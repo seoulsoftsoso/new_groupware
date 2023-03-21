@@ -20,7 +20,7 @@ from api.models import CodeMaster, CustomerMaster, GroupCodeMaster, Process, Sub
     SensorH2, SensorH2Value, SubprocessTemplet, SubprocessFaultReason, OrderingExItems, Qunbalance, QunbalanceDetail, \
     Rotator, Stator, \
     MyInfoMaster, Orders, OrdersItems, OrdersInItems, OutsourcingItem, OutsourcingInItems, ItemLed, ItemOutOrder, \
-    Device, SubprocessLog
+    Device, SubprocessLog, UnitPrice
 from api.models import UserMaster
 from api.models import ItemMaster
 from api.models import BomMaster, Bom, BomLog
@@ -3554,7 +3554,6 @@ class MyInfoSerializer(BaseSerializer):
 
 
 class ItemAmountCalculateNonZeroSerializer(BaseSerializer):
-
     class Meta:
         model = ItemMaster
         fields = '__all__'
@@ -3638,7 +3637,6 @@ class ItemAmountCalculateNonZeroSerializer(BaseSerializer):
         else:
             safe_amount = ''
 
-
         return {
             'id': instance.id,  # id
             'code': instance.code,  # 품번
@@ -3668,13 +3666,17 @@ class ItemAmountCalculateNonZeroSerializer(BaseSerializer):
 
             'bom_division_id': bom_division_id,  # BOM 구분
 
-
-            'in_receive_amount': instance.in_receive_amount ,  # 입하수량
+            'in_receive_amount': instance.in_receive_amount,  # 입하수량
             'in_faulty_amount': instance.in_faulty_amount,  # 입하불량수량
             'in_out_amount': instance.in_out_amount,  # 출고수량
-            'in_rein_amount': instance.in_rein_amount, # 반입수량
-            'in_adjust_amount': instance.in_adjust_amount, #조정수량
+            'in_rein_amount': instance.in_rein_amount,  # 반입수량
+            'in_adjust_amount': instance.in_adjust_amount,  # 조정수량
             'safe_amount': safe_amount
 
         }
 
+
+class UnitPriceSerializer(BaseSerializer):
+    class Meta:
+        model = UnitPrice
+        fields = '__all__'

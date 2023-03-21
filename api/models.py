@@ -3,6 +3,9 @@ import datetime
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.db.models import Model
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 """
 This models.py is initially written based on '데이터베이스설계서(유니로보틱스).hwp' of which version 1.0
@@ -89,7 +92,7 @@ class EnterpriseMaster(models.Model):
     nSensorH2 = models.CharField(max_length=32, null=True)
     nSensorPCH2 = models.CharField(max_length=32, null=True)
     nSensorTVH2 = models.CharField(max_length=32, null=True)
-    nSensorLEDH2 = models.CharField(max_length=32, null=True)  #  02월 14일 추가
+    nSensorLEDH2 = models.CharField(max_length=32, null=True)  # 02월 14일 추가
 
     nickTempVolt = models.CharField(max_length=32, null=True, verbose_name='온도전압 관리')
     nTempVoltManage = models.CharField(max_length=32, null=True)
@@ -141,8 +144,8 @@ class EnterpriseMaster(models.Model):
     nQualityRotatorAdd = models.CharField(max_length=32, null=True)
     nQualityStatorAdd = models.CharField(max_length=32, null=True)
 
-    nProduction = models.CharField(max_length=32,null=True)
-    nProductionDevice = models.CharField(max_length=32, null = True)
+    nProduction = models.CharField(max_length=32, null=True)
+    nProductionDevice = models.CharField(max_length=32, null=True)
 
 
 class GroupCodeMaster(models.Model):
@@ -207,7 +210,8 @@ class CustomerMaster(models.Model):
                                  models.PROTECT,
                                  null=True,
                                  verbose_name='거래처구분')
-    licensee_number = models.CharField(max_length=32, verbose_name='사업자번호', null=True)  # 사업자번호, it will cause bad occasions..
+    licensee_number = models.CharField(max_length=32, verbose_name='사업자번호',
+                                       null=True)  # 사업자번호, it will cause bad occasions..
     owner_name = models.CharField(max_length=20, null=True,
                                   verbose_name='대표자명')  # 대표자명
     business_conditions = models.CharField(max_length=48, null=True, verbose_name='업태')  # 업태
@@ -313,7 +317,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     order_company = models.ForeignKey('OrderCompany', models.SET_NULL, null=True, related_name='order_company',
                                       verbose_name='납품기업')  # 납품기업
 
-    snd_auth = models.CharField(max_length=128, verbose_name='2차인증')  #스마트름뱅이 요청
+    snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
 
 class ItemLed(models.Model):
@@ -371,9 +375,9 @@ class ItemMaster(models.Model):
     #                                      verbose_name='공장구분')  # 공장구분
 
     color = models.ForeignKey('CodeMaster', models.PROTECT,
-                                       null=True,
-                                       related_name='color_division',
-                                       verbose_name='칼라구분')  # 칼라구분
+                              null=True,
+                              related_name='color_division',
+                              verbose_name='칼라구분')  # 칼라구분
 
     # LR_division = models.CharField(max_length=1, null=True, verbose_name='LH/RH')  # LH/RH
     # TD_division = models.CharField(max_length=1, null=True, verbose_name='TOP/DOWN')  # TOP/DOWN
@@ -383,9 +387,9 @@ class ItemMaster(models.Model):
     purchase_from = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='purchase_from',
                                       verbose_name='구매처')  # 구매처
     purchase_from2 = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='purchase_from2',
-                                      verbose_name='구매처')  # 구매처
+                                       verbose_name='구매처')  # 구매처
     purchase_from3 = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='purchase_from3',
-                                      verbose_name='구매처')  # 구매처
+                                       verbose_name='구매처')  # 구매처
     # sales_to = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='sales_to',
     #                              verbose_name='판매처')  # 판매처
     unit = models.ForeignKey('CodeMaster', models.PROTECT,
@@ -393,9 +397,9 @@ class ItemMaster(models.Model):
                              related_name='unit',
                              verbose_name='단위')  # 단위
     container = models.ForeignKey('CodeMaster', models.PROTECT,
-                                       null=True,
-                                       related_name='container_type',
-                                       verbose_name='용기타입')  # 용기타입
+                                  null=True,
+                                  related_name='container_type',
+                                  verbose_name='용기타입')  # 용기타입
 
     # box_size = models.FloatField(null=True, verbose_name='BOX SIZE')  # BOX_SIZE
     # box_quantity = models.FloatField(null=True, verbose_name='BOX 수량')  # BOX_수량
@@ -434,9 +438,9 @@ class ItemMaster(models.Model):
                               related_name='bom_brand',
                               verbose_name='브랜드')  # 단위
     item_group = models.ForeignKey('CodeMaster', models.PROTECT,
-                              null=True,
-                              related_name='bom_item_group',
-                              verbose_name='제품군')  # 단위
+                                   null=True,
+                                   related_name='bom_item_group',
+                                   verbose_name='제품군')  # 단위
     # brand = models.CharField(max_length=32, null=True, verbose_name='브랜드')
     # item_group = models.CharField(max_length=32, null=True, verbose_name='제품군')
     nice_number = models.CharField(max_length=32, null=True, verbose_name='나이스번호')
@@ -449,7 +453,7 @@ class ItemMaster(models.Model):
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='item_created_by',
                                    verbose_name='최초작성자')  # 최초작성자
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='item_updated_by',
-                                  verbose_name='최종작성자')  # 최종작성자
+                                   verbose_name='최종작성자')  # 최종작성자
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='item_master_enterprise',
@@ -550,7 +554,8 @@ class BomMaster(models.Model):
     color = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='BomMaster_color_division',
                               verbose_name='칼라구분')  # 칼라구분
 
-    type = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='BomMaster_type', verbose_name='품종')  # 품종
+    type = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='BomMaster_type',
+                             verbose_name='품종')  # 품종
 
     version = models.CharField(max_length=8, null=True, verbose_name='버전')  # 버전
     master_customer = models.ForeignKey('CustomerMaster', models.PROTECT, null=True,
@@ -627,8 +632,8 @@ class Bom(models.Model):
 
     item_name = models.CharField(max_length=100, null=True, verbose_name='품명')  # 품명
     location = models.ForeignKey('CodeMaster', models.SET_NULL,
-                                null=True,
-                                related_name='bom_location', verbose_name='생산공정(창고)')  # 창고
+                                 null=True,
+                                 related_name='bom_location', verbose_name='생산공정(창고)')  # 창고
 
     enable = models.BooleanField(default=True, verbose_name='사용구분')  # 사용구분
 
@@ -677,7 +682,7 @@ class ItemIn(models.Model):
     in_at = models.DateField(verbose_name='입하일자')  # 입하 /출고 일자
 
     customer = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='item_in_customer',
-                                      verbose_name='구매처')  # 구매처
+                                 verbose_name='구매처')  # 구매처
 
     package_amount = models.FloatField(null=True, verbose_name='포장수량')  # 포장수량 (자재입고)
 
@@ -686,7 +691,7 @@ class ItemIn(models.Model):
     in_faulty_amount = models.FloatField(verbose_name='불량수량')  # 불량 수량 = 입하 수량 - 입고 수량
     in_price = models.FloatField(default=0, null=True, verbose_name="입고단가")
 
-    location = models.ForeignKey('CodeMaster', models.SET_NULL, null = True, verbose_name="입고창고")  # 입고창고
+    location = models.ForeignKey('CodeMaster', models.SET_NULL, null=True, verbose_name="입고창고")  # 입고창고
     etc = models.CharField(max_length=64, null=True, verbose_name='비고')  # 비고
 
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='item_in_created_by',
@@ -709,7 +714,6 @@ class ItemIn(models.Model):
 
 
 class ItemInPay(models.Model):
-
     # 자재입고
     item_in = models.ForeignKey('ItemIn', models.PROTECT)  # 입고 ID
     pay_at = models.DateField(null=True, verbose_name='지급일자')  # 지급일자
@@ -737,7 +741,8 @@ class ItemOut(models.Model):
     etc = models.CharField(max_length=20, null=True, verbose_name='비고')  # 비고
     location = models.ForeignKey('CodeMaster', models.SET_NULL, null=True, verbose_name="출고창고")  # 출고창고
 
-    purchase_from = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, related_name='item_out_purchase_from',
+    purchase_from = models.ForeignKey('CustomerMaster', models.PROTECT, null=True,
+                                      related_name='item_out_purchase_from',
                                       verbose_name='출고_거래처')  # 출고거래처
 
     # 창고관리 필드들. 추후에 더 추가된다면 정규화 할 것.
@@ -759,7 +764,6 @@ class ItemOut(models.Model):
 
 
 class ItemOutPay(models.Model):
-
     # 자재출고
     item_out = models.ForeignKey('ItemOut', models.PROTECT)  # 출고 ID
     pay_at = models.DateField(null=True, verbose_name='수금일자')  # 수금일자
@@ -1286,6 +1290,7 @@ class SensorH2(models.Model):
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='h2_sensor_enterprise',
                                    verbose_name='업체')
 
+
 class Device(models.Model):
     device = models.CharField(null=False, max_length=32, verbose_name='장비명')
     mac = models.CharField(null=False, max_length=32, verbose_name='MAC')
@@ -1312,7 +1317,6 @@ class Device(models.Model):
     updated_at = models.DateField(auto_now=True, verbose_name="최종작성일")
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='Device_enterprise',
                                    verbose_name='업체')
-
 
 
 class SensorH2Value(models.Model):
@@ -1530,7 +1534,8 @@ class OrderIn(models.Model):
 
     check_at = models.DateField(null=True, verbose_name='검사일자')  # 검사일자 (자재입고)
     item_created_at = models.DateField(null=True, verbose_name='자재생산일자')  # 자재생산일자 (자재입고)
-    location = models.ForeignKey('CodeMaster', models.SET_NULL, null = True, related_name="OrderIn_location", verbose_name="자재위치")  # 자재위치
+    location = models.ForeignKey('CodeMaster', models.SET_NULL, null=True, related_name="OrderIn_location",
+                                 verbose_name="자재위치")  # 자재위치
 
     package_amount = models.FloatField(null=True, verbose_name='포장수량')  # 포장수량 (자재입고)
     is_in = models.ForeignKey('CodeMaster', models.PROTECT, verbose_name='입고상태')  # 포장수량 (자재입고)
@@ -1700,7 +1705,8 @@ class OutsourcingItem(models.Model):
                                    related_name='outsourcing_items_master_updated_by', verbose_name='최종작성자')  # 최종작성자
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
-    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='outsourcing_item_master_enterprise',
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT,
+                                   related_name='outsourcing_item_master_enterprise',
                                    verbose_name='업체')
 
 
@@ -2069,7 +2075,7 @@ class Rotator(models.Model):
     image = models.ImageField(upload_to='uploads', max_length=256, default=None, null=True, verbose_name='이미지')
 
     # 필드 F01
-    F01_measure_part = models.CharField(max_length=32, default='',  verbose_name="측정부_01")
+    F01_measure_part = models.CharField(max_length=32, default='', verbose_name="측정부_01")
     F01_Detail = models.CharField(max_length=32, default='', verbose_name="상세_01")
     F01_standard = models.CharField(max_length=32, default='', verbose_name="규격_01")
     F01_concentricity = models.CharField(max_length=32, default='', verbose_name="동심도_01")
@@ -2227,6 +2233,7 @@ class Rotator(models.Model):
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='Rotator_enterprise',
                                    verbose_name='업체')
 
+
 class Stator(models.Model):
     code = models.CharField(max_length=32, null=True, verbose_name='관리코드')  # 관리코드
     item_name = models.CharField(max_length=32, null=True, verbose_name="제품명")
@@ -2238,7 +2245,7 @@ class Stator(models.Model):
     image2 = models.ImageField(upload_to='uploads', max_length=256, default=None, null=True, verbose_name='이미지2')
 
     # 필드 F01
-    F01_measure_part = models.CharField(max_length=32, default='',  verbose_name="측정부_01")
+    F01_measure_part = models.CharField(max_length=32, default='', verbose_name="측정부_01")
     F01_Detail = models.CharField(max_length=32, default='', verbose_name="상세_01")
     F01_standard = models.CharField(max_length=32, default='', verbose_name="규격_01")
     F01_concentricity = models.CharField(max_length=32, default='', verbose_name="동심도_01")
@@ -2381,3 +2388,26 @@ class MyInfoMaster(models.Model):
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='my_info_enterprise',
                                    verbose_name='업체')
+
+
+class UnitPrice(models.Model):
+    item = models.ForeignKey('ItemMaster', models.PROTECT, verbose_name='품목')
+    customer = models.ForeignKey('CustomerMaster', models.PROTECT, verbose_name='거래처')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, verbose_name='업체')
+    unit_price = models.DecimalField(max_digits=9, decimal_places=3, default=0.00, verbose_name='단가')
+    fee_rate = models.DecimalField(max_digits=9, decimal_places=3, default=0.00, verbose_name='수수료율')
+
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='unitprice_created_by')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='unitprice_updated_by')  # 최종작성자
+    del_flag = models.CharField(max_length=1, default='N')
+    division = models.ForeignKey('CodeMaster',
+                                 models.PROTECT,
+                                 null=True,
+                                 verbose_name='거래처구분')
+
+    @receiver(pre_save, sender=Model)
+    def set_my_field_value(sender, instance, **kwargs):
+        if instance.my_field != 'Y':
+            instance.my_field = 'N'
