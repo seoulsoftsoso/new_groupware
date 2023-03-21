@@ -149,14 +149,6 @@
                     <div class="row no-gutters">
                         <div class="content-input-group col-3">
                             <div class="content-input-group-header">
-                                <label>수수료율</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" id="fee_rate"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
                                 <label>비고</label>
                             </div>
                             <div class="content-input-group-input">
@@ -180,9 +172,6 @@
                                        id="standard_price" onkeyup="_chkNumber(this, 2)"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="row no-gutters">
-
                         <div class="content-input-group col-3">
                             <div class="content-input-group-header">
                                 <label>TYPE</label>
@@ -191,6 +180,9 @@
                                 <input class="form-control" id="bom_division" disabled/>
                             </div>
                         </div>
+                    </div>
+                    <div class="row no-gutters">
+
                         <div class="content-input-group col-3">
                             <div class="content-input-group-header">
                                 <label>QR</label>
@@ -301,7 +293,6 @@
                     <th rowspan="2">비고</th>
                     <th rowspan="2">표준단가</th>
                     <th rowspan="2">TYPE</th>
-                    <th rowspan="2">수수료율</th>
                 </tr>
                 </thead>
                 <tbody id="item_tbody"></tbody>
@@ -611,7 +602,6 @@
                 (item.standard_price ? item.standard_price.toLocaleString() : 0) + "</td>";  // 표준단가
             row += "<td data-item='type'>" +
                 (item.type ? item.type : 0) + "</td>";  // 타입
-            row += "<td data-item='fee_rate'>" + Number(item.fee_rate) +"%"+ "</td>"; //수수료율
             row += "</tr>";
             rows += row;
         }
