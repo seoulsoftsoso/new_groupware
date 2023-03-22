@@ -200,6 +200,7 @@ class CodeMaster(models.Model):
         return self.name
 
 
+
 class CustomerMaster(models.Model):
     class Meta:
         unique_together = ('enterprise', 'code')
@@ -2402,12 +2403,11 @@ class UnitPrice(models.Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
                                    related_name='unitprice_updated_by')  # 최종작성자
     del_flag = models.CharField(max_length=1, default='N')
-    division = models.ForeignKey('CodeMaster',
-                                 models.PROTECT,
-                                 null=True,
-                                 verbose_name='거래처구분')
+    division = models.ForeignKey('CodeMaster',  models.PROTECT, null=True, verbose_name='거래처구분')
+    etc = models.CharField(max_length=128, null=True, verbose_name='기타')
+    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
 
-    @receiver(pre_save, sender=Model)
-    def set_my_field_value(sender, instance, **kwargs):
-        if instance.my_field != 'Y':
-            instance.my_field = 'N'
+
+
+

@@ -57,7 +57,8 @@ from api.base.myinfo_views_n import MyInfoMaster_in, MyInfoMaster_create, MyInfo
 from api.base.order_company import OrderCompanyViewSet
 from api.base.order_company_n import OrderCompany_in, OrderCompany_create, OrderCompany_read, OrderCompany_update, \
     OrderCompany_delete
-from api.base.unitprice_views import customer_unitprice, UnitPriceSubViewSet
+from api.base.unitprice_views import customer_unitprice, UnitPriceSubViewSet, customer_unitprice_update, \
+    customer_unitprice_delete
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 from api.base.item_views import ItemMasterViewSet, ItemMasterSelectViewSet, ItemMasterPartViewSet, ItemMasterViewSet5, \
     ItemMasterLedViewSet
@@ -337,7 +338,11 @@ urlpatterns = [
     path('basic_information/codemaster/manage', codemaster_manage),
 
     path('basic_information/customer/', customer),
-    path('basic_information/customer_unitprice/', customer_unitprice),
+    path('basic_information/customer_unitprice/', customer_unitprice, name='basic_information_unitprice'),
+    path('basic_information/customer_unitprice_update/', customer_unitprice_update.as_view(),
+         name='customer_unitprice_update'),
+    path('basic_information/customer_unitprice_delete/', customer_unitprice_delete.as_view(),
+         name='customer_unitprice_delete'),
     # path('basic_information/customer/', CustomerList.as_view(), name='customer_list'),
     # path('basic_information/customer/<int:pk>', CustomerUpdate.as_view(), name='customer_detail'),
     # path('basic_information/customer_delete/<int:pk>', CustomerDeleteView.as_view(), name='customer_delete'),

@@ -3680,3 +3680,22 @@ class UnitPriceSerializer(BaseSerializer):
     class Meta:
         model = UnitPrice
         fields = '__all__'
+
+    def to_representation(self, instance):
+        # print(instance.division)
+        if instance.division is not None:
+            division_name = instance.division.name
+        else:
+            division_name = None  # 또는 적절한 기본값 설정
+
+        return {
+            'id': instance.id,
+            'code': instance.customer.code,
+            'name': instance.customer.name,
+            'licensee_number': instance.customer.licensee_number,
+            'division_id': instance.division_id,
+            'division_name': division_name,
+            'unit_price': instance.unit_price,
+            'fee_rate': instance.fee_rate,
+            'etc': instance.etc
+        }

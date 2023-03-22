@@ -96,6 +96,7 @@
                 </div>
 
                 <form id="custom_info_form">
+                    {% csrf_token %}
                     <div class="form-row">
                     <div class="col-md-4 mb-3 p-2">
                         <label>거래처 코드</label>
@@ -180,15 +181,7 @@
                     </tr>
                     </thead>
                 <tbody>
-                {% comment %}{% for item in data %}
-                    <tr>
-                        <td style="word-wrap: break-word;">{{ item.id }}</td>
-                        <td style="word-wrap: break-word;">{{ item.code }}</td>
-                        <td style="word-wrap: break-word;">{{ item.name }}</td>
-                        <td style="word-wrap: break-word;">{{ item.detail }}</td>
-                        <td style="word-wrap: break-word;">{{ item.model }}</td>
-                    </tr>
-                {% endfor %}{% endcomment %}
+
                 </tbody>
 
                 </table>
@@ -209,11 +202,17 @@
     // 전역변수 설정
     let item_id = null;
     let customer_id = null;
+    let unitprice_id = null;
+    let main_talbe = null;
+    let sub_table = null;
+    let subtable_allData = null;
 
     $(document).ready(function () {
         let selected_row = null;
 
-        let table = $('#main_item_table').DataTable(
+        sub_table = $('#sub_table_sm-73').DataTable({})
+
+        main_talbe = $('#main_item_table').DataTable(
             {
                 "columnDefs": [
                     {
@@ -238,48 +237,50 @@
                           }
                           $(this).addClass('selected');
                           selected_row = this;
-                          item_id = data.id
+                          item_id = data.id;
                           set_subtables(item_id);
                     });
                 }
             }
         );
 
-        // $('#example tbody').on('click', 'tr', function (row, data) {
-        // let data = table.row(this).data();
-        //  $(this).toggleClass('selected');
 
-        // });
     });
 
     function set_subtables(itemId){
         api_gp("/unitprice/sub/", "GET", {"item_id": itemId}, (done) => {
-            console.log(done);
-            // $('#sub_table_sm-73').DataTable().rows.add(done).draw();
-        });
 
-        {% comment %}$('#sub_table_sm-73').DataTable( {
-            "ajax": {
-                "url": "/unitprice/sub/",
-                "type": "GET",
-                "data": {"item_id" : itemId,
-                        "Authorization": get_token()
-                    }
-            },
-            "columns": [
-                { "data": "code" },
-                { "data": "name" },
-                { "data": "licensee_number" },
-                { "data": "type" },
-                { "data": "unit_price" },
-                { "data": "fee_rate" },
-                { "data": "etc" }
-            ],
-            "success": function(data) {
-                  // 데이터를 Datatables에 추가
-                  $('#sub_table_sm-73').DataTable().rows.add(data).draw();
-               }
-            } );{% endcomment %}
+            subtable_allData = formatData(done.results)
+            sub_table.rows().remove().draw();
+
+            sub_table.rows.add(formatData(done.results)).draw();
+
+            $('#sub_table_sm-73 tbody').on('click', 'tr', function(row) {
+            let data = sub_table.row(this).data();
+            console.log(data)
+            unitprice_id = data[8];
+            // 단가관리 form 데이터 채우기
+            $('#cus_code').val(data[0])
+            $('#cus_name').val(data[1])
+            $('#cus_number').val(data[2])
+            let option1 = new Option(data[3], data[7], true, true);
+            $('#id_cu_division_add').append(option1).trigger('change');
+            $('#unit_price_sm_73').val(data[4])
+            $('#fee_rate_sm_73').val(data[5])
+            $('#etc_sm_73').val(data[6])
+
+            $("#add_btn_sm_73").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
+
+              $("#edit_btn_sm_73").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
+              $("#del_btn_sm_73").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
+
+
+            //선택 row 색상 표시
+             $(this).css('background-color', 'yellow');
+             $(this).siblings().css('background-color', '');
+
+                    });
+                  });
         }
     // 거래처 코드 선택시 아래 input 채우기
     $('#id_cu_name_sch').on('select2:select', function (e) {
@@ -294,74 +295,141 @@
               $('#cus_name').val(item.name)
               $('#cus_number').val(item.licensee_number)
 
+              let option1 = new Option('', '', true, true);
+            $('#id_cu_division_add').append(option1).trigger('change');
+            $('#unit_price_sm_73').val('')
+            $('#fee_rate_sm_73').val('')
+            $('#etc_sm_73').val('')
+
+              $("#add_btn_sm_73").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
+              $("#edit_btn_sm_73").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
+              $("#del_btn_sm_73").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
+
             });
         });
 
-    function validation_check(){
-        var formData = $('form').serialize();
+    function formatData(results) {
 
-        if (formData == null){
-            alert("데이터를 정확하게 입력해주세요")
-            return false
-        }else if (item_id == null){
-            alert("품목을 선택해주세요")
-            return false
-        }else if(customer_id == null){
-            alert("거래처를 선택해주세요")
-            return false
+          return results.map(result => [
+            result.code,
+            result.name,
+            result.licensee_number,
+            result.division_name,
+              result.unit_price,
+              result.fee_rate,
+              result.etc,
+              result.division_id,
+              result.id
+          ]);
         }
-        else {
-            return true
-        }
+
+
+    function validation_check(type){
+        let formData = $('#custom_info_form').serializeArray();
+        let dup_check = true;
+        let ori_unit = $('#cus_code').val() + formData[1].value
+
+        subtable_allData.forEach(function(rowData) {
+
+            let com_unit = rowData[0] + rowData[7];
+
+            if (ori_unit == com_unit){
+                dup_check = false;
+            }
+        });
+
+        if (type != 'A'){
+                return true
+            }else{
+                switch (true) {
+                    case formData[1].value.length < 1:
+                        alert('거래구분을 선택해주세요');
+                    return false;
+                    case item_id == null:
+                    alert("품목을 선택해주세요");
+                    return false;
+                  case customer_id == null:
+                    alert("거래처를 선택해주세요");
+                    return false;
+                  case dup_check == false:
+                    alert("이미 등록된 거래처와 거래구분입니다.");
+                    return false;
+                  default:
+                    return true;
+                }
+            }
+
+
     }
 
-    function get_data(){
+    function get_data(type){
         // form 데이터 가져오기
-      let formData =$('#custom_info_form').serialize()
+      let formData =$('#custom_info_form').serializeArray();
+        console.log("거래구분" + formData[1].value)
+        console.log("거래구분2" + formData[2].value)
+        console.log("거래구분3" + formData[3].value)
+        console.log("거래구분4" + formData[4].value)
       let customer_division = $('#id_cu_division_add').val();
-      console.log(formData);
-      formData.append('customer_division', customer_division)
-      formData.append('item_id', item_id);
-      formData.append('customer_id', customer_id);
+        console.log("거래구분" + customer_division)
+
+      if (type != 'A'){
+          unitprice_id = unitprice_id
+      }else{
+          unitprice_id = null;
+      }
 
       return {
-
+            csrfmiddlewaretoken: '{{ csrf_token }}',
             pk: unitprice_id,
 
-            code: customer_code,
-            name: customer_name,
-            division: customer_division,
-            licensee_number: licensee_number,
-            owner_name: customer_owner_name,
-            business_conditions: business_conditions,
-            business_event: business_event,
-            postal_code: office_post_code,
-            address: office_address,
-            office_phone: office_phone,
-            office_fax: office_fax_number,
-            charge_name: person_in_charge,
-            charge_level: charge_level,
-            charge_phone: charge_phone,
-            email: email,
-            {#enable: customer_use_division,#}
-            etc: customer_note,
+            item: item_id,
+            customer: customer_id,
+            enterPrise_id: get_cookie('enterprise_id'),
+            division: customer_division,  // 거래구분 매입,매출
+            unit_price: formData[2].value,  // 단가
+            fee_rate: formData[3].value,  //수수료
+
+            etc: formData[4].value  // 기타
         };
     }
 
     $('#add_btn_sm_73').click(function() {
 
-      let allData = get_data()
+      let allData = get_data('A')
 
-      let val_check = validation_check()
+      let val_check = validation_check('A')
       if (val_check){
-          api_gp("/unitprice/sub/", "POST", formData, (done) => {
-            console.log(done);
+          api_gp("/unitprice/sub/", "POST", allData, (done) => {
+            alert('추가되었습니다.')
+              set_subtables(item_id)
             });
       }
+    });
 
+    $('#edit_btn_sm_73').click(function() {
 
+      let allData = get_data('E')
 
+      let val_check = validation_check('E')
+      if (val_check){
+          api_gp("/basic_information/customer_unitprice_update/", "POST", allData, (done) => {
+            alert('수정되었습니다.')
+              set_subtables(item_id)
+            });
+      }
+    });
 
+    $('#del_btn_sm_73').click(function() {
+
+      let allData = get_data('D')
+
+      let val_check = validation_check('E')
+      if (val_check){
+          api_gp("/basic_information/customer_unitprice_delete/", "POST", allData, (done) => {
+            alert('삭제되었습니다.')
+              set_subtables(item_id)
+            });
+      }
     });
 
 
