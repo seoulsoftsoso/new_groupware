@@ -1,66 +1,56 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<!-- load bootstrap stylesheet -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" media="all">
+<meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+   {% comment %} <title>SmartMES - Seoulsoft Dashboard</title>{% endcomment %}
+
+{% comment %}<link rel="shortcut icon" type="image/png" href="srtdash/assets/images/icon/favicon.ico">{% endcomment %}
+<link rel="shortcut icon" type="image/png" href="{% static 'srtdash/assets/images/icon/favicon.ico' %}">
+
+{% comment %}<script src="https://code.jquery.com/jquery-3.5.1.js"></script>{% endcomment %}
+ {% comment %}<script src="{% static 'srtdash/assets/js/vendor/jquery-2.2.4.min.js' %}"></script>{% endcomment %}
+
+<!-- jQuery 라이브러리 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery UI 라이브러리 -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/themify-icons.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/metisMenu.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/slicknav.min.css' %}">
 
 <!-- load bootstrap datepicker stylesheet-->
 <link rel="stylesheet" href="{% static 'bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
-<!-- table export -->
-<link rel="stylesheet" href="https://unpkg.com/tableexport@5.2.0/dist/css/tableexport.min.css">
 
-<!-- load bootstrap popper.js for dropdown menu -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- others css -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'srtdash/assets/css/typography.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/default-css.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'srtdash/assets/css/responsive.css' %}">
 
-<!-- load bootstrap js -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous" media="all"></script>
+<!-- modernizr css -->
+
+<script src="{% static 'srtdash/assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
 
 <!-- load bootstrap datepicker js -->
 <script src="{% static 'bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
 <script src="{% static 'bootstrap-datepicker/locales/bootstrap-datepicker.ko.min.js' %}"></script>
 
-<!-- custom javascript files -->
-<script src="{% static 'js/api_adapter.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/main.js' %}" type="text/javascript"></script>
-
-<!-- Daum Address Finder API -->
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
 <!-- select2 CDN -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2/dist/Chart.min.js"></script>
 
-<!-- printThis for screen print -->
-<script src="{% static 'js/printThis.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/api_adapter.js' %}" type="text/javascript"></script>
 
-<!-- table export -->
-<script src="https://unpkg.com/xlsx@0.16.4/dist/xlsx.core.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
-<script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
 
-<!-- new excel table export -->
-<script type="text/javascript" src="{% static 'js/tableExport.min.js' %}"></script>
 
-<!-- pagination for tables -->
-<script src="{% static 'js/paginathing.js' %}" type="text/javascript"></script>
-
-<!-- custom javascript files 2 -->
-<script src="{% static 'js/excel_export.js' %}" type="text/javascript"></script>
-
-<!-- tab drag -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-
-<script src="{% static 'js/api_process.js' %}" type="text/javascript"></script>
-
-<input class="d-none" id="mes_toggle" name="test" type="text">
 <script>
     const tabID = sessionStorage.tabID ? sessionStorage.tabID : sessionStorage.tabID = Math.random();
 </script>

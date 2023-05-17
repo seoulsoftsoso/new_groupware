@@ -4,7 +4,7 @@ import time
 from decimal import *
 
 from django.db import IntegrityError, transaction
-from django.db.models import Sum, Avg, Q
+from django.db.models import Sum, Avg, Q, Count
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
@@ -20,7 +20,7 @@ from api.models import CodeMaster, CustomerMaster, GroupCodeMaster, Process, Sub
     SensorH2, SensorH2Value, SubprocessTemplet, SubprocessFaultReason, OrderingExItems, Qunbalance, QunbalanceDetail, \
     Rotator, Stator, \
     MyInfoMaster, Orders, OrdersItems, OrdersInItems, OutsourcingItem, OutsourcingInItems, ItemLed, ItemOutOrder, \
-    Device, SubprocessLog, UnitPrice
+    Device, SubprocessLog, UnitPrice, MenuMaster
 from api.models import UserMaster
 from api.models import ItemMaster
 from api.models import BomMaster, Bom, BomLog
@@ -55,6 +55,32 @@ def generate_code(prefix1, model, model_field_prefix, user):
 
     last_order = res.values(model_field_prefix).last()[model_field_prefix]
     return prefix1 + str(int(prefix2) * 1000 + int(last_order[-3:]) + 1)
+
+
+def generate_lot_code(code_id, model, model_field_prefix, user):
+    prefix1 = CodeMaster.objects.filter(id=code_id).values('etc').first().get('etc')
+
+    if not prefix1:
+        raise ValidationError('자재구분 코드가 존재하지 않습니다.')
+
+    today = date.today()
+    prefix2 = f"{today.year}{today.month:02d}{today.day:02d}"
+
+    kwargs = {
+        model_field_prefix + '__istartswith': prefix1 + '-' + prefix2 + '-',
+        'enterprise': user.enterprise
+    }
+
+    cnt = model.objects.filter(**kwargs).aggregate(cnt=Count('*'))['cnt']
+    print("cnt   : " + str(cnt))
+    if cnt == 0:
+        return prefix1 + '-' + prefix2 + '-' + '01'
+    elif 0 < cnt < 9:
+        return prefix1 + '-' + prefix2 + '-' + '0' + str(int(cnt) + 1)
+    elif cnt == 99:
+        raise ValidationError('당일 순번이 99를 초과하여 입고등록을 진행 할 수 없습니다.')
+    else:
+        return prefix1 + '-' + prefix2 + '-' + str(int(cnt) + 1)
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -992,7 +1018,12 @@ class ItemInSerializer(BaseSerializer):
 
     def create(self, instance):
 
-        instance['num'] = generate_code('I', ItemIn, 'num', self.context['request'].user)
+        if self.context['request'].user.enterprise_id == 54:  # 스마트름뱅이는 입고번호를 lot번호로 사용
+            instance['num'] = generate_lot_code(self.context['request'].POST.get('it_division_sch', ''), ItemIn, 'num',
+                                                self.context['request'].user)
+        else:
+            instance['num'] = generate_code('I', ItemIn, 'num', self.context['request'].user)
+
         instance['current_amount'] = ItemMaster.objects.get(pk=instance['item'].id).stock
 
         """
@@ -3699,3 +3730,13 @@ class UnitPriceSerializer(BaseSerializer):
             'fee_rate': instance.fee_rate,
             'etc': instance.etc
         }
+
+
+class MenuSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MenuMaster
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        return super(MenuSerializer, self).to_representation(instance)

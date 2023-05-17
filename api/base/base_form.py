@@ -2,7 +2,7 @@ from dal import autocomplete
 from django import forms
 
 from api.models import GroupCodeMaster, CustomerMaster, CodeMaster, ItemMaster, FacilitiesMaster, OrderCompany, \
-    MyInfoMaster
+    MyInfoMaster, EnterpriseMaster, UserMaster
 
 
 # 코드 마스터
@@ -73,6 +73,18 @@ class customer_fm(forms.Form):
                                                  'data-placeholder': '선택 및 검색',
                                              }),
                                          )
+
+    # 거래처 명 form에서 사용
+    cu_name_form = forms.ModelChoiceField(required=False,
+                                          queryset=qs_customer,
+                                          widget=autocomplete.ListSelect2(
+                                              url='customer_name_ac',
+                                              attrs={
+                                                  'class': 'form-control form-control-sm',
+                                                  'style': 'width:100%; height:100%',
+                                                  'data-placeholder': '선택 및 검색',
+                                              }),
+                                          )
 
     # Add
     # 거래구분 code108_name_ac
@@ -187,6 +199,18 @@ class item_fm(forms.Form):
                                                  'data-placeholder': '선택 및 검색',
                                              }),
                                          )
+    # form에서 사용할 품번
+    it_code_form = forms.ModelChoiceField(required=False,
+                                          queryset=qs_item,
+                                          widget=autocomplete.ListSelect2(
+                                              url='item_code_ac',
+                                              attrs={
+                                                  'class': 'form-control form-control-sm',
+                                                  'style': 'width:100%; height:100%',
+                                                  'data-placeholder': '선택 및 검색',
+                                              }),
+                                          )
+
     # 품명
     it_name_sch = forms.ModelChoiceField(required=False,
                                          queryset=qs_item,
@@ -198,6 +222,18 @@ class item_fm(forms.Form):
                                                  'data-placeholder': '선택 및 검색',
                                              }),
                                          )
+
+    # form에서 사용할 품명
+    it_name_form = forms.ModelChoiceField(required=False,
+                                          queryset=qs_item,
+                                          widget=autocomplete.ListSelect2(
+                                              url='item_name_ac',
+                                              attrs={
+                                                  'class': 'form-control form-control-sm',
+                                                  'style': 'width:100%; height:100%',
+                                                  'data-placeholder': '선택 및 검색',
+                                              }),
+                                          )
 
     # 나이스번호
     it_nice_number_sch = forms.ModelChoiceField(required=False,
@@ -262,27 +298,27 @@ class item_fm(forms.Form):
 
     # 제품군 128 code128_name_ac
     it_brand_sch = forms.ModelChoiceField(required=False,
-                                             queryset=qs_cm,
-                                             widget=autocomplete.ListSelect2(
-                                                 url='code127_name_ac',
-                                                 attrs={
-                                                     'class': 'form-control form-control-sm',
-                                                     'style': 'width:100%; height:100%',
-                                                     'data-placeholder': '선택 및 검색',
-                                                 }),
-                                             )
+                                          queryset=qs_cm,
+                                          widget=autocomplete.ListSelect2(
+                                              url='code127_name_ac',
+                                              attrs={
+                                                  'class': 'form-control form-control-sm',
+                                                  'style': 'width:100%; height:100%',
+                                                  'data-placeholder': '선택 및 검색',
+                                              }),
+                                          )
 
     # 자재분류 118 code118_name_ac
     it_item_group_sch = forms.ModelChoiceField(required=False,
-                                                  queryset=qs_cm,
-                                                  widget=autocomplete.ListSelect2(
-                                                      url='code128_name_ac',
-                                                      attrs={
-                                                          'class': 'form-control form-control-sm',
-                                                          'style': 'width:100%; height:100%',
-                                                          'data-placeholder': '선택 및 검색',
-                                                      }),
-                                                  )
+                                               queryset=qs_cm,
+                                               widget=autocomplete.ListSelect2(
+                                                   url='code128_name_ac',
+                                                   attrs={
+                                                       'class': 'form-control form-control-sm',
+                                                       'style': 'width:100%; height:100%',
+                                                       'data-placeholder': '선택 및 검색',
+                                                   }),
+                                               )
 
     # 모델 116 code116_name_ac
     it_model_add = forms.ModelChoiceField(required=False,
@@ -335,12 +371,12 @@ class item_fm(forms.Form):
     it_customer2_add = forms.ModelChoiceField(required=False,
                                               queryset=qs_cs,
                                               widget=autocomplete.ListSelect2(
-                                                 url='customer_name_ac',
-                                                 attrs={
-                                                     'class': 'form-control form-control-sm',
-                                                     'style': 'width:100%; height:100%',
-                                                     'data-placeholder': '선택 및 검색',
-                                                 }),
+                                                  url='customer_name_ac',
+                                                  attrs={
+                                                      'class': 'form-control form-control-sm',
+                                                      'style': 'width:100%; height:100%',
+                                                      'data-placeholder': '선택 및 검색',
+                                                  }),
                                               )
 
     # 거래처
@@ -359,12 +395,12 @@ class item_fm(forms.Form):
     it_customer3_add = forms.ModelChoiceField(required=False,
                                               queryset=qs_cs,
                                               widget=autocomplete.ListSelect2(
-                                                 url='customer_name_ac',
-                                                 attrs={
-                                                     'class': 'form-control form-control-sm',
-                                                     'style': 'width:100%; height:100%',
-                                                     'data-placeholder': '선택 및 검색',
-                                                 }),
+                                                  url='customer_name_ac',
+                                                  attrs={
+                                                      'class': 'form-control form-control-sm',
+                                                      'style': 'width:100%; height:100%',
+                                                      'data-placeholder': '선택 및 검색',
+                                                  }),
                                               )
     # 거래처
     it_customer3_add_code = forms.ModelChoiceField(required=False,
@@ -415,15 +451,15 @@ class item_fm(forms.Form):
 
     # 수수료율 스마트름뱅이
     it_item_fee_rate = forms.ModelChoiceField(required=False,
-                                         queryset=qs_item,
-                                         widget=autocomplete.ListSelect2(
-                                             url='item_fee_rate',
-                                             attrs={
-                                                 'class': 'form-control form-control-sm',
-                                                 'style': 'width:100%; height:100%',
-                                                 'data-placeholder': '선택 및 검색',
-                                             }),
-                                         )
+                                              queryset=qs_item,
+                                              widget=autocomplete.ListSelect2(
+                                                  url='item_fee_rate',
+                                                  attrs={
+                                                      'class': 'form-control form-control-sm',
+                                                      'style': 'width:100%; height:100%',
+                                                      'data-placeholder': '선택 및 검색',
+                                                  }),
+                                              )
 
 
 # 설비 기준정보관리
@@ -623,14 +659,13 @@ class request_fm(forms.Form):
     it_nice_number_sch = forms.ModelChoiceField(required=False,
                                                 queryset=qs_item,
                                                 widget=autocomplete.ListSelect2(
-                                                     url='item_nice_number_ac',
-                                                     attrs={
-                                                         'class': 'form-control form-control-sm',
-                                                         'style': 'width:100%; height:100%',
-                                                         'data-placeholder': '선택 및 검색',
-                                                     }),
-                                                 )
-
+                                                    url='item_nice_number_ac',
+                                                    attrs={
+                                                        'class': 'form-control form-control-sm',
+                                                        'style': 'width:100%; height:100%',
+                                                        'data-placeholder': '선택 및 검색',
+                                                    }),
+                                                )
 
 
 # 견적서
@@ -733,14 +768,13 @@ class estimate_fm(forms.Form):
     it_nice_number_sch = forms.ModelChoiceField(required=False,
                                                 queryset=qs_item,
                                                 widget=autocomplete.ListSelect2(
-                                                     url='item_nice_number_ac',
-                                                     attrs={
-                                                         'class': 'form-control form-control-sm',
-                                                         'style': 'width:100%; height:100%',
-                                                         'data-placeholder': '선택 및 검색',
-                                                     }),
-                                                 )
-
+                                                    url='item_nice_number_ac',
+                                                    attrs={
+                                                        'class': 'form-control form-control-sm',
+                                                        'style': 'width:100%; height:100%',
+                                                        'data-placeholder': '선택 및 검색',
+                                                    }),
+                                                )
 
     # 품명
     it_name_sch = forms.ModelChoiceField(required=False,
@@ -880,13 +914,13 @@ class ordering_fm(forms.Form):
     it_nice_number_sch = forms.ModelChoiceField(required=False,
                                                 queryset=qs_item,
                                                 widget=autocomplete.ListSelect2(
-                                                     url='item_nice_number_ac',
-                                                     attrs={
-                                                         'class': 'form-control form-control-sm',
-                                                         'style': 'width:100%; height:100%',
-                                                         'data-placeholder': '선택 및 검색',
-                                                     }),
-                                                 )
+                                                    url='item_nice_number_ac',
+                                                    attrs={
+                                                        'class': 'form-control form-control-sm',
+                                                        'style': 'width:100%; height:100%',
+                                                        'data-placeholder': '선택 및 검색',
+                                                    }),
+                                                )
 
     # 사업장 구분
     cp_div_sch = forms.ModelChoiceField(required=False,
@@ -899,3 +933,36 @@ class ordering_fm(forms.Form):
                                                 'data-placeholder': '선택 및 검색',
                                             }),
                                         )
+
+
+class enterprise_fm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(enterprise_fm, self).__init__(*args, **kwargs)
+        self.enterpriseName = args[1]
+
+    enterpriseName = '서울소프트'
+    qs_enterprise = EnterpriseMaster.objects.none()
+
+    # 회사 정보 조회
+    enterprise_name_ac = forms.ModelChoiceField(required=False,
+                                                queryset=qs_enterprise,
+                                                widget=autocomplete.ListSelect2(
+                                                    url='enterprise_name_ac',
+                                                    attrs={
+                                                        'class': 'form-control form-control-sm',
+                                                        'style': 'width:100%; height:100%',
+                                                        'data-placeholder': '선택 및 검색',
+                                                    }),
+                                                )
+
+    # client 사용자 정보 조회
+    client_name_ac = forms.ModelChoiceField(required=False,
+                                            queryset=UserMaster.objects.none(),
+                                            widget=autocomplete.ListSelect2(
+                                                url='client_name_ac',
+                                                attrs={
+                                                    'class': 'form-control form-control-sm',
+                                                    'style': 'width:100%; height:100%',
+                                                    'data-placeholder': '선택 및 검색',
+                                                }),
+                                            )

@@ -1,6 +1,7 @@
 from django.db.models import Q
 
-from api.models import ItemMaster, CustomerMaster, GroupCodeMaster, CodeMaster, UserMaster, OrderCompany, MyInfoMaster
+from api.models import ItemMaster, CustomerMaster, GroupCodeMaster, CodeMaster, UserMaster, OrderCompany, MyInfoMaster, \
+    EnterpriseMaster
 from dal import autocomplete
 
 
@@ -34,7 +35,6 @@ class Customer_name_ac(autocomplete.Select2QuerySetView):
 
     def get_result_label(self, item):
         return item.name
-
 
 
 # api\vies.py 중복?, # 재고관리 TV autoComplete 체크
@@ -372,8 +372,8 @@ class Item_code_ac(autocomplete.Select2QuerySetView):
     def get_result_label(self, item):
         print(item)
 
-        return item.detail + item.name
-        # return item.code
+        # return item.detail + item.name
+        return item.code
 
 
 # 품명
@@ -525,8 +525,8 @@ class Gc_name_ac(autocomplete.Select2QuerySetView):
         #                    Q(code='124')  # 현황구분
         #                    )
 
-            # for row in qs:
-            #     code = row.code
+        # for row in qs:
+        #     code = row.code
 
         if self.q:
             qs = qs.filter(name__contains=self.q)
@@ -553,6 +553,7 @@ class Company_division_ac(autocomplete.Select2QuerySetView):
     def get_result_label(self, item):
         return item.company_division
 
+
 # 수수료율 (스마트름뱅이)
 class Item_fee_rate(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -568,3 +569,32 @@ class Item_fee_rate(autocomplete.Select2QuerySetView):
     def get_result_label(self, item):
         return item.fee_rate
 
+
+# 회사 정보 조회
+class enterprise_name_ac(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = EnterpriseMaster.objects.all()
+
+        return qs
+
+    def get_result_label(self, result):
+        return result.name
+
+
+class client_name_ac(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+
+        enterprise = self.request.GET['enterPrise_id']
+
+        if enterprise:
+            # qs = UserMaster.objects.filter(Q(is_superuser=True) | Q(is_master=True)
+            #                               , enterprise_id=enterprise).order_by('-id')
+            qs = UserMaster.objects.filter(enterprise_id=enterprise).order_by('id')
+        else:
+            qs = UserMaster.objects.filter(enterprise_id=self.request.COOKIES['enterprise_id']).order_by('id')
+
+        return qs
+
+    def get_result_label(self, result):
+        return result.username

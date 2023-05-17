@@ -5,50 +5,80 @@
     {% block title %}
         <title>Seoul Soft MES</title>
     {% endblock title %} {% include 'header.html' %}
+{% load static %}
+
 </head>
 <body>
-<div class="wrapper" style="overflow-y:hidden;">
-    <div id="header-menu" style="position:static;left:0px;top:0px;">
-        <div class="w-100" style="background: #f3faff">
-            {% include 'header-menu.html' %}
-        </div>
-    </div>
-
-    <div id="header-menu-mobile" class="d-flex d-lg-none">
-        {% include 'header-menu-mobile.html' %}
-    </div>
-
-    <div id="body" style="margin-top:0px;height:1450px;"> {# hjlim : 이중스크롤 문제로 임시.. 생산일정등록이 현재 가장 김 #}
-        <div class="row no-gutters">
-            <div id="sub-menu" class="d-none d-lg-flex col-2">
-                {% include 'sub-menu.html' %}
-            </div>
-            <div id="content" class="col-lg-10 col-md-12" style="height:900px;">
-                <div class="row no-gutters m-2"></div>
-                <div class="row no-gutters h-100">
-                    <!-- tab header -->
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!-- preloader area start -->
+    {% comment %}<div id="preloader">
+        <div class="loader"></div>
+    </div>{% endcomment %}
+    <!-- preloader area end -->
+    <!-- page container area start -->
+    <div class="page-container">
+        {% include 'header-menu.html' %}
+        <!-- sidebar menu area start -->
+        {% include 'sub-menu.html' %}
+        <!-- sidebar menu area end -->
+        <div id="content" >
+            <div class="row no-gutters">
+                <div class="col-lg-11">
+                    <div class="card">
+                        <div class="card-body">
                     <ul
-                            class="nav nav-tabs col-11"
+                            class="nav nav-tabs"
                             id="tab_header-list"
                             role="tablist"
                     ></ul>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-1">
                     <button
                             type="button"
-                            class="btn btn-outline-secondary col-1 rounded-0"
+                            class="btn btn-flat btn-outline-secondary mt-3"
                             onclick="tab_delete_all();"
                     >
                         tab 전체삭제
                     </button>
-
-                    <!-- tab contents -->
-                    <div class="tab-content col-12 w-100 " id="tab_content-list" style="height:1400px;">
-                    </div>
                 </div>
+                <!-- tab contents -->
+
+                    <div class="tab-content col-lg-12" id="tab_content-list" style="height:3000px;">
+
+                    </div>
+                            {% comment %}</div>
+                    </div>{% endcomment %}
             </div>
         </div>
+        <!-- main content area start -->
     </div>
-</div>
-{% include 'footer.html' %}
+
+    <!-- offset area end -->
+
+    <!-- bootstrap 4 js -->
+<script src="{% static 'srtdash/assets/js/popper.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/owl.carousel.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/metisMenu.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/jquery.slicknav.min.js' %}" type="text/javascript"></script>
+
+    <!-- all line chart activation -->
+
+    <script src="{% static 'srtdash/assets/js/line-chart.js' %}"></script>
+    <!-- all pie chart -->
+
+    <script src="{% static 'srtdash/assets/js/pie-chart.js' %}"></script>
+    <!-- others plugins -->
+
+    <script src="{% static 'srtdash/assets/js/plugins.js' %}"></script>
+
+<script src="{% static 'srtdash/assets/js/scripts.js' %}"></script>
+
 </body>
 <script>
 
@@ -96,11 +126,13 @@
         let target = null;
 
         let tabs = $("#tab_header-list .nav-item .nav-link");
+
         for (let i = 0; i < tabs.length; i++) {
             // to get already-loaded one.
 
             if (_title.substring(0, 2) == 'sm') {
                 let tab_title_num = tabs[i].id.replace("tab_header-", "");
+
                 let _title_num = _title.replace("sm-", "");
 
                 if (tab_title_num === _title_num) {
@@ -119,6 +151,7 @@
             // else tab_add() with new content
             detach_all();
             //$(tab_add(url ,title)).load(url);
+
             $(tab_add(url, _title)).append(
                 // '<div id="spinner" style="position:relative;top:30%;left:45%;">'+
                 //         '<img src="../../../static/img/spinner.gif" />'+
@@ -138,7 +171,7 @@
     //   console.log('iframe loaded');
     //   setTimeout(() => {
     //     $("#spinner").remove();
-    //   }, 3000); 
+    //   }, 3000);
     // }
 
     function detach_all() {
@@ -170,243 +203,11 @@
     <!-- 넘버링 규칙 : Tab 생성시 사용됨. 권한 쪽과 동일하도록 사용하는게 좋을 듯, 지금은 매칭 안되어있음-->
     function title2num(title) {
         let num;
-        switch (title) {
-            case "sm-0": // 코드 마스터
-                num = 0;
-                break;
-            case "sm-1": // 거래처 기준정보관리
-                num = 1;
-                break;
-            case "사용자 기준정보관리": // 사용자 기준정보관리
-                num = 2;
-                break;
-            case "sm-3": // 설비 기준정보관리
-                num = 3;
-                break;
-            case "sm-4": // 품목 기준정보관리
-                num = 4;
-                break;
-            case "사용자 권한관리": // 사용자 권한관리
-                num = 5;
-                break;
-            case "업체별 권한관리":
-                num = 101;  // 100번 대는 현재 sm- 형식으로 안되어있는 것들
-                break;
-            case "sm-42": // 납품기업
-                num = 42;
-                break;
-            case "sm-57": // 내 정보 관리
-                num = 57;
-                break;
-            case "sm-6": // BOM 형식 생성
-                num = 6;
-                break;
-            case "sm-7": // BOM 관리
-                num = 7;
-                break;
-            case "sm-8": // BOM 조회
-                num = 8;
-                break;
-            case "sm-9": // 생산계획 대비 재고현황 조회
-                num = 9;
-                break;
-
-            case "sm-10": // 자재입고
-                num = 10;
-                break;
-            case "sm-61": // 출고지시서
-                num = 61;
-                break;
-            case "sm-62": // 출고지시대비 출고
-                num = 62;
-                break;
-            case "sm-11": // 자재출고
-                num = 11;
-                break;
-            case "sm-12": // 자재반입
-                num = 12;
-                break;
-            case "sm-13": // 자재현황 조회
-                num = 13;
-                break;
-            case "sm-59": // 자재현황 조회(TV)
-                num = 59;
-                break;
-            case "sm-14": // 자재재고실사 조정
-                num = 14;
-                break;
-
-            case "sm-15": // 공정명 등록 관리
-                num = 15;
-                break;
-            case "sm-16": // 세부공정관리
-                num = 16;
-                break;
-            case "sm-17": // 공정진행현황 등록
-                num = 17;
-                break;
-            case "sm-58": // 공정진행현황 등록(tablet)
-                num = 58;
-                break;
-            case "sm-18": // 공정진행현황 조회(PC)
-                num = 18;
-                break;
-            case "sm-56": // 공정진행현황 조회(TV)
-                num = 56;
-                break;
-
-            case "sm-63": // 불량사유 등록
-                num = 63;
-                break;
-            case "sm-64": // 불량사유 조회
-                num = 64;
-                break;
-            case "sm-65": // 불량그래프 조회(TV)
-                num = 65;
-                break;
-
-            case "sm-19": // 대여품목 관리
-                num = 19;
-                break;
-            case "sm-20": // 대여 등록/회수 관리
-                num = 20;
-                break;
-            case "sm-21": // 대여현황 조회
-                num = 21;
-                break;
-
-            case "sm-22": // 온습도 모니터링 장비관리
-                num = 22;
-                break;
-            case "sm-23": // 온습도 현황 조회(PC)
-                num = 23;
-                break;
-            case "sm-39": // 온습도 모니터링 장비관리 H2
-                num = 39;
-                break;
-            case "sm-40": // 온습도 현황 조회(PC) H2
-                num = 40;
-                break;
-
-            <!-- hjlim new-module -->
-            case "sm-36": // 주문서등록
-                num = 36;
-                break;
-            case "sm-37": // 주문현황조회
-                num = 37;
-                break;
-            case "sm-38": // 주문량통계
-                num = 38;
-                break;
-            case "sm-60": // 온습도_현황_조회_전광판_H2
-                num = 60;
-                break;
-
-            case "sm-28":
-                num = 28;
-                break;
-            case "sm-29":
-                num = 29;
-                break;
-            case "sm-30":
-                num = 30;
-                break;
-
-            case "sm-31":
-                num = 31;
-                break;
-            case "sm-32":
-                num = 32;
-                break;
-            case "sm-33":
-                num = 33;
-                break;
-
-            case "sm-66": // 외주출고
-                num = 66;
-                break;
-            case "sm-67": // 외주출고 입고등록
-               num = 67;
-                break;
-            case "sm-68": // 외주제품 수불부
-                num = 68;
-                break;
-
-            case "sm-34":  // 스마트 HACCP
-                num = 34;
-                break;
-
-            case "sm-43": // 출하등록
-                num = 43;
-                break;
-            case "sm-44": // 출하내역조회
-                num = 44;
-                break;
-            case "sm-45": // 제품별원가
-                num = 45;
-                break;
-            case "sm-46": // 주문대비원가
-                num = 46;
-                break;
-
-            case "sm-47": // 의뢰서작성
-                num = 47;
-                break;
-            case "sm-48": // 의뢰서조회
-                num = 48;
-                break;
-            case "sm-49": // 견적서작성
-                num = 49;
-                break;
-            case "sm-50": // 견적서조회
-                num = 50;
-                break;
-
-            case "sm-51": // UNBALANCE_등록
-                num = 51;
-                break;
-            case "sm-52": // UNBALANCE_조회
-                num = 52;
-                break;
-            case "sm-53": // 회전자검사_관리
-                num = 53;
-                break;
-            case "sm-55": // 고정자검사_관리
-                num = 55;
-                break;
-            case "sm-69":  // 매입관리
-                num = 69;
-                break;
-            case "sm-70":  // 매출관리
-                num = 70
-                break;
-            case "sm-71":  // 생산설비관리
-                num = 71
-                break;
-            case "sm-72":
-                num = 72
-                break;
-
-            // shalom
-            case "sm-901": // shalom - 라벨프린트 관리
-                num = 901;
-                break;
-            case "sm-902": // shalom - 라벨프린트 제품 관리
-                num = 902;
-                break;
-            case "sm-903": // shalom - 라벨프린트 납품처 관리
-                num = 903;
-                break;
-
-
-            //smart_rb
-            case "sm-73": //smart_rb - 거래처 단가 관리
-                num = 73;
-                break;
-
-            default:
-                num = 999;
-                break;
+        let parts = title.split("-");
+        if (parts[0] === "sm"){
+            num = parts[1];
+        }else{
+            num = title;
         }
         return num;
     }
@@ -414,9 +215,11 @@
 
     function tab_add(url, title) {
         let tab_now_add = title2num(title);
+
         let title_name = '';
 
         if (title.substring(0, 2) == 'sm') {
+
             title_name = $("." + title + ":first").text();
         } else {
             title_name = title;
@@ -433,12 +236,12 @@
             '"\n' +
             '         role="tab" aria-controls="tab_' +
             tab_now_add +
-            '" aria-selected="false"' +
-            "         onclick=\"load_detached('" +
+            '" aria-selected="false">' +
+            {% comment %}"         onclick=\"load_detached('" +
             url +
             "', '" +
             title +
-            "');\">" +
+            "');\">" +{% endcomment %}
             title_name +
             '<span class="tab_closer">&emsp;&times;</span>\n' +
             "    </a>\n" +
@@ -503,8 +306,8 @@
     // document.onclick = init_timer;
     // document.onkeypress = init_timer;
     const dragArea = document.querySelector("#tab_header-list");
-    new Sortable(dragArea, {
-        animation: 350
-    });
+    //new Sortable(dragArea, {
+    //    animation: 350
+    //});
 </script>
 </html>

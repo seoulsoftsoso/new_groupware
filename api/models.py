@@ -200,7 +200,6 @@ class CodeMaster(models.Model):
         return self.name
 
 
-
 class CustomerMaster(models.Model):
     class Meta:
         unique_together = ('enterprise', 'code')
@@ -676,7 +675,7 @@ class ItemIn(models.Model):
 
     # 자재입고
 
-    num = models.CharField(max_length=12, verbose_name='입하번호')  # 입/출하번호
+    num = models.CharField(max_length=17, verbose_name='입하번호')  # 입/출하번호
     item = models.ForeignKey('ItemMaster', models.PROTECT, verbose_name='품번 (품목관리 마스터)')  # 품번,,, 이 곧
     item_created_at = models.DateField(null=True, verbose_name='자재생산일자')  # 자재생산일자 (자재입고)
     check_at = models.DateField(null=True, verbose_name='검사일자')  # 검사일자 (자재입고)
@@ -706,7 +705,7 @@ class ItemIn(models.Model):
 
     qr_path = models.CharField(max_length=50, default='', null=True, verbose_name='QR경로')  # QR 경로
 
-    item = models.ForeignKey(ItemMaster, on_delete=models.CASCADE, related_name='itemin_related')
+    in_fee_rate = models.DecimalField(max_digits=9, decimal_places=3, default=0.00, verbose_name='수수료율')
 
     @property
     def in_amount(self):
@@ -2403,11 +2402,42 @@ class UnitPrice(models.Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
                                    related_name='unitprice_updated_by')  # 최종작성자
     del_flag = models.CharField(max_length=1, default='N')
-    division = models.ForeignKey('CodeMaster',  models.PROTECT, null=True, verbose_name='거래처구분')
+    division = models.ForeignKey('CodeMaster', models.PROTECT, null=True, verbose_name='거래처구분')
     etc = models.CharField(max_length=128, null=True, verbose_name='기타')
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
 
 
+class MenuMaster(models.Model):
+    code = models.CharField(max_length=50, null=False, verbose_name='메뉴코드')
+    name = models.CharField(max_length=50, null=False, verbose_name='메뉴이름')
+    path = models.CharField(max_length=256, null=False, verbose_name='경로')
+    type = models.CharField(max_length=1, null=False, verbose_name='유형')
+    comment = models.CharField(max_length=256, verbose_name='코멘트')
+    i_class = models.CharField(max_length=64, verbose_name='class icon')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='menumaster_created_by')
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='menumaster_updated_by')
+    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
 
 
+class Menu_Auth(models.Model):
+    menu = models.ForeignKey('MenuMaster', models.PROTECT, null=False, verbose_name='메뉴아이디',
+                             related_name='menuauth')
+    alias = models.CharField(max_length=64, null=True, verbose_name='별칭')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, verbose_name='업체')
+    user = models.ForeignKey('UserMaster', models.PROTECT, null=False, verbose_name='사용자')
+    # parent = models.ForeignKey('MenuMaster', models.PROTECT, null=False, verbose_name='상위키')
+    parent_id = models.IntegerField(null=True, verbose_name='순서')
+    order = models.IntegerField(null=False, verbose_name='순서')
+    use_flag = models.CharField(max_length=1, default='Y', verbose_name='사용여부')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='menuauth_created_by')
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='menuauth_updated_by')
+    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')
+    del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')

@@ -2,10 +2,14 @@ import time
 import traceback
 
 import requests
+import speech_recognition as sr
+import pyaudio
+import numpy as np
 
 from django.http import HttpResponse, JsonResponse
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import viewsets
 
 from api.models import SensorH2Value, Process, Subprocess, CodeMaster, ItemMaster
 
@@ -166,6 +170,7 @@ def getVolt(request):
 
     return HttpResponse(context)
 
+
 # def sendSubProcessInfo(request):
 #     print(request.GET)
 #
@@ -270,3 +275,70 @@ class CodeAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__contains=self.q).order_by('-id')
 
         return qs
+
+
+def getAlivecheck(request):
+    response = requests.get('http://192.168.0.125:8254/common/alive-check')
+    print(response)
+
+    return JsonResponse({'results': str(response)})
+
+    # if response.status_code == 200:
+    #    data = response.json()
+    #    print(data)
+    #    return JsonResponse({'message': 'success', 'data': data})
+    # else:
+    #    print('Error:', response.status_code)
+
+
+def recognize(request):
+    CHUNK = 1024  # 음성 데이터를 처리할 단위 크기
+    RATE = 44100  # 샘플링 레이트 (Hz)
+    RECORD_SECONDS = 5  # 음성 데이터를 수집할 시간
+
+    # PyAudio 객체 생성
+    audio = pyaudio.PyAudio()
+
+    # 마이크 입력 스트림 열기
+    stream = audio.open(format=pyaudio.paInt16, channels=2, rate=RATE, input=True, frames_per_buffer=CHUNK)
+
+    print("음성인식을 시작합니다.")
+
+    # RECORD_SECONDS 동안 마이크에서 입력받은 음성데이터를 출력
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        data = stream.read(CHUNK)
+        decoded = np.frombuffer(data, dtype=np.int16)
+        print(decoded)
+
+    print("음성인식이 종료되었습니다.")
+
+    # 스트림과 객체 닫기
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+
+    return JsonResponse({'results': str(decoded)})
+
+
+# 마이크로부터 스트림을 읽어오는 함수
+def get_audio_input_stream(self):
+    stream = self.audio.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, frames_per_buffer=1024)
+    return stream
+
+
+# 음성인식을 수행하는 함수
+def recognize_speech(self):
+    with self.get_audio_input_stream() as stream:
+        # 마이크로부터 입력된 오디오 스트림을 실시간으로 읽어와 Recognizer 객체의 record() 함수에 전달
+        audio_data = self.r.record(stream, duration=5)  # 5초간 음성 입력을 받음
+
+    # 구글 음성인식 API를 사용하여 음성을 텍스트로 변환
+    try:
+        text = self.r.recognize_google(audio_data, language='ko-KR')
+        print("인식 결과:", text)
+    except sr.UnknownValueError:
+        print("음성을 인식할 수 없습니다.")
+    except sr.RequestError as e:
+        print("구글 음성인식 API에 접근할 수 없습니다. {0}".format(e))
+
+    return JsonResponse({'results': str(text)})

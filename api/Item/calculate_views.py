@@ -39,6 +39,13 @@ class ItemCalculateViewSet(viewsets.ModelViewSet):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemCalculateViewSet", "get_queryset", False)
         # qs = ItemMaster.objects.filter(enterprise=self.request.user.enterprise).all().order_by('-id')
 
+        # stockzero = self.request.query_params['stockzero']
+
+        if 'stockzero' in self.request.query_params:
+            stockzero = self.request.query_params['stockzero']
+        else :
+            stockzero = "False"
+
         itemin_subquery = Subquery(
             ItemIn.objects.filter(
                 item_id=OuterRef('id')
@@ -86,34 +93,26 @@ class ItemCalculateViewSet(viewsets.ModelViewSet):
             ).values('out_adjust_amount')
         )
 
-        if self.request.query_params['stockzero'] == "False":
-            qs = (
-                ItemMaster.objects.filter(enterprise_id=self.request.user.enterprise)
-                .annotate(
-                    in_receive_amount=Coalesce(itemin_subquery, Value(0), output_field=IntegerField()),
-                    in_faulty_amount=Coalesce(in_faulty_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_out_amount=Coalesce(out_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_rein_amount=Coalesce(in_rein_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_adjust_amount=Coalesce(in_adjust_amount_subquery, Value(0), output_field=IntegerField())
-                ).all().order_by('-id')
-            )
-        else:
-            qs = (
-                ItemMaster.objects.filter(enterprise_id=self.request.user.enterprise)
-                .annotate(
-                    in_receive_amount=Coalesce(itemin_subquery, Value(0), output_field=IntegerField()),
-                    in_faulty_amount=Coalesce(in_faulty_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_out_amount=Coalesce(out_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_rein_amount=Coalesce(in_rein_amount_subquery, Value(0), output_field=IntegerField()),
-                    in_adjust_amount=Coalesce(in_adjust_amount_subquery, Value(0), output_field=IntegerField())
-                ).exclude(
-                    Q(in_receive_amount__isnull=True) | Q(in_receive_amount=0),
-                    Q(in_faulty_amount__isnull=True) | Q(in_faulty_amount=0),
-                    Q(in_out_amount__isnull=True) | Q(in_out_amount=0),
-                    Q(in_rein_amount__isnull=True) | Q(in_rein_amount=0),
-                    Q(in_adjust_amount__isnull=True) | Q(in_adjust_amount=0)
-                ).all().order_by('-id')
-            )
+        qs = (
+            ItemMaster.objects.filter(enterprise_id=self.request.user.enterprise)
+            .annotate(
+                in_receive_amount=Coalesce(itemin_subquery, Value(0), output_field=IntegerField()),
+                in_faulty_amount=Coalesce(in_faulty_amount_subquery, Value(0), output_field=IntegerField()),
+                in_out_amount=Coalesce(out_amount_subquery, Value(0), output_field=IntegerField()),
+                in_rein_amount=Coalesce(in_rein_amount_subquery, Value(0), output_field=IntegerField()),
+                in_adjust_amount=Coalesce(in_adjust_amount_subquery, Value(0), output_field=IntegerField())
+            ).all().order_by('-id')
+        )
+
+        if stockzero != "False":
+            qs = qs.exclude(
+                Q(in_receive_amount__isnull=True) | Q(in_receive_amount=0),
+                Q(in_faulty_amount__isnull=True) | Q(in_faulty_amount=0),
+                Q(in_out_amount__isnull=True) | Q(in_out_amount=0),
+                Q(in_rein_amount__isnull=True) | Q(in_rein_amount=0),
+                Q(in_adjust_amount__isnull=True) | Q(in_adjust_amount=0)
+            ).all().order_by('-id')
+
 
         # if 'customer' in self.request.query_params:
         #     customer = self.request.query_params['customer']

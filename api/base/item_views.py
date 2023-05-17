@@ -82,7 +82,7 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
 
     # 추가
     def create(self, request, *args, **kwargs):
-        print('create를 탄다')
+        #print('create를 탄다')
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemMasterViewSet", "create", False)
 
         ret = request
