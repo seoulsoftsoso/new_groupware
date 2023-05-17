@@ -9,7 +9,7 @@ function api_login(username, password, done_callback) {
     })
         .done(function (json) {
             // add cookie
-            console.log("login  json  : " + json);
+
             document.cookie = "Authorization=Token " + json.token + "; path=/;";
             document.cookie = "user_id=" + json.user.id + "; path=/;";
             document.cookie = "usercode=" + json.user.code + "; path=/;";
@@ -144,3 +144,4 @@ function loading_start() {
 function loading_finish() {
     $('html').css("cursor", "auto");
 }
+

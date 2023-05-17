@@ -21,6 +21,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls import url
 
+from api import views
 from api.Item.cost_calculate_views import ItemCostCalculateViewSet
 from api.Item.mobile_views import ItemInMobileViewSet
 from api.Item.n_item_in_views import Material_input_read
@@ -31,7 +32,7 @@ from api.QRCode.RQCodeReceiver import *
 from api.auto_complete import Code_108_ac, Customer_name_ac, Code_104_ac, Code_113_ac, Code_112_ac, Code_114_ac, \
     Code_109_ac, Code_110_ac, Code_111_ac, Code_105_ac, Code_106_ac, Code_115_ac, Code_116_ac, Code_118_ac, Code_119_ac, \
     Code_127_ac, Code_128_ac, Oc_name_ac, Gc_name_ac, Customer_code_ac, Item_code_ac, Item_name_ac, Company_division_ac, \
-    Item_code_name_ac, Item_nice_number_ac, Item_fee_rate
+    Item_code_name_ac, Item_nice_number_ac, Item_fee_rate, enterprise_name_ac, client_name_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.codemaster_views_n import CodeMaster_in, CodeMaster_create, CodeMaster_read, CodeMaster_update, \
     CodeMaster_delete
@@ -49,6 +50,7 @@ from api.base.groupcodemaster_views_n import GroupCode_in, GroupCode_create, Gro
 from api.base.item_excel_views import ItemExcelView, YuseongItemExcelView
 from api.base.item_views_n import ItemMaster_in, ItemMaster_create, ItemMaster_read, ItemMaster_update, \
     ItemMaster_delete, ItemMaster_qr_update
+from api.base.menu_view import Menuauth, getSubMenuList, getLmenuList
 from api.base.myinfo_views import MyInfoViewSet
 from api.base.customer_views_n import CustomerMaster_in, CustomerMaster_create, CustomerMaster_delete, \
     CustomerMaster_update, CustomerMaster_read, CustomerMaster_excel
@@ -114,7 +116,7 @@ from api.sensor.views_H2 import SensorH2ViewSet
 from api.production.production import DeviceViewSet
 from api.temp_volt_monitoring.value_views import SensorPCValueViewSet, SensorPCValueBPViewSet
 from api.temp_volt_monitoring.views import SensorPCViewSet
-from api.user.views import CustomObtainAuthToken
+from api.user.views import CustomObtainAuthToken, MenuHandler
 from api.views import *
 from api.warehouse.adjust_views import ItemWarehouseAdjustViewSet, ItemMasterWarehouseAdjustViewSet
 from api.warehouse.calculate_views import ItemWarehouseCalculateViewSet
@@ -287,7 +289,8 @@ router.register(r'facilities', FacilitiesMasterViewSet)
 router.register(r'order/company', OrderCompanyViewSet)
 router.register(r'myinfo', MyInfoViewSet)
 
-router.register(r'unitprice/sub', UnitPriceSubViewSet) #거래처별 단가관리 업체등록/수정/삭제
+router.register(r'unitprice/sub', UnitPriceSubViewSet) #거래처별 단가관리 업체조회, 등록
+router.register(r'getMenulist', MenuHandler)  #업체,사용자별 메뉴 조회
 
 # 주문관리
 router.register(r'ordering_input', OrderingViewSet)
@@ -308,12 +311,19 @@ router.register(r'Stator', StatorViewSet)
 
 custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
+
 urlpatterns = [
+
     path('users/login/', custom_obtain_auth_token),         # login
 
     # web
     path('', index),
     path('basic_information/codemaster/', codemaster),
+    path('basic_information/menumaster/', Menumaster),
+    path('basic_information/getlmenulist/', getLmenuList),
+    path('basic_information/getsublist/', getSubMenuList),
+    path('basic_information/menuauth_create/', Menuauth.as_view(), name='basic_information_menuauth_create'),
+    path('basic_information/columnconfig/', ColumnConfig),
 
     url('basic_information/codemasters/', CodeMaster_in.as_view(), name='basic_information_codemasters'),
     url('basic_information/codemasters_create/', CodeMaster_create.as_view(),
@@ -713,6 +723,10 @@ urlpatterns = [
     # 견적서조회에 사업장 구분
     url('autocomplete/myinfo/cp_div$', Company_division_ac.as_view(), name='cp_div_ac'),  # 사업장 구분
 
+    # 등록된 회사 조회
+    url('autocomplete/menumaster/enterprise_name_ac$', enterprise_name_ac.as_view(), name='enterprise_name_ac'),  # 회사정보
+    url('autocomplete/menumaster/client_name_ac$', client_name_ac.as_view(), name='client_name_ac'),  # 회사정보
+
 
    # 2022-02-14 샛별식품 라벨프린터 건
     path('ordering/label_print/', LabelPrint.as_view(), name='labelprint_list'),
@@ -738,6 +752,12 @@ urlpatterns = [
     url('autocomplete/code/$', CodeAutoComplete.as_view(), name='code_autocomplete'),  # Select2
 
     url(r'ordering/api/$', OrderingAPI.as_view(), name='ktv_dispatch_api'),
+
+    path('getAlivecheck/', views.getAlivecheck, name='getAlivecheck'),
+
+    path('recognize/', views.recognize, name='recognize'),
+
+
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

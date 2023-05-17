@@ -51,17 +51,25 @@ class UnitPriceSubViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "UnitPriceSubViewSet", "get_queryset", False)
-        return UnitPrice.objects.filter(enterprise_id=self.request.user.enterprise_id,
-                                        item_id=self.request.query_params.get('item_id'),
-                                        del_flag='N').order_by('-id')
+        filtertype = self.request.query_params.get('type')  #
+        if filtertype == "s":
+            qs = UnitPrice.objects.filter(enterprise_id=self.request.user.enterprise_id,
+                                          item_id=self.request.query_params.get('item_id'),
+                                          customer_id=self.request.query_params.get('customer_id'),
+                                          division_id=self.request.query_params.get('division_id'),
+                                          del_flag='N').order_by('-id')
+        else:
+            qs = UnitPrice.objects.filter(enterprise_id=self.request.user.enterprise_id,
+                                          item_id=self.request.query_params.get('item_id'),
+                                          del_flag='N').order_by('-id')
+        return qs
 
     def list(self, request, *args, **kwargs):
         return super().list(request, request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "UnitPriceSubViewSet", "create", False)
-        division = request.POST.get('division', '')
-        print(division)
+
         return super().create(request, request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):

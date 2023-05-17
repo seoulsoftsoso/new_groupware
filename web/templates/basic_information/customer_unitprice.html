@@ -365,12 +365,7 @@
     function get_data(type){
         // form 데이터 가져오기
       let formData =$('#custom_info_form').serializeArray();
-        console.log("거래구분" + formData[1].value)
-        console.log("거래구분2" + formData[2].value)
-        console.log("거래구분3" + formData[3].value)
-        console.log("거래구분4" + formData[4].value)
       let customer_division = $('#id_cu_division_add').val();
-        console.log("거래구분" + customer_division)
 
       if (type != 'A'){
           unitprice_id = unitprice_id

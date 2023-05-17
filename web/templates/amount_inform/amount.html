@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <header>{% include "header.html" %}</header>
-{# 발주대비 입고등록 #}
+
 
 <body style="overflow: hidden;">
 
@@ -9,7 +9,7 @@
 
 <div class="card m-2">
     <div class="card-body p-2">
-       <i class="bi bi-exclamation-triangle"></i> 재고부족 알림
+       <i class="bi bi-exclamation-triangle"></i> IM ERP API 연동 테스트 페이지
     </div>
 </div>
 <div class="card m-2">
@@ -18,256 +18,153 @@
         <div
                 class="content-search row no-gutters align-items-center content-input-group"
         >
-            <div
-                    class="col-11"
-                    id="material_status_main-form"
-            >
-                <div class="row no-gutters">
+            <div class="col-lg-6 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">Outline buttons</h4>
+                            <button type="button" class="btn btn-outline-primary mb-3" id="alive-check">alive-check</button>
+                            <button type="button" class="btn btn-outline-secondary mb-3" id="Company-sales">Company-sales</button>
+                            <button type="button" class="btn btn-outline-success mb-3" id="off-work">off-work</button>
+                            <button type="button" class="btn btn-outline-danger mb-3" id="Driver-sales">Driver-sales</button>
+                            <button type="button" class="btn btn-outline-warning mb-3" id="Income">Income</button>
 
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>브랜드</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control brand-dropdown-search"
-                                    id="brand_search"
-                                    name="brand_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>제품군</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item_group-dropdown-search"
-                                    id="item_group_search"
-                                    name="item_group_search"
-                            ></select>
-                        </div>
-                    </div>
-                      <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>품번</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item-code-dropdown-search"
-                                    id="item_code_search"
-                                    name="item_code_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>나이스번호</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control nice_number-dropdown-search"
-                                    id="nice_number_search"
-                                    name="nice_number_search"
-                            ></select>
-                        </div>
                     </div>
                 </div>
-
-                <div class="row no-gutters">
-                      <div class="content-input-group col-4 mt-2">
-                        <div class="content-input-group-input input-group">
-                            <input class="form-control" id="multiSearch" placeholder="검색어를 입력해주세요
-                            "/>
-                          <div class="input-group-append">
-                     <button class="btn btn-outline-secondary" type="button" onclick="ordering_search();"> 🔍</button>
-
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-1 px-0 ml-auto">
-                <button
-                        class="btn button-search rounded-0 w-100 h-100"
-                        onclick="nation1.page =1; ordering_search()"
-                >
-                    검색
-                </button>
             </div>
         </div>
     </div>
 </div>
 <div class="card m-2">
-    <div class="card-body p-2">
-        <div class="content-table" style="overflow-x:auto; overflow-y:hidden; height:700px">
-        <table class="table table-sm text-center" id="amount_inform_table">
-            <thead>
-            <th>재고분류</th>
-            <th>브랜드</th>
-            <th>제품군</th>
-            <th class="sorting_item_name" onclick="ordering_search('name')">품명</th>
-            <th class="sorting_item_code" onclick="ordering_search('code')">품번</th>
-            <th class="sorting_item_nice_number" onclick="ordering_search('nice_number')">나이스번호</th>
-            <th>품명상세</th>
-            <th>형태</th>
-            <th>현재고</th>
-            <th>안전재고수량</th>
-            </thead>
-            <tbody id="amount_inform_tbody">
-            </tbody>
-        </table>
-                 <div class="row no-gutters d-flex justify-content-center" id="item_nation"
-                 style="margin-top: -20px;">
-            </div>
-        </div>
-    </div>
+    <div class="d-none row" id="chart">
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="ambarchart6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 </div>
+
 </body>
-<script src="{% static 'js/html2canvas.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/jspdf.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/api_customer.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/api_request.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<!-- start chart js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- start highcharts js -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- start zingchart js -->
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+    zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
+    </script>
+    <!-- start amchart js -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <!-- all line chart activation -->
+<script src="{% static 'srtdash/assets/js/line-chart.js' %}"></script>
+    {% comment %}<script src="assets/js/line-chart.js"></script>{% endcomment %}
+    <!-- all bar chart activation -->
+<script src="{% static 'srtdash/assets/js/bar-chart.js' %}"></script>
+    {% comment %}<script src="assets/js/bar-chart.js"></script>{% endcomment %}
+    <!-- all pie chart -->
+<script src="{% static 'srtdash/assets/js/pie-chart.js' %}"></script>
+    {% comment %}<script src="assets/js/pie-chart.js"></script>{% endcomment %}
+    <!-- others plugins -->
+<script src="{% static 'srtdash/assets/js/plugins.js' %}"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}"></script>
+    {% comment %}<script src="assets/js/plugins.js"></script>
+    <script src="assets/js/scripts.js"></script>{% endcomment %}
 <script>
 
-    let nation_data1 = {
-        cname : 'nation1',  // 인스턴스 명과 일치해야함
-        table_id: 'item_nation',
-        range: 5,
-        page_size: 15,
-    };
+    $(document).ready(function() {
+    $("#alive-check").click(function() {
+         api_gp('/getAlivecheck/', 'GET', {}, (data) => {
+            alert(data.results);
+            {% comment %}console.table(data){% endcomment %}
+        });
+    });
 
-    let nation1 = new Pnations(nation_data1, ordering_search);
+    $("#Income").click(function() {
 
-    $(function(){
-        material_status_init()
-        ordering_search()
-    })
-    let order = ""
-    function material_status_init() {
-        function make_dropdown(data, selectors) {
-            let list = "<option value=''>선택 및 검색</option>";
-            let distinct = [];
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                if (selectors.includes('.item-code-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.code + "</option>";
-                } else if (selectors.includes('.nice_number-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.nice_number + "</option>";
-                } else if (selectors.includes('.item-name-dropdown')) {
-                    if (distinct.indexOf(item.name) === -1) {
-                        list += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        distinct.push(item.name);
-                    }
-                }else {
-                    list += "<option value='" + item.id + "'>" + item.name + "</option>";
-                }
-            }
-            $(selectors).html(list);
-            $(selectors).select2({width: '100%'});
-        }
+        {% comment %}navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
 
-        api_gp('/items_part/', 'GET', {}, (data) => {
-            make_dropdown(data, '.item-code-dropdown-search');
-            make_dropdown(data, '.item-name-dropdown-search');
-            make_dropdown(data, '.nice_number-dropdown-search');
+        if (navigator.getUserMedia) {
+               navigator.getUserMedia (
+                  {audio: true},
+                  function(stream) {
+                     // 마이크 입력 스트림을 처리하는 코드
+                  },
+                  function(err) {
+                     console.log("The following error occurred: " + err.name);
+                  }
+               );
+            } else {
+               console.log("getUserMedia not supported");
+            }{% endcomment %}
+
+        let audioContext = new AudioContext();
+        let mediaStreamSource = null;
+
+        navigator.getUserMedia({audio:true}, function(stream) {
+            mediaStreamSource = audioContext.createMediaStreamSource(stream);
+            alert("mediaStreamSource   : " + mediaStreamSource);
+            // 스트림을 처리하는 코드 작성
+        }, function(error) {
+            console.log("Error getting audio");
         });
 
 
-        // 브랜드
-        api_gp('/codes_select/?group=127&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.brand-dropdown-search');
-        });
+        {% comment %}api_gp('/recognize/', 'GET', {}, (data) => {
+             console.log(data.results)
+             alert(data.results)
+             if(data.results.length > 0){
+                 $('#chart').removeClass('d-none row').addClass('row');
+             }
 
-        // 제품군
-        api_gp('/codes_select/?group=128&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_group-dropdown-search');
-        });
+        });{% endcomment %}
+    });
 
-    }
-    function ordering_search(ordering){
-        let query ="?"
-
-        let brand = ($('#brand_search option:selected').val() ? $('#brand_search option:selected').val() : "");
-        let item_group = ($('#item_group_search option:selected').val() ? $('#item_group_search option:selected').val() : "");
-        let nice_number = ($('#nice_number_search option:selected').val() ? $('#nice_number_search option:selected').val() : "");
-        let item_code = ($('#item_code_search option:selected').val() ? $('#item_code_search option:selected').val() : "");
-
-
-        let multiSearch = $("#multiSearch").val()
-
-
-        if (brand !== '') query += "brand=" + brand + "&";
-        if (item_group !== '') query += "item_group=" + item_group + "&";
-        if (nice_number !== '') query += "nice_number=" + nice_number + "&";
-        if (item_code !== '') query += "item_code=" + item_code + "&";
-        if (multiSearch !=='') query += 'search=' + multiSearch +"&"
-
-         if (ordering === '' || ordering === null || ordering=== undefined ){
-        } else {
-              order === ordering ? order = "-" +ordering : order = ordering
-        }
-        $(".sorting_item_name").html("품명▽")
-        $(".sorting_item_code").html("품번▽")
-        $(".sorting_item_nice_number").html("나이스번호▽")
-        switch(order){
-            case "name":
-                $(".sorting_item_name").html("품명▼")
-                break;
-            case "-name":
-                $(".sorting_item_name").html("품명▲")
-                break;
-            case "code":
-                $(".sorting_item_code").html("품번▼")
-                break;
-            case "-code":
-                $(".sorting_item_code").html("품번▲")
-                break;
-             case "nice_number":
-                $(".sorting_item_nice_number").html("나이스번호▼")
-                break;
-            case "-nice_number":
-                $(".sorting_item_nice_number").html("나이스번호▲")
-                break;
-            default:
-                break;
-        }
-           query += "ordering=" + order + "&";
-         query += `page=${nation1.page}` + "&"
-        query += 'safe_amount=1'
-        api_gp(`/items/calculate/${query}`, "GET", {}, (done) => {
-            draw_item_amount(done.results);
-            nation1.nation_display(done)
-        });
-    }
-    function draw_item_amount(data){
-        let rows = ""
-        let result = []
-        for(let i=0; i<data.length; i++){
-             data[i].total <= 0 ?
-            result.push(data[i]) : result.unshift(data[i])
-        }
-        for(let i=0; i<result.length; i++){
-            let item = result[i]
-            let row = `<tr>
-                    <td>${item.division_name}</td>
-                    <td title='${item.brand_name}' data-toggle="tooltip">${nullapply(item.brand_name ? item.brand_name.length >10 ? item.brand_name.slice(0,10) + "...": item.brand_name : "")}</td>
-                    <td title='${item.item_group_name}' data-toggle="tooltip">${nullapply(item.item_group_name ? item.item_group_name.length >10 ? item.item_group_name.slice(0,10) + "...": item.item_group_name : "")}</td>
-                    <td title='${item.name}' data-toggle="tooltip">${nullapply(item.name ? item.name.length >10 ? item.name.slice(0,10) + "...": item.name : "")}</td>
-                    <td title='${item.code}' data-toggle="tooltip">${nullapply(item.code ? item.code.length >10 ? item.code.slice(0,10) + "...": item.code : "")}</td>
-                    <td title='${item.nice_number}' data-toggle="tooltip">${nullapply(item.nice_number ? item?.nice_number.length >10 ? item.nice_number.slice(0,10) + "...": item.nice_number : "")}</td>
-                    <td title='${item.detail}' data-toggle="tooltip">${nullapply(item.detail ? item.detail.length >10 ? item.detail.slice(0,10) + "...": item.detail : "")}</td>
-                    <td title='${item.shape}' data-toggle="tooltip">${nullapply(item.shape ? item.shape.length >10 ? item.shape.slice(0,10) + "...": item.shape : "")}</td>
-                    <td>${(item.stock < item.safe_amount ? `<span style="color: red">${item.stock}</span>` : item.stock )}</td>
-                    <td>${item.safe_amount}</td>
-                    </tr>`
-            rows += row
-
-        }
-        $("#amount_inform_tbody").html(rows)
-    }
+});
 
 </script>
 </html>

@@ -1,6 +1,8 @@
 from django.db import transaction
 from django.db.models import Q
+from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from requests import Response
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -9,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import OrderingFilter
 
 from KPI.kpi_views import kpi_log
+from api.base.base_form import item_fm
 from api.models import ItemIn, ItemMaster, CodeMaster
 from api.permission import MesPermission
 from api.serializers import ItemInSerializer
@@ -34,7 +37,7 @@ class ItemInViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemInViewSet", "get_queryset", False)
         qs = ItemIn.objects.filter(enterprise=self.request.user.enterprise).all().order_by('-id')
-        print(self.request.query_params)
+        # print(self.request.query_params)
 
         if 'total_search' in self.request.query_params:
             total_search = str(self.request.query_params['total_search'])
@@ -100,7 +103,7 @@ class ItemInViewSet(viewsets.ModelViewSet):
         return qs
 
     def list(self, request, *args, **kwargs):
-        return super().list(request, request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):

@@ -1,3 +1,6 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Sum, Case, When, F, IntegerField, Avg
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
@@ -6,9 +9,9 @@ from django.shortcuts import render
 # Create your views here.
 from api.Item.item_form import item_form
 from api.base.base_form import customer_fm, user_fm, facilities_fm, item_fm, order_company_fm, group_code_fm, \
-    request_fm, estimate_fm, ordering_fm
+    request_fm, estimate_fm, ordering_fm, enterprise_fm
 from api.form import Search_Customer1, Search_Code
-from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster
+from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth
 from api.orderpurchase.orderpurchase_form import orderpurchase_form
 from customer_manage.form import Search_Customer
 
@@ -47,6 +50,7 @@ def customer(request):
 
 def customerg1(request):
     return render(request, 'basic_information/customer_g1.html', {})
+
 
 def user(request):
     context = {}
@@ -155,7 +159,10 @@ def bom_add(request):
 
 
 def material_input(request):
-    return render(request, 'material/material_input.html', {})
+    context = {}
+    context['cu'] = customer_fm(request.GET, request.COOKIES['enterprise_name'])
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    return render(request, 'material/material_input.html', context)
 
 
 def material_outorder(request):
@@ -490,6 +497,26 @@ def Alert(request):  # 건강생활연구소
 
 def Rest_kpi(request):  # 건강생활연구소
     return render(request, 'basic_information/rest_kpi.html', {})
+
+
+def Menumaster(request):
+    allMenu = MenuMaster.objects.filter(type='L').order_by('id')
+    useMenu = MenuMaster.objects.filter(menuauth__enterprise=request.COOKIES.get("enterprise_id")
+                                        , menuauth__user=request.COOKIES.get('user_id')
+                                        , menuauth__use_flag='Y'
+                                        , menuauth__del_flag='N'
+                                        , menuauth__parent_id=0).order_by('menuauth__order')
+
+    enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
+    context = {}
+    context['allMenu'] = allMenu
+    context['useMenu'] = useMenu
+    context['ep'] = enter
+    return render(request, 'basic_information/menumaster.html', context)
+
+
+def ColumnConfig(request):
+    return render(request, 'basic_information/columnconfig.html', {})
 
 
 def kpi_pop(request):

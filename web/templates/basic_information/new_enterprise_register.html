@@ -2,102 +2,64 @@
 <html>
 <header>
     {% include "header.html" %}
+
+    <style>
+        .col-12 {
+          height: 100vh; /* vh 단위를 사용하여 뷰포트의 100% 높이로 설정합니다. */
+        }
+
+    </style>
 </header>
 <body>
 
 {% load static %}
 
-<div class="row no-gutters" id="root">
-    <div class="col-12">
-        <h5 class="m-2"><strong>업체 등록</strong></h5>
-        <div class="card m-2">
-            <div class="card-body p-2">
-                <!-- 본문 -->
-                <form class="content-search row no-gutters content-input-group" id="enterprise_register_content">
-                    {% csrf_token %}
-                    <div class="content-title col-1 align-self-stretch">
-                        등록
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="row">
+    <div class="col-lg-12 col-ml-12 mt-3">
+        <div class="card">
+            <form class="mt-3 ml-3">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">기업코드</span>
                     </div>
-                    <div class="content-input-group col-2 px-0">
-                        <div class="content-input-group-header">
-                            <label><strong>*</strong>기업코드</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <input class="form-control" id="new_enterprise_register_search_code" name="code">
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label><strong>*</strong>기업명</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <input class="form-control" id="search_name_regist_ent_name" name="name">
-                        </div>
-                    </div>
-                    <div class="content-input-group col-2 px-0">
-                        <div class="content-input-group-header">
-                            <label>관리명</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <input class="form-control" id="search_name_manage" name="manage">
-                        </div>
-                    </div>
-                    <div class="col-1 px-0 ml-2 mr-2">
-                        <a class="btn button-custom2 w-100" role="button" onclick="add()">등록</a>
-                    </div>
+                    <input type="text" class="form-control col-sm-2">
 
-                    <div class="col-1 px-0 mr-2">
-                        <a class="btn button-custom2 w-100" role="button" onclick="enterprise_register_edit()">수정</a>
-                        {#                          <button#}
-                        {#                            type="button"#}
-                        {#                            class="btn button-custom2 w-100"#}
-                        {#                            onclick="enterprise_register_edit()"#}
-                        {#                          >#}
-                        {#                            수정#}
-                        {#                          </button>#}
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">기업명</span>
                     </div>
-                    <div class="col-1 px-0 mr-2">
-                        {#                          <button#}
-                        {#                            type="button"#}
-                        {#                            class="btn button-custom2 w-100"#}
-                        {#                            onclick="enterprise_register_delete()"#}
-                        {#                          >#}
-                        {#                            삭제#}
-                        {#                          </button>#}
+                    <input type="text" class="form-control col-sm-2">
 
-                        <a class="btn button-custom2 w-100" role="button" onclick="enterprise_register_delete()">삭제</a>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">관리명</span>
                     </div>
-                </form>
-            </div>
+                    <input type="text" class="form-control col-sm-2">
+                    <div class="gradient-buttons ml-5 col-sm-4">
+                        <button type="button" class="btn btn-secondary col-sm-3">등록</button>
+                        <button type="button" class="btn btn-secondary col-sm-3">수정</button>
+                        <button type="button" class="btn btn-secondary col-sm-3">삭제</button>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+            <!-- table-->
+            <div class="row no-gutters">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="new_enterprise_register_data-table">
 
-        <!-- 테이블 -->
-        <div class="card m-2">
-            <div class="row no-gutters card-body p-2">
-                <div class="content-table col-12" style="height: 600px;">
-                    <table id="new_enterprise_register_data-table" class="table table-sm text-center">
-                        <colgroup>
-                            <col style="width: 10%">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>순번</th>
-                            <th>기업코드</th>
-                            <th>기업명</th>
-                            <th>관리명</th>
-                        </tr>
-                        </thead>
-                        <tbody id="new_enterprise_register_main-tbody"></tbody>
-                    </table>
-
-                    <div class="row no-gutters d-flex justify-content-center" id="item_nation">
+                            </table>
+                        </div>
                     </div>
-
                 </div>
             </div>
+
         </div>
-
-
     </div>
 </div>
 
@@ -105,6 +67,7 @@
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
 
 <script>
+
     // draw main table
     let enterprise_register_columns = [
         "code",
@@ -129,7 +92,7 @@
 
     // starting point
     $(function () {
-        refresh();
+        //refresh();
     });
 
     function refresh_data() {
