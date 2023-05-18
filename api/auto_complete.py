@@ -573,7 +573,11 @@ class Item_fee_rate(autocomplete.Select2QuerySetView):
 # 회사 정보 조회
 class enterprise_name_ac(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = EnterpriseMaster.objects.all()
+        is_super = self.request.COOKIES.get('is_superuser')
+        if is_super == 'true':
+            qs = EnterpriseMaster.objects.all()
+        else:
+            qs = EnterpriseMaster.objects.filter(id=self.request.COOKIES.get('enterprise_id'))
 
         return qs
 

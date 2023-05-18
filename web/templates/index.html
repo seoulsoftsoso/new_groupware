@@ -48,6 +48,18 @@
                 <!-- tab contents -->
 
                     <div class="tab-content col-lg-12" id="tab_content-list" style="height:3000px;">
+                        <div class="page-title-area mb-3">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+                            <h4 class="page-title pull-left" id="page_title">WelCome!</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <!-- 오른쪽 공간 활용 -->
+                    </div>
+                </div>
+            </div>
 
                     </div>
                             {% comment %}</div>
@@ -67,12 +79,7 @@
 <script src="{% static 'srtdash/assets/js/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'srtdash/assets/js/jquery.slicknav.min.js' %}" type="text/javascript"></script>
 
-    <!-- all line chart activation -->
 
-    <script src="{% static 'srtdash/assets/js/line-chart.js' %}"></script>
-    <!-- all pie chart -->
-
-    <script src="{% static 'srtdash/assets/js/pie-chart.js' %}"></script>
     <!-- others plugins -->
 
     <script src="{% static 'srtdash/assets/js/plugins.js' %}"></script>
@@ -126,6 +133,9 @@
         let target = null;
 
         let tabs = $("#tab_header-list .nav-item .nav-link");
+
+        let title_name = $("." + _title + ":first").text();
+            $('#page_title').text(title_name);
 
         for (let i = 0; i < tabs.length; i++) {
             // to get already-loaded one.
@@ -221,6 +231,7 @@
         if (title.substring(0, 2) == 'sm') {
 
             title_name = $("." + title + ":first").text();
+
         } else {
             title_name = title;
         }

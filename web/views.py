@@ -11,7 +11,7 @@ from api.Item.item_form import item_form
 from api.base.base_form import customer_fm, user_fm, facilities_fm, item_fm, order_company_fm, group_code_fm, \
     request_fm, estimate_fm, ordering_fm, enterprise_fm
 from api.form import Search_Customer1, Search_Code
-from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth
+from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth, EnterpriseMaster
 from api.orderpurchase.orderpurchase_form import orderpurchase_form
 from customer_manage.form import Search_Customer
 
@@ -107,7 +107,10 @@ def auth_customer(request):
 
 
 def new_enterprise(request):
-    return render(request, 'basic_information/new_enterprise_register.html', {})
+    qs = EnterpriseMaster.objects.all().order_by('code')
+    context = {}
+    context['data'] = qs
+    return render(request, 'basic_information/new_enterprise_register.html', context)
 
 
 def print_page(request):
@@ -505,7 +508,12 @@ def Menumaster(request):
                                         , menuauth__user=request.COOKIES.get('user_id')
                                         , menuauth__use_flag='Y'
                                         , menuauth__del_flag='N'
-                                        , menuauth__parent_id=0).order_by('menuauth__order')
+                                        , menuauth__parent_id=0
+                                        ).annotate(alias=Coalesce('menuauth__alias', F('name'))
+                                                   ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'
+                                                            , 'created_by_id', 'created_at', 'updated_by_id',
+                                                            'updated_at'
+                                                            , 'del_flag').order_by('menuauth__order')
 
     enter = enterprise_fm(request.GET, request.COOKIES['enterprise_name'])
     context = {}

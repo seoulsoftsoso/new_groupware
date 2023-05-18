@@ -124,16 +124,16 @@
                 <div class="col-sm-8">
                   <div>
                       <ul class="list-group" id="dropzone">
-                        {% for item in useMenu %}
+                        {% comment %}{% for item in useMenu %}
                           <li class="list-group-item d-flex justify-content-between align-items-center" data-value={{ item.id }}>
                               <button type="button" class="btn btn-info selected"><span class="ti-support mb-3"></span>
                           </button>
-                              <strong>{{ item.name }}</strong>
-
+                              <strong>{{ item.alias_name }}</strong>
+                              <input class="form-control ml-1 mr-1" type="text" value="영업">
                           <button type="button" class="btn btn-default btn-xs remove"><span class="ti-trash mb-3"></span>
                           </button>
                           </li>
-                      {% endfor %}
+                      {% endfor %}{% endcomment %}
                       </ul>
                   </div>
                   <button class="btn btn-primary pull-right" onclick="lmenuSubmit()">저장</button>
@@ -218,7 +218,8 @@
                 let dataValue = $(ui.draggable.html()).data('value')
                 let $el = $('<li class="list-group-item d-flex justify-content-between align-items-center" data-value="'+dataValue+'">');
                 $el.append($('<button type="button" class="btn btn-info"><span class="ti-support mb-3"></span></button>').click(function () { showSubmenu(); }));
-                $el.append('<strong>'+ dropText + '</strong>');
+                //$el.append('<strong>'+ dropText + '</strong>');
+                $el.append('<input class="form-control ml-1 mr-1" type="text" value='+dropText+'>');
                 $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="ti-trash mb-3"></span></button></li>').click(function () { $(this).parent().detach(); }));
                 $(this).append($el);
             }
@@ -313,9 +314,10 @@
         if (formchk){
             $('#dropzone li').each(function(index) {
                 let menuId = $(this).data('value');
-                let menuName = $(this).find('strong').text();
+                let menuName = $(this).find('input').val();
 
                 idList.push(menuId);
+                nameList.push(menuName);
             });
 
         //formData['menuid'] = idList;
@@ -323,12 +325,16 @@
             let allData = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
             menuid: idList,
+            alias: nameList,
             user_id: user_id,
             client: client
         }
 
         api_gp(`/basic_information/menuauth_create/`, "post", allData, (done) => {
-                    done = done.results[0]
+                     done = done.success
+            if(done){
+                alert('등록완료')
+            }
 
                 })
         }
@@ -371,13 +377,15 @@
       });
     }
     function rightMenuDraw(data){
-        let useSubMenu = JSON.parse(data.usesubmenu);
+        let useSubMenu = data.usesubmenu;
+
         let rSubList = ''
         $('#rightdropzone').empty();
         useSubMenu.forEach(function (sub){
 
-           rSubList = $('<li class="list-group-item d-flex justify-content-between align-items-center" data-value="'+sub.pk+'">');
-           rSubList.append('<strong>'+ sub.fields.name + '</strong>');
+           rSubList = $('<li class="list-group-item d-flex justify-content-between align-items-center" data-value="'+sub.id+'">');
+           // rSubList.append('<strong>'+ sub.fields.name + '</strong>');
+           rSubList.append('<input class="form-control ml-1 mr-1" type="text" value="'+sub.alias+'">');
            rSubList.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="ti-trash mb-3"></span></button></li>').click(function () { $(this).parent().detach(); }));
            $('#rightdropzone').append(rSubList);
         })
@@ -415,7 +423,8 @@
     function getUseLmenulist(user_id){
         let client = $('#id_enterprise_name_ac').val();
         api_gp(`/basic_information/getlmenulist/`, "GET", {'client': client, 'user_id': user_id}, (done) => {
-                   let data = JSON.parse(done.results)
+
+            let data = done.results
                     drawListbyUser(data);
 
                 })
@@ -427,9 +436,10 @@
         $('#dropzone').empty();
         data.forEach(function (sub){
 
-           rSubList = $('<li class="list-group-item d-flex justify-content-between align-items-center" data-value="'+sub.pk+'">');
+           rSubList = $('<li class="list-group-item d-flex justify-content-between align-items-center" data-value="'+sub.id+'">');
            rSubList.append($('<button type="button" class="btn btn-info selected"><span class="ti-support mb-3"></span></button>').click(function () { showSubmenu($(this)); }));
-           rSubList.append('<strong>'+ sub.fields.name + '</strong>');
+           //rSubList.append('<strong>'+ sub.fields.name + '</strong>');
+           rSubList.append('<input class="form-control ml-1 mr-1" type="text" value="'+sub.alias+'">');
            rSubList.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="ti-trash mb-3"></span></button></li>').click(function () { $(this).parent().detach(); }));
            $('#dropzone').append(rSubList);
 
@@ -439,8 +449,9 @@
     }
 
     function rmenuSubmit(){
-        console.log("click_Lmenu   :" + click_Lmenu)
+
         let idList = [];
+        let nameList = [];
         let client = $('#id_enterprise_name_ac').val();
 
         let user_id = $("#id_client_name option:selected").val();
@@ -450,16 +461,16 @@
         if (formchk){
             $('#rightdropzone li').each(function(index) {
                 let menuId = $(this).data('value');
-                let menuName = $(this).find('strong').text();
+                let menuName = $(this).find('input').val();
 
                 idList.push(menuId);
+                nameList.push(menuName);
             });
-
-        //formData['menuid'] = idList;
 
             let allData = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 menuid: idList,
+                alias: nameList,
                 user_id: user_id,
                 client: client,
                 parent_id: click_Lmenu
