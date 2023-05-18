@@ -1,3 +1,5 @@
+from django.db.models import F
+from django.db.models.functions import Coalesce
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -34,7 +36,12 @@ class MenuHandler(viewsets.ModelViewSet):
         # 해당 유저의 메뉴 정보 가져오기
         qs = MenuMaster.objects.filter(menuauth__enterprise_id=self.request.user.enterprise_id
                                        , menuauth__user_id=self.request.user.id,
-                                       menuauth__del_flag='N').order_by('menuauth__order')
+                                       menuauth__del_flag='N'
+                                       ).annotate(alias=Coalesce('menuauth__alias', F('name'))
+                                                  ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'
+                                                           , 'created_by_id', 'created_at', 'updated_by_id',
+                                                           'updated_at'
+                                                           , 'del_flag').order_by('menuauth__order')
 
         return qs
 

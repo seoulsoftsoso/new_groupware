@@ -3733,6 +3733,7 @@ class UnitPriceSerializer(BaseSerializer):
 
 
 class MenuSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='alias')
 
     class Meta:
         model = MenuMaster

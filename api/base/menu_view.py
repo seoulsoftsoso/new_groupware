@@ -2,6 +2,8 @@ import json
 
 from django.core import serializers
 from django.db import transaction
+from django.db.models import F
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -17,10 +19,14 @@ def getLmenuList(request):
                                    , menuauth__user=user_id
                                    , menuauth__use_flag='Y'
                                    , menuauth__del_flag='N'
-                                   , menuauth__parent_id=0).order_by('menuauth__order')
-    qs_json = serializers.serialize('json', qs)
-    qs_json = qs_json.encode('utf-8').decode('unicode_escape')
-    qs_json = json.dumps(json.loads(qs_json), ensure_ascii=False)
+                                   , menuauth__parent_id=0
+                                   ).annotate(alias=Coalesce('menuauth__alias', F('name'))
+                                              # ).annotate(alias=F('menuauth__alias')
+                                              ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'
+                                                       , 'created_by_id', 'created_at', 'updated_by_id', 'updated_at'
+                                                       , 'del_flag').order_by('menuauth__order')
+
+    qs_json = list(qs)
 
     context = {}
     context['results'] = qs_json
@@ -40,7 +46,7 @@ def getSubMenuList(request):
     if userId:
         user = UserMaster.objects.get(id=userId)
 
-    if userId == 1:
+    if user.is_superuser:
         menutype.append('M')
 
     if enterpriseId:
@@ -58,14 +64,16 @@ def getSubMenuList(request):
                                    , menuauth__parent_id=parent
                                    , menuauth__del_flag='N'
                                    , type__in=menutype
-                                   ).order_by('menuauth__order').distinct()
+                                   ).annotate(alias=Coalesce('menuauth__alias', F('name'))
+                                              ).values('id', 'code', 'alias', 'path', 'type', 'comment', 'i_class'
+                                                       , 'created_by_id', 'created_at', 'updated_by_id', 'updated_at'
+                                                       , 'del_flag').order_by('menuauth__order').distinct()
 
     ql = MenuMaster.objects.filter(type__in=menutype)
 
     # 직렬화된 JSON 문자열로 변환 (인코딩 설정-한글깨짐방지)
-    qs_json = serializers.serialize('json', qs)
-    qs_json = qs_json.encode('utf-8').decode('unicode_escape')
-    qs_json = json.dumps(json.loads(qs_json), ensure_ascii=False)
+
+    qs_json = list(qs)
     ql_json = serializers.serialize('json', ql)
     ql_json = ql_json.encode('utf-8').decode('unicode_escape')
     ql_json = json.dumps(json.loads(ql_json), ensure_ascii=False)
@@ -93,6 +101,7 @@ class Menuauth(View):
     def post(self, request, *args, **kwargs):
 
         menulist = request.POST.getlist('menuid[]', '')
+        aliaslist = request.POST.getlist('alias[]', '')
         userId = request.POST.get('user_id', '')
         client = request.POST.get('client', '')
         parentId = request.POST.get('parent_id', '')
@@ -110,15 +119,17 @@ class Menuauth(View):
 
             auto = 5
 
-        for unit in menulist:
+        # 등록되어있는 메뉴들을 삭제한다.
 
-            menuobj = self.get_queryset().filter(menu_id=unit, use_flag='Y', parent_id=parentId,
-                                                 enterprise_id=client, user_id=userId).first()
-            if menuobj:
-                menuobj.delete()
+        self.get_queryset().filter(use_flag='Y', parent_id=parentId,
+                                   enterprise_id=client, user_id=userId).delete()
+
+        for index, unit in enumerate(menulist):
+            alias = aliaslist[index] if index < len(aliaslist) else None
 
             authObj = Menu_Auth.objects.create(
                 menu_id=unit,
+                alias=alias,
                 enterprise_id=client,
                 user_id=userId,
                 order=cnt,
