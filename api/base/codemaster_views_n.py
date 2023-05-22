@@ -265,12 +265,17 @@ def get_results(qs):
         else:
             etc = ''
 
+        if (row.enable):
+            enable = '사용'
+        else:
+            enable = '미사용'
+
         appendResult({
             'id': row.id,
 
             'code': row.code,
             'name': row.name,
-            'enable': row.enable,
+            'enable': enable,
 
             'group_id': row.group.id,
 
