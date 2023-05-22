@@ -358,7 +358,7 @@
             for (let i = 0; i < data.length; i++) {
                 let item = data[i];
                 option = new Option(item.text, item.id, true, true);
-                $("#id_client_name").append(option).trigger('change');
+                $("#id_client_name").append(option).select2().trigger('change');
 
             }
             option = new Option('선택', '', true, true);
