@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
-<header>{% include "header.html" %}</header>
+<header>
+    {% include "header.html" %}
+    <style>
+
+</style>
+</header>
 
 <body style="overflow: hidden;">
 <!-- {#{% extends 'index.html' %}#} -->
 {% load static %}
 {{ cu.media }}
+{% csrf_token %}
 <!-- {##}
 {#{% block title %}#}
 {#    <title>거래처 기준정보관리</title>#}
@@ -13,57 +19,184 @@
 
 {#{% block content %}#} -->
 
-<!-- 검색 -->
-<div class="card m-2">
-    <div class="card-body p-2">
-        <!-- 본문 -->
-        <div
-                class="content-search row no-gutters align-items-center content-input-group"
-        >
-            <div class="content-title col-1 align-self-stretch">검색</div>
-            <div class="col-11">
-                <div class="row no-gutters">
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>거래구분</label>
-                        </div>
-                        <div
-                                class="input-group"
-                                id="customer_type_search"
-                        >
-                            {{ cu.cu_division_sch }}
 
-                            {#                            <select#}
-                            {#                                    name="customer_division"#}
-                            {#                                    class="form-control"#}
-                            {#                                    id="customer_search1"#}
-                            {#                            ></select>#}
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 검색  -->
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
+
+                            <div class="row ml-3">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">거래구분</label>
+                                        <div class="content-input-group-input">
+                                        {{ cu.cu_division_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">거래처명</label>
+                                        <div class="content-input-group-input">
+                                         {{ cu.cu_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 clearfix">
+                    <div class="gradient-buttons ml-5 col-md-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="search_click();"><i class="ti-search"></i>  검색</button>
+                    </div>
+                </div>
+                <div class="col-md-3 mt-4">
+                    <ul class="notification-area pull-right">
+                        <li class="settings-btn">
+                            <i class="ti-settings"></i>
+                        </li>
+                    </ul>
+                </div>
+                            </div>
+
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- 테이블  -->
+        <div class="row no-gutters ml-4 mr-4">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <table id="customer_data-table" class="table table-hover table-striped table-bordered display nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>순번</th>
+                                        <th>거래처코드</th>
+                                        <th>거래처명</th>
+                                        <th>거래구분</th>
+                                        <th>사업자번호</th>
+                                        <th>대표자명</th>
+                                        <th>업태</th>
+                                        <th>종목</th>
+                                        <th>우편번호</th>
+                                        <th>주소</th>
+                                        <th>회사전화번호</th>
+                                        <th>팩스번호</th>
+                                        <th>담당자</th>
+                                        <th>직급</th>
+                                        <th>담당자 연락처</th>
+                                        <th>E-mail</th>
+                                        <th>비고</th>
+                                        <th>등록자</th>
+                                        <th>등록일</th>
+                                        <th>최종변경자</th>
+                                        <th>최종변경일</th>
+                                        <th class="d-none"></th>
+                                        <th class="d-none"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customer_tbody"></tbody>
+
+                            </table>
 
                         </div>
                     </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>거래처 명</label>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- offset area start -->
+<div class="offset-area">
+    <div class="offset-close"><i class="ti-close"></i></div>
+    <ul class="nav offset-menu-tab">
+        <li><a class="active" data-toggle="tab" href="#detail_customer">편집</a></li>
+        <li></li>
+    </ul>
+    <div class="offset-content tab-content">
+        <div id="detail_customer" class="tab-pane fade in show active">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation">
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for=""><strong>*</strong>거래처코드</label>
+                                    <input type="text" class="form-control form-control-sm" name="customer_code" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for=""><strong>*</strong>거래처명</label>
+                                    <input type="text" class="form-control form-control-sm" name="customer_name" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for=""><strong>*</strong>사업자번호</label>
+                                    <input type="text" class="form-control form-control-sm" name="licensee_number" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">대표자명</label>
+                                    <input type="text" class="form-control form-control-sm" name="customer_owner_name" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">업태</label>
+                                    <input type="text" class="form-control form-control-sm" name="business_conditions" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">종목</label>
+                                    <input type="text" class="form-control form-control-sm" name="business_event" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">우편번호</label>
+                                    <input type="text" class="form-control form-control-sm" name="office_post_code" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">주소</label>
+                                    <input type="text" class="form-control form-control-sm" name="office_address" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">전화번호</label>
+                                    <input type="text" class="form-control form-control-sm" name="office_phone" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">팩스</label>
+                                    <input type="text" class="form-control form-control-sm" name="office_fax_number" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">담당자</label>
+                                    <input type="text" class="form-control form-control-sm" name="person_in_charge" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">직급</label>
+                                    <input type="text" class="form-control form-control-sm" name="charge_level" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">담당자연락처</label>
+                                    <input type="text" class="form-control form-control-sm" name="charge_phone" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">E-mail</label>
+                                    <input type="text" class="form-control form-control-sm" name="email" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">거래구분</label>
+                                    <div class="content-input-group-input">
+                                    {{ cu.cu_division_add }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">비고</label>
+                                    <input type="text" class="form-control form-control-sm" name="customer_note" autocomplete="off"/>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="gradient-buttons pull-right">
+                            <div class="btn btn-primary mr-3" onclick="customer_refresh()"> 초기화 </div>
+                            <div class="btn btn-primary mr-3" id="customer_add-sm-1"> 등 록 </div>
+                            <div class="btn btn-primary mr-3" id="customer_edit-sm-1"> 수 정 </div>
+                            <div class="btn btn-primary mr-3" id="customer_delete-sm-1"> 삭 제 </div>
                         </div>
-                        <div
-                                class="input-group"
-                                id="customer_name_search"
-                        >
-                            {{ cu.cu_name_sch }}
-                            {#                            <select#}
-                            {#                                    name="customer_name"#}
-                            {#                                    class="form-control"#}
-                            {#                                    id="customer_search2"#}
-                            {#                            ></select>#}
-                        </div>
-                    </div>
-                    <div class="col-1 px-0">
-                        <button
-                                class="btn button-search rounded-0 w-100 h-100"
-                                onclick="search_click()"
-                        >
-                            검색
-                        </button>
                     </div>
                 </div>
             </div>
@@ -71,255 +204,8 @@
     </div>
 </div>
 
-<!-- 내용 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <form id="detail_customer" class="content-content w-100">
-            <!-- TODO: submit 시 validation 구현 -->
-            {% csrf_token %}
-            <div class="row no-gutters w-100 mb-2">
-                <div class="col-1 content-title">내용</div>
-                <div class="col-11">
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>거래처코드<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="customer_code"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>거래처명<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="customer_name"/>
-                            </div>
-                        </div>
 
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>사업자번호<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="licensee_number"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>대표자명</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="customer_owner_name"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>업태</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="business_conditions"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>종목</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="business_event"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-2">
-                            <div class="content-input-group-header">
-                                <label>우편번호</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="office_post_code"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-4">
-                            <div class="content-input-group-header">
-                                <label>주소</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="office_address"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>전화번호</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="office_phone"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>팩스번호</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="office_fax_number"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-2">
-                            <div class="content-input-group-header">
-                                <label>담당자</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="person_in_charge"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-4">
-                            <div class="content-input-group-header">
-                                <label>직급</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="charge_level"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>담당자 연락처</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="charge_phone"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>E-mail</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="email"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-2">
-                            <div class="content-input-group-header">
-                                <label>거래구분</label>
-                            </div>
-                            <div class="input-group">
-                                <!--
-                                <select
-                                        class="form-control h-100"
-                                        name="customer_division"
-                                ></select>
-                                -->
-                                {{ cu.cu_division_add }}
-                            </div>
-                        </div>
-                        <div class="content-input-group col-4">
-                            <div class="content-input-group-header col-2">
-                                <label>비고</label>
-                            </div>
-                            <div class="content-input-group-input col-10">
-                                <input class="form-control" name="customer_note"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row no-gutters w-100 mt-3 justify-content-end">
-                    <div class="col-1 px-0 mr-2">
-                        <button
-                                type="button"
-                                class="btn button-custom2 w-100"
-                                onclick="document.getElementById('file-selector').click();"
-                        >
-                            엑셀 업로드
-                        </button>
-                        <input
-                                type="file"
-                                id="file-selector"
-                                style="display: none"
-                                accept=".xlsx, .xls"
-                        />
-                    </div>
-                    <div class="col-1 px-0 mr-2">
-                        <button
-                                class="btn button-custom2 w-100"
-                                type="button"
-                                onclick="customer_refresh();"
-                        >
-                            초기화
-                        </button>
-                    </div>
 
-                    <div class="col-1 px-0 mr-2">
-                        <button class="btn button-custom2 w-100 add" type="button" onclick="customer_add()">
-                            추가
-                        </button>
-                    </div>
-                    <div class="col-1 px-0 mr-2">
-                        <button
-                                class="btn button-custom2 w-100"
-                                type="button"
-                                onclick="customer_edit();"
-                        >
-                            수정
-                        </button>
-                    </div>
-                    <div class="col-1 px-0">
-                        <button
-                                class="btn button-custom2 w-100"
-                                type="button"
-                                onclick="customer_remove();"
-                        >
-                            삭제
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-table col-12" style="overflow-y: hidden; height:420px;">
-            <table
-                    id="customer_data-table"
-                    class="table table-sm text-center"
-                    style="min-width: 1300px"
-            >
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>거래처코드</th>
-                    <th>거래처명</th>
-                    <th>거래구분</th>
-                    <th>사업자번호</th>
-                    <th>대표자명</th>
-                    <th>업태</th>
-                    <th>종목</th>
-                    <th>우편번호</th>
-                    <th>주소</th>
-                    <th>회사전화번호</th>
-                    <th>팩스번호</th>
-                    <th>담당자</th>
-                    <th>직급</th>
-                    <th>담당자 연락처</th>
-                    <th>E-mail</th>
-                    {#                    <th>사용구분</th>#}
-                    <th>비고</th>
-                    <th>등록자</th>
-                    <th>등록일</th>
-                    <th>최종변경자</th>
-                    <th>최종변경일</th>
-                </tr>
-                </thead>
-                <tbody id="customer_tbody"></tbody>
-            </table>
-
-            <div class="row no-gutters d-flex justify-content-center" id="customer_nation"
-                 style="margin-top: -20px;">
-            </div>
         </div>
     </div>
 </div>
@@ -354,7 +240,9 @@
 <script src="{% static 'js/api_customer.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
 <script>
+    let main_talbe = null;
     // 검색인자
     let cu_division_sch = null;
     let cu_name_sch = null;
@@ -365,7 +253,7 @@
 
     let customer_id;
     let customer_name;
-    let page1_size = 10;
+    let page1_size = 100000;
 
     let nation_data1 = {
         cname: 'nation1',  // 인스턴스 명과 일치해야함
@@ -377,19 +265,32 @@
     let nation1 = new Pnations(nation_data1, search); // 인스턴스 명
 
     $(function () {
+        main_table = $('#customer_data-table').DataTable({
+            scrollX: true,
+            "columnDefs": [
+                  {
+                    "targets": [21], // 숨길 컬럼의 인덱스(0부터 시작)
+                    "visible": false, // 컬럼 숨김
+                    "searchable": false // 숨긴 컬럼에 대한 검색 비활성화 (선택 사항)
+                  },
+                {
+                    "targets": [22], // 숨길 컬럼의 인덱스(0부터 시작)
+                    "visible": false, // 컬럼 숨김
+                    "searchable": false // 숨긴 컬럼에 대한 검색 비활성화 (선택 사항)
+                  }
+                ]
+            })
         main();
+
+        // 버튼 활성화
+        $("#customer_add-sm-1").prop('disabled', false).attr("class","btn btn-primary mr-3").on('click', function (){customer_add()})
+
+        $("#customer_edit-sm-1").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
+        $("#customer_delete-sm-1").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
     });
 
     function main() {
         search();
-    }
-
-    // 이거 있어야 되나???
-    window.onkeydown = function (event) {
-        if (event.keyCode == 116) {  // F5
-            event.returnValue = false;
-            refresh();
-        }
     }
 
     function refresh() {
@@ -423,219 +324,86 @@
             draw_customers_table(done);
         });
 
-        // for file upload
-        const fileSelector = document.getElementById("file-selector");
-        fileSelector.addEventListener("change", (event) => {
-            let form = new FormData();
-            let file = (fileSelector.files[0] ? fileSelector.files[0] : null);
-
-            form.append("csrfmiddlewaretoken", '{{ csrf_token }}')
-            form.append("excel", file)
-
-            api_excel_upload(form, () => {
-                alert("성공적으로 등록하였습니다.");
-
-                refresh_data();
-            });
-        });
     }
 
     function draw_customers_table(done) {
+        main_table.rows().remove().draw();
 
-        let data = done.results;
-        let num = (((nation1.page * 1) - 1) * nation_data1["page_size"]) + 1;
-        let rows = "";
-        for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            let created_date = item.created_at;
-            let updated_date = item.updated_at;
-            if (item.customer_code != 0) {
-                // append it
-                let row = "<tr id='" + item.id + "' style='cursor:pointer;'>";
-                row += "<td>" + (num + i) + "</td>";
-                row += "<td name='customer_code'>" + item.code + "</td>";
-                row += "<td name='customer_name'>" + item.name + "</td>";
-                row +=
-                    "<td name='customer_division' property='" +
-                    (item.division_id ? item.division_id : "") +
-                    "'>" +
-                    (item.division_name ? item.division_name : "") +
-                    "</td>";
-                row +=
-                    "<td name='licensee_number'>" + (item.licensee_number ? item.licensee_number : '') + "</td>";
-                row +=
-                    "<td name='customer_owner_name'>" + (item.owner_name ? item.owner_name : '') + "</td>";
-                row +=
-                    "<td name='business_conditions'>" +
-                    (item.business_conditions ? item.business_conditions : "") +
-                    "</td>";
-                row +=
-                    "<td name='business_event'>" +
-                    (item.business_event ? item.business_event : "") +
-                    "</td>";
-                row +=
-                    "<td name='office_post_code'>" +
-                    (item.postal_code ? item.postal_code : "") +
-                    "</td>";
-                row +=
-                    "<td name='office_address'>" +
-                    (item.address ? item.address : "") +
-                    "</td>";
-                row +=
-                    "<td name='office_phone'>" +
-                    (item.office_phone ? item.office_phone : "") +
-                    "</td>";
-                row +=
-                    "<td name='office_fax_number'>" +
-                    (item.office_fax ? item.office_fax : "") +
-                    "</td>";
-                row +=
-                    "<td name='person_in_charge'>" +
-                    (item.charge_name ? item.charge_name : "") +
-                    "</td>";
-                row +=
-                    "<td name='charge_level'>" +
-                    (item.charge_level ? item.charge_level : "") +
-                    "</td>";
-                row +=
-                    "<td name='charge_phone'>" +
-                    (item.charge_phone ? item.charge_phone : "") +
-                    "</td>";
-                row +=
-                    "<td name='email'>" + (item.email ? item.email : "") + "</td>";
-                {% comment %}row +=
-                    "<td name='customer_use_division'>" +
-                    (item.enable ? "사용" : "미사용") +
-                    "</td>";{% endcomment %}
-                row +=
-                    "<td name='customer_note'>" +
-                    (item.etc ? item.etc : "") +
-                    "</td>";
-                row += "<td name='created_by'>" + item.created_by + "</td>";
-                row +=
-                    "<td name='created_at'>" +
-                    created_date.substring(0, 4) +
-                    "-" +
-                    created_date.substring(5, 7) +
-                    "-" +
-                    created_date.substring(8, 10) +
-                    "</td>";
-                row += "<td name='updated_by'>" + item.updated_by + "</td>";
-                row +=
-                    "<td name='updated_at'>" +
-                    updated_date.substring(0, 4) +
-                    "-" +
-                    updated_date.substring(5, 7) +
-                    "-" +
-                    updated_date.substring(8, 10) +
-                    "</td>";
-
-                row += "</tr>";
-
-                rows += row;
-            }
-        }
-
-        nation1.nation_display(done);
-        $('#customer_tbody').html(rows);
-
-        // 클릭한 행 유지하게끔...
-        if (customer_id != null) {
-            $("#" + customer_id).addClass('clicked');
-        }
+        main_table.rows.add(formatData(done.results)).draw();
 
         $('#customer_tbody > tr').on('click', function () {
-            customer_id = $(this).attr("id");
-            customer_name = $(this).find("[name='customer_name']").text();
+            let data = main_table.row(this).data();
 
-            cu_click_division_id = $(this).find("[name='customer_division']").attr("property")
-            cu_click_division_name = $(this).find("[name='customer_division']").text();
+            setRowColor(this, 'M');
 
-            $("#detail_customer [name='customer_code']").val(
-                $(this).find("[name='customer_code']").text()
-            );
-            $("#detail_customer [name='customer_name']").val(
-                $(this).find("[name='customer_name']").text()
-            );
+            customer_id = data[21];
+            customer_name = data[2];
+
+            cu_click_division_id = data[22]
+            cu_click_division_name = data[3];
+
+            $("#detail_customer [name='customer_code']").val(data[1]);
+            $("#detail_customer [name='customer_code']").prop('disabled', true);
+            $("#detail_customer [name='customer_name']").val(customer_name);
 
             // add 항목중에 거래구분
             let option1 = new Option(cu_click_division_name, cu_click_division_id, true, true);
             $('#id_cu_division_add').append(option1).trigger('change');
 
-            /*
-            $("#detail_customer [name='customer_division']")
-                .val($(this).find("[name='customer_division']").attr("property"))
-                .trigger("change");
-             */
 
             $("#detail_customer [name='licensee_number']").val(
-                $(this).find("[name='licensee_number']").text()
+                data[4]
             );
+            $("#detail_customer [name='licensee_number']").prop('disabled', true);
             $("#detail_customer [name='customer_owner_name']").val(
-                $(this).find("[name='customer_owner_name']").text()
+               data[5]
             );
             $("#detail_customer [name='business_conditions']").val(
-                $(this).find("[name='business_conditions']").text()
+                data[6]
             );
             $("#detail_customer [name='business_event']").val(
-                $(this).find("[name='business_event']").text()
+                data[7]
             );
             $("#detail_customer [name='office_post_code']").val(
-                $(this).find("[name='office_post_code']").text()
+                data[8]
             );
             $("#detail_customer [name='office_address']").val(
-                $(this).find("[name='office_address']").text()
+                data[9]
             );
             $("#detail_customer [name='office_phone']").val(
-                $(this).find("[name='office_phone']").text()
+                data[10]
             );
             $("#detail_customer [name='office_fax_number']").val(
-                $(this).find("[name='office_fax_number']").text()
+                data[11]
             );
             $("#detail_customer [name='person_in_charge']").val(
-                $(this).find("[name='person_in_charge']").text()
+                data[12]
             );
             $("#detail_customer [name='charge_level']").val(
-                $(this).find("[name='charge_level']").text()
+                data[13]
             );
             $("#detail_customer [name='charge_phone']").val(
-                $(this).find("[name='charge_phone']").text()
+                data[14]
             );
             $("#detail_customer [name='email']").val(
-                $(this).find("[name='email']").text()
+                data[15]
             );
-            $("#detail_customer [name='customer_use_division']").val(
+            {% comment %}$("#detail_customer [name='customer_use_division']").val(
                 $(this).find("[name='customer_use_division']").text()
-            );
+            );{% endcomment %}
             $("#detail_customer [name='customer_note']").val(
-                $(this).find("[name='customer_note']").text()
+                data[16]
             );
 
-            // table click highlight
-            $(this).parent().find('tr').removeClass('clicked');
-            $(this).addClass('clicked');
+            // 버튼 활성화
+            $("#customer_add-sm-1").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
+
+            $("#customer_edit-sm-1").prop('disabled', false).attr("class","btn btn-primary mr-3").off('click').on('click', function (){customer_edit()})
+            $("#customer_delete-sm-1").prop('disabled', false).attr("class","btn btn-primary mr-3").off('click').on('click', function (){customer_remove()})
+
+
         });
     }
-
-
-    $('#detail_customer [name="business_event"]').keydown(function (e) {
-        let code = e.keyCode || e.which;
-        if (code === 9) {
-            addrPostCodeFinder(
-                document.querySelector(
-                    '#detail_customer [name="office_post_code"]'
-                ),
-                document.querySelector('#detail_customer [name="office_address"]')
-            );
-        }
-    });
-    $('#detail_customer [name="office_post_code"]').on("click", function () {
-        addrPostCodeFinder(
-            document.querySelector('#detail_customer [name="office_post_code"]'),
-            document.querySelector('#detail_customer [name="office_address"]')
-        );
-    });
-
 
     // validation Test Code
     function validationTest(el) {
@@ -773,6 +541,8 @@
                 alert("수정되었습니다.");
 
                 search();
+                //수정후 데이터 초기화
+                customer_id = null;
             });
     }
 
@@ -905,6 +675,12 @@
 
         $('#customer_tbody').find('tr').removeClass('clicked');
 
+        // 버튼 활성화
+        $("#customer_add-sm-1").prop('disabled', false).attr("class","btn btn-primary mr-3").on('click', function (){customer_add()})
+
+        $("#customer_edit-sm-1").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
+        $("#customer_delete-sm-1").prop('disabled', true).attr("class","btn btn-primary mr-3 disabled").off('click')
+
         //search();
 
     }
@@ -930,6 +706,35 @@
             })
             .fail(handle_error);
     }
+
+    function formatData(results) {
+
+          return results.map((result, index) => [
+            index+1,
+            result.code,
+            result.name,
+            result.division_name,
+            result.licensee_number,
+            result.owner_name,
+            result.business_conditions,
+            result.business_event,
+            result.postal_code,
+            result.address,
+            result.office_phone,
+            result.office_fax,
+            result.charge_name,
+            result.charge_level,
+            result.charge_phone,
+            result.email,
+            result.etc,
+            result.created_by,
+            result.created_at,
+            result.updated_by,
+            result.updated_at,
+            result.id,
+            result.division_id
+          ]);
+        }
 </script>
 <!-- {#{% endblock %}#} -->
 </body>

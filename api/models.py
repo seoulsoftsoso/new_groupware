@@ -152,7 +152,8 @@ class GroupCodeMaster(models.Model):
     class Meta:
         unique_together = ('enterprise', 'code')
 
-    code = models.IntegerField(verbose_name='그룹코드')
+    # code = models.IntegerField(verbose_name='그룹코드')
+    code = models.CharField(max_length=10, verbose_name='그룹코드')
     name = models.CharField(max_length=16, verbose_name='그룹코드 이름')
     enable = models.BooleanField(default=True, verbose_name='사용구분')
 
@@ -176,7 +177,8 @@ class CodeMaster(models.Model):
 
     group = models.ForeignKey('GroupCodeMaster', models.PROTECT, related_name='codemaster_group',
                               verbose_name='그룹 코드')
-    code = models.IntegerField(verbose_name='상세 코드')  # 상세 코드
+    # code = models.IntegerField(verbose_name='상세 코드')  # 상세 코드
+    code = models.CharField(max_length=10, verbose_name='상세 코드')  # 상세 코드
     name = models.CharField(max_length=16, verbose_name='상세 코드명')  # 상세 코드명
     ref_code = models.ForeignKey('CodeMaster',
                                  models.PROTECT,

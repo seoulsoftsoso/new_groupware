@@ -1798,6 +1798,10 @@ table.dbkit-table tr td {
 .btn-rounded {
     border-radius: 50px;
 }
+.btn.disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /*-------------------- END Button ------------------- */
 
@@ -2630,7 +2634,8 @@ table.dataTable thead td {
     position: fixed;
     right: -720px;
     top: 0;
-    height: 100vh;
+    /*height: 100vh;*/
+    height: 920px;
     width: 720px;
     background: #f9f9f9;
     z-index: 998;
@@ -2802,9 +2807,15 @@ table.dataTable thead td {
     font-size: 16px;
     color: #555;
 }
-
+/*-------------------- END Offset Sidebar ------------------- */
 .gradient-buttons .btn {
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.2) 49%, rgba(0,0,0,0.15) 51%, rgba(0,0,0,0.05));
     background-repeat: repeat-x;
 }
-/*-------------------- END Offset Sidebar ------------------- */
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
