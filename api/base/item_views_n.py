@@ -819,7 +819,8 @@ def get_results(qs):
             safe_amount = ''
 
         if row.fee_rate:
-            fee_rate = row.fee_rate
+            fee_rate_str = str(row.fee_rate)  # '15.400'
+            fee_rate = fee_rate_str.rstrip('0').rstrip('.')  # '15.4'
         else:
             fee_rate = 0.0
 

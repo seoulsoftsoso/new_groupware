@@ -145,3 +145,15 @@ function loading_finish() {
     $('html').css("cursor", "auto");
 }
 
+function setRowColor(obj, type){
+     //선택 row 색상 표시
+    if (type=='M'){
+        $(obj).css('background-color', 'yellow');
+    }else{
+     $(obj).css('background-color', 'orange');
+    }
+
+     $(obj).siblings().css('background-color', '');
+}
+
+

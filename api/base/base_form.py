@@ -260,6 +260,17 @@ class item_fm(forms.Form):
                                              )
 
     # add
+    # 자재분류 118 code118_name_ac
+    it_division_add = forms.ModelChoiceField(required=False,
+                                             queryset=qs_cm,
+                                             widget=autocomplete.ListSelect2(
+                                                 url='code118_name_ac',
+                                                 attrs={
+                                                     'class': 'form-control form-control-sm',
+                                                     'style': 'width:100%; height:100%',
+                                                     'data-placeholder': '선택 및 검색',
+                                                 }),
+                                             )
     # 브랜드 127 code127_name_ac
     it_division_add = forms.ModelChoiceField(required=False,
                                              queryset=qs_cm,
@@ -284,7 +295,7 @@ class item_fm(forms.Form):
                                           }),
                                       )
 
-    # 자재분류 118 code118_name_ac
+    # 제품군 118 code118_name_ac
     it_item_group = forms.ModelChoiceField(required=False,
                                            queryset=qs_cm,
                                            widget=autocomplete.ListSelect2(
