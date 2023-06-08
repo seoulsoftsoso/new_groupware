@@ -2,7 +2,7 @@ from dal import autocomplete
 from django import forms
 
 from api.models import GroupCodeMaster, CustomerMaster, CodeMaster, ItemMaster, FacilitiesMaster, OrderCompany, \
-    MyInfoMaster, EnterpriseMaster, UserMaster
+    MyInfoMaster, EnterpriseMaster, UserMaster, MenuMaster
 
 
 # 코드 마스터
@@ -977,3 +977,14 @@ class enterprise_fm(forms.Form):
                                                     'data-placeholder': '선택 및 검색',
                                                 }),
                                             )
+    # 메뉴목록 조회
+    menulist_name_ac = forms.ModelChoiceField(required=False,
+                                              queryset=MenuMaster.objects.none(),
+                                              widget=autocomplete.ListSelect2(
+                                                  url='menulist_name_ac',
+                                                  attrs={
+                                                      'class': 'form-control form-control-sm',
+                                                      'style': 'width:100%; height:100%',
+                                                      'data-placeholder': '선택 및 검색',
+                                                  }),
+                                              )

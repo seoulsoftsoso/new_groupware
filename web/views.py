@@ -1,7 +1,7 @@
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models import Sum, Case, When, F, IntegerField, Avg
+from django.db.models import Sum, Case, When, F, IntegerField, Avg, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -11,7 +11,8 @@ from api.Item.item_form import item_form
 from api.base.base_form import customer_fm, user_fm, facilities_fm, item_fm, order_company_fm, group_code_fm, \
     request_fm, estimate_fm, ordering_fm, enterprise_fm
 from api.form import Search_Customer1, Search_Code
-from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth, EnterpriseMaster
+from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth, \
+    EnterpriseMaster, ColumnMaster
 from api.orderpurchase.orderpurchase_form import orderpurchase_form
 from customer_manage.form import Search_Customer
 
@@ -524,7 +525,16 @@ def Menumaster(request):
 
 
 def ColumnConfig(request):
-    return render(request, 'basic_information/columnconfig.html', {})
+    enter = enterprise_fm(request.GET, request.COOKIES)
+    column = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=request.COOKIES['enterprise_id']) &
+                                         Q(menu__menuauth__user_id=request.COOKIES['user_id']) &
+                                         Q(menu=112) &
+                                         Q(visual_flag=True)
+                                         ).select_related('menu').annotate(code=F('menu__code'))
+    context = {}
+    context['ep'] = enter
+    context['column'] = column
+    return render(request, 'basic_information/columnconfig.html', context)
 
 
 def kpi_pop(request):

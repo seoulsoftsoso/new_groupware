@@ -278,8 +278,11 @@ class CodeAutoComplete(autocomplete.Select2QuerySetView):
 
 
 def getAlivecheck(request):
-    response = requests.get('http://192.168.0.125:8254/common/alive-check')
-    print(response)
+    try:
+        response = requests.get('http://192.168.0.125:8254/common/alive-check')
+        print(response)
+    except requests.exceptions.RequestException as e:
+        print('요청 예외가 발생했습니다:', e)
 
     return JsonResponse({'results': str(response)})
 

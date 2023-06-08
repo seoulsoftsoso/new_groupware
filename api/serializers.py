@@ -3741,3 +3741,25 @@ class MenuSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return super(MenuSerializer, self).to_representation(instance)
+
+
+class ColumnSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'label': instance.label,
+            'label_en': instance.label_en,
+            'pre_label': instance.pre_label,
+            'tag': instance.tag,
+            'type': instance.type,
+            'class_name': instance.class_name,
+            'event': instance.event,
+            'position': instance.position,
+            'use_flag': instance.use_flag,
+            'visual_flag': instance.visual_flag,
+            'excel_flag': instance.excel_flag,
+            'edit_flag': instance.edit_flag,
+            'menu_id': instance.menu_id,
+            'code': instance.menu.code
+        }

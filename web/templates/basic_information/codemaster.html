@@ -360,7 +360,7 @@
         $("#regist-sm-0 [name='detail_code_name']").val(''); // 상세코드명
         $("#regist-sm-0 [name='code_account']").val(''); // 코드설명
         $("#regist-sm-0 [name='code_the_others']").val(''); //기타
-        $("#regist-sm-0 [name='code_use_division']").val(''); //사용여부
+        //$("#regist-sm-0 [name='code_use_division']").val(''); //사용여부
 
         // 버튼 활성화
         $("#codemaster_add-sm-0").prop('disabled', false).attr("class","btn btn-primary mr-3").off('click').on('click', function (){codemaster_add()})
@@ -584,7 +584,7 @@
     function groupcode_table_draw(done){
         //sub_allData = formatData(done.results)
         sub_table.rows().remove().draw();
-        console.log(done);
+
         sub_table.rows.add(formatData_sub(done.results)).draw();
 
         // row click event

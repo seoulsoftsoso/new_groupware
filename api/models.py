@@ -2443,3 +2443,25 @@ class Menu_Auth(models.Model):
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')
     del_flag = models.CharField(max_length=1, default='N', verbose_name='삭제여부')
+
+
+class ColumnMaster(models.Model):
+    menu = models.ForeignKey('MenuMaster', models.PROTECT, null=False, verbose_name='메뉴아이디', related_name='column')
+    label = models.CharField(max_length=64, null=True, verbose_name='컬럼명')
+    label_en = models.CharField(max_length=64, null=True, verbose_name='컬럼명(영)')
+    pre_label = models.CharField(max_length=128, null=True, verbose_name='선행자')
+    tag = models.CharField(max_length=128, null=True, verbose_name='tag')
+    type = models.CharField(max_length=64, null=True, verbose_name='text')
+    class_name = models.CharField(max_length=128, null=True, verbose_name='class')
+    event = models.CharField(max_length=128, null=True, verbose_name='onclick')
+    position = models.IntegerField(null=False, verbose_name='순서')
+    use_flag = models.BooleanField(default=True, verbose_name='사용여부')
+    visual_flag = models.BooleanField(default=True, verbose_name='표시여부')
+    excel_flag = models.BooleanField(default=True, verbose_name='엑셀다운로드사용여부')
+    edit_flag = models.BooleanField(default=True, verbose_name='수정필드')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='column_created_by')
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='column_updated_by')
+    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
+    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')

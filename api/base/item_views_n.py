@@ -207,7 +207,7 @@ class ItemMaster_read(View):
         print(request.GET)
         # 검색인자 - 품번, 품명, 자재분류
         it_code_sch = request.GET.get('it_code_sch', '')
-        # it_name_sch = request.GET.get('it_name_sch', '')
+        it_name_sch = request.GET.get('it_name_sch', '')
         it_div_sch = request.GET.get('it_div_sch', '')
         it_nice_number_sch = request.GET.get('it_nice_number_sch', '')
         it_brand_sch = request.GET.get('it_brand_sch', '')
@@ -285,6 +285,9 @@ class ItemMaster_read(View):
 
         if it_id_sch != '':
             qs = qs.filter(id=it_id_sch)
+
+        if (it_name_sch):
+            qs = qs.filter(id=it_name_sch)
 
         # Pagination
         qs_ps = Pagenation(qs, _size, _page)

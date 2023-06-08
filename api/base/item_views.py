@@ -38,11 +38,11 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        print('ItemMasterViewSet를 탄다 111')  # 첫진입, 검색
+        # print('ItemMasterViewSet를 탄다 111')  # 첫진입, 검색
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemMasterViewSet", "get_queryset", False)
 
         started = datetime.datetime.now()
-        print(started)
+        # print(started)
         qs = ItemMaster.objects.filter(enterprise=self.request.user.enterprise).order_by('-id').all()
 
         if 'code_i' in self.request.query_params:
@@ -82,7 +82,7 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
 
     # 추가
     def create(self, request, *args, **kwargs):
-        #print('create를 탄다')
+        # print('create를 탄다')
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemMasterViewSet", "create", False)
 
         ret = request
@@ -172,7 +172,7 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
         codes = codes.exclude(name="입고창고")
 
         item_in_sorted = item_in.exclude(location__in=codes).order_by('-id')
-        print(item_in_sorted)
+        # print(item_in_sorted)
         if item_in_sorted.exists():
             print("it exists!")
             in_sum = item_in_sorted.aggregate(

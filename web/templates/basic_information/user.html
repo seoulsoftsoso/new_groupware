@@ -8,328 +8,196 @@
 {#    <title>사용자 기준정보관리</title>#}
 {#{% endblock title %}#}
 {#{% block content %}#} -->
-
+{{ us.media }}
 <div class="spinner" id="spinner">
     <img src="../../../static/img/spinner.gif" width="150px" height="150px"/>
 </div>
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 검색 -->
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
 
-<!-- 검색 -->
-<div class="card m-2">
-    <div class="card-body p-2">
-        <!-- 본문 -->
-        <div
-                class="content-search row no-gutters align-items-center content-input-group"
-        >
-            <div class="content-title col-1 align-self-stretch">검색</div>
-            <form class="col-11" id="user_search">
-                <div class="row no-gutters">
-                    <div class="content-input-group col-3 px-0" id="search_order_company">
-                        <div class="content-input-group-header">
-                            <label>기업명</label>
-                        </div>
-                        <div class="content-input-group-input ">
-                            <select
-                                    class="form-control search-company-name-dropdown"
-                                    name="search_company_name"
-                                    id="company_name_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>공장구분</label>
-                        </div>
-                        <div
-                                class="content-input-group-input"
-                                id="select-factory-classification"
-                        >
-                            <select
-                                    class="form-control factory-dropdown"
-                                    name="factory-classification"
-                                    id="factory-search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>부서구분</label>
-                        </div>
-                        <div
-                                class="content-input-group-input"
-                                id="select-department-position"
-                        >
-                            <select
-                                    class="form-control department-dropdown"
-                                    name="department-position"
-                                    id="department-search"
-                            ></select>
-                        </div>
-                    </div>
-                    {% comment %}<div class="content-input-group col-2 px-0">
-                        <div class="content-input-group-header">
-                            <label>사용구분</label>
-                        </div>
-                        <div
-                                class="content-input-group-input"
-                                id="select-user-use-division"
-                        >
-                            <select
-                                    class="form-control"
-                                    name="user-use-division"
-                                    id="user-use-search"
-                            >
-                                <option value="">선택</option>
-                                <option>사용</option>
-                                <option>미사용</option>
-                            </select>
-                        </div>
-                    </div>{% endcomment %}
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>사용자명</label>
-                        </div>
-                        <div class="content-input-group-input" id="select-user-name">
-                            <input
-                                    class="form-control"
-                                    name="user-name"
-                                    id="user-name-search"
-                            />
-                        </div>
-                    </div>
-                    <div class="col-1 px-0">
-                        <button class="btn button-search rounded-0 w-100 h-100"
-                                onclick="return search_submit(event)">
-                            검색
-                        </button>
+                            <div class="row ml-3">
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">공장구분</label>
+                                        <div class="content-input-group-input">
+                                        {{ us.us_factory_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">부서구분</label>
+                                        <div class="content-input-group-input">
+                                         {{ us.us_depart_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">사용자명</label>
+                                        <input type="text" class="form-control form-control-sm" id="user-name-search" autocomplete="off"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 clearfix">
+                    <div class="gradient-buttons ml-1 col-md-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="search_click();"><i class="ti-search"></i>  검색</button>
                     </div>
                 </div>
-            </form>
+                <div class="col-md-1 mt-4">
+                    <ul class="notification-area pull-right">
+                        <li class="settings-btn">
+                            <i class="ti-settings"></i>
+                        </li>
+                    </ul>
+                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- 테이블 -->
+<div class="row no-gutters ml-4 mr-4">
+    <div class="card">
+        <div class="card-body" style="width: 100%">
+            <table id="user_data-table" class="table table-hover table-striped table-bordered display nowrap" style="width: 100%; table-layout: fixed;">
+                <thead>
+                <tr>
+                    <th>순번</th>
+                    <th>사번</th>
+                    <th>사용자명</th>
+                    <th>ID</th>
+                    <th>전화번호</th>
+                    <th>E-mail</th>
+                    <th></th>
+                    <th>공장구분</th>
+                    <th></th>
+                    <th>고용구분</th>
+                    <th>입사일자</th>
+                    <th></th>
+                    <th>직위</th>
+                    <th></th>
+                    <th>부서구분</th>
+                    <th>우편번호</th>
+                    <th>주소</th>
+{#                    <th>사용구분</th>#}
+                    <th>기타</th>
+                    <th>등록자</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <tbody id="user_main-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        <!-- end table -->
+
+                   </div>
+    </div>
+</div>
+<!-- offset area start -->
+<div class="offset-area">
+    <div class="offset-close"><i class="ti-close"></i></div>
+    <ul class="nav offset-menu-tab">
+        <li><a class="active" data-toggle="tab" href="#user-detail-content">편집</a></li>
+        <li></li>
+    </ul>
+    <div class="offset-content tab-content">
+        <div id="user-detail-content" class="tab-pane fade in show active">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" id="item_master_form">
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for=""><strong>*</strong>사번</label>
+                                    <input type="text" class="form-control form-control-sm" name="code" autocomplete="off" disabled/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for=""><strong>*</strong>사용자명</label>
+                                    <input type="text" class="form-control form-control-sm" name="username" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">ID</label>
+                                    <input type="text" class="form-control form-control-sm" name="user_id" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">비밀번호</label>
+                                    <input type="password" class="form-control form-control-sm" name="password" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">공장구분</label>
+                                    <div>
+                                    {{ us.us_factory_add }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">고용구분</label>
+                                    <div>
+                                    {{ us.us_emp_div_add }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">입사일자</label>
+                                    <input type="text" class="form-control form-control-sm datepicker" name="employment_date" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">직위</label>
+                                    <div>
+                                    {{ us.us_job_pos_add }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">부서구분</label>
+                                    <div>
+                                    {{ us.us_depart_add }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">우편번호</label>
+                                    <input type="text" class="form-control form-control-sm" name="postal_code" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">주소</label>
+                                    <input type="text" class="form-control form-control-sm" name="address" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">전화번호</label>
+                                    <input type="text" class="form-control form-control-sm" name="tel" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">E-mail</label>
+                                    <input type="text" class="form-control form-control-sm" name="email" autocomplete="off"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">기타</label>
+                                    <input type="text" class="form-control form-control-sm" name="etc" autocomplete="off"/>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="gradient-buttons pull-right">
+                            <div class="btn btn-primary mr-3" onclick="user_refresh()"> 초기화 </div>
+                            <div class="btn btn-primary mr-3" id="item_add-sm-4" onclick="formsubmit()"> 등 록 </div>
+                            <div class="btn btn-primary mr-3" id="item_edit-sm-4" onclick="edit_user()"> 수 정 </div>
+                            <div class="btn btn-primary mr-3" id="item_delete-sm-4" onclick="delete_user()"> 삭 제 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 내용 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <form class="content-content w-100" id="user-content">
-            {% csrf_token %}
-            <div class="row no-gutters w-100 mb-2">
-                <div class="col-1 content-title">내용</div>
-                <div class="col-11" id="user-detail-content">
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>사번<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="code" disabled/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>사용자명<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="username"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>ID<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="user_id"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>비밀번호<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        type="password"
-                                        class="form-control"
-                                        name="password"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3" id="form_order_company">
-                            <div class="content-input-group-header">
-                                <label>기업명</label>
-                            </div>
-                            <div
-                                    class="content-input-group-input "
-                            >
-                                <select
-                                        class="form-control company-name-dropdown"
-                                        name="company_name"
-                                        id="company_name"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>공장구분</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control factory-dropdown"
-                                        name="factory_classification"
-                                        id="select-factory"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>고용구분</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control employment-dropdown"
-                                        name="employment_division"
-                                        id="select-emp-division"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>입사일자</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control datepicker"
-                                        autocomplete="off"
-                                        type="text"
-                                        name="employment_date"
-                                />
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>직위</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control job-dropdown"
-                                        name="job_position"
-                                        id="select-job-pos"
-                                ></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>부서구분</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control department-dropdown"
-                                        name="department_position"
-                                        id="select-dep-pos"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>우편번호</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="postal_code"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-6">
-                            <div class="content-input-group-header">
-                                <label>주소</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="address"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        {% comment %}<div class="content-input-group col-2">
-                            <div class="content-input-group-header">
-                                <label>사용구분<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select class="form-control" name="enable">
-                                    <option>사용</option>
-                                    <option>미사용</option>
-                                </select>
-                            </div>
-                        </div>{% endcomment %}
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>전화번호</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="tel"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>E-mail</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="email"/>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-6">
-                            <div class="content-input-group-header">
-                                <label>기타</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="etc"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row no-gutters w-100 justify-content-end">
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            type="button"
-                            class="btn button-custom2 w-100 add"
-                            onclick="user_refresh()"
-                    >
-                        초기화
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            type="button"
-                            class="btn button-custom2 w-100 add"
-                            onclick="formsubmit()"
-                    >
-                        추가
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            type="button"
-                            class="btn button-custom2 w-100"
-                            onclick="edit_user()"
-                    >
-                        수정
-                    </button>
-                </div>
-                <div class="col-1 px-0">
-                    <button
-                            type="button"
-                            class="btn button-custom2 w-100"
-                            onclick="delete_user()"
-                    >
-                        삭제
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+
+
 
 <!-- 관리자비밀번호(스마트름뱅이) -->
 <div class="card m-2" id="second_password_check" style="display:none">
@@ -383,71 +251,12 @@
     </div>
 </div>
 
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-table col-12" style="overflow-y: hidden; height:420px;">
-            <table
-                    id="user_data-table"
-                    class="table table-sm text-center"
-                    style="min-width: 1300px"
-            >
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>사번</th>
-                    <th>사용자명</th>
-                    <th>ID</th>
-                    <th>전화번호</th>
-                    <th id="table_order_company">납품기업</th>
-                    <th>E-mail</th>
-                    <th>공장구분</th>
-                    <th>고용구분</th>
-                    <th>입사일자</th>
-                    <th>직위</th>
-                    <th>부서구분</th>
-                    <th>우편번호</th>
-                    <th>주소</th>
-{#                    <th>사용구분</th>#}
-                    <th>기타</th>
-                    <th>등록자</th>
-                    <th>등록일</th>
-                </tr>
-                </thead>
-                <tbody id="user_main-tbody"></tbody>
-            </table>
 
-            <div class="row no-gutters d-flex justify-content-center" id="item_nation"
-                 style="margin-top: -20px;">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <label class="mb-0">(<strong id="table_row">0</strong>) 건 로딩</label>
-    </div>
-</div>
 <script src="{% static 'js/api_user.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
 <script>
     // get post code and address event
-    $('#user-detail-content [name="select-dep-pos"]').on("blur", function () {
-        addrPostCodeFinder(
-            document.querySelector('#user-detail-content [name="postal_code"]'),
-            document.querySelector('#user-detail-content [name="address"]')
-        );
-    });
-    $('#user-detail-content [name="postal_code"]').on("click", function () {
-        addrPostCodeFinder(
-            document.querySelector('#user-detail-content [name="postal_code"]'),
-            document.querySelector('#user-detail-content [name="address"]')
-        );
-    });
-
-    var inewtech = false;
 
     let nation_data1 = {
         cname : 'nation1',  // 인스턴스 명과 일치해야함
@@ -458,14 +267,6 @@
 
     let nation1 = new Pnations(nation_data1, main_search);  // 인스턴스 명
 
-    // console.log(get_userinfo());
-    if (get_userinfo().enterprise_name === "(주)아이뉴텍") {
-        inewtech = true;
-    } else {
-        $("#search_order_company").remove()
-        $("#form_order_company").remove()
-        $("#table_order_company").remove()
-    }
 
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd",
@@ -498,10 +299,6 @@
             "name : " + username
         );
 
-        // <!--var factory_classification = $("#user_search [name='factory-classification']").val();-->
-        // <!--var department_position = $("#user_search [name='department-position']").val();-->
-        // <!--var user_use_division = $("#user_search [name='user-use-division']").val();-->
-        // <!--var username = $("#user_search [name='user-name']").val();-->
 
         if (factory_classification === "선택 및 검색" || factory_classification === "")
             fac_csf = "";
@@ -536,8 +333,9 @@
     }
 
     var employee_number_code; // pk
+
     function formsubmit() {
-        var valid = true;
+        let valid = true;
         if ($("#user-detail-content [name='username']").val() == "") {
             valid = false;
         }
@@ -549,31 +347,23 @@
         }
 
         if (valid) {
-            let user_id = $('#user-content [name="user_id"]').val();
-            let user_password = $('#user-content [name="password"]').val(); //TODO: 비밀번호 수정 필요
-            let employee_number_code = $('#user-content [name="code"]').val();
-            let user_name = $('#user-content [name="username"]').val();
-            let factory_classification = $(
-                '#user-content [name="factory_classification"]'
-            ).val();
-            let employment_division = $(
-                '#user-content [name="employment_division"]'
-            ).val();
-            let employment_date = $(
-                '#user-content [name="employment_date"]'
-            ).val();
-            let job_position = $('#user-content [name="job_position"]').val();
-            let department_position = $(
-                '#user-content [name="department_position"]'
-            ).val();
-            let employer_post = $('#user-content [name="postal_code"]').val();
-            let employer_address = $('#user-content [name="address"]').val();
+            let user_id = $('#user-detail-content [name="user_id"]').val();
+            let user_password = $('#user-detail-content [name="password"]').val(); //TODO: 비밀번호 수정 필요
+            let employee_number_code = $('#user-detail-content [name="code"]').val();
+            let user_name = $('#user-detail-content [name="username"]').val();
+            let factory_classification = $('#id_us_factory_add').val();
+            let employment_division = $('#id_us_emp_div_add').val();
+            let employment_date = $('#user-detail-content [name="employment_date"]').val();
+            let job_position = $('#id_us_job_pos_add').val();
+            let department_position = $('#id_us_depart_add').val();
+            let employer_post = $('#user-detail-content [name="postal_code"]').val();
+            let employer_address = $('#user-detail-content [name="address"]').val();
             {#let user_use_division = $('#user-content [name="enable"]').val() === "사용";#}
-            let employer_the_others = $('#user-content [name="etc"]').val();
+            let employer_the_others = $('#user-detail-content [name="etc"]').val();
 
-            let email = $('#user-content [name="email"]').val();
-            let tel = $('#user-content [name="tel"]').val();
-            let company_name = $('#user-content [name="company_name"]').val();
+            let email = $('#user-detail-content [name="email"]').val();
+            let tel = $('#user-detail-content [name="tel"]').val();
+            let company_name = $('#user-detail-content [name="company_name"]').val();
 
 
             let userData = {
@@ -595,7 +385,6 @@
                 order_company: company_name,
             };
 
-            console.log("submit userData", userData);
             api_post_user_content(userData, () => {
                 alert("추가 되었습니다.");
                 user_search();
@@ -607,45 +396,29 @@
         }
     }
 
-    // 필수항목을 모두 작성한 경우
-    {% comment %}$("#user-detail-content [name='code']").on("change", function () {
-        $(this).css("border", "");
-    });
-    $("#user-detail-content [name='username']").on("change", function () {
-        $(this).css("border", "");
-    });
-    $("#user-detail-content [name='factory_classification']").on(
-        "change",
-        function () {
-            $(this).css("border", "");
-        }
-    );
-    $("#user-detail-content [name='employment_division']").on(
-        "change",
-        function () {
-            $(this).css("border", "");
-        }
-    );
-    $("#user-detail-content [name='employment_date']").on(
-        "change",
-        function () {
-            $(this).css("border", "");
-        }
-    );
-    $("#user-detail-content [name='job_position']").on("change", function () {
-        $(this).css("border", "");
-    });
-    $("#user-detail-content [name='department_position']").on(
-        "change",
-        function () {
-            $(this).css("border", "");
-        }
-    );{% endcomment %}
-    {% comment %}$("#user-detail-content [name='enable']").on("change", function () {
-        $(this).css("border", "");
-    });{% endcomment %}
 
     $(function () {
+
+        main_table = $('#user_data-table').DataTable({
+            "columnDefs": [
+                {
+                    targets: [6,8,11,13],
+                    "visible": false, // 컬럼 숨김
+                    "searchable": false // 숨긴 컬럼에 대한 검색 비활성화 (선택 사항)
+                },
+                  {
+                    "targets": "_all",
+                    "className": "ellipsis"
+                  }
+                ],
+            "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        setRowColor(this, 'M');
+
+                        setInput(data);
+                    });
+                }
+        })
         refresh();
 
         // Table export
@@ -654,15 +427,69 @@
         );
     });
 
+    function setInput(data) {
+        console.log("setInput data   : " + data);
+        $("#user-detail-content [name='code']").val(data[1]);
+        $("#user-detail-content [name='username']").val(data[2]);
+        $("#user-detail-content [name='user_id']").val(data[3]);
+        $("#user-detail-content [name='employment_date']").val(data[10]);
+        $("#user-detail-content [name='postal_code']").val(data[15]);
+        $("#user-detail-content [name='address']").val(data[17]);
+        $("#user-detail-content [name='etc']").val(data[16]);
+        $("#user-detail-content [name='tel']").val(data[4]);
+        $("#user-detail-content [name='email']").val(data[5]);
+
+        if (data[7] != null) {
+          $('#id_us_factory_add').append(new Option(data[7], data[6])).trigger('change');
+        }else {
+            $('#id_us_factory_add').val("").trigger('change');
+        }
+
+        if (data[9] != null) {
+          $('#id_us_emp_div_add').append(new Option(data[9], data[8])).trigger('change');
+        }else {
+            $('#id_us_emp_div_add').val("").trigger('change');
+        }
+
+        if (data[12] != null) {
+          $('#id_us_job_pos_add').append(new Option(data[12], data[11])).trigger('change');
+        }else {
+            $('#id_us_job_pos_add').val("").trigger('change');
+        }
+
+        if (data[14] != null) {
+          $('#id_us_depart_add').append(new Option(data[14], data[13])).trigger('change');
+        }else {
+            $('#id_us_depart_add').val("").trigger('change');
+        }
+
+        employee_number_code = data[data.length-1];
+
+            //스마트름뱅이 관리자비밀번호 설정 버튼
+        let check_auth = $(this).find("[data-item='snd_auth']").text()
+        // console.log("check_auth  : " + check_auth);
+
+        if(check_auth != "00"){
+            $("#second_pass_editB").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
+            $("#second_pass_addB").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
+        }else{
+            $("#second_pass_editB").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
+            $("#second_pass_addB").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
+
+        }
+
+
+    }
+
     function refresh() {
-        init();
+
         main_search();
     }
 
 
     function main_search(){
-        let search_factory = $('#factory-search :selected').val();
-        let search_department = $('#department-search :selected').val();
+        let search_factory = $('#id_us_factory_sch').val();
+        let search_department = $('#id_us_depart_sch').val();
         let search_username = $('#user-name-search').val();
 
         let query = "?page=" + nation1.page;
@@ -693,37 +520,27 @@
             if ($("#user-detail-content [name='user_id']").val() == "") {
                 valid = false;
             }
-            if ($("#user-detail-content [name='password']").val() == "") {
-                valid = false;
-            }
+
 
             if (valid) {
-                let user_id = $('#user-content [name="user_id"]').val();
-                let user_password = $('#user-content [name="password"]').val(); // TODO: 비밀번호 수정 필요
-                let employee_number_code2 = $('#user-content [name="code"]').val();
-                let user_name = $('#user-content [name="username"]').val();
-                let factory_classification = $(
-                    '#user-content [name="factory_classification"]'
-                ).val();
-                let employment_division = $(
-                    '#user-content [name="employment_division"]'
-                ).val();
+                let user_id = $('#user-detail-content [name="user_id"]').val();
+                let user_password = $('#user-detail-content [name="password"]').val(); // TODO: 비밀번호 수정 필요
+                let employee_number_code2 = $('#user-detail-content [name="code"]').val();
+                let user_name = $('#user-detail-content [name="username"]').val();
+                let factory_classification = $('#id_us_factory_add').val();
+                let employment_division = $('#id_us_emp_div_add').val();
                 let employment_date = $(
-                    '#user-content [name="employment_date"]'
+                    '#user-detail-content [name="employment_date"]'
                 ).val();
-                let job_position = $('#user-content [name="job_position"]').val();
-                let department_position = $(
-                    '#user-content [name="department_position"]'
-                ).val();
-                let employer_post = $('#user-content [name="postal_code"]').val();
-                let employer_address = $('#user-content [name="address"]').val();
+                let job_position = $('#id_us_job_pos_add').val();
+                let department_position = $('#id_us_depart_add').val();
+                let employer_post = $('#user-detail-content [name="postal_code"]').val();
+                let employer_address = $('#user-detail-content [name="address"]').val();
                 {#let user_use_division = $('#user-content [name="enable"]').val() === "사용";#}
-                let employer_the_others = $('#user-content [name="etc"]').val();
+                let employer_the_others = $('#user-detail-content [name="etc"]').val();
 
-                let email = $('#user-content [name="email"]').val();
-                let tel = $('#user-content [name="tel"]').val();
-                let company_name = $('#user-content [name="company_name"]').val();
-                console.log("company_name:::", company_name);
+                let email = $('#user-detail-content [name="email"]').val();
+                let tel = $('#user-detail-content [name="tel"]').val();
 
                 let userData = {
                     user_id: user_id,
@@ -739,8 +556,7 @@
                     {#enable: user_use_division,#}
                     etc: employer_the_others,
                     tel: tel,
-                    email: email,
-                    order_company: company_name,
+                    email: email
                 };
 
                 if (user_password !== "") userData["password"] = user_password;
@@ -793,124 +609,15 @@
     ];
 
     function user_load_table(done) {
+        spinner();
         let data = done.results;
 
-        $("#table_row").text(data.length); // 로딩된 데이터 갯수 세기
-        let rows = "";
-        let num = (((nation1.page*1) - 1) * nation_data1["page_size"]) + 1 ;
-        for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            // append it
-            let row = "<tr id='" + item.id + "' style='cursor:pointer;'>";
-            row += "<td>" + (num+i) + "</td>";
-            row += "<td data-item='code'>" + item.code + "</td>";
-            row += "<td data-item='username'>" + item.username + "</td>";
-            row += "<td data-item='user_id'>" + item.user_id + "</td>";
-            // {#row += "<td data-item='user_pw'>" + "*********" + "</td>";
-            row += "<td data-item='tel'>" + nullapply(item.tel) + "</td>";
-            if (inewtech === true) {
-                row += "<td data-item='company_name' property='" +
-                    (item.order_company ? item.order_company.id : "") + "'>" +
-                    (item.order_company ? item.order_company.name : "") + "</td>";
-            }
-            row += "<td data-item='email'>" + nullapply(item.email) + "</td>";
-            row +=
-                "<td data-item='factory_classification' property='" +
-                (item.factory_classification ? item.factory_classification.id : "") + "'>" +
-                (item.factory_classification ? item.factory_classification.name : "") + "</td>";
-            row +=
-                "<td data-item='employment_division' property=" +
-                (item.employment_division ? item.employment_division.id : "") +
-                ">" +
-                (item.employment_division ? item.employment_division.name : "") +
-                "</td>";
-            row +=
-                "<td data-item='employment_date'>" +
-                nullapply(item.employment_date) +
-                "</td>";
-            row +=
-                "<td data-item='job_position' property=" +
-                (item.job_position ? item.job_position.id : "") +
-                ">" +
-                (item.job_position ? item.job_position.name : "") +
-                "</td>";
-            row +=
-                "<td data-item='department_position' property=" +
-                (item.department_position ? item.department_position.id : "") +
-                ">" +
-                (item.department_position ? item.department_position.name : "") +
-                "</td>";
-            row +=
-                "<td data-item='postal_code'>" +
-                nullapply(item.postal_code) +
-                "</td>";
-            row +=
-                "<td data-item='address'>" + nullapply(item.address) + "</td>";
-            {#row +=#}
-            {#    "<td data-item='enable'>" +#}
-            {#    (item.enable ? "사용" : "미사용") +#}
-            {#    "</td>";#}
-            row += "<td data-item='etc'>" + nullapply(item.etc) + "</td>";
-            row += "<td data-item='created_by'>" + item.created_by + "</td>";
-            row +=
-                "<td data-item='created_at'>" +
-                item.created_at.substring(0, 4) +
-                "-" +
-                item.created_at.substring(5, 7) +
-                "-" +
-                item.created_at.substring(8, 10) +
-                "</td>";
-            row += "<td data-item='snd_auth' style='visibility:hidden'>" + item.snd_auth +"</td>"  //스마트름뱅이
+        main_table.rows().remove().draw();
+        main_table.rows.add(formatData(done.results)).draw();
 
-            row += "</tr>";
 
-            rows += row;
-        }
-        spinner();
-
-        $("#user_main-tbody").html(rows);
         $("#user_main-tbody > tr").on("click", function () {
-            user_columns.forEach((item) => {
-                if (
-                    item === "factory_classification" ||
-                    item === "employment_division" ||
-                    item === "job_position" ||
-                    item === "department_position" ||
-                    item === "company_name"
 
-                ) {
-                    // {#console.log(item + ' : ' + $(this).find("[data-item='" + item + "_id']").text());#}
-                    // {#console.log(item + ' id : ',$(this).find("[data-item='" + item + "']").attr('property'));#}
-
-                    $("#user-content [name='" + item + "']")
-                        .val(
-                            $(this)
-                                .find("[data-item='" + item + "']")
-                                .attr("property")
-                        )
-                        .trigger("change");
-                } else {
-                    $("#user-content [name='" + item + "']").val(
-                        $(this)
-                            .find("[data-item='" + item + "']")
-                            .text()
-                    );
-                }
-            });
-            employee_number_code = $(this).attr("id");
-
-            //스마트름뱅이 관리자비밀번호 설정 버튼
-        let check_auth = $(this).find("[data-item='snd_auth']").text()
-        // console.log("check_auth  : " + check_auth);
-
-        if(check_auth != "00"){
-            $("#second_pass_editB").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
-            $("#second_pass_addB").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
-        }else{
-            $("#second_pass_editB").prop("disabled", true).attr("class","btn button-custom2 disabled w-100 add")
-            $("#second_pass_addB").prop("disabled", false).attr("class","btn button-custom2 w-100 add")
-
-        }
         });
 
         // table click highlight
@@ -924,58 +631,20 @@
 
     }
 
-    function init() {
-        function make_dropdown(data, selectors) {
-            let list = "<option value=''>선택 및 검색</option>";
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                list +=
-                    "<option value='" + item.id + "'>" + item.name + "</option>";
-            }
-            $(selectors).html(list);
-            $(selectors).select2({width: "100%"});
-        }
 
-        // factory dropdown
-        // TODO codes 사용 필터 리팩토링
-        api_gp("/codes_select/?group=104&enable=true", "GET", {}, (data) => {
-            make_dropdown(data, ".factory-dropdown");
-        });
-
-        api_gp("/codes_select/?group=112&enable=true", "GET", {}, (data) => {
-            make_dropdown(data, ".employment-dropdown");
-        });
-
-        api_gp("/codes_select/?group=113&enable=true", "GET", {}, (data) => {
-            make_dropdown(data, ".department-dropdown");
-        });
-
-        api_gp("/codes_select/?group=114&enable=true", "GET", {}, (data) => {
-            make_dropdown(data, ".job-dropdown");
-        });
-
-        if (get_userinfo().enterprise_name === "(주)아이뉴텍") {
-            api_gp("/order/company/", "GET", {}, (data) => {
-                make_dropdown(data, ".company-name-dropdown");
-                make_dropdown(data, ".search-company-name-dropdown");
-            });
-        }
-    }
 
 
     function user_refresh(){
-        $("[name='factory-classification']").val(null).trigger("change");  // 공장구분
-        $("[name='department-position']").val(null).trigger("change");  // 부서구분
 
         $("[name='code']").val("");  // 사번
         $("[name='username']").val("");  // 사용자명
         $("[name='user_id']").val("");  // ID
         $("[name='password']").val("");  // 비밀번호
-        $("[name='factory_classification']").val(null).trigger("change");  // 공장구분
-        $("[name='employment_division']").val(null).trigger("change");  // 고용구분
+        $("#id_us_factory_add").val(null).trigger("change"); // 공장구분
+        $("#id_us_emp_div_add").val(null).trigger("change");  // 고용구분
         $("[name='employment_date']").val("");  // 입사일자
-        $("[name='job_position']").val(null).trigger("change");  // 직위
-        $("[name='department_position']").val(null).trigger("change");  // 부서구분
+        $("#id_us_job_pos_add").val(null).trigger("change");   // 직위
+        $("#id_us_depart_add").val(null).trigger("change");   // 부서구분
         $("[name='postal_code']").val("");  // 우편번호
         $("[name='address']").val("");  // 주소
         $("[name='tel']").val("");  // 전화번호
@@ -989,8 +658,8 @@
         });
     }
 
-    function search_submit(e) {
-        e.preventDefault();
+    function search_click() {
+
         nation1.page = 1;
         main_search();
 
@@ -1055,6 +724,41 @@
         $('#second_password_check').show();
 
     }
+
+    function formatData(results) {
+
+
+          return results.map((result, index) => [
+            index+1,
+            result.code,
+            result.username,
+            result.user_id,
+            result.tel,
+            result.email,
+              result.factory_classification !== null ? result.factory_classification.id : null,
+              result.factory_classification !== null ? result.factory_classification.name : null,
+
+              result.employment_division !== null ? result.employment_division.id : null,
+              result.employment_division !== null ? result.employment_division.name : null,
+
+              result.employment_date,
+
+              result.job_position !== null ? result.job_position.id : null,
+              result.job_position !== null ? result.job_position.name : null,
+
+              result.department_position !== null ? result.department_position.id : null,
+              result.department_position !== null ? result.department_position.name : null,
+
+              result.postal_code,
+              result.etc,
+              result.address,
+              result.created_by,
+              result.created_at,
+              result.snd_auth,
+              result.id
+          ]);
+        }
+
 
 </script>
 
