@@ -2,14 +2,15 @@ import json
 
 from django.core import serializers
 from django.db import transaction
-from django.db.models import F
+from django.db.models import F, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.views import View
 
-from api.models import Menu_Auth, MenuMaster, UserMaster
+from api.models import Menu_Auth, MenuMaster, UserMaster, ColumnMaster
+from api.serializers import ColumnSerializer
 
 
 def getLmenuList(request):
@@ -144,4 +145,28 @@ class Menuauth(View):
 
             cnt += auto
 
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+
+
+class columnViewSet(viewsets.ViewSet):
+    queryset = ColumnMaster.objects.all()
+    http_method_names = ['get', 'post', 'patch', 'delete']
+    serializer_class = ColumnSerializer
+
+    def get_queryset(self, request):
+        menu_id = self.request.query_params['menu_id']
+        qs = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=request.COOKIES['enterprise_id']) &
+                                         Q(menu__menuauth__user_id=request.COOKIES['user_id']) &
+                                         Q(menu=menu_id) &
+                                         Q(visual_flag=True)
+                                         ).select_related('menu')
+        return qs
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset(request)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)

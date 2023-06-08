@@ -1,7 +1,8 @@
-from django.db.models import Q
+from django.db.models import Q, F
+from django.db.models.functions import Coalesce
 
 from api.models import ItemMaster, CustomerMaster, GroupCodeMaster, CodeMaster, UserMaster, OrderCompany, MyInfoMaster, \
-    EnterpriseMaster
+    EnterpriseMaster, MenuMaster
 from dal import autocomplete
 
 
@@ -579,12 +580,16 @@ class enterprise_name_ac(autocomplete.Select2QuerySetView):
         else:
             qs = EnterpriseMaster.objects.filter(id=self.request.COOKIES.get('enterprise_id'))
 
+        if self.q:
+            qs = qs.filter(name__contains=self.q)
+
         return qs
 
     def get_result_label(self, result):
         return result.name
 
 
+# 사용자 리스트
 class client_name_ac(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
@@ -598,7 +603,39 @@ class client_name_ac(autocomplete.Select2QuerySetView):
         else:
             qs = UserMaster.objects.filter(enterprise_id=self.request.COOKIES['enterprise_id']).order_by('id')
 
+        if self.q:
+            qs = qs.filter(user_name__contains=self.q)
+
         return qs
 
     def get_result_label(self, result):
         return result.username
+
+
+# 메뉴리스트
+class menulist_name_ac(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        menutype = ['S']
+
+        user = UserMaster.objects.get(enterprise_id=self.request.COOKIES['enterprise_id'], id=self.request.COOKIES['user_id'])
+
+        if user.is_superuser :
+            menutype.append('M')
+
+        qs = MenuMaster.objects.filter(
+                Q(menuauth__use_flag='Y') &
+                Q(menuauth__enterprise_id=user.enterprise_id) &
+                Q(menuauth__user_id=user.id) &
+                Q(type__in=menutype)
+            ).annotate(
+                alias=Coalesce('menuauth__alias', F('name'))
+            )
+
+        if self.q:
+            qs = qs.filter(alias__contains=self.q)
+
+        return qs
+
+    def get_result_label(self, result):
+        return result.alias
