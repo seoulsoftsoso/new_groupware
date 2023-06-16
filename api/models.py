@@ -706,8 +706,9 @@ class ItemIn(models.Model):
                                    verbose_name='업체')
 
     qr_path = models.CharField(max_length=50, default='', null=True, verbose_name='QR경로')  # QR 경로
+    file = models.FileField(upload_to='uploads/itemin/%Y/%m/%d/', default=None, null=True, verbose_name='파일')  # 첨부파일
 
-    in_fee_rate = models.DecimalField(max_digits=9, decimal_places=3, default=0.00, verbose_name='수수료율')
+    fee_rate = models.DecimalField(max_digits=9, decimal_places=3, default=0.00, verbose_name='수수료율')
 
     @property
     def in_amount(self):
@@ -2455,6 +2456,9 @@ class ColumnMaster(models.Model):
     class_name = models.CharField(max_length=128, null=True, verbose_name='class')
     event = models.CharField(max_length=128, null=True, verbose_name='onclick')
     position = models.IntegerField(null=False, verbose_name='순서')
+    colmenuauth = models.ForeignKey('Menu_Auth', models.PROTECT, null=False, verbose_name='사용자권한', related_name='col_menuauth')
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, verbose_name='업체')
+    user = models.ForeignKey('UserMaster', models.PROTECT, null=False, verbose_name='사용자')
     use_flag = models.BooleanField(default=True, verbose_name='사용여부')
     visual_flag = models.BooleanField(default=True, verbose_name='표시여부')
     excel_flag = models.BooleanField(default=True, verbose_name='엑셀다운로드사용여부')
@@ -2465,3 +2469,4 @@ class ColumnMaster(models.Model):
                                    related_name='column_updated_by')
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')
+    attr = models.CharField(max_length=64, null=True, verbose_name='속성')

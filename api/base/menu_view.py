@@ -6,6 +6,7 @@ from django.db.models import F, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import viewsets, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django.views import View
 
@@ -148,25 +149,43 @@ class Menuauth(View):
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
 
 
-class columnViewSet(viewsets.ViewSet):
-    queryset = ColumnMaster.objects.all()
-    http_method_names = ['get', 'post', 'patch', 'delete']
-    serializer_class = ColumnSerializer
+class CustomPagination(PageNumberPagination):
+    page_size = 1000  # 페이지당 가져올 항목 수
 
-    def get_queryset(self, request):
+
+class columnViewSet(viewsets.ModelViewSet):
+    queryset = ColumnMaster.objects.all()
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    serializer_class = ColumnSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
         menu_id = self.request.query_params['menu_id']
-        qs = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=request.COOKIES['enterprise_id']) &
-                                         Q(menu__menuauth__user_id=request.COOKIES['user_id']) &
+        qs = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=self.request.COOKIES['enterprise_id']) &
+                                         Q(menu__menuauth__user_id=self.request.COOKIES['user_id']) &
                                          Q(menu=menu_id) &
                                          Q(visual_flag=True)
-                                         ).select_related('menu')
+                                         ).select_related('menu').annotate(code=F('menu__code')).order_by('position')
+
+        # qs = qs.filter(visual_flag=True)
+
         return qs
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset(request)
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+        return super().list(request, request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, request, *args, **kwargs)
 
     @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, request, *args, **kwargs)
+
+    def paginate_queryset(self, queryset):
+        """
+        페이지네이션을 수행하여 요청된 페이지의 항목을 반환합니다.
+        """
+        if self.paginator is None:
+            return None
+
+        return self.paginator.paginate_queryset(queryset, self.request, view=self)

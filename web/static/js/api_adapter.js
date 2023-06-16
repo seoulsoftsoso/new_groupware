@@ -156,4 +156,61 @@ function setRowColor(obj, type){
      $(obj).siblings().css('background-color', '');
 }
 
+function formatData(results, re_column) {
+        //console.log(results);
+        //console.log("re_column  :"  + re_column);
+        return results.map((result, index) => {
+            let rowData = re_column.map(column => result[column]);
+            return rowData;
+        });
+
+    }
+
+function formatDataArray(results, re_column) {
+    return results.map((result, index) => {
+        let rowData = re_column.map(column => {
+          let value = result;
+          column.split('.').forEach(key => {
+            value = value ? value[key] : undefined;
+          });
+          //console.log(index + "column = " + column +"   value =  "+ value)
+          return value;
+        });
+        return rowData;
+  });
+}
+
+function setInput_api(data, re_name, hidden_name) {
+        re_name.forEach((item) => {
+            let tmp = "input[name=" + item.name + "]"
+            $(tmp).val(data[item.index-1]);
+        });
+
+        if(hidden_name.length > 0){
+            let option;
+
+          const groupedArray = hidden_name.reduce((result, obj) => {
+          const key = Object.keys(obj)[0];
+          const value = obj[key];
+
+          if (result[key]) {
+            result[key].push(value);
+          } else {
+            result[key] = [value];
+          }
+
+          return result;
+        }, {});
+
+        for (const key in groupedArray) {
+          const value = groupedArray[key];
+          option = new Option(data[value[0]-1], data[value[1]-1], true, true);
+          $('#' + key).append(option).trigger("change");
+
+        }
+        }
+
+
+    }
+
 

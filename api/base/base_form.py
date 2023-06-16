@@ -177,8 +177,13 @@ class user_fm(forms.Form):
 class item_fm(forms.Form):
 
     def __init__(self, *args, **kwargs):
+        initial_values = kwargs.get('initial', {})
+        initial_values.setdefault('it_location_add', '입고창고')
+        kwargs['initial'] = initial_values
         super(item_fm, self).__init__(*args, **kwargs)
         self.enterpriseName = args[1]
+
+
 
     enterpriseName = '서울소프트'
     # qs_it = ItemMaster.objects.none()
@@ -199,6 +204,18 @@ class item_fm(forms.Form):
                                                  'data-placeholder': '선택 및 검색',
                                              }),
                                          )
+    # 거래처 명 customer_name_ac
+    cu_name_sch = forms.ModelChoiceField(required=False,
+                                         queryset=qs_cs,
+                                         widget=autocomplete.ListSelect2(
+                                             url='customer_name_ac',
+                                             attrs={
+                                                 'class': 'form-control form-control-sm',
+                                                 'style': 'width:100%; height:100%',
+                                                 'data-placeholder': '선택 및 검색',
+                                             }),
+                                         )
+
     # form에서 사용할 품번
     it_code_form = forms.ModelChoiceField(required=False,
                                           queryset=qs_item,
@@ -459,6 +476,18 @@ class item_fm(forms.Form):
                                                  'data-placeholder': '선택 및 검색',
                                              }),
                                          )
+
+    # 창고구분 107 code107_name_ac
+    it_location_add = forms.ModelChoiceField(required=False,
+                                             queryset=qs_cm,
+                                             widget=autocomplete.ListSelect2(
+                                                 url='code107_name_ac',
+                                                 attrs={
+                                                     'class': 'form-control form-control-sm',
+                                                     'style': 'width:100%; height:100%',
+                                                     'data-placeholder': '선택 및 검색',
+                                                 }),
+                                             )
 
     # 수수료율 스마트름뱅이
     it_item_fee_rate = forms.ModelChoiceField(required=False,

@@ -32,7 +32,8 @@ from api.QRCode.RQCodeReceiver import *
 from api.auto_complete import Code_108_ac, Customer_name_ac, Code_104_ac, Code_113_ac, Code_112_ac, Code_114_ac, \
     Code_109_ac, Code_110_ac, Code_111_ac, Code_105_ac, Code_106_ac, Code_115_ac, Code_116_ac, Code_118_ac, Code_119_ac, \
     Code_127_ac, Code_128_ac, Oc_name_ac, Gc_name_ac, Customer_code_ac, Item_code_ac, Item_name_ac, Company_division_ac, \
-    Item_code_name_ac, Item_nice_number_ac, Item_fee_rate, enterprise_name_ac, client_name_ac, menulist_name_ac
+    Item_code_name_ac, Item_nice_number_ac, Item_fee_rate, enterprise_name_ac, client_name_ac, menulist_name_ac, \
+    Code_107_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.codemaster_views_n import CodeMaster_in, CodeMaster_create, CodeMaster_read, CodeMaster_update, \
     CodeMaster_delete
@@ -291,6 +292,7 @@ router.register(r'myinfo', MyInfoViewSet)
 
 router.register(r'unitprice/sub', UnitPriceSubViewSet) #거래처별 단가관리 업체조회, 등록
 router.register(r'getMenulist', MenuHandler)  #업체,사용자별 메뉴 조회
+router.register(r'basic_information/columnview', columnViewSet)
 
 # 주문관리
 router.register(r'ordering_input', OrderingViewSet)
@@ -324,7 +326,7 @@ urlpatterns = [
     path('basic_information/getsublist/', getSubMenuList),
     path('basic_information/menuauth_create/', Menuauth.as_view(), name='basic_information_menuauth_create'),
     path('basic_information/columnconfig/', ColumnConfig),
-    path('basic_information/columnview/', columnViewSet.as_view({'get': 'list'}), name='column-view'),
+    #path('basic_information/columnview/', columnViewSet.as_view({'get': 'list', 'patch':'partial_update'}), name='column-view'),
 
     url('basic_information/codemasters/', CodeMaster_in.as_view(), name='basic_information_codemasters'),
     url('basic_information/codemasters_create/', CodeMaster_create.as_view(),
@@ -698,6 +700,7 @@ urlpatterns = [
     url('autocomplete/code116$', Code_116_ac.as_view(), name='code116_name_ac'),  # 코드 116 - 모델
     url('autocomplete/code118$', Code_118_ac.as_view(), name='code118_name_ac'),  # 코드 118 - 자재분류
     url('autocomplete/code119$', Code_119_ac.as_view(), name='code119_name_ac'),  # 코드 119 - 칼라구분
+    url('autocomplete/code107$', Code_107_ac.as_view(), name='code107_name_ac'),  # 코드 119 - 창고구분
 
     # 품목 기준정보 ac - (유성산업 전용) 브랜드 127, 제품군 128
     url('autocomplete/code127$', Code_127_ac.as_view(), name='code127_name_ac'),  # 코드 127 - 브랜드
