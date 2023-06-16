@@ -136,6 +136,23 @@ class Code_106_ac(autocomplete.Select2QuerySetView):
         return item.name
 
 
+# 용기타입 106
+class Code_107_ac(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        qs = CodeMaster.objects.filter(
+            enterprise__name=self.request.COOKIES['enterprise_name'], group__code=107, enable=True,
+        )
+
+        if self.q:
+            qs = qs.filter(name__contains=self.q).order_by('-id')
+
+        return qs
+
+    def get_result_label(self, item):
+        return item.name
+
+
 # 거래구분 108
 class Code_108_ac(autocomplete.Select2QuerySetView):
 
@@ -618,19 +635,20 @@ class menulist_name_ac(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         menutype = ['S']
 
-        user = UserMaster.objects.get(enterprise_id=self.request.COOKIES['enterprise_id'], id=self.request.COOKIES['user_id'])
+        user = UserMaster.objects.get(enterprise_id=self.request.COOKIES['enterprise_id'],
+                                      id=self.request.COOKIES['user_id'])
 
-        if user.is_superuser :
+        if user.is_superuser:
             menutype.append('M')
 
         qs = MenuMaster.objects.filter(
-                Q(menuauth__use_flag='Y') &
-                Q(menuauth__enterprise_id=user.enterprise_id) &
-                Q(menuauth__user_id=user.id) &
-                Q(type__in=menutype)
-            ).annotate(
-                alias=Coalesce('menuauth__alias', F('name'))
-            )
+            Q(menuauth__use_flag='Y') &
+            Q(menuauth__enterprise_id=user.enterprise_id) &
+            Q(menuauth__user_id=user.id) &
+            Q(type__in=menutype)
+        ).annotate(
+            alias=Coalesce('menuauth__alias', F('name'))
+        )
 
         if self.q:
             qs = qs.filter(alias__contains=self.q)

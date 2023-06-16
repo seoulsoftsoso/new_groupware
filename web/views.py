@@ -163,9 +163,11 @@ def bom_add(request):
 
 
 def material_input(request):
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 19)
     context = {}
     context['cu'] = customer_fm(request.GET, request.COOKIES['enterprise_name'])
     context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    context['column'] = column
     return render(request, 'material/material_input.html', context)
 
 
@@ -526,15 +528,22 @@ def Menumaster(request):
 
 def ColumnConfig(request):
     enter = enterprise_fm(request.GET, request.COOKIES)
-    column = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=request.COOKIES['enterprise_id']) &
-                                         Q(menu__menuauth__user_id=request.COOKIES['user_id']) &
-                                         Q(menu=112) &
-                                         Q(visual_flag=True)
-                                         ).select_related('menu').annotate(code=F('menu__code'))
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 112)
+
     context = {}
     context['ep'] = enter
     context['column'] = column
     return render(request, 'basic_information/columnconfig.html', context)
+
+
+def getColumnList(ep_id, user_id, menu):
+    qs = ColumnMaster.objects.filter(Q(enterprise_id=1) &
+                                     Q(user_id=1) &
+                                     Q(menu=menu) &
+                                     Q(use_flag=True)
+                                     ).select_related('menu').annotate(code=F('menu__code')).order_by('position')
+
+    return qs
 
 
 def kpi_pop(request):

@@ -2,18 +2,6 @@
 <html>
 <header>
     {% include "header.html" %}
-
-    <style>
-        tr.selected {
-            background-color: #ccc;
-        }
-        th {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 100px;
-        }
-    </style>
 </header>
 
 
@@ -75,7 +63,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {% for item in column %}
+                                {% comment %}{% for item in column %}
                                     <tr>
                                         <th></th>
                                         <th class="th-sm" style="word-wrap: break-word;"  >{{ item.label|default_if_none:'' }}</th>
@@ -90,7 +78,7 @@
                                     <th class="th-sm"  >{{ item.excel_flag }}</th>
 
                                     </tr>
-                                        {% endfor %}
+                                        {% endfor %}{% endcomment %}
                                 </tbody>
 
                             </table>
@@ -116,20 +104,20 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form class="needs-validation" id="item_master_form">
+                        <form class="needs-validation" id="column_form">
                             <div class="form-row">
                                 {% for item in column %}
                                     {% if item.edit_flag %}
                                         <div class="col-md-6 mb-3">
-                                        <label for=""><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
+                                        <label><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
                                         {% if item.tag == "input" %}
 
 
-                                    <input type="text" class="{{ item.class_name|safe }}" name="{{ item.label_en|safe }}{{ item.code|safe }}" autocomplete="off"/>
+                                    <input type="text" class="{{ item.class_name|safe }}" name="{{ item.label_en|safe }}" autocomplete="off" {{ item.type }}/>
 
                                         {% elif item.tag == "select" %}
 
-                                            <select class="{{ item.class_name|safe }}">
+                                            <select class="{{ item.class_name|safe }}" name="{{ item.label_en|safe }}" {{ item.type }}>
                                             <option value="1">사용</option>
                                             <option value="0">미사용</option>
                                             </select>
@@ -145,9 +133,10 @@
                             </div>
                         </form>
                         <div class="gradient-buttons pull-right">
-                            <div class="btn btn-primary mr-3" id="item_add-sm-4"> 등 록 </div>
-                            <div class="btn btn-primary mr-3" id="item_edit-sm-4"> 수 정 </div>
-                            <div class="btn btn-primary mr-3" id="item_delete-sm-4"> 삭 제 </div>
+                            <div class="btn btn-primary mr-3" id="reset-btn-sm-112"> 초기화 </div>
+                            {% comment %}<div class="btn btn-primary mr-3" id="add-btn-sm-112"> 등 록 </div>{% endcomment %}
+                            <div class="btn btn-primary mr-3" id="edit-btn-sm-112"> 수 정 </div>
+                            {% comment %}<div class="btn btn-primary mr-3" id="delete-btn-sm-112"> 삭 제 </div>{% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -162,13 +151,19 @@
 <script>
     let main_table = null;
     let re_column = []
+    let re_name = []
+    let select_id = null;
+    let page1_size = 10000;
 
     {% for item in column %}
-        {% if item.label_en != "No" %}
-        re_column.push("result." +  "{{ item.label_en }}")
+
+        re_column.push("{{ item.label_en }}")
+        {% if item.edit_flag %}
+            re_name.push("{{ item.label_en|safe }}")
         {% endif %}
     {% endfor %}
-    console.log(re_column);
+    re_column.push("id");
+
     $(document).ready(function() {
 
         main_table = $('#main_table_sm-112').DataTable({
@@ -179,8 +174,22 @@
                         render: function(data, type, row, meta) {
                             return meta.row + 1;
                         }
-                    }
-                ]
+                    },
+                    {
+                    "targets": "_all",
+                    "className": "ellipsis"
+                  }
+                ],
+            "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        setRowColor(this, 'M');
+
+                        setInput(data);
+
+                        select_id = data[data.length-1];
+                        console.log(select_id);
+                    });
+                }
         })
 
 
@@ -190,42 +199,78 @@
     function search_click() {
 
         let menu_id = $('#id_menulist_name_ac').val()
-        let query = "?menu_id=" + menu_id
+        let query = "?page_size=" + page1_size;
+         query += "&menu_id=" + menu_id
+
         api_gp("/basic_information/columnview/" + query, "GET", {}, (done) => {
-            console.log(done)
+
             draw_column_table(done);
         });
     }
 
     function draw_column_table(done) {
         main_table.rows().remove().draw();
-        console.log(formatData(done));
-        main_table.rows.add(formatData(done)).draw();
+        main_table.rows.add(formatData(done.results, re_column)).draw();
+
     }
 
-    function formatData(results) {
+    function setInput(data) {
 
-        return results.map((result, index) =>  [
-            index +1,
-            result.label,
-            result.pre_label,
-            result.tag,
-            result.type,
-            result.class_name,
-            result.event,
-            result.position,
-            result.use_flag,
-            result.visual_flag,
-            result.excel_flag
-            //re_column
+        re_name.forEach((item, index) => {
+            let tmp = "input[name=" + item + "]"
+            $(tmp).val(data[index+1]);
+        })
 
-
-            {% comment %}re_column.forEach((item) => {
-                item
-                //console.log(item)
-                }){% endcomment %}
-          ]);
     }
+
+    function get_data(type){
+        // form 데이터 가져오기
+      let formData =$('#column_form').serializeArray();
+      formData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
+
+      if (type != 'A'){
+
+          formData.push({name:'pk', value: select_id})
+      }
+
+      return formData
+    }
+
+    $('#reset-btn-sm-112').click(function() {
+        re_name.forEach((item, index) => {
+            let tmp = "input[name=" + item + "]"
+            $(tmp).val("");
+        })
+    })
+
+    $('#add-btn-sm-112').click(function() {
+
+      let allData = get_data('A')
+
+      let val_check = true
+      if (val_check){
+          api_gp("/basic_information/columnview/", "POST", allData, (done) => {
+            alert('추가되었습니다.')
+
+            });
+      }
+    });
+
+    $('#edit-btn-sm-112').click(function() {
+
+      let allData = get_data('E')
+        console.table("allData  : "  + allData)
+      let menu_id = $('#id_menulist_name_ac').val()
+      let query = "?menu_id=" + menu_id
+
+      let val_check = true
+      if (val_check){
+          api_gp("/basic_information/columnview/" + select_id + "/" + query, "PATCH", allData, (done) => {
+            alert('수정되었습니다.')
+
+            });
+      }
+    });
 
 </script>
 </html>

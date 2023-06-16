@@ -20,7 +20,7 @@ from api.models import CodeMaster, CustomerMaster, GroupCodeMaster, Process, Sub
     SensorH2, SensorH2Value, SubprocessTemplet, SubprocessFaultReason, OrderingExItems, Qunbalance, QunbalanceDetail, \
     Rotator, Stator, \
     MyInfoMaster, Orders, OrdersItems, OrdersInItems, OutsourcingItem, OutsourcingInItems, ItemLed, ItemOutOrder, \
-    Device, SubprocessLog, UnitPrice, MenuMaster
+    Device, SubprocessLog, UnitPrice, MenuMaster, ColumnMaster
 from api.models import UserMaster
 from api.models import ItemMaster
 from api.models import BomMaster, Bom, BomLog
@@ -58,7 +58,7 @@ def generate_code(prefix1, model, model_field_prefix, user):
 
 
 def generate_lot_code(code_id, model, model_field_prefix, user):
-    prefix1 = CodeMaster.objects.filter(id=code_id).values('etc').first().get('etc')
+    prefix1 = CodeMaster.objects.filter(id=code_id).values('code').first().get('code')
 
     if not prefix1:
         raise ValidationError('자재구분 코드가 존재하지 않습니다.')
@@ -3744,6 +3744,9 @@ class MenuSerializer(serializers.ModelSerializer):
 
 
 class ColumnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ColumnMaster
+        fields = '__all__'
 
     def to_representation(self, instance):
         return {

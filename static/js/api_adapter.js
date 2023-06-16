@@ -9,6 +9,7 @@ function api_login(username, password, done_callback) {
     })
         .done(function (json) {
             // add cookie
+
             document.cookie = "Authorization=Token " + json.token + "; path=/;";
             document.cookie = "user_id=" + json.user.id + "; path=/;";
             document.cookie = "usercode=" + json.user.code + "; path=/;";
@@ -20,6 +21,7 @@ function api_login(username, password, done_callback) {
             document.cookie = "enterprise_name=" + json.user.enterprise_name + "; path=/;";
             document.cookie = "enterprise_manage=" + json.user.enterprise_manage + "; path=/;";
             document.cookie = "order_company=" + json.user.order_company + "; path=/;";
+            document.cookie = "snd_auth=" + json.user.snd_auth + "; path=/;";
             done_callback();
         })
         .fail(handle_error);
@@ -80,6 +82,7 @@ function flush_token() {
     document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.cookie = 'enterprise_manage=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'snd_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 function get_token() {
@@ -141,3 +144,16 @@ function loading_start() {
 function loading_finish() {
     $('html').css("cursor", "auto");
 }
+
+function setRowColor(obj, type){
+     //선택 row 색상 표시
+    if (type=='M'){
+        $(obj).css('background-color', 'yellow');
+    }else{
+     $(obj).css('background-color', 'orange');
+    }
+
+     $(obj).siblings().css('background-color', '');
+}
+
+
