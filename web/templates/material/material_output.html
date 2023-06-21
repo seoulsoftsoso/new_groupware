@@ -4,481 +4,171 @@
 <body style="overflow: hidden;">
 <!-- {#{% extends 'index.html' %}#}  -->
 {% load static %}
-
+{{ it.media }}
 <div class="spinner" id="spinner">
     <img src="../../../static/img/spinner.gif" width="150px" height="150px"/>
 </div>
 
-<!-- 검색 -->
-<div class="card m-2">
-    <div class="card-body p-2">
-        <!-- 본문 -->
-        <div
-                class="content-search row no-gutters align-items-center content-input-group"
-        >
-            <form
-                    class="col-11"
-                    id="material_import_main-form"
-                    onsubmit="nation2.page = 1; return output_submit(event)"
-            >
-                <div class="row no-gutters">
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>출고기간</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <input class="datepicker form-control"
-                                   id="fr_date"/>
-                            <div class="btn">~</div>
-                            <input class="datepicker form-control"
-                                   id="to_date"/>
-                        </div>
-                    </div>
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 검색  -->
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
 
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>거래처명</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control customer-dropdown-search"
-                                    id="customer_search"
-                                    name="customer_search"
-                            ></select>
-                        </div>
+                            <div class="row ml-3">
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label class="col-form-label">출고기간</label>
+                                        <div class="input-group input-daterange">
+                                        <input type="text"
+                                            class="form-control created_at_after datepicker form-control-sm"
+                                            id="fr_date"
+                                            autocomplete="off"
+                                        />
+                                        <div class="input-group-addon px-3">~</div>
+                                        <input type="text"
+                                            class="form-control created_at_before datepicker form-control-sm"
+                                            id="to_date"
+                                            autocomplete="off"
+                                        />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">거래처</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.cu_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">품명</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.it_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 clearfix">
+                    <div class="gradient-buttons ml-1 col-md-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="search();"><i class="ti-search"></i>  검색</button>
                     </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>브랜드</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control brand-dropdown-search"
-                                    id="brand_search"
-                                    name="brand_search"
-                            ></select>
-                        </div>
-                    </div>
-
                 </div>
-                <div class="row no-gutters">
-                    {#                     <div class="content-input-group col-2 px-0">#}
-                    {#                        <div class="content-input-group-header">#}
-                    {#                            <label>품명</label>#}
-                    {#                        </div>#}
-                    {#                        <div class="content-input-group-input">#}
-                    {#                            <select#}
-                    {#                                    class="form-control item-name-dropdown-search"#}
-                    {#                                    id="item_name_search"#}
-                    {#                                    name="item_name_search"#}
-                    {#                            ></select>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>제품군</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item_group-dropdown-search"
-                                    id="item_group_search"
-                                    name="item_group_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>품번</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item-code-dropdown-search"
-                                    id="item_code_search"
-                                    name="item_code_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>나이스번호</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control nice_number-dropdown-search"
-                                    id="nice_number_search"
-                                    name="nice_number_search"
-                            ></select>
-                        </div>
-                    </div>
-                    {#                    <div class="content-input-group col-3 px-0">#}
-                    {#                        <div class="content-input-group-header">#}
-                    {#                            <label>품명상세</label>#}
-                    {#                        </div>#}
-                    {#                        <div class="content-input-group-input">#}
-                    {#                            <input#}
-                    {#                                    class="form-control"#}
-                    {#                                    id="detail_search"#}
-                    {#                                    name="detail_search"#}
-                    {#                            />#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    {#                    <div class="content-input-group col-2 px-0">#}
-                    {#                        <div class="content-input-group-header">#}
-                    {#                            <label>형태</label>#}
-                    {#                        </div>#}
-                    {#                        <div class="content-input-group-input">#}
-                    {#                            <input#}
-                    {#                                    class="form-control"#}
-                    {#                                    id="shape_search"#}
-                    {#                                    name="shape_search"#}
-                    {#                            />#}
-                    {#                        </div>#}
-                    {#                    </div>#}
+                <div class="col-md-1 mt-4">
+                    <ul class="notification-area pull-right">
+                        <li class="settings-btn">
+                            <i class="ti-settings"></i>
+                        </li>
+                    </ul>
                 </div>
-                <div class="row no-gutters">
-                    <div class="content-input-group col-4 mt-2">
-                        <div class="content-input-group-input input-group">
-                            <input class="form-control" id="multiSearch" placeholder="검색어를 입력해주세요
-                            "/>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="detail_search();">
-                                    🔍
-                                </button>
-
                             </div>
-                        </div>
+
                     </div>
                 </div>
-            </form>
-            <div class="col-1 px-0 ml-auto">
-                <button
-                        class="btn button-search rounded-0 w-100 h-100"
-                        type="submit"
-                        form="material_import_main-form"
-                >
-                    검색
-                </button>
+                </div>
+            </div>
+            <!-- 테이블  -->
+            <div class="row no-gutters ml-4 mr-4">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <table id="material_output_data-table" class="table table-hover table-striped table-bordered display nowrap" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        {% for item in column %}
+                                            {% if item.visual_flag %}
+                                            <th>{{ item.label }}</th>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody id="material-output-tbody"></tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+
             </div>
         </div>
     </div>
 </div>
-{#</div>#}
 
-<!-- 테이블 -->
-
-<!-- 내용 -->
-<form class="card m-2" id="material_output_detail-form">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-content w-100">
-            <div class="row no-gutters w-100 mb-2">
-                <div class="col-1 content-title">출고등록</div>
-                <div class="col-11">
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>출고일자<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control datepicker"
-                                        name="out-at"
-                                        id="out-at"
-                                />
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>거래처</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control customer-dropdown"
-                                        name="purchase_from"
-                                        id="rein-customer"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>브랜드</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control brand-dropdown"
-                                        name="brand"
-                                        id="brand" disabled></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>제품군</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control item_group-dropdown"
-                                        name="item_group"
-                                        id="item_group" disabled></select>
-                            </div>
-                        </div>
-                    </div>
-                      <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품명<strong>*</strong></label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <select class="form-control item-name-dropdown" name="item-name" id="item-name">
-                                </select>
+<!-- offset area start -->
+<div class="offset-area">
+    <div class="offset-close"><i class="ti-close"></i></div>
+    <ul class="nav offset-menu-tab">
+        <li><a class="active" data-toggle="tab" href="#ma_input_item">편집</a></li>
+        <li></li>
+    </ul>
+    <div class="offset-content tab-content">
+        <div id="ma_input_item" class="tab-pane fade in show active">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" id="material_output_main-form">
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3" id="id_it_code_form_div">
+                                    <label><strong>*</strong>품번</label>
+                                    <div class="input-group">
+                                        {{ it.it_code_form }}
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품번<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control item-code-dropdown"
-                                        name="item-code"
-                                        id="item-code"
-                                >
-                                </select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>나이스번호<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control nice_number-dropdown"
-                                        name="nice_number"
-                                        id="nice_number"
-                                >
-                                </select>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품명상세</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="item-detail"
-                                        id="item-detail" disabled/>
-                            </div>
-                        </div>
-                    </div>
-                      <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>형태</label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <input  class="form-control" name="item-shape" id="item-shape" disabled/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>자재분류</label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <select
-                                        class="form-control item_division_dropdown"
-                                        name="item_division"
-                                        id="item_division" disabled></select>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>출고수량<strong>*</strong></label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <input  class="form-control" name="out-amount" id="out-amount" onkeyup="_chkNumber(this, 3)"/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>단가</label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <input  class="form-control" name="out-price" id="out-price" onkeyup="_chkNumber(this, 3)"/>
-                            </div>
-                        </div>
-
-                    </div>
-                      <div class="row no-gutters">
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>부가세포함</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <div class="form-control w-100">
-                                <input
-                                        class="checkbox-row"
-                                        type="checkbox"
-                                        name="tax"
-                                        id="tax"
-                                        checked
-                                />
+                                <div class="col-md-6 mb-3" id="id_it_name_form_div">
+                                    <label><strong>*</strong>품명</label>
+                                    <div class="input-group">
+                                        {{ it.it_name_form }}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>출고창고</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="w-100 h-100  btn-primary" type="button" value="" name="location" id="location" onclick="showLocationModal()"/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-6">
-                            <div class="content-input-group-header">
-                                <label>반출처(목적)</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="purpose"
-                                        id="purpose"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>현재고</label>
-                            </div>
-                            <div class="content-input-group-input">
+                                <div class="col-md-6 mb-3" id="id_cu_name_form_div">
+                                    <label>거래처</label>
+                                    <div>
+                                    {{ it.it_customer_add }}
+                                    </div>
+                                </div>
+                                {% for item in column %}
+                                    {% if item.edit_flag %}
 
-                                <input
-                                        class="form-control"
-                                        name="item-amount"
-                                        id="item-amount"
-                                        onkeyup="_chkNumber(this, 3)"
-                                disabled/>
 
+                                        {% if item.tag == "input" %}
+                                    <div class="col-md-6 mb-3">
+                                    <label><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
+                                    <input type="text" class="{{ item.class_name|safe }}"
+                                           name="{{ item.label_en|safe }}"
+                                           autocomplete="off"
+                                            {% if item.attr != None %} {{ item.attr|safe }} {% endif %}
+                                            {% if item.event != None %} {{ item.event|safe }} {% endif %}/>
+                                     </div>
+                                        {% elif item.tag == "btn" %}
+                                            <div class="col-md-6 mb-3">
+                                    <label><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
+                                    <input type="button" class="{{ item.class_name|safe }}" name="{{ item.label_en|safe }}" onclick="{{ item.event|safe }}" {{ item.attr }}/>
+                                     </div>
+
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="content-input-group col-6">
-                            <div class="content-input-group-header">
-                                <label>비고</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="form-control" name="etc" id="etc"/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>QR</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input class="btn button-custom2 w-100" name="qr" id="qr_search" type="button" onclick="show_qr_print($(this).val())">
-                            </div>
+                        </form>
+                        <div class="gradient-buttons pull-right">
+                        {% for item in column %}
+                            {% if item.tag == "button" %}
+                                <div class="{{ item.class_name|safe }}" onclick="{{ item.event|safe }}">{{ item.label }}</div>
+                            {% endif %}
+                        {% endfor %}
+
                         </div>
                     </div>
                 </div>
-
-            </div>
-            </div>
-            <div class="row no-gutters w-100 justify-content-end">
-                <div class="col-1 px-0 mr-2">
-                        <input placeholder="QR선택" autocomplete="off" class="form-control" name="qr_select" id="qr_select"/>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="resetDetailForm()"
-                    >
-                        초기화
-                    </button>
-                </div>
-                 <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_output_add()"
-                    >
-                        출고등록
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_output_edit()"
-                    >
-                        출고수정
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_output_remove()"
-                    >
-                        출고삭제
-                    </button>
-                </div>
-                <!-- {#                    <div class="col-1 px-0 mr-2">#}
-{#                        <a class="btn button-custom2 w-100" role="button">저장</a>#}
-{#                    </div>#} -->
             </div>
         </div>
     </div>
-</form>
-
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        {# Todo hjlim : Table Line 수 지정 #}
-        <div class="content-table col-12" style="overflow-y:hidden">
-            <table id="material_output_data-table" class="table table-sm text-center" >
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>출고번호</th>
-                    <th>출고일</th>
-                    <th>거래처</th>
-                    <th>브랜드</th>
-                    <th>제품군</th>
-                    <!-- {# <th>구매처</th> #} -->
-                    <th class="sorting_item_name" onclick="detail_search('item__name')">품명</th>
-                    <th class="sorting_item_code" onclick="detail_search('item__code')">품번</th>
-
-                    <th class="sorting_item_nice_number" onclick="detail_search('item__nice_number')">나이스번호</th>
-                    <th>품명상세</th>
-                    <th>형태</th>
-                    <th>출고수량</th>
-                    <th>출고단가</th>
-                    <th>출고창고</th>
-                    <th>반출처(목적)</th>
-                    <th>비고</th>
-                    <th>QR</th>
-                </tr>
-                </thead>
-                <tbody id="material-output-tbody"></tbody>
-            </table>
-
-            <div class="row no-gutters d-flex justify-content-center" id="item_nation2"
-                 style="margin-top: -20px;">
-            </div>
-{#                <div class="col-1 ml-auto">#}
-{#                 <a href="#" id="excel-export" class="col-1 text-center">#}
-{#                    <img src="/static/img/i_excel_c.png" width="38" height="38" />#}
-{#                    <p class="mb-0">엑셀 변환</p>#}
-{#                </a>#}
-{#                </div>#}
-
-        </div>
-    </div>
-
 </div>
-
 <!-- 모달창 -->
 <div class="card m-2">
     <div class="card-body">
@@ -533,27 +223,32 @@
 <script src="{% static 'js/api_materials.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
 <script>
 
-    let nation_data2 = {
-        cname : 'nation2',  // 인스턴스 명과 일치해야함
-        table_id: 'item_nation2',
-        range: 5,
-        page_size: 10,
-    };
+    let main_table = null;
+    let re_column = []
+    let re_invisual_col = []
+    let re_name = []
+    let hidden_name = []
+    let detail_click_id = null;
+    {% for item in column %}
+            {% if item.tag == "input" or item.tag == "btn" %}
+                re_name.push("{{ item.label_en|safe }}")
 
-    let nation2 = new Pnations(nation_data2, detail_search);  // 인스턴스 명
+            {% elif item.tag == "select" %}
 
-    // material_output table 에 사용됨.
-    var detail_click_id = null;
-    var material_output_columns = ['out-at', 'purchase_from', 'item-code', 'item-name', 'item-model', 'item-unit',
-        'current-amount', 'out-amount', 'etc', 'purpose',"out-price", "tax", "location", "qr_search", "nice_number",
-        'item-shape', 'item_group', 'brand', 'item-detail', 'item_division', 'item-amount'];
-
-    // material_input lookup table 에 사용됨.
-    var main_click_id = null;
-    var material_output_columns_in = ['purchase_from', 'item-code', 'check-at', 'in-at', 'item-unit', 'package-amount', "nice_number",
-        'receive-amount', 'in-faulty-amount', 'in-amount', 'etc', 'item-created-at', "out-price", "tax", "location"];
+                hidden_name.push({
+                    "{{ item.label_en|safe }}":
+                     "{{ item.type|safe }}"
+                })
+            {% endif %}
+        {% if not item.visual_flag and item.edit_flag %}
+            re_invisual_col.push("{{ item.type|safe }}")
+            {% else %}
+            re_column.push("{{ item.label_en|safe }}")
+        {% endif %}
+    {% endfor %}
 
     let location_dict = {};
     $('.datepicker').datepicker({
@@ -565,7 +260,7 @@
         todayHighlight: 'true',
     });
 
-    $("#out-at").datepicker("setDate", "today");
+    $("input[name='out-at']").datepicker("setDate", "today");
 
     let total_price = 0;
     function changeTotalPriceFromTax() {
@@ -580,29 +275,50 @@
          $('#total_price').val(total_price)
     }
     $(function () {
-        set_naming();
-        refresh();
+        main_table = $('#material_output_data-table').DataTable({
+            scrollX: true,
+            "columnDefs": [
+                    {
+                        targets: 0,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                    "targets": "_all",
+                    "className": "ellipsis"
+                  }
+                ],
+            "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        // 클릭 로우 색상
+                        setRowColor(this, 'M');
+                        // 데이터 셋팅
 
-        // Table Export
-        $(parent.document).find("#excel-export").click(() => {
-            {#init_excel_export($('#material_output_data-table-up'), '자재품목');#}
-            init_excel_export($('#material_output_data-table'), '재고출고');
-        });
+
+                        setInput_api(data,re_column, re_name, hidden_name);
+
+                        //readonly 셋팅
+                        $('#id_cu_name_form').attr("disabled",true);
+                        $('#id_it_code_form').attr("disabled",true);
+                        $('#id_it_name_form').attr("disabled",true);
+                        $('#id_it_model_add').attr("disabled",true);
+                        $('#id_it_division_add').attr("disabled",true);
+                        $('#id_it_unit_add').attr("disabled",true);
+
+
+                        detail_click_id = data[data.length-1];
+                        console.log(data);
+                    });
+                }
+                })
+        refresh();
     });
 
 
-    function set_naming(){
-        let enterprise_name = get_userinfo().enterprise_name;
-        if (enterprise_name == '(주)건강생활연구소'){
-            $("#n_bom_model1").text("제품군");
-            $("#n_bom_model2").text("제품군");
-            $("#n_bom_model3").text("제품군");
-        }
-    }
-
 
     function refresh() {
-        material_output_init();
+
         detail_search()
     }
 
@@ -628,32 +344,26 @@
         return false;
     }
     function resetDetailForm(){
-        material_output_columns.forEach((item) => {
 
-            {#$(`#material_output_detail-form input[name=${item}]`).val("").trigger("change");#}
-            {#$(`#material_output_detail-form select[name=${item}]`).val("").trigger("change");#}
-            if(item ==="tax"){
-                document.querySelector(`#material_output_detail-form input[name=${item}]`).checked = true
-            } else {
-                $("#material_output_detail-form [name='" + item + "']").val(null).trigger("change");
-            }
-        });
-        document.querySelectorAll("#material-output-tbody > tr").forEach(data => data.classList.remove("clicked"));
         detail_click_id = null;
-        $("#out-at").datepicker("setDate", "today");
+
         set_default_value();
     }
 
     function set_default_value(){
-        {#$("#material_output_main-form [name='package-amount']").val('0');#}
-        {#$("#material_output_main-form [name='receive-amount']").val('0');#}
-        $("#material_output_main-form [name='out-amount']").val('0');
-        $("#material_output_main-form [name='out-price']").val('0');
 
-        $("#item-code").attr("disabled", false);
-        $("#item-name").attr("disabled", false);
-        {#$("#material_output_customer").attr("disabled", false);#}
-        $("#nice_number").attr("disabled", false);
+        $('#material_output_main-form input').val('');
+
+        $('#material_output_main-form select').val(null).trigger('change');
+        $('#material_output_main-form select').attr("disabled",false);
+
+        $('#material_input_tbody').find('tr').siblings().css('background-color', '');
+
+        $("#material_output_main-form [name='out_amount']").val('0');
+        $("#material_output_main-form [name='out_price']").val('0');
+        $("#material_output_main-form [name='fee_rate']").val('0');
+        $("#material_output_main-form [name='out_at']").datepicker("setDate", "today");
+
     }
 
 
@@ -673,66 +383,27 @@
 
     function detail_search(ordering){
 
-        let query = "?page=" + nation2.page + "&";
+        let query = "?page=" + "1" + "&";
 
         let customer_search = ($('#customer_search :selected').val() ? $('#customer_search :selected').val() : "");
 
         let fr_date = $("#fr_date").val();
         let to_date = $("#to_date").val();
 
-        let brand = ($('#brand_search :selected').val() ? $('#brand_search :selected').val() : "");
-        let item_group = ($('#item_group_search :selected').val() ? $('#item_group_search :selected').val() : "");
-        let nice_number = ($('#nice_number_search :selected').val() ? $('#nice_number_search :selected').val() : "");
-        {#let item_name = ($('#item_name_search :selected').val() ? $('#item_name_search :selected').val() : "");#}
         let item_code = ($('#item_code_search :selected').val() ? $('#item_code_search :selected').val() : "");
-        {#let detail = ($('#detail_search').val() ? $('#detail_search').val() : "");#}
-        {#let shape = ($('#shape_search').val() ? $('#shape_search').val() : "");#}
-
-        let multiSearch = $("#multiSearch").val()
-
 
         if (ordering === '' || ordering === null || ordering=== undefined ){
         } else {
               order === ordering ? order = "-" +ordering : order = ordering
         }
 
-        $(".sorting_item_name").html("품명▽")
-        $(".sorting_item_code").html("품번▽")
-        $(".sorting_item_nice_number").html("나이스번호▽")
-        switch(order){
-            case "item__name":
-                $(".sorting_item_name").html("품명▼")
-                break;
-            case "-item__name":
-                $(".sorting_item_name").html("품명▲")
-                break;
-            case "item__code":
-                $(".sorting_item_code").html("품번▼")
-                break;
-            case "-item__code":
-                $(".sorting_item_code").html("품번▲")
-                break;
-             case "item__nice_number":
-                $(".sorting_item_nice_number").html("나이스번호▼")
-                break;
-            case "-item__nice_number":
-                $(".sorting_item_nice_number").html("나이스번호▲")
-                break;
-            default:
-                break;
-        }
         query += "ordering=" + order + "&";
         if (fr_date !== '') query += "fr_date=" + fr_date + "&";
         if (to_date !== '') query += "to_date=" + to_date + "&";
-        if (brand !== '') query += "brand=" + brand + "&";
+
         if (customer_search !== '') query += "customer=" + customer_search + "&";
-        if (item_group !== '') query += "item_group=" + item_group + "&";
-        if (nice_number !== '') query += "nice_number=" + nice_number + "&";
-        {#if (item_name !== '') query += "item_name=" + item_name + "&";#}
+
         if (item_code !== '') query += "item_code=" + item_code + "&";
-        {#if (detail !== '') query += "detail=" + detail + "&";#}
-        {#if (shape !== '') query += "shape=" + shape + "&";#}
-        if (multiSearch !=='') query += 'search=' + multiSearch;
 
         api_gp("/items/out/" + query, "GET", {}, (done) => {
 
@@ -745,256 +416,11 @@
         console.table(done);
 
         let data = done.results;
-        let num = (((nation2.page*1) - 1) * nation_data2["page_size"]) + 1 ;
 
-        let rows = "";
-        for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            console.log(item);
-            let row = `<tr id="${item.id}">
-                           <td> ${i+1}</td>
-                           <td data-item="num">${item.num !== undefined ? item.num: ""}</td>
-                           <td data-item="out-at">${item.out_at !== undefined ? item.out_at: ""}</td>
-                           <td data-item="purchase_from" item-id="${item.purchase_from !== null ? item.purchase_from.id : ""}">${item.purchase_from !== null ? item.purchase_from.name : ""}</td>
-                           <td data-item="brand" item-id="${item.item.brand_id}">${item.item.brand_name !== undefined ? item.item.brand_name: ""}</td>
-                           <td data-item="item_group" item-id="${item.item.item_group_id}">${item.item.item_group_name !== undefined ? item.item.item_group_name: ""}</td>
-                           <td data-item="item-name"  title="${item.item.name}" item-id="${item.item.id}">${item.item.name.length > 10 ? item.item.name.slice(0,10) + "..." : item.item.name}</td>
-                           <td data-item="item-code"  title="${item.item.code}" item-id="${item.item.id}">${item.item.code.length > 10 ? item.item.code.slice(0,10) + "..." : item.item.code}</td>
-                           <td data-item="nice_number" item-id="${item.item.id}">${item.item.nice_number !== undefined ? item.item.nice_number.length >10 ? item.item.nice_number.slice(0,10) + "..." : item.item.nice_number : ""}</td>
-                           <td data-item="item-detail">${item.item.detail !== null ? item.item.detail: ""}</td>
-                           <td data-item="item-shape">${item.item.shape !== undefined ? item.item.shape: ""}</td>
-                           <td data-item="out-amount">${item.out_amount !== undefined ? numberWithCommas(item.out_amount): ""}</td>
-                           <td data-item="out-price">${item.out_price !== undefined ? numberWithCommas(item.out_price): ""}</td>
-                           <td data-item="location">${item.location !== null ? item.location.name: "입고창고"}</td>
-                           <td data-item="purpose">${item.purpose !== null ? item.purpose: ""}</td>
-                           <td class="d-none" data-item="tax">${item.tax !== "X" ? "O" : 'X'}</td>
-                           <td data-item="etc">${item.etc !== null && item.etc !== "" ? item.etc: ""}</td>
-                           <td data-item="qr_search" value="${item.item.qr_path}">${item.item.qr_path !== null ? item.item.qr_path: ""}</td>
-                           <td data-item='item_division' class="d-none" item-id="${item.item.division_id}">${item.item.division_name !== undefined ? item.item.division_name: ""}</td>
-                           <td data-item='item-amount' class="d-none" item-id="${item.item.id}">${item.item.stock !== undefined ? item.item.stock: ""}</td>
-                       </tr>`
-
-            rows += row;
-        }
         spinner();
-
-        nation2.nation_display(done);
-        $('#material-output-tbody').html(rows);
-
-        // click check
-        if (detail_click_id != null){
-            $("#material-output-tbody #" + detail_click_id).addClass('clicked');
-        }
-
-        $('#material-output-tbody > tr').on('click', function () {
-            $(this).parent().find('tr').removeClass('clicked');
-            $(this).addClass('clicked');
-
-            $("#item-code").attr("disabled", true);
-            $("#item-name").attr("disabled", true);
-            $("#nice_number").attr("disabled", true);
-
-            main_click_id = $(this).find("[data-item='item-code']").attr("item-id")
-
-            material_output_columns.forEach((item) => {
-                if (item === 'item-code' ||
-                    item === "item-name" ||
-                    item === "nice_number" ||
-                    item === "brand" ||
-                    item === "item_group" ||
-                    item === "item_division" ||
-                    item === "purchase_from") {
-
-                    $("#material_output_detail-form [name='" + item + "']").val($(this).find("[data-item='" + item + "']").attr("item-id")).trigger("change");
-
-                    {#$("#material_output_detail-form .item-name-dropdown").val(#}
-                    {#    $(this).find("[data-item='" + item + "']").attr("item-id")#}
-                    {#).trigger("change");#}
-                    {#$("#material_output_detail-form .item-code-dropdown").val(#}
-                    {#    $(this).find("[data-item='" + item + "']").attr("item-id")#}
-                    {#).trigger("change");#}
-                    {#$("#material_output_detail-form .nice_number-dropdown").val(#}
-                    {#    $(this).find("[data-item='" + item + "']").attr("item-id")#}
-                    {#).trigger("change");#}
-                } else if(item === "tax"){
-                    if($(this).find("[data-item='" + item + "']").text() === "X"){
-                          document.querySelector(`#${item}`).checked = true
-                         $('#out-amount').keyup()
-                    }else{
-                        document.querySelector(`#${item}`).checked = false
-                        $('#out-amount').keyup()
-                    }
-                     $(`#${item}`).click()
-                }else if(item ==="location"){
-                    $(`#location`).val($(this).find("[data-item='" + item + "']").text() !== "" ? $(this).find("[data-item='" + item + "']").text() : "location")
-                } else {
-                    $("#" + item + "").val($(this).find("[data-item='" + item + "']").text());
-                     $("#" + item + "").trigger("keyup")
-                }
-            });
-            detail_click_id = $(this).attr('id');
-            console.log(main_click_id, detail_click_id);
-        });
     }
 
-    function material_output_init() {
-        function make_dropdown(data, selectors) {
-            let list = "<option value=''>선택 및 검색</option>";
-            let distinct = [];
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                if (selectors.includes('.bom-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.bom_name + "</option>";
-                } else if (selectors.includes('.item-code-dropdown')) {
-                    list += "<option value='" + item.id + "'" +
-                    " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                    " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                    " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                    " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                    item.code + "</option>";
-                } else if (selectors.includes('.item-name-dropdown')) {
-                    if (distinct.indexOf(item.name) === -1) {
-                        list += "<option value='" + item.id + "'" +
-                        " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                        " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                        " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                        " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                        item.name + "</option>";
-                        distinct.push(item.name);
-                    } else {
-                        list += "<option value='" + item.id + "'" +
-                        " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                        " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                        " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                        " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                        item.name + "</option>";
-                    }
-                }
-                else if(selectors.includes(".nice_number-dropdown")){
-                    list += "<option value='" + item.id + "'" +
-                    " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                    " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                    " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                    " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                    item.nice_number + "</option>";
-                } else if(selectors.includes(".product-dropdown")){
-                     list += "<option value='" + item.product + "'>" + item.product + "</option>";
-                } else if(selectors.includes(".shape-dropdown")){
-                     list += "<option value='" + item.shape + "'>" + item.shape + "</option>";
-                } else if(selectors.includes(".detail-dropdown")){
-                     list += "<option value='" + item.detail + "'>" + item.detail + "</option>";
-                } else{
-                 list += "<option value='" + item.id + "'>" + item.name + "</option>";}
-            }
-            $(selectors).html(list);
-            $(selectors).select2({width: '100%'});
-        }
-
-        // 구매처
-        api_gp('/customers_select/', 'GET', {}, (data) => {
-            make_dropdown(data, '.customer-dropdown');
-            make_dropdown(data, '.customer-dropdown-search');
-        });
-
-        // 자재구분
-        api_gp('/codes_select/?group=118&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_division_dropdown');
-        });
-
-        // 창고 list
-        api_gp('/codes_select/?group=107&enable=true', 'GET', {}, (data) => {
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                location_dict[item.name] = item.id;
-            }
-        });
-
-        // 모델
-        api_gp('/codes_select/?group=116&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.model-dropdown');
-        });
-
-        // 브랜드
-        api_gp('/codes_select/?group=127&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.brand-dropdown');
-            make_dropdown(data, '.brand-dropdown-search');
-        });
-
-        // 제품군
-        api_gp('/codes_select/?group=128&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_group-dropdown');
-            make_dropdown(data, '.item_group-dropdown-search');
-        });
-
-
-        // 품번, 품명
-        api_gp("/items_part/", "GET", {}, (data) => {
-            make_dropdown(data, '.item-code-dropdown');
-            make_dropdown(data, '.item-code-dropdown-search');
-            make_dropdown(data, '.item-name-dropdown');
-            make_dropdown(data, '.item-name-dropdown-search');
-            make_dropdown(data, '.nice_number-dropdown');
-            make_dropdown(data, '.nice_number-dropdown-search');
-
-            $('.item-code-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-name-dropdown").val(select2_data.id).trigger("change")
-                $(".nice_number-dropdown").val(select2_data.id).trigger("change")
-                main_click_id = $('#item-name :selected').val();
-            })
-            $('.item-name-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-code-dropdown").val(select2_data.id).trigger("change")
-                $(".nice_number-dropdown").val(select2_data.id).trigger("change")
-                main_click_id = $('#item-name :selected').val();
-            })
-            $('.nice_number-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-code-dropdown").val(select2_data.id).trigger("change")
-                $(".item-name-dropdown").val(select2_data.id).trigger("change")
-                main_click_id = $('#item-name :selected').val();
-            })
-        });
-
-
-        {#api_gp('/items_select/', 'GET', {}, (data) => {});#}
-    }
-
-
-        function show_qr_print(_imgurl){
+    function show_qr_print(_imgurl){
 
         var url = "/material/qr_print/?param1=";
         url = url + _imgurl;

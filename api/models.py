@@ -2456,7 +2456,7 @@ class ColumnMaster(models.Model):
     class_name = models.CharField(max_length=128, null=True, verbose_name='class')
     event = models.CharField(max_length=128, null=True, verbose_name='onclick')
     position = models.IntegerField(null=False, verbose_name='순서')
-    colmenuauth = models.ForeignKey('Menu_Auth', models.PROTECT, null=False, verbose_name='사용자권한', related_name='col_menuauth')
+    # colmenuauth = models.ForeignKey('Menu_Auth', models.PROTECT, null=False, verbose_name='사용자권한', related_name='col_menuauth')
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, verbose_name='업체')
     user = models.ForeignKey('UserMaster', models.PROTECT, null=False, verbose_name='사용자')
     use_flag = models.BooleanField(default=True, verbose_name='사용여부')

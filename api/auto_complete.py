@@ -388,7 +388,7 @@ class Item_code_ac(autocomplete.Select2QuerySetView):
         return qs
 
     def get_result_label(self, item):
-        print(item)
+        # print(item)
 
         # return item.detail + item.name
         return item.code

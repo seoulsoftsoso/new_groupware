@@ -58,6 +58,10 @@ def generate_code(prefix1, model, model_field_prefix, user):
 
 
 def generate_lot_code(code_id, model, model_field_prefix, user):
+
+    if not code_id:
+        raise ValidationError('자재구분 코드를 입력해주세요.')
+
     prefix1 = CodeMaster.objects.filter(id=code_id).values('code').first().get('code')
 
     if not prefix1:
@@ -1019,7 +1023,7 @@ class ItemInSerializer(BaseSerializer):
     def create(self, instance):
 
         if self.context['request'].user.enterprise_id == 54:  # 스마트름뱅이는 입고번호를 lot번호로 사용
-            instance['num'] = generate_lot_code(self.context['request'].POST.get('it_division_sch', ''), ItemIn, 'num',
+            instance['num'] = generate_lot_code(self.context['request'].POST.get('it_division_add', ''), ItemIn, 'num',
                                                 self.context['request'].user)
         else:
             instance['num'] = generate_code('I', ItemIn, 'num', self.context['request'].user)

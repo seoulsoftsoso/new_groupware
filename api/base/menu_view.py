@@ -164,7 +164,7 @@ class columnViewSet(viewsets.ModelViewSet):
         qs = ColumnMaster.objects.filter(Q(menu__menuauth__enterprise_id=self.request.COOKIES['enterprise_id']) &
                                          Q(menu__menuauth__user_id=self.request.COOKIES['user_id']) &
                                          Q(menu=menu_id) &
-                                         Q(visual_flag=True)
+                                         Q(use_flag=True)
                                          ).select_related('menu').annotate(code=F('menu__code')).order_by('position')
 
         # qs = qs.filter(visual_flag=True)
