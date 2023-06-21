@@ -180,16 +180,45 @@ function formatDataArray(results, re_column) {
   });
 }
 
-function setInput_api(data, re_name, hidden_name) {
-        re_name.forEach((item) => {
-            let tmp = "input[name=" + item.name + "]"
-            $(tmp).val(data[item.index-1]);
+function setInput_api(data, re_column, re_name, hidden_name) {
+
+    let re_names = []
+    let hidden_names =[]
+    re_name.forEach(function(name) {
+
+        let index_name = re_column.indexOf(name);
+            re_names.push({
+                name : name,
+                index: index_name
+                })
         });
 
-        if(hidden_name.length > 0){
+    hidden_name.forEach(function(item) {
+        let name = Object.keys(item)[0]; // hidden_name 배열의 이름 추출
+
+        let type_st = Object.values(item)[0];
+
+        let index_sh = re_column.indexOf(name); // re_column에서 일치하는 인덱스 검색
+
+        if (index_sh !== -1) {
+
+            hidden_names.push({
+                [type_st] : index_sh + 1
+                })
+            }
+        });
+
+    //input 요소
+    re_names.forEach((item) => {
+            let tmp = "input[name=" + item.name + "]"
+            $(tmp).val(data[item.index]);
+
+        });
+    // select 요소
+        if(hidden_names.length > 0){
             let option;
 
-          const groupedArray = hidden_name.reduce((result, obj) => {
+          const groupedArray = hidden_names.reduce((result, obj) => {
           const key = Object.keys(obj)[0];
           const value = obj[key];
 

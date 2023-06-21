@@ -181,7 +181,10 @@ def material_outout(request):
 
 def material_output(request):
     context = {}
-    context['out'] = item_form(request.GET, request.COOKIES['enterprise_name'])
+    # context['out'] = item_form(request.GET, request.COOKIES['enterprise_name'])
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 20)
+    context['column'] = column
     return render(request, 'material/material_output.html', context)
 
 
@@ -540,6 +543,7 @@ def getColumnList(ep_id, user_id, menu):
     qs = ColumnMaster.objects.filter(Q(enterprise_id=1) &
                                      Q(user_id=1) &
                                      Q(menu=menu) &
+                                     # Q(visual_flag=True) &
                                      Q(use_flag=True)
                                      ).select_related('menu').annotate(code=F('menu__code')).order_by('position')
 

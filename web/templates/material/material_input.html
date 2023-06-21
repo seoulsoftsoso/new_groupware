@@ -113,38 +113,38 @@
                     <div class="card-body">
                         <form class="needs-validation" id="material_input_main-form">
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label for=""><strong>*</strong>품번</label>
+                                <div class="col-md-6 mb-3" id="id_it_code_form_div">
+                                    <label><strong>*</strong>품번</label>
                                     <div class="input-group">
                                         {{ it.it_code_form }}
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for=""><strong>*</strong>품명</label>
+                                <div class="col-md-6 mb-3" id="id_it_name_form_div">
+                                    <label><strong>*</strong>품명</label>
                                     <div class="input-group">
                                         {{ it.it_name_form }}
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="">자재분류</label>
+                                <div class="col-md-6 mb-3" id="id_it_division_add_div">
+                                    <label>자재분류</label>
                                     <div>
                                     {{ it.it_division_add }}
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="">거래처</label>
+                                <div class="col-md-6 mb-3" id="id_cu_name_form_div">
+                                    <label>거래처</label>
                                     <div>
                                     {{ cu.cu_name_form }}
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="">모델</label>
+                                <div class="col-md-6 mb-3" id="id_it_model_add_div">
+                                    <label>모델</label>
                                     <div>
                                     {{ it.it_model_add }}
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="">단위</label>
+                                <div class="col-md-6 mb-3" id="id_it_unit_add_div">
+                                    <label>단위</label>
                                     <div>
                                     {{ it.it_unit_add }}
                                     </div>
@@ -173,7 +173,7 @@
                                     {% endif %}
                                 {% endfor %}
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3" id="id_it_location_add_div">
                                     <label for="">창고구분</label>
                                     <div>
                                     {{ it.it_location_add }}
@@ -218,29 +218,36 @@
 <script>
     let main_table = null;
     let re_column = []
+    let re_invisual_col = []
     let re_name = []
     let hidden_name = []
     let material_input_id_idx = null;
     {% for item in column %}
+            {% if item.tag == "input" or item.tag == "btn" %}
+                re_name.push("{{ item.label_en|safe }}")
+                {% comment %}re_name.push({
+                    name: "{{ item.label_en|safe }}",
+                    index: {{ forloop.counter }}
+                });{% endcomment %}
 
-        re_column.push("{{ item.label_en }}")
+            {% elif item.tag == "select" %}
 
-        {% if item.tag == "input" or item.tag == "btn" %}
+                {% comment %}hidden_name.push({
+                    "{{ item.type|safe }}":
+                     {{ forloop.counter }}
+                }){% endcomment %}
+                hidden_name.push({
+                    "{{ item.label_en|safe }}":
+                     "{{ item.type|safe }}"
+                })
 
-            re_name.push({
-                name: "{{ item.label_en|safe }}",
-                index: {{ forloop.counter }}
-            });
-        {% elif item.tag == "select" %}
-            hidden_name.push({
-                "{{ item.type|safe }}":
-                 {{ forloop.counter }}
-            })
 
+            {% endif %}
+        {% if not item.visual_flag and item.edit_flag %}
+            re_invisual_col.push("{{ item.type|safe }}")
+            {% else %}
+            re_column.push("{{ item.label_en|safe }}")
         {% endif %}
-
-
-
     {% endfor %}
 
     $(".datepicker").datepicker({
@@ -253,6 +260,7 @@
     });
 
     $(function () {
+
         main_table = $('#material_input_data-table').DataTable({
             scrollX: true,
             "columnDefs": [
@@ -272,7 +280,9 @@
                         // 클릭 로우 색상
                         setRowColor(this, 'M');
                         // 데이터 셋팅
-                        setInput_api(data, re_name, hidden_name);
+
+
+                        setInput_api(data,re_column, re_name, hidden_name);
 
                         //readonly 셋팅
                         $('#id_cu_name_form').attr("disabled",true);
@@ -284,13 +294,23 @@
 
 
                         material_input_id_idx = data[data.length-1];
-                        console.log(material_input_id_idx);
+                        console.log(data);
                     });
                 }
         })
 
+        //offset Setting
+        re_invisual_col.forEach(function (item){
+            let itemid = item + "_div"
+            let divElement = document.getElementById(itemid);
+            if (divElement) {
+              divElement.style.display = "none";
+            }
+        })
+
         let option = new Option('입고창고', 12, true, true);
         $('#id_it_location_add').append(option).trigger('change');
+
         refresh();
     });
 
@@ -334,7 +354,7 @@
         //console.log(query);
 
         api_gp("/items/in/" + query + "/", "GET", {}, (done) => {
-            //console.log(done);
+            console.log(done);
 
             material_input_draw_in_table(done);
         });
@@ -351,34 +371,6 @@
 
     }
 
-
-    function material_input_get_form_data() {
-        let data = {};
-
-        material_input_columns.forEach((item) => {
-            if (item === "enable")
-                data[item] =
-                    $('#material_input_main-form [name="' + item + '"]').val() ===
-                    "사용";
-            else if (
-                item === "receive-amount" ||
-                item === "in-faulty-amount" ||
-                item === "in-price"
-            ) {
-                data[item.replace(/-/gi, "_")] = parseFloat($('#material_input_main-form [name="' + item + '"]').val().replace(/,/g, ""));
-            } else if (item === "in-amount") {
-                data["package_amount"] = parseFloat($('#material_input_main-form [name="' + item + '"]').val().replace(/,/g, ""));
-            } else
-                data[item.replace(/-/gi, "_")] = $(
-                    '#material_input_main-form [name="' + item + '"]'
-                ).val();
-        });
-        data.item = data["item_code"];
-
-        return data;
-    }
-
-
     function add_item_in(_data) {
         api_gp("/items/in/", "POST", _data, (done) => {
             nation1.page = 1;
@@ -389,7 +381,7 @@
             }
 
             alert("등록하였습니다.");
-            init_item_select();
+
             search();
 
         }, () => {
@@ -400,15 +392,17 @@
     function validation_check(type, formdata){
         let valid = true;
 
-        let item_id = $('#id_it_code_form').val() ? $('#id_it_name_form').val() : null;
+        let item_code_id = $('#id_it_code_form').val();
+        let item_name_id = $('#id_it_name_form').val();
+
         let customer_id = $('#id_cu_name_form').val();
         let location = $('#id_it_location_add').val();
 
         if (type === "A"){
-            if(item_id == null){
+            if(item_code_id == null){
                 alert("품목을 선택해주세요");
                 valid = false;
-            }else if(customer_id.length < 1){
+            }else if(customer_id == null){
                 alert("거래처를 선택해주세요");
                 valid = false;
             }
@@ -421,13 +415,16 @@
     }
 
     function material_input_add() {
-        let item_id = $('#id_it_code_form').val() ? $('#id_it_name_form').val() : null;
+
+        let item_code_id = $('#id_it_code_form').val();
+        let item_name_id = $('#id_it_name_form').val();
+
         let customer_id = $('#id_cu_name_form').val();
         let location = $('#id_it_location_add').val();
         let formData =$('#material_input_main-form').serializeArray();
 
         formData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
-        formData.push({name:'item', value: item_id})
+        formData.push({name:'item', value: item_code_id})
         formData.push({name:'customer', value: customer_id})
         formData.push({name:'location', value: location})
 
@@ -450,55 +447,7 @@
                 alert("실패했습니다.");
             });
             }
-        {#console.log(valid);#}
-        {#valid = false;#}
-        {% comment %}if (valid) {
-            // 품목 기준정보 관리에 있는지 검토
-            api_gp("/items/?code_i=" + item_code_direct, "GET", {}, (data) => {
 
-                //console.table(data);
-
-                if (data.count == 0) {  // 품목 기준정보가 없는 경우, 품목 추가
-                    console.log("1");
-                    let form = new FormData();
-
-                    form.append("code", item_code_direct);
-                    form.append("name", item_name_direct);
-                    form.append("qr_path", '');
-                    api_post_detail_itemmaster_form(form, () => {
-                        api_gp("/items/?code_i=" + item_code_direct, "GET", {}, (data) => {
-
-                            // 생성된 데이터가 있을때
-                            let data2 = material_input_get_form_data();
-                            data2.item = data.results[0].id;
-                            data2["item-code"] = item_code_direct;
-                            data2["item-name"] = item_name_direct;
-                            //data2["item-nice_number"] = item_nice_number_direct;
-                            add_item_in(data2);
-                            return true;
-                        });
-                    });
-                } else {  // 품목 기준정보가 있는 경우, 재고 입고
-                    let data3 = material_input_get_form_data();
-
-                    if (item_code_direct != ''){  // Select 가 있는 경우
-                        data3.item = data.results[0].id;
-                    }
-
-                    console.log("3  : " + data3);
-                    data3["item-code"] = item_code_direct;
-                    data3["item-name"] = item_name_direct;
-                    //data3["item-nice_number"] = item_nice_number_direct;
-                    //console.table(data3);
-
-                    add_item_in(data3);
-                    return true;
-                }
-            });
-        } else {
-            alert("데이터가 유효하지 않습니다.");
-            return false;
-        }{% endcomment %}
     }
 
     // Todo : 입고 수정시, 만약 품번을 변경 가능하도록 한다면, 현재고값이 틀어짐 >> 품번 변경 못하도록 함 (기획 요청)
@@ -518,6 +467,7 @@
                 name: key // 새로운 key로 변경
               };
             });
+        let location = $('#id_it_location_add').val();
 
         let valid = validation_check("E", transformedData);
 
@@ -527,14 +477,20 @@
                             alert("수정하였습니다.");
                         }
                     );
-                    return true;
+            return true;
         }
     }
 
     function material_input_remove() {
-        let data = material_input_get_form_data();
-        api_gp("/items/in/?pk=" + material_input_id_idx + "/", "DELETE", data, (data) => {
-                nation1.page = 1;
+        if(material_input_id_idx == null){
+            alert("삭제할 데이터를 선택해주세요.");
+            return;
+        }
+
+        let data = {}
+        data.qr = $('input[name="qr_path"]').val();
+        api_gp("/items/in/" + material_input_id_idx + "/", "DELETE", data, (data) => {
+
                 form_blank();
                 search();
                 alert("삭제하였습니다.");
@@ -593,12 +549,19 @@
         if (cu_id != null) {
             get_feeRate(cu_id, it_code);
         }
-        $('#material_input_item-code-direct').val(e.params.data.text);
+
+        if (it_code != null){
+            get_itemmaster_info(it_code, "C")
+        }
+
     });
 
     $('#id_it_name_form').on('select2:select', function (e) {
+        let it_code = e.params.data.id;
+        if (it_code != null){
+            get_itemmaster_info(it_code, "N")
+        }
 
-        $('#material_input_item-name-direct').val(e.params.data.text);
     });
 
     function get_feeRate(cuId, itCode) {
@@ -610,9 +573,42 @@
 
         api_gp("/unitprice/sub/", "get", postData, (done) => {
 
-                $('#material_input_fee_rate').val(done.results[0].fee_rate);
-                $('#material_input_in-price').val(done.results[0].unit_price);
+            if (done.count == 0){
+                alert("거래처별 단가관리에서 단가와 수수료를 등록해주세요")
+            }else {
+
+                $('input[name="fee_rate"]').val(done.results[0].fee_rate);
+                $('input[name="in_price"]').val(done.results[0].unit_price);
+
+            }
+
             })
+    }
+
+    function get_itemmaster_info(id, type) {
+        if (id == null){
+            console.log("선택된 품번, 품명이 존재하지 않습니다.")
+        }else{
+            api_gp(`/items/?id=${id}`, 'get', {},(done)=>{
+                done = done.results[0]
+                console.log(done);
+                let option = new Option(done.division_name, done.division_id, true, true);
+                $("#id_it_division_add").append(option).trigger('change');
+                option = new Option(done.model_name, done.model_id, true, true);
+                $("#id_it_model_add").append(option).trigger('change');
+
+                option = new Option(done.unit_name, done.unit_id, true, true);
+                $("#id_it_unit_add").append(option).trigger("change")
+
+                if (type == "C"){
+                    option = new Option(done.name, done.id, true, true);
+                    $("#id_it_name_form").append(option).trigger("change")
+                }else{
+                    option = new Option(done.code, done.id, true, true);
+                    $("#id_it_code_form").append(option).trigger("change")
+                }
+            })
+        }
     }
 
     function form_blank() {
