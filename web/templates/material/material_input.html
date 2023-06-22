@@ -574,7 +574,9 @@
         api_gp("/unitprice/sub/", "get", postData, (done) => {
 
             if (done.count == 0){
-                alert("거래처별 단가관리에서 단가와 수수료를 등록해주세요")
+                alert("거래처별 단가관리에서 단가와 수수료를 등록해주세요");
+                $('#material_output_main-form [name="fee_rate"]').val("");
+                $('#material_output_main-form [name="in_price"]').val("");
             }else {
 
                 $('input[name="fee_rate"]').val(done.results[0].fee_rate);

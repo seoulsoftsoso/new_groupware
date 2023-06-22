@@ -125,3 +125,22 @@ function items_rein_search(my_arr, done_callback) {
        .fail(handle_error);
 }
 
+function validation_itemcode_check(type, item_code_id){
+        let valid = true;
+
+        if (type === "A"){
+            if(item_code_id == null){
+                alert("품목을 선택해주세요");
+                valid = false;
+            }/*else if(customer_id == null){
+                alert("거래처를 선택해주세요");
+                valid = false;
+            }*/
+        }else{
+
+        }
+
+
+        return valid;
+    }
+
