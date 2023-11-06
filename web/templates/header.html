@@ -1,75 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
 {% load static %}
+<head>
 
-<meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-   {% comment %} <title>SmartMES - Seoulsoft Dashboard</title>{% endcomment %}
+    <meta charset="utf-8">
 
-{% comment %}<link rel="shortcut icon" type="image/png" href="srtdash/assets/images/icon/favicon.ico">{% endcomment %}
-<link rel="shortcut icon" type="image/png" href="{% static 'srtdash/assets/images/icon/favicon.ico' %}">
+    <!--네이버 검색등록 -->
+    <meta name="naver-site-verification" content="3341b7ec1724ec0a9582242d0010961174bd3b25"/>
+    <meta name="description" content="여객화물운송업 및 제조업에 스마트 솔루션을 제공하는 전문 기업으로, 버스 ERP, 스마트 팩토리, 스마트 공방, 지능형 AVM 등의 솔루션을 제공하고 있습니다. 무료 컨설팅을 통해 회사의 경쟁력을 키워보세요.">
 
-{% comment %}<script src="https://code.jquery.com/jquery-3.5.1.js"></script>{% endcomment %}
- {% comment %}<script src="{% static 'srtdash/assets/js/vendor/jquery-2.2.4.min.js' %}"></script>{% endcomment %}
+    <!--  구글폰트 링크  -->
 
-<!-- jQuery 라이브러리 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400&display=swap" rel="stylesheet">
 
-<!-- jQuery UI 라이브러리 -->
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'admin/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/slick.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" >
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/font-awesome.min.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/themify-icons.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/metisMenu.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/owl.carousel.min.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/slicknav.min.css' %}">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Popper.js script for dropdown menu -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-<!-- load bootstrap datepicker stylesheet-->
-<link rel="stylesheet" href="{% static 'bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+    <script src="http://mattstow.com/experiment/responsive-image-maps/jquery.rwdImageMaps.min.js"></script>
+    <!-- 기존 naver map clientID
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=dxGxubaN3QcjV5OPEYjC"></script>
+    -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3ec4e4ae0adbe97712d1274f5920055f"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+    <link rel="stylesheet" href="{% static 'css/content.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font/linecon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vector-icons/vector-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font/steadysets.css' %}">
+    <!-- fullpage.css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'fullpage/fullpage.css' %}">
+    <script type="text/javascript" charset="utf-8" src="{% static 'js/default.js' %}"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 
-<!-- others css -->
+    <!--공홈 url-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="{% static 'admin/js/slick.min.js' %}"></script>
+    <script src="{% static 'admin/js/slickslide.js' %}"></script>
+    <script src="{% static 'admin/js/main_slide.js' %}" type="text/javascript" defer="defer"></script>
+    <script src="{% static 'admin/js/custom.js' %}" defer="defer"></script>
 
-    <link rel="stylesheet" href="{% static 'srtdash/assets/css/typography.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/default-css.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/styles.css' %}">
-<link rel="stylesheet" href="{% static 'srtdash/assets/css/responsive.css' %}">
+    <title>{% block title %}서울소프트{% endblock %}</title>
+</head>
 
-<!-- modernizr css -->
-
-<script src="{% static 'srtdash/assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
-
-<!-- load bootstrap datepicker js -->
-<script src="{% static 'bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
-<script src="{% static 'bootstrap-datepicker/locales/bootstrap-datepicker.ko.min.js' %}"></script>
-
-<!-- select2 CDN -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-
-<!-- datatables -->
-
-<link rel="stylesheet" href="{% static 'srtdash/datatable/jquery.dataTables.min.css' %}">
-<script src="{% static 'srtdash/datatable/jquery.dataTables.min.js' %}"></script>
-
-<!-- default script -->
-
-<script src="{% static 'srtdash/assets/js/popper.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/owl.carousel.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/metisMenu.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/jquery.slicknav.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/plugins.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
-
-
-
-
-
-<script src="{% static 'js/api_adapter.js' %}" type="text/javascript"></script>
-<script src="{% static 'js/main.js' %}" type="text/javascript"></script>
-
-
-<script>
-    const tabID = sessionStorage.tabID ? sessionStorage.tabID : sessionStorage.tabID = Math.random();
-</script>
+<body>

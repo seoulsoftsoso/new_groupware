@@ -50,14 +50,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
 
-    'customer_manage',
 
     'dal',
     'dal_select2',
     'mathfilters',
 
-    # 2022-02-14 샛별식품 라벨프린터 관련 업데이트
-    'order_manage',
 ]
 SWAGGER_SETTINGS = {
    'DEFAULT_INFO': 'import.path.to.urls.api_info',

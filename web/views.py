@@ -14,7 +14,9 @@ from api.form import Search_Customer1, Search_Code
 from api.models import Process, ItemRein, Ordering, OrderingExItems, ItemMaster, MenuMaster, Menu_Auth, \
     EnterpriseMaster, ColumnMaster
 from api.orderpurchase.orderpurchase_form import orderpurchase_form
-from customer_manage.form import Search_Customer
+
+from django.views.generic import View, TemplateView, FormView, ListView
+
 
 
 def index(request):
@@ -163,7 +165,7 @@ def bom_add(request):
 
 
 def material_input(request):
-    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 19)
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 19, 'M')
     context = {}
     context['cu'] = customer_fm(request.GET, request.COOKIES['enterprise_name'])
     context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
@@ -183,17 +185,25 @@ def material_output(request):
     context = {}
     # context['out'] = item_form(request.GET, request.COOKIES['enterprise_name'])
     context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
-    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 20)
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 20, 'M')
     context['column'] = column
     return render(request, 'material/material_output.html', context)
 
 
 def material_import(request):
-    return render(request, 'material/material_import.html', {})
+    context = {}
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 21, 'M')
+    context['column'] = column
+    return render(request, 'material/material_import.html', context)
 
 
 def material_status(request):
-    return render(request, 'material/material_status.html', {})
+    context = {}
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 22, 'M')
+    context['column'] = column
+    return render(request, 'material/material_status.html', context)
 
 
 def material_status_tv(request):
@@ -212,7 +222,11 @@ def material_status_tv_pop(request):
 
 
 def material_adjust(request):
-    return render(request, 'material/material_adjust_add.html', {})
+    context = {}
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 23, 'M')
+    context['column'] = column
+    return render(request, 'material/material_adjust_add.html', context)
 
 
 def material_adjust_status(request):
@@ -333,7 +347,13 @@ def temp_volt_monitoring_lookup(request):
 
 
 def order_manage(request):
-    return render(request, 'order/order_manage.html', {})
+    context = {}
+    context['it'] = item_fm(request.GET, request.COOKIES['enterprise_name'])
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 37, 'M')
+    subcolumn = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 37, 'S')
+    context['column'] = column
+    context['subcolumn'] = subcolumn
+    return render(request, 'order/order_manage.html', context)
 
 
 def order_input(request):
@@ -531,7 +551,7 @@ def Menumaster(request):
 
 def ColumnConfig(request):
     enter = enterprise_fm(request.GET, request.COOKIES)
-    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 112)
+    column = getColumnList(request.COOKIES['enterprise_id'], request.COOKIES['user_id'], 112, 'M')
 
     context = {}
     context['ep'] = enter
@@ -539,10 +559,14 @@ def ColumnConfig(request):
     return render(request, 'basic_information/columnconfig.html', context)
 
 
-def getColumnList(ep_id, user_id, menu):
+def getColumnList(ep_id, user_id, menu, tier):
+    if tier is None:
+        tier = "M"
+
     qs = ColumnMaster.objects.filter(Q(enterprise_id=1) &
                                      Q(user_id=1) &
                                      Q(menu=menu) &
+                                     Q(tier=tier) &
                                      # Q(visual_flag=True) &
                                      Q(use_flag=True)
                                      ).select_related('menu').annotate(code=F('menu__code')).order_by('position')

@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Sum
 from django_filters import DateFromToRangeFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import viewsets, status
@@ -21,7 +22,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
 
         class Meta:
             model = Orders
-            fields = ['id', 'code_id']
+            fields = ['id']
 
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
@@ -33,7 +34,10 @@ class OrdersViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "OrdersViewSet", "get_queryset", False)
-        qs = Orders.objects.filter(enterprise=self.request.user.enterprise).order_by('-id')
+        qs = Orders.objects.filter(enterprise=self.request.user.enterprise, finish_chk=0).annotate(
+            item_supply_total=Sum('ordersitems__quantity') * Sum('ordersitems__item_price') + Sum(
+                'ordersitems__quantity') * Sum('ordersitems__item_price') * 0.1
+        ).order_by('-id')
 
         if 'last' in self.request.query_params:
             last = self.request.query_params['last']
@@ -114,8 +118,10 @@ class OrdersViewSet(viewsets.ModelViewSet):
             mail_info = dict(gmail_user='seoulsoftinfo@gmail.com', gmail_password='zwsixkqojsisiqpc',
                              sent_from=enter_email, send_to=customer_email,
                              Cc='yubin.shin@seoul-soft.com', Bcc=enter_email,
-                             subject=request.data['enterprise_name'] + " - 발행한 발주서입니다.", enterprise=request.data['enterprise_name'],
-                             enter_email=enter_email, enter_fax=enter_fax, enter_call=enter_call, logo_img=logo_img, type="발주서")
+                             subject=request.data['enterprise_name'] + " - 발행한 발주서입니다.",
+                             enterprise=request.data['enterprise_name'],
+                             enter_email=enter_email, enter_fax=enter_fax, enter_call=enter_call, logo_img=logo_img,
+                             type="발주서")
 
             # 'hjlim@seoul-soft.com, greenbi5693@naver.com, ubin1101@gmail.com, ubin1101@naver.com'
 
@@ -129,107 +135,45 @@ class OrdersViewSet(viewsets.ModelViewSet):
         else:
             raise ValidationError('거래처 이메일을 확인해 주시기 바랍니다.')
 
-
     def list(self, request, *args, **kwargs):
         return super().list(request, request, *args, **kwargs)
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "OrdersViewSet", "create", False)
-        res = super().create(request, request, *args, **kwargs)
-        if 'itemCnt' in request.data:
-            cnt = int(request.data['itemCnt'])
-            user = request.user
-
-            item_id = []
-            item_detail = []
-
-            item_quantity = []
-            item_price = []
-            supply_price = []
-            surtax = []
-            item_supply_total = []
-
-            item_remarks = []
-            item_file = []
-
-            # 초기화
-            for i in range(0, cnt):
-                item_id.append(None)
-                item_detail.append(None)
-
-                item_quantity.append(None)
-                item_price.append(None)
-                supply_price.append(None)
-                surtax.append(None)
-                item_supply_total.append(None)
-
-                item_remarks.append(None)
-                item_file.append(None)
-
-            for i in range(0, cnt):
-                item_id[i] = request.data['item_id[' + str(i) + ']']  # 품번 ID
-                item_detail[i] = request.data['item_detail[' + str(i) + ']']  # 품명상세
-
-                item_quantity[i] = request.data['item_quantity[' + str(i) + ']']  # 수량
-                item_price[i] = request.data['item_price[' + str(i) + ']']  # 단가
-                supply_price[i] = request.data['supply_price[' + str(i) + ']']  # 공급가
-                surtax[i] = request.data['surtax[' + str(i) + ']']  # 부가세
-                item_supply_total[i] = request.data['item_supply_total[' + str(i) + ']']  # 합계
-
-                item_remarks[i] = request.data['item_remarks[' + str(i) + ']']  # 비고
-                item_file[i] = request.data['file[' + str(i) + ']']
-
-                # 발주항목 등록
-                row = OrdersItems.objects.create(orders_id=res.data['id'],
-                                                 item_id=item_id[i],
-                                                 item_detail=item_detail[i],
-
-                                                 quantity=(0 if (item_quantity[i] == '') else item_quantity[i]),
-                                                 item_price=(0 if (item_price[i] == '') else item_price[i]),
-
-                                                 supply_price=(0 if (supply_price[i] == '') else supply_price[i]),
-                                                 surtax=(0 if (surtax[i] == '') else surtax[i]),
-                                                 item_supply_total=(0 if (item_supply_total[i] == '') else item_supply_total[i]),
-
-                                                 remarks=item_remarks[i],
-                                                 file=item_file[i],
-
-                                                 created_by=user,
-                                                 updated_by=user,
-                                                 created_at=user,
-                                                 updated_at=user,
-                                                 enterprise=request.user.enterprise
-                                                 )
-
-                # 미입고 등록
-                num = generate_code('I', ItemIn, 'num', user)
-                OrdersInItems.objects.create(ins=False,  # 미입고
-                                             orders_id=res.data['id'],
-                                             orders_item_id=row.id,
-                                             num=num,
-                                             item_id=item_id[i],
-                                             item_detail=item_detail[i],
-
-                                             quantity=(0 if (item_quantity[i] == '') else item_quantity[i]),
-                                             item_price=(0 if (item_price[i] == '') else item_price[i]),
-                                             supply_price=(0 if (supply_price[i] == '') else supply_price[i]),
-
-                                             surtax=(0 if (surtax[i] == '') else surtax[i]),
-                                             item_supply_total=(0 if (item_supply_total[i] == '') else item_supply_total[i]),
-
-                                             in_quantity=(0 if (item_quantity[i] == '') else item_quantity[i]),  # 입고수량
-                                             in_date=None,  # 입고일자
-
-                                             created_by=user,
-                                             updated_by=user,
-                                             created_at=user,
-                                             updated_at=user,
-                                             enterprise=request.user.enterprise
-                                             )
 
 
-        return res
+        cu_id = request.data.get('customer')
+        orderExgist = Orders.objects.filter(enterprise=self.request.user.enterprise, customer=cu_id,
+                                            finish_chk=0).order_by('-id')
+        if orderExgist.exists() is False:
+            res = super().create(request, request, *args, **kwargs)
+            res_id = res.data['id']
+        else:
+            res = None
+            res_id = orderExgist.first().id
+
+        item_id = request.data.get('item')
+        quantity = request.data.get('quantity', 0)
+        price = request.data.get('item_price', 0)
+        user = request.user
+
+        # 발주항목 등록
+        row = OrdersItems.objects.create(orders_id=res_id,
+                                         item_id=item_id,
+
+                                         quantity=(0 if (quantity == '') else quantity),
+                                         item_price=(0 if (price == '') else price),
+
+                                         created_by=user,
+                                         updated_by=user,
+                                         created_at=user,
+                                         updated_at=user,
+                                         enterprise=request.user.enterprise
+                                         )
+
+        return Response({'message': '주문 및 발주항목이 성공적으로 생성되었습니다.', 'data':{'orders_id' : row.orders_id} }, status=status.HTTP_201_CREATED)
+        # return res_id
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, request, *args, **kwargs)
@@ -370,7 +314,7 @@ class OrdersInItemsViewSet(viewsets.ModelViewSet):
                 row.delete()
 
             orders = Orders.objects.get(id=orders_id)
-            customer = orders.code
+            customer = orders.customer
 
             # 재고입고 진행
             current_amount = ItemMaster.objects.get(pk=item_id).stock
@@ -418,7 +362,6 @@ class OrdersInItemsViewSet(viewsets.ModelViewSet):
             # 아이템에 QR코드 이미지 경로 업데이트
             # ex : previous.item.qrpath = qrcodePath
             # ex : previous.item.save()
-
 
             # 품목마스터 현재고 재계산
             item = ItemMaster.objects.get(pk=item_id)
@@ -537,7 +480,8 @@ class OrdersInItemsViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        kpi_log(self.request.user.enterprise, self.request.user.user_id, "OrdersInItemsViewSet", "partial_update", False)
+        kpi_log(self.request.user.enterprise, self.request.user.user_id, "OrdersInItemsViewSet", "partial_update",
+                False)
         return super().partial_update(request, request, *args, **kwargs)
 
     @transaction.atomic
@@ -617,12 +561,10 @@ class OrdersInItemsViewSet(viewsets.ModelViewSet):
                 b = orders_item.in_ed_quantity  # 입고된 수량
                 remain = (a - b) if ((a - b) >= 0) else 0  # 미입고 수량 (남은 수량)
 
-
                 # if remain == 0:
                 #     orders_item.in_status = True  # 입고완료
                 # else:
                 #     orders_item.in_status = False  # 미입고
-
 
                 # 미입고 : 입고한 수량 = 0
                 # 입고완료 : 발주 수량 <= 입고한 수량
@@ -674,7 +616,6 @@ class OrdersInItemsViewSet(viewsets.ModelViewSet):
         return super().destroy(request, request, *args, **kwargs)
 
 
-
 def orders_status_check(self, _id):
     OrdersItems_qs = OrdersItems.objects.filter(orders_id=_id)
 
@@ -690,7 +631,6 @@ def orders_status_check(self, _id):
         else:
             row.in_status = ''
             row.save()
-
 
         if row.in_status == '입고완료':
             ok_in = ok_in + 1
@@ -710,39 +650,3 @@ def orders_status_check(self, _id):
             orders.in_status = '일부입고'
 
         orders.save()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

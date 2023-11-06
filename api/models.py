@@ -1561,25 +1561,17 @@ class OrderIn(models.Model):
 
 
 class Orders(models.Model):
-    code = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, verbose_name='거래처코드')  # 거래처코드
+    # code = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, verbose_name='거래처코드', related_name='Orders_code')  # 거래처코드
+    customer = models.ForeignKey('CustomerMaster', models.PROTECT, null=True, verbose_name='거래처코드', related_name='Orders_customer')  # 거래처코드
+
     # division = models.ForeignKey('CodeMaster', models.PROTECT, null=True, verbose_name='거래처구분')  # 거래처구분
-    licensee_number = models.CharField(max_length=32, null=True, verbose_name='사업자번호')  # 사업자번호
-    owner_name = models.CharField(max_length=8, null=True, verbose_name='대표자명')  # 대표자명
-    business_conditions = models.CharField(max_length=24, null=True, verbose_name='업태')  # 업태
-    business_event = models.CharField(max_length=16, null=True, verbose_name='종목')  # 종목
-    postal_code = models.CharField(max_length=12, null=True, verbose_name='우편번호')  # 우편번호
-    address = models.CharField(max_length=128, null=True, verbose_name='주소')  # 주소
-    office_phone = models.CharField(max_length=32, null=True, verbose_name='회사전화번호')  # 회사전화번호
-    office_fax = models.CharField(max_length=32, null=True, verbose_name='회사팩스번호')  # 회사팩스번호
-    charge_name = models.CharField(max_length=8, null=True, verbose_name='담당자')  # 담당자
-    charge_phone = models.CharField(max_length=32, null=True, verbose_name='담당자연락처')  # 담당자연락처
-    charge_level = models.CharField(max_length=8, null=True, verbose_name='직급')  # 직급
-    email = models.CharField(max_length=64, null=True, verbose_name='이메일')  # email
+
     # enable = models.BooleanField(default=True, verbose_name='사용구분')  # 사용구분
     etc = models.CharField(max_length=64, null=True, verbose_name='비고')  # 비고
 
-    orders_code = models.CharField(max_length=32, null=True, verbose_name='발주번호')
-    in_status = models.CharField(default='', max_length=16, verbose_name='입고현황')  # 미입고(''), 일부입고, 입고완료
+    # orders_code = models.CharField(max_length=32, null=True, verbose_name='발주번호')
+    po_no = models.CharField(max_length=32, null=True, verbose_name='발주번호')
+    in_status = models.CharField(default='U', max_length=16, verbose_name='입고현황')  #  U(미입고),P(일부입고),Finish(입고완료)
     provide_sum = models.FloatField(default=0, verbose_name='공급가')
     provide_surtax = models.BooleanField(default=True, verbose_name='부가세포함')
 
@@ -1592,15 +1584,17 @@ class Orders(models.Model):
     send_date = models.DateField(null=True, verbose_name='발송일자')  # 발송일자
     send_chk = models.BooleanField(default=False, verbose_name='발송여부')  # 발송여부
 
+    finish_date = models.DateTimeField(null=True, verbose_name='마감일자')  # 마감일자
+    finish_chk = models.BooleanField(default=0, verbose_name='마감여부')  # 마감여부  0(미완료), 1(마감완료)
+
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='orders_master_created_by',
                                    verbose_name='최초작성자')  # 최초작성자
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='orders_master_updated_by',
                                    verbose_name='최종작성자')  # 최종작성자
-    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
-    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='orders_master_enterprise',
                                    verbose_name='업체')
-
 
 class OrdersItems(models.Model):
     orders = models.ForeignKey('Orders', models.PROTECT, null=True, verbose_name='발주서')
@@ -2470,3 +2464,4 @@ class ColumnMaster(models.Model):
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')
     attr = models.CharField(max_length=64, null=True, verbose_name='속성')
+    tier = models.CharField(max_length=1, null=False, default='M', verbose_name='테이블계층')  # 메인과 sub테이블 구분 M,S

@@ -4,7 +4,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from api.models import UserMaster, MenuMaster
+from api.models import UserMaster, MenuMaster, CodeMaster
 from api.serializers import UserMasterSerializer, MenuSerializer
 from rest_framework import status, viewsets
 
@@ -19,12 +19,18 @@ class CustomObtainAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        location = CodeMaster.objects.filter(name='입고창고', enterprise_id=user.enterprise_id).first()
+        if location:
+            location_id = location.id
+        else:
+            # 원하는 조건에 해당하는 레코드가 없을 경우 예외 처리
+            raise Exception('입고창고 레코드를 찾을 수 없습니다.')
 
         #         Token.objects.filter(user=user, created__lt=get_expire_time()).delete()
 
         token, created = Token.objects.get_or_create(user=user)
 
-        return Response({'token': token.key, 'user': UserMasterSerializer(user).data}, status=status.HTTP_200_OK)
+        return Response({'token': token.key, 'user': UserMasterSerializer(user).data, 'location': location.id}, status=status.HTTP_200_OK)
 
 
 class MenuHandler(viewsets.ModelViewSet):

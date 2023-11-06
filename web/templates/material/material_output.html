@@ -180,29 +180,15 @@
                 </div>
                 <div class="modal-body d-flex justify-content-center">
                     <div class="card m-2">
-                        <div class="card-body p-2 ">
-                            <div class="p-2 m-2 content-table" style="overflow-y:hidden; overflow-x: hidden; height: 100px;">
-                                <table class="text-center">
-                                    <thead>
-                                        <tr style="font-weight: bold">품목정보</tr>
-                                    </thead>
-                                    <thead>
-                                        <tr>
-                                        <th>브랜드</th>
-                                        <th>제품군</th>
-                                        <th>품명</th>
-                                        <th>품번</th>
-                                        <th>나이스번호</th>
-                                        <th>품명상세</th>
-                                        <th>형태</th>
-                                        <th>현재고</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="itemInform"></tbody>
-                                </table>
+                        <div class="card-body p-2 " style="display: flex; flex-direction: row;">
+                            <div class="p-2 m-2 content-table" style="overflow-y:hidden; overflow-x: hidden; flex:1;">
+                                <div class="card-title" style="text-align: center;"> 품목정보
+                                    <div style="text-align: center;" id="itemInform"></div>
+                                </div>
                             </div>
-                                <div class="card-title">창고정보</div>
-                                    <div class="card-body row" id="selectLocation" style="overflow-y:hidden;">
+                                <div class="card-title" style="text-align: center; overflow-x: hidden; flex:1;">창고정보
+
+                                    <div class="card-body row" id="selectLocation" style="height: 128px"></div>
                                 </div>
                         </div>
                     </div>
@@ -592,13 +578,7 @@
         shape: "",
         amount: 3300
     }
-    let itemAmountAtLocations = {
-        입고창고: 100,
-        쇼핑몰창고: 1000,
-        A창고: 1500,
-        B창고: 700,
-        C창고: 0
-    }
+
 
     function showLocationModal() {
         if (main_click_id === undefined || main_click_id === null) {
@@ -609,9 +589,8 @@
         $("#locationModal").modal()
         console.log(main_click_id);
         api_gp(`/material/location/?item=${main_click_id}`, 'GET', {}, (data) => {
-            console.log("data");
-            console.log(data);
-            itemAmountAtLocations = data;
+
+            let itemAmountAtLocations = data;
             let location = '';
             for (let key in itemAmountAtLocations) {
                 if (itemAmountAtLocations.hasOwnProperty(key)) {
@@ -619,7 +598,7 @@
 
                     location += `<div class="col-sm-6 mb-4 col-xl-3" id="${key.replace(/\s/g, '')}" onclick="selectLocation('${key}','${value}')">
                                     <div class="card">
-                                        <div class="card-body">
+                                        <div class="card-body" style="background: no-repeat center; background-image: url('../../../static/img/storage.png'); background-size: contain; display: flex; flex-direction: column; justify-content: space-between;">
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-uppercase mb-1"> ${key} </div>
@@ -635,45 +614,70 @@
         });
 
          api_gp("/items/" + main_click_id, "GET", {}, (done) => {
-            itemInform = done
-             console.log(itemInform)
+             let itemInform = done
+             //console.log(itemInform)
              let row = `
-            <tr>
-            <td>${itemInform.brand_name !== undefined ? itemInform.brand_name :""}</td>
-            <td>${itemInform.item_group_name !== undefined ? itemInform.item_group_name :""}</td>
-            <td title = ${itemInform.name}>${itemInform.name.length > 10 ? itemInform.name.slice(0,10) + "..." : itemInform.name}</td>
-            <td title = ${itemInform.code}>${itemInform.code.length > 10 ? itemInform.code.slice(0,10) + "..." : itemInform.code}</td>
-            <td>${itemInform.nice_number !== undefined ? itemInform.nice_number :""}</td>
-            <td>${itemInform.detail !== undefined ? itemInform.detail :""}</td>
-            <td>${itemInform.shape !== undefined ? itemInform.shape :""}</td>
-            <td>${itemInform.stock !== undefined ? itemInform.stock :""}</td>
-            </tr>
-            `
+            <div class="form-row" style="display: flex; justify-content: center; text-align: center;">
+                <div class="col-md-6 mb-3">
+                    <label>품명</label>
+                        <div class="form-control" title="${itemInform.name}">${itemInform.name.length > 40 ? itemInform.name.slice(0,40) + "..." : itemInform.name}
+                        </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>품번</label>
+                        <div class="form-control" title="${itemInform.code}">${itemInform.code.length > 40 ? itemInform.code.slice(0,40) + "..." : itemInform.code}
+                        </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>품명상세</label>
+                        <div class="form-control" title="${itemInform.detail}">${itemInform.detail !== undefined ? itemInform.detail : ""}
+                        </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>형태</label>
+                        <div class="form-control" title="${itemInform.shape}">${itemInform.shape !== undefined ? itemInform.shape : ""}
+                        </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>현재고</label>
+                        <div class="form-control" title="${itemInform.stock}">${itemInform.stock !== undefined ? itemInform.stock : ""}
+                        </div>
+                </div>
+            </div>
+
+        `
              $("#itemInform").html(row)
         });
     }
        function selectLocation(key, value) {
         let stock = parseInt(value);
-        let out_amount = parseInt($("#material_output_main-form [name='out_amount']").val().replace(/,/g, ''));
+      let out_amount = parseInt($("#material_output_main-form [name='out_amount']").val().replace(/,/g, ''));
 
+      if (stock <= 0 || out_amount > stock) {
+        alert("해당 창고에 재고가 없거나 출고하려는 수량이 재고량보다 많습니다. 다른 창고를 선택해 주세요.");
+        return;
+      }
 
+      // 선택된 요소에 클래스 추가
+      $("#selectLocation .col-sm-6").removeClass("text-info");
+      $(`#${key.replace(/\s/g, '')}`).addClass("text-info");
 
-        if (stock <= 0 || out_amount > stock) {
-            alert("해당 창고에 재고가 없거나 출고하려는 수량이 재고량보다 많습니다. 다른 창고를 선택해 주세요.")
-            return;
-        }
+      const cardBody = document.querySelector(`#${key.replace(/\s/g, '')} .card-body`);
 
-        document.querySelectorAll("#selectLocation .col-sm-6").forEach(element =>
-            element.classList.remove("text-info"));
+      cardBody.style.border = "2px solid #36b9cc";
+      cardBody.style.opacity = '1';
 
-        $(`#${key.replace(/\s/g, '')}`).addClass("text-info");
-        {#document.querySelector(`#a${key}`).classList.add("text-info");#}
-        $("#material_output_main-form [name='location.name']").val(`${key}`);
+      $("#material_output_main-form [name='location.name']").val(`${key}`);
 
     }
        function resetLocation() {
         document.querySelectorAll("#selectLocation .col-sm-6").forEach(element =>
             element.classList.remove("text-info"))
+        const cardBodies = document.querySelectorAll("#selectLocation .col-sm-6 .card-body");
+          cardBodies.forEach(cardBody => {
+            cardBody.style.border = "";
+            cardBody.style.opacity = '0.7';
+          });
        $("#material_output_main-form [name='location.name']").val("");
     }
         function enrollLocation(){

@@ -467,7 +467,7 @@
                 name: key // 새로운 key로 변경
               };
             });
-        let location = $('#id_it_location_add').val();
+        
 
         let valid = validation_check("E", transformedData);
 
@@ -499,7 +499,7 @@
     }
 
     function in_amount_calc() {
-        "input[name=in_amount]"
+
         let sum = _numberWithCommas(
             parseFloat($("input[name=receive_amount]").val().replace(/[\{\}\[\]\/?,;:|\)*~`!^\+_<>@\#$%&\\\=\(\'\"]/g, '')) -
             parseFloat($("input[name=in_faulty_amount]").val().replace(/[\{\}\[\]\/?,;:|\)*~`!^\+_<>@\#$%&\\\=\(\'\"]/g, ''))

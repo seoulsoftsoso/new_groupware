@@ -7,6 +7,7 @@
 <body style="overflow: hidden;">
 <!-- {#{% extends 'index.html' %}#} -->
 {% load static %}
+{{ it.media }}
 
 <!-- {#{% block title %}#}
 {#    <title>자재현황 조회</title>#}
@@ -23,175 +24,93 @@
     <h2 class="font-weight-bold my-2">자재재고현황 조회</h2>
 </div>
 
-<!-- 검색 -->
-<div class="card m-2">
-    <div class="card-body p-2">
-        <!-- 본문 -->
-        <div
-                class="content-search row no-gutters align-items-center content-input-group"
-        >
-            <form
-                    class="col-11"
-                    id="material_status_main-form"
-                    onsubmit="nation1.page =1; return material_status_search_submit(event)"
-            >
-                <div class="row no-gutters">
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>거래처명</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control customer-dropdown"
-                                    id="customer_search"
-                                    name="customer_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>브랜드</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control brand-dropdown-search"
-                                    id="brand_search"
-                                    name="brand_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>제품군</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item_group-dropdown-search"
-                                    id="item_group_search"
-                                    name="item_group_search"
-                            ></select>
-                        </div>
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 검색  -->
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
+
+                            <div class="row ml-3">
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">거래처</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.cu_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% comment %}<div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">품번</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.it_code_sch }}
+                                        </div>
+                                    </div>
+                                </div>{% endcomment %}
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">품명</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.it_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 mt-2 clearfix">
+                                    <div class="content-input-group-header ml-4">
+                                    <label>전체 보기</label>
+                                </div>
+                                    <div class="form-control form-control-sm" style="border: 0px">
+                                        <input
+                                            class="w-100"
+                                            type="checkbox"
+                                            id="stockzero"
+                                            checked
+                                            style="width: 20px; height: 20px"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-1 clearfix">
+                    <div class="gradient-buttons ml-1 col-md-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="material_status_search_submit();"><i class="ti-search"></i>  검색</button>
                     </div>
                 </div>
-                <div class="row no-gutters">
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>품번</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item-code-dropdown-search"
-                                    id="item_code_search"
-                                    name="item_code_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>나이스번호</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control nice_number-dropdown-search"
-                                    id="nice_number_search"
-                                    name="nice_number_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>품목구분</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item_division-dropdown-search"
-                                    id="item_division_search"
-                                    name="item_division_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-3 px-0">
-                        <div class="content-input-group-header">
-                            <label>수량 0 제외</label>
-                        </div>
-                        <div class="content-input-group-input">
-                    <div class="form-control">
 
-                        <input type="checkbox" class="w-100 align-center" id="stockzero" unchecked>
+                            </div>
 
-                    </div>
-                        </div>
                     </div>
                 </div>
-                <div class="row no-gutters">
-                      <div class="content-input-group col-4 mt-2">
-                        <div class="content-input-group-input input-group">
-                            <input class="form-control" id="multiSearch" placeholder="검색어를 입력해주세요
-                            "/>
-                          <div class="input-group-append">
-                     <button class="btn btn-outline-secondary" type="button" onclick="nation1.page=1; search();"> 🔍</button>
+                </div>
+            </div>
+            <!-- 테이블  -->
+            <div class="row no-gutters ml-4 mr-4">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <table id="material_import_data-table-down" class="table table-hover table-striped table-bordered display nowrap" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        {% for item in column %}
+                                            {% if item.visual_flag %}
+                                            <th>{{ item.label }}</th>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody id="material-import-tbody"></tbody>
+
+                            </table>
 
                         </div>
-                        </div>
                     </div>
-                </div>
-            </form>
-            <div class="col-1 px-0 ml-auto">
-                <button
-                        class="btn button-search rounded-0 w-100 h-100"
-                        type="submit"
-                        form="material_status_main-form"
-                >
-                    검색
-                </button>
+
             </div>
         </div>
     </div>
 </div>
 
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-table col-12" style="overflow-x: visible; height: 600px;">
-            <table id="material_status_data-table" class="table table-sm text-center">
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>브랜드</th>
-                    <th>제품군</th>
-                    <th class="sorting_item_name" onclick="search('name')">품명</th>
-                    <th class="sorting_item_code" onclick="search('code')">품번</th>
-                    <th class="sorting_item_nice" onclick="search('nice_number')">나이스번호</th>
-                    <th>품명상세</th>
-                    <th>형태</th>
-                    <th>자재구분</th>
-                    <th>입하수량</th>
-                    <th>불량수량</th>
-                    <th>입고수량</th>
-                    <th>출고수량</th>
-                    <th>반입수량</th>
-                    <th>조정수량</th>
-                    <th>현재고</th>
-                    <th>창고별 재고현황</th>
-                </tr>
-                </thead>
-                <tbody id="material-status-tbody"></tbody>
-            </table>
-
-            <div class="row no-gutters d-flex justify-content-center" id="item_nation"
-                 style="margin-top: -20px;">
-            </div>
-{#                <div class="col-1 ml-auto">#}
-{#                 <a href="#" id="excel-export" class="col-1 text-center">#}
-{#                    <img src="/static/img/i_excel_c.png" width="38" height="38" />#}
-{#                    <p class="mb-0">엑셀 변환</p>#}
-{#                </a>#}
-{#                </div>#}
-
-        </div>
-    </div>
-</div>
 <!-- 모달창 -->
 <div class="card m-2">
     <div class="card-body">
@@ -293,58 +212,80 @@
 <script src="{% static 'js/api_materials.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
 <script>
-
-    let nation_data1 = {
-        cname: 'nation1',  // 인스턴스 명과 일치해야함
-        table_id: 'item_nation',
-        range: 5,
-        page_size: 15,
-    };
-
-    let nation1 = new Pnations(nation_data1, search);  // 인스턴스 명
-
-    $(".datepicker").datepicker({
-        format: "yyyy-mm-dd",
-        minViewMode: 0,
-        maxViewMode: 2,
-        autoclose: true,
-        language: "ko",
-    });
-
     let main_click_id = null;
+    let main_table = null;
+    let re_column = []
 
-    $(".datepicker").datepicker("setDate", "today");
+    {% for item in column %}
+        {% if not item.visual_flag and item.edit_flag %}
 
-    $(".input-daterange input").each(function () {
-        $(this).datepicker({
-            format: "yyyy-mm-dd",
-            language: "ko",
-        });
-    });
+            {% else %}
+            re_column.push("{{ item.label_en|safe }}")
+        {% endif %}
+    {% endfor %}
+
 
     $(function () {
-        set_naming();
+        let in_receive_cnt = re_column.indexOf('in_receive_cnt');  //입고수량
+        let in_receive_amount = re_column.indexOf('in_receive_amount'); //입하수량
+        let in_faulty_amount = re_column.indexOf('in_faulty_amount'); //불량수량
+        let stock_pos = re_column.indexOf('stock'); //불량수량
+        let location = re_column.indexOf('id');  // 창고의 아이디가 아닌 itemmaster의 아이디이다.
+
+        main_table = $('#material_import_data-table-down').DataTable({
+            scrollX: true,
+            "columnDefs": [
+                    {
+                        targets: 0,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },{
+                        targets: [in_receive_cnt],
+                        render: function (data, type, row, meta) {
+                            let value = row[in_receive_amount] - row[in_faulty_amount]
+
+                            return value.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                        }
+                },{
+                    "targets": [in_receive_amount, in_faulty_amount], //
+                    render: function(data, type, row) {
+                        if (type === 'display' && typeof data === 'number') {
+                          return data.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                        }
+                        return data;
+                      }
+                  },{
+                    "targets": [location], //
+                    render: function(data, type, row) {
+                        let tmp = "<input class='btn-primary' type='button' value='저장창고' onclick='showLocationModal(" + data + "," + row[stock_pos] + ")'/>"
+                        return tmp;
+                      }
+                  },
+                    {
+                    "targets": "_all",
+                    "className": "ellipsis"
+                  }
+                ],
+            "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        // 클릭 로우 색상
+                        setRowColor(this, 'M');
+
+                        material_import_id_idx = data[data.length-1];
+                        //console.log(data);
+                    });
+                }
+                })
+
         refresh();
 
-        // Table Export
-        $(parent.document).find("#excel-export").click(() =>
-            init_excel_export($("#material_status_data-table"), "재고현황")
-        );
     });
 
-
-    function set_naming() {
-        let enterprise_name = get_userinfo().enterprise_name;
-        if (enterprise_name == '(주)건강생활연구소') {
-            $("#n_bom_model1").text("제품군");
-            $("#n_bom_model2").text("제품군");
-        }
-    }
-
-
     function refresh() {
-        material_status_init();
+
         search();
     }
 
@@ -352,87 +293,38 @@
 
 
     function search(ordering) {
-        let query = "?page=" + nation1.page + "&";
+        let query = "?page=1&";
 
-        let customer_search = $('#customer_search :selected').val();
+        let customer_search = $('#id_cu_name_sch').val();
 
-        let brand = ($('#brand_search :selected').val() ? $('#brand_search :selected').val() : "");
-        let item_group = ($('#item_group_search :selected').val() ? $('#item_group_search :selected').val() : "");
-        let nice_number = ($('#nice_number_search :selected').val() ? $('#nice_number_search :selected').val() : "");
-        {#let item_name = ($('#item_name_search :selected').val() ? $('#item_name_search :selected').val() : "");#}
-        let item_code = ($('#item_code_search :selected').val() ? $('#item_code_search :selected').val() : "");
-        let item_division = ($('#item_division_search :selected').val() ? $('#item_division_search :selected').val() : "");
-        {#let detail = ($('#detail_search').val() ? $('#detail_search').val() : "");#}
-        {#let shape = ($('#shape_search').val() ? $('#shape_search').val() : "");#}
 
-        let multiSearch = $("#multiSearch").val()
+        let item_code = $('#id_it_name_sch').val();
+
 
        if (customer_search === '' || customer_search == null){
         } else {
             query += "customer=" + customer_search + "&";
         }
 
-        if (brand !== '') query += "brand=" + brand + "&";
-        if (item_group !== '') query += "item_group=" + item_group + "&";
-        if (nice_number !== '') query += "nice_number=" + nice_number + "&";
-        {#if (item_name !== '') query += "item_name=" + item_name + "&";#}
-        if (item_code !== '') query += "item_code=" + item_code + "&";
-        if (item_division !== '') query += "item_division=" + item_division + "&";
-        {#if (detail !== '') query += "detail=" + detail + "&";#}
-        {#if (shape !== '') query += "shape=" + shape + "&";#}
-        if (multiSearch !=='') query += 'search=' + multiSearch + "&"
 
-        if (ordering === '' || ordering === null || ordering=== undefined ){
-        } else {
-              order === ordering ? order = "-" +ordering : order = ordering
-        }
+        if (item_code !== '' || item_code == null){}else{ query += "item_code=" + item_code + "&";}
 
-
-        $(".sorting_item_name").html("품명▽")
-        $(".sorting_item_code").html("품번▽")
-        $(".sorting_item_nice").html("나이스번호▽")
-        switch(order){
-            case "name":
-                $(".sorting_item_name").html("품명▼")
-                break;
-            case "-name":
-                $(".sorting_item_name").html("품명▲")
-                break;
-            case "code":
-                $(".sorting_item_code").html("품번▼")
-                break;
-            case "-code":
-                $(".sorting_item_code").html("품번▲")
-                break;
-            case "nice_number":
-                $(".sorting_item_nice").html("나이스번호▼")
-                break;
-            case "-nice_number":
-                $(".sorting_item_nice").html("나이스번호▲")
-                break;
-            default:
-                break;
-        }
-       query += "ordering=" + order + "&";
 
         if ($('#stockzero').is(":checked"))
             {
-                // urls = "/items/calculatezero/"
                 query += 'stockzero=True'+ "&";
             }else{
-                // urls = "/items/calculate/"
+
                 query += 'stockzero=False'+"&"
             }
         console.log("query   : "  +  query)
         api_gp("/items/calculate/" + query + "/", "GET", {}, (done) => {
-            main_table_draw(done)
+            main_table_draw(done);
         });
     }
 
     function material_status_search_submit(e) {
-        e.preventDefault();
-        order = ""
-        nation1.page = 1;
+
         main_click_id = null;
         search();
         return false;
@@ -442,79 +334,12 @@
         console.log(done);
 
         let data = done.results;
-        let num = (((nation1.page * 1) - 1) * nation_data1["page_size"]) + 1;
 
-        let rows = "";
-        for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            //console.log("item", item);
+        main_table.rows().remove().draw();
+        main_table.rows.add(formatDataArray(data, re_column)).draw();
 
-            let row = "<tr id='" + item.id + "' style='cursor:pointer;'>";
-            row += "<td class=''>" + (num + i) + "</td>";
-            row += "<td data-item='item-brand'>" + (item.brand_name ? item.brand_name : "") + "</td>";
-            row += "<td data-item='item-item_group'>" + (item.item_group_name ? item.item_group_name : "") + "</td>";
-            row += "<td data-item='item-name' title='" + item.name + "'>" + (item.name.length > 10 ? item.name.slice(0,10) + "..." : item.name) + "</td>"; // 품명
-            row += "<td data-item='item-code' title='" + item.code + "'>" + (item.code.length > 10 ? item.code.slice(0,10) + "..." : item.code) + "</td>"; // 품번
-            row += "<td data-item='item-nice_number'>" + (item.nice_number ? item.nice_number : "") + "</td>"; // 나이스
-            row += "<td data-item='item-detail'>" + (item.detail ? item.detail : "") + "</td>"; // 나이스
-            row += "<td data-item='item-shape'>" + (item.shape ? item.shape : "") + "</td>"; // 형태
-            row +=
-                "<td data-item='item-item-division'>" +
-                (item.division_name ? item.division_name : "") +
-                "</td>"; // 자재구분
-            {#row +=#}
-            {#    "<td data-item='item-item-division'>" +#}
-            {#    (item.unit_name ? item.unit_name : "") +#}
-            {#    "</td>"; // 단위#}
-            row +=
-                "<td data-item='in-receive-amount'>" +
-                (item.in_receive_amount ? item.in_receive_amount.toLocaleString() : 0) +
-                "</td>"; // 입하수량
-            row +=
-                "<td data-item='in-faulty-amount'>" +
-                (item.in_faulty_amount ? item.in_faulty_amount.toLocaleString() : 0) +
-                "</td>"; // 입하불량수량
-            row +=
-                "<td data-item='in-amount'>" +
-                (item.in_receive_amount - item.in_faulty_amount).toLocaleString() +
-                "</td>"; // 입고수량
-            row +=
-                "<td data-item='out-amount'>" +
-                (item.in_out_amount ? item.in_out_amount.toLocaleString() : 0) +
-                "</td>"; // 출고수량
-            row +=
-                "<td data-item='rein-amount'>" +
-                (item.in_rein_amount ? item.in_rein_amount.toLocaleString() : 0) +
-                "</td>"; // 반입수량
-            row +=
-                "<td data-item='adjust-amount'>" +
-                item.in_adjust_amount
-                "</td>"; // 조정 수량
-            row += "<td data-item='actual-amount'>" + (item.stock ? item.stock.toLocaleString() : 0) + "</td>"; // 현재고
-            row += "<td data-item='item-location'>" + "<input class='btn-primary' type='button' value='저장창고' onclick='showLocationModal(" + item.id + ")'/>" + "</td>"; // 현재고
-            row += "</tr>";
-
-            rows += row;
-        }
         spinner();
 
-        nation1.nation_display(done);
-        $("#material-status-tbody").html(rows);
-        document.querySelectorAll("#material-status-tbody tr td").forEach(element=>
-        element.classList.add("align-middle")
-        )
-
-        if (main_click_id != null) {
-            $("#material-status-tbody #" + main_click_id).addClass('clicked');
-        }
-
-        // table click highlight
-        $("#material-status-tbody tr").on("click", function () {
-            $(this).parent().find("tr").removeClass("clicked");
-            $(this).addClass("clicked");
-
-            main_click_id = $(this).attr("id");
-        });
     }
 
     function showLocationModal(id) {
@@ -579,79 +404,6 @@
             element.classList.remove("text-info"))
         document.querySelector(`#${key}`).classList.add("text-info")
         $("#location").val(`${key}`)
-    }
-
-    function material_status_init() {
-        function make_dropdown(data, selectors) {
-            let list = "<option value=''>선택 및 검색</option>";
-            let distinct = [];
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                if (selectors.includes('.bom-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.bom_name + "</option>";
-                } else if (selectors.includes('.item-code-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.code + "</option>";
-                } else if (selectors.includes('.nice_number-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.nice_number + "</option>";
-                } else if (selectors.includes('.item-name-dropdown')) {
-                    if (distinct.indexOf(item.name) === -1) {
-                        list += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        distinct.push(item.name);
-                    }
-                }else {
-                    list += "<option value='" + item.id + "'>" + item.name + "</option>";
-                }
-            }
-            $(selectors).html(list);
-            $(selectors).select2({width: '100%'});
-        }
-
-        // 구매처
-        api_gp('/customers_select/', 'GET', {}, (data) => {
-            make_dropdown(data, '.customer-dropdown');
-        });
-
-        // 자재구분
-        api_gp('/codes_select/?group=118&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item-division-dropdown');
-        });
-
-        // 모델
-        api_gp('/codes_select/?group=116&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.model-dropdown');
-        });
-
-        // 품번, 품명
-        {#api_gp('/items_select/', 'GET', {}, (data) => {#}
-        api_gp('/items_part/', 'GET', {}, (data) => {
-            make_dropdown(data, '.item-code-dropdown');
-            make_dropdown(data, '.item-code-dropdown-search');
-            make_dropdown(data, '.item-name-dropdown');
-            make_dropdown(data, '.item-name-dropdown-search');
-            make_dropdown(data, '.nice_number-dropdown-search');
-        });
-
-        api_gp('/codes_select/?group=107&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.location-dropdown');
-        });
-
-        // 브랜드
-        api_gp('/codes_select/?group=127&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.brand-dropdown');
-            make_dropdown(data, '.brand-dropdown-search');
-        });
-
-        // 제품군
-        api_gp('/codes_select/?group=128&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_group-dropdown');
-            make_dropdown(data, '.item_group-dropdown-search');
-        });
-
-        // 자재분류
-        api_gp('/codes_select/?group=118&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_division-dropdown-search');
-        });
-
     }
 
     function material_status_get_form_data() {

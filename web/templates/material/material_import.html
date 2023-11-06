@@ -4,466 +4,180 @@
 <body style="overflow: hidden;">
 <!-- {#{% extends 'index.html' %}#} -->
 {% load static %}
-
+{{ it.media }}
 <!-- {#{% block title %}#}
 {#    <title>자재반입</title>#}
 {#{% endblock title %}#}
 {##}
 {#{% block content %}#} -->
-
 <div class="spinner" id="spinner">
     <img src="../../../static/img/spinner.gif" width="150px" height="150px"/>
 </div>
 
-<!-- 검색 -->
-<div class="card m-2">
-    <div class="card-body p-2">
-        <!-- 본문 -->
-        <div
-                class="content-search row no-gutters align-items-center content-input-group"
-        >
-            <form
-                    class="col-11"
-                    id="material_import_main-form"
-                    onsubmit="return material_import_search_submit(event)"
-            >
-                <div class="row no-gutters">
-                     <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>반입기간</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <input class="datepicker form-control"
-                                    id="fr_date"/>
-                            <div class="btn">~</div>
-                            <input class="datepicker form-control"
-                                    id="to_date"/>
+<div class="col-12">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 검색  -->
+            <div class="row align-items-center">
+                <div class="col-lg-12 col-ml-12 mt-3">
+                    <div class="card">
+
+                            <div class="row ml-3">
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label class="col-form-label">반입기간</label>
+                                        <div class="input-group input-daterange">
+                                        <input type="text"
+                                            class="form-control created_at_after datepicker form-control-sm"
+                                            id="fr_date"
+                                            autocomplete="off"
+                                        />
+                                        <div class="input-group-addon px-3">~</div>
+                                        <input type="text"
+                                            class="form-control created_at_before datepicker form-control-sm"
+                                            id="to_date"
+                                            autocomplete="off"
+                                        />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">거래처</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.cu_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 clearfix">
+                                    <div class="form-group">
+                                        <label for="example-text-input" class="col-form-label">품명</label>
+                                        <div class="content-input-group-input">
+                                         {{ it.it_name_sch }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 clearfix">
+                    <div class="gradient-buttons ml-1 col-md-3 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="material_import_search_submit();"><i class="ti-search"></i>  검색</button>
+                    </div>
+                </div>
+                <div class="col-md-1 mt-4">
+                    <ul class="notification-area pull-right">
+                        <li class="settings-btn">
+                            <i class="ti-settings"></i>
+                        </li>
+                    </ul>
+                </div>
+                            </div>
+
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- 테이블  -->
+            <div class="row no-gutters ml-4 mr-4">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <table id="material_import_data-table-down" class="table table-hover table-striped table-bordered display nowrap" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        {% for item in column %}
+                                            {% if item.visual_flag %}
+                                            <th>{{ item.label }}</th>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody id="material-import-tbody"></tbody>
+
+                            </table>
+
                         </div>
                     </div>
 
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>거래처명</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control customer-dropdown-search"
-                                    id="customer_search"
-                                    name="customer_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>브랜드</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control brand-dropdown-search"
-                                    id="brand_search"
-                                    name="brand_search"
-                            ></select>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row no-gutters">
-{#                     <div class="content-input-group col-2 px-0">#}
-{#                        <div class="content-input-group-header">#}
-{#                            <label>품명</label>#}
-{#                        </div>#}
-{#                        <div class="content-input-group-input">#}
-{#                            <select#}
-{#                                    class="form-control item-name-dropdown-search"#}
-{#                                    id="item_name_search"#}
-{#                                    name="item_name_search"#}
-{#                            ></select>#}
-{#                        </div>#}
-{#                    </div>#}
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>제품군</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item_group-dropdown-search"
-                                    id="item_group_search"
-                                    name="item_group_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>품번</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control item-code-dropdown-search"
-                                    id="item_code_search"
-                                    name="item_code_search"
-                            ></select>
-                        </div>
-                    </div>
-                    <div class="content-input-group col-4 px-0">
-                        <div class="content-input-group-header">
-                            <label>나이스번호</label>
-                        </div>
-                        <div class="content-input-group-input">
-                            <select
-                                    class="form-control nice_number-dropdown-search"
-                                    id="nice_number_search"
-                                    name="nice_number_search"
-                            ></select>
-                        </div>
-                    </div>
-{#                    <div class="content-input-group col-3 px-0">#}
-{#                        <div class="content-input-group-header">#}
-{#                            <label>품명상세</label>#}
-{#                        </div>#}
-{#                        <div class="content-input-group-input">#}
-{#                            <input#}
-{#                                    class="form-control"#}
-{#                                    id="detail_search"#}
-{#                                    name="detail_search"#}
-{#                            />#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="content-input-group col-2 px-0">#}
-{#                        <div class="content-input-group-header">#}
-{#                            <label>형태</label>#}
-{#                        </div>#}
-{#                        <div class="content-input-group-input">#}
-{#                            <input#}
-{#                                    class="form-control"#}
-{#                                    id="shape_search"#}
-{#                                    name="shape_search"#}
-{#                            />#}
-{#                        </div>#}
-{#                    </div>#}
-                </div>
-                <div class="row no-gutters">
-                      <div class="content-input-group col-4 mt-2">
-                        <div class="content-input-group-input input-group">
-                            <input class="form-control" id="multiSearch" placeholder="검색어를 입력해주세요
-                            "/>
-                          <div class="input-group-append">
-                     <button class="btn btn-outline-secondary" type="button" onclick="nation2.page =1; detail_search();"> 🔍</button>
-
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-              <div class="col-1 px-0 ml-auto">
-                  <button
-                          class="btn button-search rounded-0 w-100 h-100"
-                          type="submit"
-                          form="material_import_main-form"
-                  >
-                      검색
-                  </button>
-              </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 내용 -->
-<form class="card m-2" id="material_import_detail-form">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-content w-100">
-            <div class="row no-gutters w-100 mb-2">
-                <div class="col-1 content-title">재고반입</div>
-                <div class="col-11">
-                    <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>반입일자<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control datepicker"
-                                        name="rein_at"
-                                        id="mi-rein_at"
-                                />
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>반입 거래처</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control customer-dropdown"
-                                        name="customer"
-                                        id="mi-customer"
-                                ></select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>브랜드</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control brand-dropdown"
-                                        name="item-brand"
-                                        id="mi-item-brand" disabled
-                                >
-                                </select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>제품군</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control item_group-dropdown"
-                                        name="item-item_group"
-                                        id="mi-item-item_group" disabled
-                                >
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                      <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품명<strong>*</strong></label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <select class="form-control item-name-dropdown" name="item-name" id="mi-item-name">
-                                </select>
+<!-- offset area start -->
+<div class="offset-area">
+    <div class="offset-close"><i class="ti-close"></i></div>
+    <ul class="nav offset-menu-tab">
+        <li><a class="active" data-toggle="tab" href="#ma_input_item">편집</a></li>
+        <li></li>
+    </ul>
+    <div class="offset-content tab-content">
+        <div id="ma_input_item" class="tab-pane fade in show active">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" id="material_import_main-form">
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3" id="id_it_code_form_div">
+                                    <label><strong>*</strong>품번</label>
+                                    <div class="input-group">
+                                        {{ it.it_code_form }}
+                                    </div>
                                 </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품번<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select
-                                        class="form-control item-code-dropdown"
-                                        name="item-code"
-                                        id="mi-item-code"
-                                >
-                                </select>
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>나이스번호<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                 <select
-                                        class="form-control nice_number-dropdown"
-                                        name="nice_number"
-                                >
-                                </select>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>품명상세</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="item-detail"
-                                        id="mi-item-detail" disabled
-                                />
-                            </div>
-                        </div>
-                    </div>
-                      <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>형태</label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <input  class="form-control" name="item-shape" id="mi-item-shape" disabled/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>반입수량<strong>*</strong></label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="rein-amount"
-                                        id="mi-rein-amount"
-                                        onkeyup="_chkNumber(this, 3)"
-                                />
-                            </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>불량수량</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="out-faulty-amount"
-                                        id="mi-out-faulty-amount"
-                                        onkeyup="_chkNumber(this, 3)"
-                                />
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>입고수량</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="out-import-amount"
-                                        id="mi-out-import-amount"
-                                        disabled
-                                        onkeyup="_chkNumber(this, 3)"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                      <div class="row no-gutters">
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>반입단가</label>
-                            </div>
-                           <div class="content-input-group-input">
-                                <input  class="form-control" name="rein-price" id="mi-rein-price"/>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>부가세포함</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <div class="form-control w-100 h-100">
-                                <input
-                                        class="form-control"
-                                        type="checkbox"
-                                        name="tax"
-                                        id="mi-tax"
-                                        checked
-                                />
+                                <div class="col-md-6 mb-3" id="id_it_name_form_div">
+                                    <label><strong>*</strong>품명</label>
+                                    <div class="input-group">
+                                        {{ it.it_name_form }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3" id="id_it_customer_add_div">
+                                    <label>거래처</label>
+                                    <div>
+                                    {{ it.it_customer_add }}
+                                    </div>
+                                </div>
+                                {% for item in column %}
+                                    {% if item.edit_flag %}
+
+
+                                        {% if item.tag == "input" %}
+                                    <div class="col-md-6 mb-3">
+                                    <label><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
+                                    <input type="text" class="{{ item.class_name|safe }}"
+                                           name="{{ item.label_en|safe }}"
+                                           autocomplete="off"
+                                            {% if item.attr != None %} {{ item.attr|safe }} {% endif %}
+                                            {% if item.event != None %} {{ item.event|safe }} {% endif %}/>
+                                     </div>
+                                        {% elif item.tag == "btn" %}
+                                            <div class="col-md-6 mb-3">
+                                    <label><strong>{{ item.pre_label|default_if_none:'' }}</strong>{{ item.label }}</label>
+                                    <input type="button" class="{{ item.class_name|safe }}" name="{{ item.label_en|safe }}" onclick="{{ item.event|safe }}" {{ item.attr }}/>
+                                     </div>
+
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                <div class="col-md-6 mb-3" id="id_it_location_add_div">
+                                    <label for="">창고구분</label>
+                                    <div>
+                                    {{ it.it_location_add }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>반입창고</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <select class="form-control location-dropdown" name="location" id="mi-location"></select>
-                            </div>
-                        </div>
-                          <div class="content-input-group col-3">
-                            <div class="content-input-group-header">
-                                <label>비고</label>
-                            </div>
-                            <div class="content-input-group-input">
-                                <input
-                                        class="form-control"
-                                        name="etc"
-                                        id="mi-etc"
-                                />
-                            </div>
+                        </form>
+                        <div class="gradient-buttons pull-right">
+                        {% for item in column %}
+                            {% if item.tag == "button" %}
+                                <div class="{{ item.class_name|safe }}" onclick="{{ item.event|safe }}">{{ item.label }}</div>
+                            {% endif %}
+                        {% endfor %}
+
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div class="row no-gutters w-100 justify-content-end">
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="form_blank()"
-                    >
-                        초기화
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_import_add()"
-                    >
-                        반입처리
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_import_edit()"
-                    >
-                        반입수정
-                    </button>
-                </div>
-                <div class="col-1 px-0 mr-2">
-                    <button
-                            class="btn button-custom2 w-100"
-                            type="button"
-                            onclick="material_import_remove()"
-                    >
-                        반입삭제
-                    </button>
-                </div>
-                <!-- {#                    <div class="col-1 px-0 mr-2">#}
-{#                        <a class="btn button-custom2 w-100" role="button">저장</a>#}
-{#                    </div>#} -->
-            </div>
-        </div>
-    </div>
-</form>
-
-<!-- 테이블 -->
-<div class="card m-2">
-    <div class="row no-gutters card-body p-2">
-        <!-- 본문 -->
-        <div class="content-table col-12" style="overflow-x:auto; overflow-y:hidden; height:400px">
-            <table
-                    id="material_import_data-table-down"
-                    class="table table-sm text-center"
-                    style="min-width: 1300px"
-            >
-                <thead>
-                <tr>
-                    <th>순번</th>
-                    <th>반입일자</th>
-                    <th>반입거래처</th>
-                    <th>브랜드</th>
-                    <th>제품군</th>
-                    <th>품명</th>
-                    <th>품번</th>
-
-                    <th>나이스번호</th>
-                    <th>품명상세</th>
-                    <th>형태</th>
-                    <th>기존재고</th>
-                    <th>반입수량</th>
-                    <th>불량수량</th>
-                    <th>입고수량</th>
-                    <th>반입단가</th>
-                    <th>반입반영재고수량</th>
-                    <th>반입창고</th>
-                    <th>비고</th>
-                </tr>
-                </thead>
-                <tbody id="detail_tbody"></tbody>
-            </table>
-
-            <div class="row no-gutters d-flex justify-content-center" id="item_nation2"
-                 style="margin-top: -20px;">
-            </div>
-{#            <div class="col-1 ml-auto">#}
-{#                 <a href="#" id="excel-export" class="col-1 text-center">#}
-{#                    <img src="/static/img/i_excel_c.png" width="38" height="38" />#}
-{#                    <p class="mb-0">엑셀 변환</p>#}
-{#                </a>#}
-{#            </div>#}
         </div>
     </div>
 </div>
@@ -472,37 +186,34 @@
 <script src="{% static 'js/api_materials.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_codemaster.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/api_paginations.js' %}" type="text/javascript"></script>
+<script src="{% static 'srtdash/assets/js/scripts.js' %}" type="text/javascript"></script>
 <script>
 
-    let nation_data2 = {
-        cname : 'nation2',  // 인스턴스 명과 일치해야함
-        table_id: 'item_nation2',
-        range: 5,
-        page_size: 10,
-    };
+    let main_table = null;
+    let re_column = []
+    let re_invisual_col = []
+    let re_name = []
+    let hidden_name = []
+    let material_import_id_idx = null;
 
-    let nation2 = new Pnations(nation_data2, detail_search);  // 인스턴스 명
+    {% for item in column %}
+            {% if item.tag == "input" or item.tag == "btn" %}
+                re_name.push("{{ item.label_en|safe }}")
 
-    // material_import table 에 사용됨.
-    var material_import_columns = ["etc", "rein-amount", "out-faulty-amount", "rein-price", "tax", "location",
-        "rein_at", "customer","item-brand", "item-item_group", "item-code", "item-name",
-        "nice_number", "item-detail", "item-shape","out-import-amount"];
-    var detail_click_id;
+            {% elif item.tag == "select" %}
 
-    // material_output lookup table 에 사용됨.
-    var material_import_columns_out = [
-        "out-at",
-        "customer",
-        "item-code",
-        "item-name",
-        "item-model",
-        "item-item-division",
-        "item-unit",
-        "current-amount",
-        "out-amount",
-        "etc",
-        "purpose",
-    ];
+                hidden_name.push({
+                    "{{ item.label_en|safe }}":
+                     "{{ item.type|safe }}"
+                })
+            {% endif %}
+        {% if not item.visual_flag and item.edit_flag %}
+            re_invisual_col.push("{{ item.type|safe }}")
+            {% else %}
+            re_column.push("{{ item.label_en|safe }}")
+        {% endif %}
+    {% endfor %}
+
 
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd",
@@ -511,80 +222,93 @@
         autoclose: true,
         language: "ko",
     });
-    $("#mi-rein_at").datepicker("setDate", "today");
-
-    $(".input-daterange input").each(function () {
-        $(this).datepicker({
-            format: "yyyy-mm-dd",
-            language: "ko",
-        });
-    });
 
     $(function () {
-        set_naming();
+        $("#material_import_main-form [name='rein_at']").datepicker("setDate", "today");
+
+        let remakeData_pos =  re_column.indexOf('out_import_amount');
+        let rein_amount_pos =  re_column.indexOf('rein_amount');
+        let out_faulty_amount_pos =  re_column.indexOf('out_faulty_amount');
+
+
+        main_table = $('#material_import_data-table-down').DataTable({
+            scrollX: true,
+            "columnDefs": [
+                    {
+                        targets: 0,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },{
+                        targets: [remakeData_pos],
+                        render: function (data, type, row, meta) {
+                            let value = row[remakeData_pos-2] - row[remakeData_pos-1]
+
+                            return value.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                        }
+                },{
+                    "targets": [rein_amount_pos, out_faulty_amount_pos], // 반입수량, 불량수량
+                    render: function(data, type, row) {
+                        if (type === 'display' && typeof data === 'number') {
+                          return data.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                        }
+                        return data;
+                      }
+                  },
+                    {
+                    "targets": "_all",
+                    "className": "ellipsis"
+                  }
+                ],
+            "rowCallback": function(row, data) {
+                    $(row).on('click', function() {
+                        // 클릭 로우 색상
+                        setRowColor(this, 'M');
+                        // 데이터 셋팅
+                        setInput_api(data,re_column, re_name, hidden_name);
+                        let sumint = data[rein_amount_pos] - data[out_faulty_amount_pos]
+
+                        $("#material_import_main-form [name='out_import_amount']").val(sumint);
+
+                        material_import_id_idx = data[data.length-1];
+                        //console.log(data);
+                    });
+                }
+                })
+
+        // 편집에서 컬럼 숨기기
+        if(re_invisual_col.length > 1){
+            re_invisual_col.forEach(function (item){
+            let itemid = item + "_div"
+            let divElement = document.getElementById(itemid);
+            if (divElement) {
+              divElement.style.display = "none";
+            }
+        })
+        }
+
         refresh();
         form_blank();
 
-        $('#mi-rein-amount').on('change', function () {
-            let faulty = parseInt(
-                ($('#mi-out-faulty-amount').val() ? $('#mi-out-faulty-amount').val().replace(/,/g, '') : 0)
-            );
-
-            let rein = parseInt(
-                ($(this).val() ? $(this).val().replace(/,/g, '') : 0)
-            );
-            $('#mi-out-import-amount').val(rein - faulty);
-        });
-
-        $('#mi-out-faulty-amount').on('change', function () {
-            let faulty = parseInt(
-                ($(this).val() ? $(this).val().replace(/,/g, '') : 0)
-            );
-            let rein = parseInt(
-                ($('#mi-rein-amount').val() ? $('#mi-rein-amount').val().replace(/,/g, '') : 0)
-            );
-            $('#mi-out-import-amount').val(rein - faulty);
-        });
-
-        // Table Export
-        $(parent.document).find("#excel-export").click(() => {
-            {#init_excel_export($("#material_import_data-table-up"), "자재품목");#}
-            init_excel_export($("#material_import_data-table-down"), "재고반입");
-        });
     });
 
     function refresh() {
-        material_import_init();
+
         detail_search();
     }
 
 
-    function set_naming(){
-        let enterprise_name = get_userinfo().enterprise_name;
-        if (enterprise_name == '(주)건강생활연구소'){
-            $("#n_bom_model1").text("제품군");
-            $("#n_bom_model2").text("제품군");
-            $("#n_bom_model3").text("제품군");
-        }
-    }
-
     function form_blank() {
-        document.querySelectorAll("#detail_tbody tr").forEach(element=>
-                 element.classList.remove("clicked")
-        )
-        material_import_columns.forEach((item) => {
-            {#console.log(item);#}
-            if(item ==="tax"){
-                document.querySelector(`#material_import_detail-form [name=${item}]`).checked = true
-            } else if (item === "rein_at") { $("#mi-rein_at").datepicker("setDate", "today") }
-            else if (item === "rein-amount" || item === "out-faulty-amount" || item === "rein-price"){
-                $(`#material_import_detail-form [name=${item}]`).val(0).trigger("change")
-            } else {
-                $(`#material_import_detail-form [name=${item}]`).val("").trigger("change")
-            }
-        });
-        detail_click_id = null;
+
+        material_import_id_idx = null;
         $("#in-at").datepicker("setDate", "today");
+
+        $('#material_import_main-form input').val('');
+
+        $('#material_import_main-form select').val(null).trigger('change');
+
+
+        $('#material-import-tbody').find('tr').siblings().css('background-color', '');
     }
 
 
@@ -595,11 +319,11 @@
         $("#mi-out-faulty-amount").val("");
         $("#mi-etc").val("");
 
-        $("#detail_tbody").empty();
+        $("#material-import-tbody").empty();
 
 
-        nation2.page = 1;
-        detail_click_id = null;
+
+        material_import_id_idx = null;
 
         detail_search();
         return false;
@@ -607,8 +331,8 @@
 
 
     function detail_table_load() {
-        nation2.page = 1;
-        detail_click_id = null;
+
+        material_import_id_idx = null;
 
         $("#mi-rein-amount").val("");
         $("#mi-out-faulty-amount").val("");
@@ -617,40 +341,9 @@
 
     function detail_search(){
 
-        let query = "?page=" + nation2.page + "&";
+        let query = "?page=" + "1" + "&";
 
-        let customer_search = $('#customer_search :selected').val();
 
-        let fr_date = $("#fr_date").val();
-        let to_date = $("#to_date").val();
-
-        let brand = ($('#brand_search :selected').val() ? $('#brand_search :selected').val() : "");
-        let item_group = ($('#item_group_search :selected').val() ? $('#item_group_search :selected').val() : "");
-        let nice_number = ($('#nice_number_search :selected').val() ? $('#nice_number_search :selected').val() : "");
-        {#let item_name = ($('#item_name_search :selected').val() ? $('#item_name_search :selected').val() : "");#}
-        let item_code = ($('#item_code_search :selected').val() ? $('#item_code_search :selected').val() : "");
-        {#let detail = ($('#detail_search').val() ? $('#detail_search').val() : "");#}
-        {#let shape = ($('#shape_search').val() ? $('#shape_search').val() : "");#}
-
-        let multiSearch = $("#multiSearch").val()
-
-        if (customer_search === '' || customer_search == null){
-        } else {
-            query += "customer=" + customer_search + "&";
-        }
-        {#if (ordering === '' || ordering === null || ordering=== undefined ){} else {#}
-        {#      order === ordering ? order = "-" +ordering : order = ordering}#}
-
-        if (fr_date !== '') query += "fr_date=" + fr_date + "&";
-        if (to_date !== '') query += "to_date=" + to_date + "&";
-        if (brand !== '') query += "brand=" + brand + "&";
-        if (item_group !== '') query += "item_group=" + item_group + "&";
-        if (nice_number !== '') query += "nice_number=" + nice_number + "&";
-        {#if (item_name !== '') query += "item_name=" + item_name + "&";#}
-        if (item_code !== '') query += "item_code=" + item_code + "&";
-        {#if (detail !== '') query += "detail=" + detail + "&";#}
-        {#if (shape !== '') query += "shape=" + shape + "&";#}
-        if (multiSearch !=='') query += 'search=' + multiSearch;
 
         api_gp("/items/rein/" + query, "GET", {}, (done) => {
             detail_table_draw(done);
@@ -660,293 +353,123 @@
 
 
     function detail_table_draw(done) {
-        console.log(done);
+
 
         let data = done.results;
-        let num = (((nation2.page*1) - 1) * nation_data2["page_size"]) + 1 ;
 
-        let rows = "";
-        for (let i = 0; i < data.length; i++) {
-            let item = data[i];
-            {#console.log(item);#}
-            let row = "<tr id='" + item.id + "' style='cursor:pointer;'>";
-            row += "<td>" + (num + i) + "</td>";
-            row += "<td data-item='rein_at'>" + (item.rein_at ? item.rein_at : "") + "</td>"; // 품번
-            row += "<td data-item='customer'" + `item-id ='${item.customer ? item.customer.id : ""}'>`  + (item.customer ? item.customer.name : "") + "</td>"; // 품번
-            row += "<td data-item='item-brand'" + `item-id ='${item.item.brand_id}'>` + (item.item.brand_name  ? item.item.brand_name : "") + "</td>"; // 브랜드
-            row += "<td data-item='item-item_group'" + `item-id ='${item.item.item_group_id}'>` + (item.item.item_group_name  ? item.item.item_group_name : "") + "</td>"; // 제품군
-            row += "<td data-item='item-name' title='" + item.item.name + "'" +`item-id ='${item.item.id}'>` + (item.item.name.length > 10 ? item.item.name.slice(0,10) + "..." : item.item.name) + "</td>"; // 품번
-            row += "<td data-item='item-code' title='" + item.item.code + "'" + `item-id ='${item.item.id}'>` +(item.item.code.length > 10 ? item.item.code.slice(0,10) + "..." : item.item.code)+ "</td>"; // 품명
-            row += "<td data-item='nice_number'" + `item-id ='${item.item.id}'>` + (item.item.nice_number  ? item.item.nice_number : "" )+ "</td>"; // 나이스번호
-            row += "<td data-item='item-detail'>" + (item.item.detail ? item.item.detail : "") + "</td>"; // 디테일
-            row += "<td data-item='item-shape'>" + (item.item.shape  ? item.item.shape : "") + "</td>"; // 디테일
-            {#row += "<td data-item='item-model'>" + (item.item.model_id ? item.item.model_name : "") + "</td>"; // 모델#}
-            row += "<td data-item='current-amount'>" + (item.current_amount ? item.current_amount.toLocaleString() : 0) + "</td>"; // 기존재고
-            row += "<td data-item='rein-amount'>" + (item.rein_amount ? item.rein_amount.toLocaleString() : 0) + "</td>"; // 반입수량
-            row += "<td data-item='out-faulty-amount'>" + (item.out_faulty_amount ? item.out_faulty_amount.toLocaleString() : 0) + "</td>"; // 반입불량수량
-            row += "<td data-item='out-import-amount'>" + (item.rein_amount - item.out_faulty_amount ) + "</td>"; // 입고수량
-            row += "<td data-item='rein-price'>" + (item.rein_price ? item.rein_price.toLocaleString() : 0) + "</td>"; // 반입단가
-            row += "<td data-item='out-amount'>" + (item.current_amount + item.rein_amount - item.out_faulty_amount).toLocaleString() + "</td>"; // 반입반영재고수량
-            row += "<td class='d-none' data-item='tax'>" + (item.tax !== "X" ? "O": "X") + "</td>"; // 반입반영재고수량
-            row += "<td data-item='location'" + `item-id ='${item.location?.id}'>` + (item.location ? item.location.name : "입고창고")+ "</td>"; // 창고
-            row += "<td data-item='etc'>" + nullapply(item.etc) + "</td>"; // 비고
-            row += "</tr>";
-            rows += row;
-        }
+        main_table.rows().remove().draw();
+        main_table.rows.add(formatDataArray(data, re_column)).draw();
 
-        nation2.nation_display(done);
-        $("#detail_tbody").html(rows);
 
-        // click check
-        if (detail_click_id != null){
-            $("#detail_tbody #" + detail_click_id).addClass('clicked');
-        }
 
-        $("#detail_tbody > tr").on("click", function () {
-            $(this).parent().find("tr").removeClass("clicked");
-            $(this).addClass("clicked");
-
-            $("#item-code").attr("disabled", true);
-            $("#item-name").attr("disabled", true);
-            $("#nice_number").attr("disabled", true);
-
-            material_import_columns.forEach((item) => {
-              if(item === "item-code" || item=== "item-name" || item === "nice_number"){
-                    console.log($(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                    $("#material_import_detail-form .item-code-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-                    $("#material_import_detail-form .item-name-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-                    $("#material_import_detail-form .nice_number-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-                }else if(item === "location"){
-                   $("#material_import_detail-form .location-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-              }else if(item==="customer"){
-                    $("#material_import_detail-form .customer-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-              }else if(item==="item-brand"){
-
-                    $("#material_import_detail-form .brand-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-              }else if(item==="item-item_group"){
-                    $("#material_import_detail-form .item_group-dropdown").val( $(this)
-                            .find("[data-item='" + item + "']")
-                            .attr("item-id"))
-                        .trigger("change");
-              }else if(item ==="tax"){
-                  document.querySelector("#mi-tax").checked = ($(this).find(`[data-item='${item}']`).text() !== "O")
-                  $("#mi-tax").trigger("click")
-              } else {
-                    $("#material_import_detail-form [name=" + item + "]").val(
-                        $(this)
-                            .find("[data-item='" + item + "']")
-                            .text()
-                    );
-                }
-            });
-            detail_click_id = $(this).attr("id");
-        });
     }
 
-    function material_import_init() {
-        function make_dropdown(data, selectors) {
-            let list = "<option value=''>선택 및 검색</option>";
-            let distinct = [];
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i];
-                if (selectors.includes('.bom-dropdown')) {
-                    list += "<option value='" + item.id + "'>" + item.bom_name + "</option>";
-                } else if (selectors.includes('.item-code-dropdown')) {
-                    list += "<option value='" + item.id + "'" +
-                    " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                    " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                    " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                    " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                    item.code + "</option>";
-                } else if (selectors.includes('.item-name-dropdown')) {
-                    if (distinct.indexOf(item.name) === -1) {
-                        list += "<option value='" + item.id + "'" +
-                        " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                        " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                        " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                        " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                        item.name + "</option>";
-                        distinct.push(item.name);
-                    }
-                } else if (selectors.includes('.nice_number-dropdown')){
-                    list += "<option value='" + item.id + "'" +
-                    " data-shape='" + (item.shape ? item.shape : "") + "'" +
-                    " data-detail='" + (item.detail ? item.detail : "") + "'" +
-                    " data-item_group='" + (item.item_group_id ? item.item_group_id : "") + "'" +
-                    " data-brand='" + (item.brand_id ? item.brand_id : "") + "'>" +
-                    item.nice_number + "</option>";
-                } else {
-                    list += "<option value='" + item.id + "'>" + item.name + "</option>";
-                }
-            }
-            $(selectors).html(list);
-            $(selectors).select2({width: '100%'});
-        }
-
-        // 구매처
-        api_gp('/customers_select/', 'GET', {}, (data) => {
-            make_dropdown(data, '.customer-dropdown');
-            make_dropdown(data, '.customer-dropdown-search');
-        });
-
-        // 자재구분
-        api_gp('/codes_select/?group=118&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '#material_import_main-form .item-division-dropdown');
-        });
-
-        api_gp('/codes_select/?group=107&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.location-dropdown');
-        });
-
-        // 모델
-        api_gp('/codes_select/?group=116&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '#material_import_main-form .model-dropdown');
-        });
-
-        // 브랜드
-        api_gp('/codes_select/?group=127&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.brand-dropdown');
-            make_dropdown(data, '#material_import_main-form .brand-dropdown-search');
-        });
-
-        // 제품군
-        api_gp('/codes_select/?group=128&enable=true', 'GET', {}, (data) => {
-            make_dropdown(data, '.item_group-dropdown');
-            make_dropdown(data, '#material_import_main-form .item_group-dropdown-search');
-        });
-
-        // 품번, 품명
-        {#api_gp('/items_select/', 'GET', {}, (data) => {#}
-        api_gp("/items_part/", "GET", {}, (data) => {
-            make_dropdown(data, '.item-code-dropdown');
-            make_dropdown(data, '.item-code-dropdown-search');
-            make_dropdown(data, '.item-name-dropdown');
-            make_dropdown(data, '.item-name-dropdown-search');
-            make_dropdown(data, '.nice_number-dropdown');
-            make_dropdown(data, '.nice_number-dropdown-search');
-
-            $('.item-code-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-name-dropdown").val(select2_data.id).trigger("change")
-                $(".nice_number-dropdown").val(select2_data.id).trigger("change")
-            })
-            $('.item-name-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-code-dropdown").val(select2_data.id).trigger("change")
-                $(".nice_number-dropdown").val(select2_data.id).trigger("change")
-            })
-            $('.nice_number-dropdown').on('select2:select', function (e) {
-                let select2_data = e.params.data;
-
-                let detail = $(this).find("option:selected").data("detail");
-                let brand = $(this).find("option:selected").data("brand");
-                let item_group = $(this).find("option:selected").data("item_group");
-                let shape = $(this).find("option:selected").data("shape");
-
-                $(".item_group-dropdown").val(item_group).trigger('change');
-                $(".brand-dropdown").val(brand).trigger('change');
-                $("#item-shape").val(shape);
-                $("#item-detail").val(detail);
-
-                $(".item-code-dropdown").val(select2_data.id).trigger("change")
-                $(".item-name-dropdown").val(select2_data.id).trigger("change")
-            })
-        });
-    }
-
-    function material_import_get_form_data() {
-        let data = {}
-        material_import_columns.forEach((item) => {
-            console.log(item);
-            if (item === "enable")
-                data[item] = $("#mi-" + item + "").val() === "사용";
-            else if (
-                item === "rein-amount" ||
-                item === "out-faulty-amount" ||
-                item === "rein-price"
-            ) {
-                data[item.replace(/-/gi, "_")] = parseFloat($("#mi-" + item + "").val().replace(/,/g, ''));
-            }else if(
-                item === "item-name"
-            ){
-                data["item"] = parseFloat($("#mi-" + item + "").val().replace(/,/g, ''));
-            } else {
-                data[item.replace(/-/gi, "_")] = $("#mi-" + item + "").val();
-            }
-        });
-
-        return data;
-    }
 
     function material_import_add() {
 
-        let data = material_import_get_form_data();
-        api_gp("/items/rein/", "POST", data, (data) => {
-            alert("등록하였습니다.");
-            nation2.page = 1;
-            detail_click_id = data.id;
-            detail_search();
-        });
+        let formData =$('#material_import_main-form').serializeArray();
+
+        // key name 변경
+        let renamedKey = [{'it_location_add': 'location'}, {'it_code_form': 'item'}, {'it_customer_add':'customer'}];
+
+        formData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+
+        for (let idx in renamedKey) {
+
+            let obj = renamedKey[idx]
+            Object.entries(obj).forEach(([key, value]) => {
+                if (formData.some(item => item.name === key)) {
+
+                let tmp = formData.find(item => item.name === key).value;
+                formData.push({name:value, value: tmp});
+            }
+            })
+
+
+        }
+
+        let valid = validation_material_itemcode_check('A', formData);
+        if (valid){
+            api_gp("/items/rein/", "POST", formData, (data) => {
+                alert("등록하였습니다.");
+                detail_search();
+                form_blank()
+            });
+        }
+
     }
 
     function material_import_edit() {
-        let data = material_import_get_form_data();
-        console.log(data);
-        api_gp("/items/rein/" + detail_click_id + "/", "PATCH", data, (data) => {
+        let formData =$('#material_import_main-form').serializeArray();
+
+        api_gp("/items/rein/" + material_import_id_idx + "/", "PATCH", formData, (data) => {
             alert("수정하였습니다.");
             detail_search();
+            form_blank()
         });
     }
 
     function material_import_remove() {
+        if (material_import_id_idx == null){
+            alert("삭제할 항목을 선택해주세요")
+        }else {
+            api_gp("/items/rein/" + material_import_id_idx + "/", "DELETE", {is_reined: false}, (data) => {
+                alert("삭제하였습니다.");
+                detail_table_load();
+            });
+        }
 
-        api_gp("/items/rein/" + detail_click_id + "/", "DELETE", {is_reined: false}, (data) => {
-            alert("삭제하였습니다.");
-            detail_table_load();
-        });
     }
+
+    function in_amount_calc() {
+        let sum = _numberWithCommas(
+            parseFloat($("input[name=rein_amount]").val().replace(/[\{\}\[\]\/?,;:|\)*~`!^\+_<>@\#$%&\\\=\(\'\"]/g, '')) -
+            parseFloat($("input[name=out_faulty_amount]").val().replace(/[\{\}\[\]\/?,;:|\)*~`!^\+_<>@\#$%&\\\=\(\'\"]/g, ''))
+        );
+        sum = parseFloat(sum.replace(/[\{\}\[\]\/?,;:|\)*~`!^\+_<>@\#$%&\\\=\(\'\"]/g, '')).toFixed(12);
+        $("#material_import_main-form [name=out_import_amount]").val(parseFloat(sum).toLocaleString());
+    }
+
+    $('#id_it_code_form').on('select2:select', function (e) {
+        let it_code = e.params.data.id;
+
+        if (it_code != null){
+            get_itemmaster_info(it_code, "C")
+        }
+
+    });
+
+    $('#id_it_name_form').on('select2:select', function (e) {
+        let it_code = e.params.data.id;
+        if (it_code != null){
+            get_itemmaster_info(it_code, "N")
+        }
+
+    });
+
+    function get_itemmaster_info(id, type) {
+        if (id == null){
+            console.log("선택된 품번, 품명이 존재하지 않습니다.")
+        }else{
+            api_gp(`/items/?id=${id}`, 'get', {},(done)=>{
+                let data = done.results[0]
+                console.log(data)
+                $("#material_import_main-form [name='item.detail']").val(data.detail);
+                $("#material_import_main-form [name='item.model_name']").val(data.model_name);
+                $("#material_import_main-form [name='item.division_name']").val(data.division_name);
+
+
+                if (type == "C"){
+                    option = new Option(data.name, data.id, true, true);
+                    $("#id_it_name_form").append(option).trigger("change")
+                }else{
+                    option = new Option(data.code, data.id, true, true);
+                    $("#id_it_code_form").append(option).trigger("change")
+                }
+            })
+        }
+    }
+
 
     function spinner() {
         $("#spinner").remove();

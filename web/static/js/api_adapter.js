@@ -22,6 +22,7 @@ function api_login(username, password, done_callback) {
             document.cookie = "enterprise_manage=" + json.user.enterprise_manage + "; path=/;";
             document.cookie = "order_company=" + json.user.order_company + "; path=/;";
             document.cookie = "snd_auth=" + json.user.snd_auth + "; path=/;";
+            document.cookie = "location=" + json.location + "; path=/;";
             done_callback();
         })
         .fail(handle_error);
@@ -161,6 +162,7 @@ function formatData(results, re_column) {
         //console.log("re_column  :"  + re_column);
         return results.map((result, index) => {
             let rowData = re_column.map(column => result[column]);
+            //console.log(index + "column =     result =  "+ result)
             return rowData;
         });
 
@@ -171,11 +173,12 @@ function formatDataArray(results, re_column) {
         let rowData = re_column.map(column => {
           let value = result;
           column.split('.').forEach(key => {
-            value = value ? value[key] : undefined;
+            value = value ? value[key] : "";
           });
-          //console.log(index + "column = " + column +"   value =  "+ value)
+          console.log(index + "column = " + column +"   value =  "+ value)
           return value;
         });
+
         return rowData;
   });
 }
@@ -210,7 +213,11 @@ function setInput_api(data, re_column, re_name, hidden_name) {
 
     //input 요소
     re_names.forEach((item) => {
-            let tmp = "input[name=" + item.name + "]"
+        /*let naming = item.name;
+        if (naming.includes(".")) {
+              naming = naming.substring(naming.lastIndexOf(".") + 1);
+            }*/
+        let tmp = "input[name='" + item.name.replace("'", "\\'") + "']";
             $(tmp).val(data[item.index]);
 
         });

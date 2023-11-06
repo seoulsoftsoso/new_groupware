@@ -125,8 +125,16 @@ function items_rein_search(my_arr, done_callback) {
        .fail(handle_error);
 }
 
-function validation_itemcode_check(type, item_code_id){
+function validation_material_itemcode_check(type, formdata){
         let valid = true;
+
+        let item_code_id
+
+        if (formdata.some(item => item.name === "item")) {
+              item_code_id = formdata.find(item => item.name === "item").value;
+            } else {
+              item_code_id = null;
+            }
 
         if (type === "A"){
             if(item_code_id == null){

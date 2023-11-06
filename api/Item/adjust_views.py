@@ -1,4 +1,5 @@
 from django.db import transaction, models
+from django.db.models import Subquery, OuterRef
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 from rest_framework.generics import get_object_or_404
@@ -22,20 +23,38 @@ class ItemMasterAdjustViewSet(viewsets.ModelViewSet):
     pagination_class = PostPageNumberPagination15
 
     def get_queryset(self):
-        kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemMasterAdjustViewSet", "get_queryset", False)
+        kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemMasterAdjustViewSet", "get_queryset",
+                False)
 
-        qs = self.queryset.filter(enterprise=self.request.user.enterprise).all().order_by('-id')
+        subquery = Subquery(
+            ItemAdjust.objects.filter(item_id=OuterRef('id'))
+            .order_by('-id')
+            .values('current_amount')[:1]
+        )
+        subquery_previous = Subquery(
+            ItemAdjust.objects.filter(item_id=OuterRef('id'))
+            .order_by('-id')
+            .values('previous_amount')[:1]
+        )
 
-        # 기존 소스
-        # adj = ItemAdjust.objects.filter(enterprise=self.request.user.enterprise)
-        # adj = adj.values('item').annotate(count=Count('item')).order_by('item')
-        # adj_list = []
-        # for items in adj:
-        #     adj_list.append(items['item'])
+        subquery_created = Subquery(
+            ItemAdjust.objects.filter(item_id=OuterRef('id'))
+            .order_by('-id')
+            .values('created_at')[:1]
+        )
 
-        # qs = qs.filter(id__in=adj_list)
+        subquery_location = Subquery(
+            ItemAdjust.objects.filter(item_id=OuterRef('id'))
+            .order_by('-id')
+            .values('location')[:1]
+        )
 
-        qs = qs.prefetch_related('item_adjust_item')
+        qs = ItemMaster.objects.annotate(
+            current_amount=subquery,
+            previous_amount=subquery_previous,
+            adjust_created_at=subquery_created,
+            location=subquery_location
+        ).filter(enterprise=self.request.user.enterprise).order_by('-id')
 
         if 'brand' in self.request.query_params:
             brand = self.request.query_params['brand']
@@ -70,45 +89,21 @@ class ItemAdjustViewSet(viewsets.ModelViewSet):
     queryset = ItemAdjust.objects.all()
     serializer_class = ItemAdjustSerializer
     permission_classes = [IsAuthenticated, MesPermission]
-    http_method_names = ['post']  # to remove 'put'
+    http_method_names = ['get', 'post']  # to remove 'put'
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ['item_in']  # TODO RANGE Query
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["name", "code", "nice_number", "brand__name", "item_group__name"]
     pagination_class = None
+
     def get_queryset(self):
         kpi_log(self.request.user.enterprise, self.request.user.user_id, "ItemAdjustViewSet", "get_queryset", False)
 
-        qs = ItemMaster.objects.filter(enterprise=self.request.user.enterprise).all()
+        itemId = self.request.query_params['item_id']
 
-        if 'brand' in self.request.query_params:
-            brand = self.request.query_params['brand']
-            qs = qs.filter(brand=brand)
-
-        if 'item_group' in self.request.query_params:
-            item_group = self.request.query_params['item_group']
-            qs = qs.filter(item_group=item_group)
-
-        if 'item_name' in self.request.query_params:
-            item_name = self.request.query_params['item_name']
-            qs = qs.filter(id=item_name)
-        elif 'item_code' in self.request.query_params:
-            item_code = self.request.query_params['item_code']
-            qs = qs.filter(id=item_code)
-        elif 'nice_number' in self.request.query_params:
-            nice_number = self.request.query_params['nice_number']
-            qs = qs.filter(id=nice_number)
-
-        if 'detail' in self.request.query_params:
-            detail = self.request.query_params['detail']
-            qs = qs.filter(detail__contains=detail)
-
-        if 'shape' in self.request.query_params:
-            shape = self.request.query_params['shape']
-            qs = qs.filter(shape__contains=shape)
+        qs = ItemAdjust.objects.filter(enterprise=self.request.user.enterprise, item=itemId).order_by('-id')
 
         return qs
-
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -150,7 +145,7 @@ class ItemAdjustViewSet(viewsets.ModelViewSet):
                 qr_path='',
                 etc="재고조정",  # 출고목적
             )
-        else :
+        else:
             num = generate_code("O", ItemOut, "num", self.request.user)
             ItemOut.objects.create(
                 num=num,  # 출하번호

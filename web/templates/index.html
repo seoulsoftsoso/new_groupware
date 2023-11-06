@@ -1,324 +1,359 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-    {% block title %}
-        <title>Seoul Soft MES</title>
-    {% endblock title %} {% include 'header.html' %}
 {% load static %}
 
-</head>
-<body>
-    <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-    <!-- preloader area start -->
-    {% comment %}<div id="preloader">
-        <div class="loader"></div>
-    </div>{% endcomment %}
-    <!-- preloader area end -->
-    <!-- page container area start -->
-    <div class="page-container">
-        {% include 'header-menu.html' %}
-        <!-- sidebar menu area start -->
-        {% include 'sub-menu.html' %}
-        <!-- sidebar menu area end -->
-        <div id="content" >
-            <div class="row no-gutters">
-                <div class="col-lg-11">
-                    <div class="card">
-                        <div class="card-body">
-                    <ul
-                            class="nav nav-tabs"
-                            id="tab_header-list"
-                            role="tablist"
-                    ></ul>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-lg-1">
-                    <button
-                            type="button"
-                            class="btn btn-flat btn-outline-secondary mt-3"
-                            onclick="tab_delete_all();"
-                    >
-                        tab 전체삭제
-                    </button>
-                </div>
-                <!-- tab contents -->
+{% include 'header.html' %}
 
-                    <div class="tab-content col-lg-12" id="tab_content-list" style="height:3000px;">
-                        <div class="page-title-area mb-3">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left" id="page_title">WelCome!</h4>
+<!--menu 로드-->
+{% include 'menu.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+
+<!--팝업-->
+<!-- <div id="popup">
+    {% for p in popup %}
+    <div id="{{p.id}}" style="position: absolute; z-index: 999; top:{{p.y}}px; left: {{p.x}}px; background: #999999; ">
+
+        {% if p.isnewwindow == 1 %}
+        <a href="{{p.link}}" target="_blank">
+            {% else %}
+            <a href="{{p.link}}">
+                {% endif %}
+
+                <img src="{{ p.image.url }}" style=" width: {{p.width}}px; height: {{p.height}}px;" alt="{{p.title}}">
+            </a>
+
+            <div style="width:{{p.width}}px; height: 30px;">
+                <label>
+                    <input type="checkbox" id="{{p.id}}check">24시간 동안 열지 않음
+                </label>
+
+                <button class="popupclosebutton" style="height=30px;">닫기</button>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div> -->
+
+<!--contents 영역-->
+<div id="body">
+        <div class="section">
+
+                <!-- 슬라이드 영역 -->
+
+        <div class="swiper" style="width: 100%; height: 49.3vw;">
+
+            <!-- Additional required wrapper -->
+
+            <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+                <div class="text_wrap">
+                    <h1>Various Skills</h1>
+                    <p>SW 개발, IT 컨설팅, VR 콘텐츠 제작 등 다양한 솔루션 사업을 진행하고 있는 서울소프트</p>
+                </div>
+                <img src="{% static 'admin/img/메인이미지.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
+            </div>
+            <div class="swiper-slide">
+                <div class="text_wrap">
+                    <h1>Talent with Creative Thinking</h1>
+                    <p>창의적인 사고를 가진 인재를 원하는 서울소프트</p>
+                </div>
+                <img src="{% static 'admin/img//메인페이지 이미지/메인페이지_슬라이드2.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
+                </div>
+            <div class="swiper-slide">
+                <div class="text_wrap">
+                    <h1>Customer's Point of View</h1>
+                    <p>고객의 입장을 먼저 생각하는 서울소프트</p>
+                </div>
+                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_슬라이드3.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
+            </div>
+            <div class="swiper-slide">
+                <div class="text_wrap">
+                    <h1>Our Efforts</h1>
+                    <p>더 큰 세상을 만들어 나가도록 노력하겠습니다.</p>
+                </div>
+                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_슬라이드4.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
+            </div>
+            </div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev le"></div>
+            <div class="swiper-button-next ri"></div>
+
+            <!-- If we need scrollbar -->
+
+        </div>
+            <!-- <div class="slide" data-anchor="slide1" style="background: url('/static/img/main_img/bg_1_1.png') no-repeat; background-size: auto 100%">
+                <div style="color: white" class="text-center">
+                    <h1>교통·물류·제조 혁신의 중심에서</h1>
+                    <h1 class="mb-5">시간과 공간의 새로운 가치를 창출하는 서울소프트</h1>
+                    <h5>서울소프트는 새로운 가치를 창출하기 위해 끊임없이 노력하고 있습니다.</h5>
+                </div>
+            </div>
+            <div class="slide" data-anchor="slide2" style="background: url('/static/img/main_img/bg_1_2.png') no-repeat; background-size: auto 100%">
+                <div style="color: white" class="text-center">
+                    <h1>깨어있는 의식으로 융합하고 협업을 통해</h1>
+                    <h1 class="mb-5">혁신하며 변화의 중심에서 창조하는 서울소프트</h1>
+                    <h5>서울소프트는 수년간의 노력과 시행착오를 통해 성장했습니다.</h5>
+                </div>
+            </div>
+            <div class="slide" data-anchor="slide3" style="background: url('/static/img/main_img/bg_1_3.png') no-repeat; background-size: auto 100%">
+                <div style="color: white" class="text-center">
+                    <h1 class="">합리적이고 효율적인 솔루션을 통한</h1>
+                    <h1 class="mb-5">고객 맞춤형 시스템을 제공하는 서울소프트</h1>
+                    <h5>서울소프트는 고객의 경쟁력 강화에 도움을 드립니다.</h5>
+                </div>
+            </div> -->
+<!--            <div class="fp-slidesNav fp-bottom">-->
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <a href="#"><span class="fp-sr-only">fullPage</span><span></span></a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#"><span class="fp-sr-only">Open</span><span></span></a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#"><span class="fp-sr-only">Easy</span><span></span></a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+        </div>
+
+        <div class="section">
+
+            <!-- 운송ERP -->
+
+            <div class="about" data-aos="fade-down-right" data-aos-anchor-placement="top-center">
+                <div class="container-fluid row mb-2 py-5 px-5 erpcontainer">
+                        <div class="col-md-6">
+                            <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+                            <div class="col-auto d-none d-lg-block erp_img">
+                                <div class="screen">
+                                    <div class="top">Stransit ERP</div>
+                                    <img src="{% static 'admin/img/메인페이지 이미지/bus_img.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bus_tit1">
+
+                            <h6>STRANSIT ERP</h6>
+                            <h1 class="featurette-heading">운송ERP</h1>
+                        <div class="bus_iconbox">
+                            <div class="erp1">
+                                <img src="{% static 'admin/img/메인페이지 이미지/bus1.svg' %}" alt="버스_icon" class="bus_icon">
+                                <p>버스ERP</p>
+                            </div>
+
+                            <div class="erp1">
+                                <img src="{% static 'admin/img/메인페이지 이미지/freight_icon.svg' %}" alt="화물_icon" class="bus_icon">
+                                <p>화물ERP</p>
+                            </div>
+
+                            <div class="erp1">
+                                <img src="{% static 'admin/img/메인페이지 이미지/taxi_icon.svg' %}" alt="택시_icon" class="bus_icon">
+                                <p>택시ERP</p>
+                            </div>
+                        </div>
+
+                            <p class="bus_lead">운수업체의 모든 업무를 유기적으로 관리 및 처리할 수 있는<br>운송업체 특화 ERP 솔루션입니다.</p>
+                            <a href="/menu/0101/">
+                                <button class="viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
+                            </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 clearfix">
-                        <!-- 오른쪽 공간 활용 -->
+                </div>
+
+            <!-- 스마트공방 -->
+
+            <div class="about smart_about" data-aos="fade-up-right" data-aos-anchor-placement="top-center">
+                <div class="container-fluid row mb-2 py-5 px-5 smart_box">
+
+                        <div class="col-md-6 smart_textbox">
+                            <div class="smart_tit">
+                                    <h6>SMART SOLUTION MES</h6>
+                                    <h1 class="featurette-heading">스마트솔루션MES</h1>
+                                <div class="smarticonbox">
+                                    <div class="smart_icon">
+                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트공방 아이콘.svg' %}" alt="스마트공방" class="smart_icon1">
+                                        <p class="smart_p1">스마트공방</p>
+                                    </div>
+
+                                    <div class="smart_icon">
+                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트팩토리 아이콘.svg' %}" alt="스마트팩토리" class="smart_icon1">
+                                        <p class="smart_p2">스마트팩토리</p>
+                                    </div>
+
+                                    <div class="smart_icon">
+                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트해썹 아이콘.svg' %}" alt="스마트해썹" class="smart_icon1">
+                                        <p class="smart_p3">스마트해썹</p>
+                                    </div>
+
+                                </div>
+                                    <p class="smart_lead">정부지원사업 스마트공방과 스마트팩토리의 업무 전반관리를<br>도와주는 MES 솔루션입니다.</p>
+                                    <a href="/menu/0102/">
+                                        <button class="smart_viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
+                                    </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+                            <div class="col-auto d-none d-lg-block smart_img">
+                                <div class="screen">
+                                <div class="top">Smart Factory</div>
+                                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트공방 이미지.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" alt="스마트공방이미지"></img>
+                            </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- 메타버스 -->
 
+            <div class="about meta_about" data-aos="fade-up-right" data-aos-anchor-placement="top-center">
+            <div class="container-fluid row mb-2 py-5 px-5">
+                <div class="col-md-6">
+                    <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+                    <div class="col-auto d-none d-lg-block meta_img">
+                        <div class="screen">
+                        <div class="top">MetaVerse</div>
+                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스 이미지.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" alt="메타버스이미지"></img>
+                        </div>
                     </div>
-                            {% comment %}</div>
-                    </div>{% endcomment %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="metaverse_tit1">
+                    <h6>Virtual Reality/Augmented Reality</h6>
+                    <h1 class="featurette-heading">메타버스</h1>
+
+                        <div class="metaverse_icon">
+                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_VR 아이콘.svg' %}" alt="vr" class="metaverse_icon1">
+                            <p class="meta_p1">VR</p>
+                        </div>
+
+                        <div class="metaverse_icon">
+                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_AR 아이콘.svg' %}" alt="ar" class="metaverse_icon1">
+                            <p class="meta_p2">AR</p>
+                        </div>
+
+                        <div class="metaverse_icon">
+                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_AI 아이콘.svg' %}" alt="ai" class="metaverse_icon1">
+                            <p class="meta_p3">AI</p>
+                        </div>
+
+                        <p class="metaverse_lead">가상현실과 현실세계의 경계에서 서로 교류가 가능한<br>컴퓨터 그래픽 기술을 통해 구현합니다.</p>
+                        <a href="/menu/0103/">
+                            <button class="viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- 메인 페이지 구축실적 -->
+
+        <div class="con1box">
+            <div class="container buildslide">
+                <h1 class="text-center con1_tit">[ 구축실적 ]</h1>
+                <div class="text-center con1_text">
+                    <h6>서울소프트의 지원사업 구축실적을 확인할 수 있습니다.</h6>
+                </div>
+                <span class="prev_arrow"><i class="fa-solid fa-angle-left"></i></span>
+                <span class="next_arrow"><i class="fa-solid fa-angle-right"></i></span>
+                <div class="for_slick_slider multiple-items">
+                    <div class="items">
+                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 위치기반 배차관리.svg' %}" alt="위치기반 배차관리" class="img-fluid">
+                    <div class="overlay"></div>
+                    </div>
+                    <div class="items">
+                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 시내버스 통합관리.svg' %}" alt="시내버스 통합관리" class="img-fluid">
+                    <div class="overlay"></div>
+                    </div>
+                    <div class="items">
+                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 최적배차관리.svg' %}" alt="최적배차관리" class="img-fluid">
+                    <div class="overlay"></div>
+                    </div>
+                    <div class="items">
+                        <img src="{% static 'admin/img/구축실적_슬라이드_ICT연계 간이형 웹기반 생산관리시스템.svg' %}" alt="ICT연계 간이형 웹기반 생산관리시스템" class="img-fluid">
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="items">
+                        <img src="{% static 'admin/img/구축실적_슬라이드_공정설비시스템.svg' %}" alt="공정설비시스템" class="img-fluid">
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="items">
+                        <img src="{% static 'admin/img/구축실적_슬라이드_자동관리 모니터링 시스템.svg' %}" alt="자동관리 모니터링 시스템" class="img-fluid">
+                        <div class="overlay"></div>
+                    </div>
+                </div>
+
+                <div class="container-fluid container col-lg-12">
+                    <div class="row viewmore_btn">
+                        <a href="/menu/0104">
+                            <button class="viewmore con1_viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- main content area start -->
-    </div>
-
-    <!-- offset area end -->
-
-    <!-- bootstrap 4 js -->
-<script src="{% static 'srtdash/assets/js/popper.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/owl.carousel.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/metisMenu.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
-<script src="{% static 'srtdash/assets/js/jquery.slicknav.min.js' %}" type="text/javascript"></script>
 
 
-    <!-- others plugins -->
-
-    <script src="{% static 'srtdash/assets/js/plugins.js' %}"></script>
-
-<script src="{% static 'srtdash/assets/js/scripts.js' %}"></script>
-
-</body>
-<script>
-
-    // hjlim : Session, Changed Event, Broadcast 가 제대로 동작 안하는 문제가 있어서 Interval 사용
-    var oldValue = $("#mes_toggle").val();
-    setInterval(function () {
-        var currentValue = $("#mes_toggle").val();
-        if (currentValue !== oldValue) {
-            {#$("#txt2").trigger("change");#}
-
-            let msg = currentValue.split(',');
-            console.log("msg_cmd : ", msg[1]);
-
-            if (msg[1] === 'fold') {
-                $("#sub-menu").removeClass("col-2");
-                $("#content").removeClass("col-lg-10");
-            } else if (msg[1] === 'spread') {
-                $("#sub-menu").addClass("col-2");
-                $("#content").addClass("col-lg-10");
-            }
-
-            oldValue = currentValue;
-            console.log("changed");
-        }
-    }, 100); // 0.1초
+    <!-- /END THE FEATURETTES -->
 
 
-    const TAB_CNT_MAX = 23;  // hjlim new-module : 수정 시 전체 검색, 상단이나 사이드의 메뉴 상단 버튼 최대 갯수
-    const AUTH_CNT_MAX = 73 + 1;  // idx 마지막 수 + 1 을 해줘야 함
-
-    if (get_token() === "") {
-        window.location.href = "/accounts/login/";
-    }
-
-    // table click highlight
-    $(".content-table tbody tr").on("click", function () {
-        $(this).parent().find("tr").removeClass("clicked");
-        $(this).addClass("clicked");
-    });
-
-    //
-    let dom_store = {};
-
-    function url_click(url, _title) {
-        let target = null;
-
-        let tabs = $("#tab_header-list .nav-item .nav-link");
-
-        let title_name = $("." + _title + ":first").text();
-            $('#page_title').text(title_name);
-
-        for (let i = 0; i < tabs.length; i++) {
-            // to get already-loaded one.
-
-            if (_title.substring(0, 2) == 'sm') {
-                let tab_title_num = tabs[i].id.replace("tab_header-", "");
-
-                let _title_num = _title.replace("sm-", "");
-
-                if (tab_title_num === _title_num) {
-                    target = tabs[i];
-                    break;
-                }
-            } else {
-                let tab_title = tabs[i].text.replace("×", "").trim();
-                if (tab_title === _title) {
-                    target = tabs[i];
-                    break;
-                }
-            }
-        }
-        if (target === null) {
-            // else tab_add() with new content
-            detach_all();
-            //$(tab_add(url ,title)).load(url);
-
-            $(tab_add(url, _title)).append(
-                // '<div id="spinner" style="position:relative;top:30%;left:45%;">'+
-                //         '<img src="../../../static/img/spinner.gif" />'+
-                // '</div>' +
-                '<iframe src="' +
-                url +
-                '" class="w-100 h-100" style="border:none;" ></iframe>'
-            );
-            // $('#tab_content-' + title2num(title)).bind("attach", function () { });
-        } else {
-            // if title 검사 => 있으면 그쪽으로 focus
-            $("#" + target.id).click();
-        }
-    }
-
-    // function spinner(){
-    //   console.log('iframe loaded');
-    //   setTimeout(() => {
-    //     $("#spinner").remove();
-    //   }, 3000);
-    // }
-
-    function detach_all() {
-        let tabs = $("#tab_header-list .nav-item .nav-link");
-
-        for (let i = 0; i < tabs.length; i++) {
-            let tab_title = tabs[i].text.replace("×", "").trim();
-            let idx = title2num(tab_title);
-            let dom = $("#container-" + idx);
-
-            dom.css("display", "none");
-            // if (dom.length > 0) dom_store[idx] = dom.detach();
-        }
-    }
-
-    function load_detached(url, title) {
-        detach_all();
-
-        let idx = title2num(title);
-        $("#container-" + idx).css("display", "block");
-        // $('#tab_content-' + idx).append(dom_store[idx]);
-        // delete dom_store[idx];
-
-        // call reload function of attached content. no way...
-        let target = $("#tab_content-" + idx + " iframe");
-        if (target.length === 1) target[0].contentWindow.location.reload(true);
-    }
-
-    <!-- 넘버링 규칙 : Tab 생성시 사용됨. 권한 쪽과 동일하도록 사용하는게 좋을 듯, 지금은 매칭 안되어있음-->
-    function title2num(title) {
-        let num;
-        let parts = title.split("-");
-        if (parts[0] === "sm"){
-            num = parts[1];
-        }else{
-            num = title;
-        }
-        return num;
-    }
 
 
-    function tab_add(url, title) {
-        let tab_now_add = title2num(title);
+        </div>
+        <div class="section">
 
-        let title_name = '';
 
-        if (title.substring(0, 2) == 'sm') {
 
-            title_name = $("." + title + ":first").text();
+        </div>
+        {% include 'footer.html' %}
+        <div class="slide_wrapper">
+            <ul class="slides">
+                <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+            </ul>
 
-        } else {
-            title_name = title;
-        }
+        </div>
+        <p class="controls">
+            <span class="prev"></span>
+            <span class="next"></span>
+        </p>
 
-        let tab_header =
-            '<li class="nav-item" id="tab_' +
-            tab_now_add +
-            '">\n' +
-            '    <a class="nav-link" id="tab_header-' +
-            tab_now_add +
-            '" data-toggle="tab" href="#tab_content-' +
-            tab_now_add +
-            '"\n' +
-            '         role="tab" aria-controls="tab_' +
-            tab_now_add +
-            '" aria-selected="false">' +
-            {% comment %}"         onclick=\"load_detached('" +
-            url +
-            "', '" +
-            title +
-            "');\">" +{% endcomment %}
-            title_name +
-            '<span class="tab_closer">&emsp;&times;</span>\n' +
-            "    </a>\n" +
-            "</li>";
-        let tab_content =
-            '<div class="tab-pane fade w-100 h-100" id="tab_content-' +
-            tab_now_add +
-            '" role="tabpanel" aria-labelledby="tab_content-' +
-            tab_now_add +
-            '">\n' +
-            '    <div id="container-' +
-            tab_now_add +
-            '" class="w-100 h-100"></div>' +
-            "</div>";
-        $("#tab_header-list").append(tab_header);
-        $("#tab_content-list").append(tab_content);
-        $("#tab_header-" + tab_now_add + " span.tab_closer").click(() => {
-            tab_delete(tab_now_add);
-        });
-        $("#tab_header-" + tab_now_add).click();
-        return "#container-" + tab_now_add;
-    }
 
-    function tab_delete(tab_num) {
-        $("#tab_" + tab_num).remove("#tab_header-list .nav-item");
-        $("#tab_content-" + tab_num).remove("#tab_content-list .tab-pane");
+        <!-- <div class="section fp-auto-height">
+            <section id="banner" class="mb-4">
+                <div class="slides-wrapper col-lg-9 col-md-10 col-12">
+                    <ol class="slides">
+                        <li><a href=""><img src="{% static 'img/banner-01.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-02-1.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-03-1.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-04-1.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-05-1.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-06-1.png' %}" alt=""></a></li>
+                        <li><a href=""><img src="{% static 'img/banner-07-1.png' %}" alt=""></a></li>
+                    </ol>
+                </div>
+            </section>
 
-        delete dom_store[tab_num];
-    }
+        </div>
+        <p class="controls">
+            <span class="prev"></span>
+            <span class="next"></span>
+        </p> -->
 
-    function tab_delete_all() {
-        $("#tab_header-list").empty();
-        $("#tab_content-list").empty();
-        dom_store = {};
-        console.log("All tabs are deleted");
-    }
+    <script>
 
-    // let not_active_setting_time = 10 * 60;
-    // let time_checker = null;
+    </script>
 
-    // init_timer = function () {
-    //   if (window.event) {
-    //     not_active_setting_time = 10 * 60 * 600000;
-    //     // console.log("사용자 작업중")
-    //     clearTimeout(time_checker);
-    //   }
-    //   if (not_active_setting_time > 0) {
-    //     not_active_setting_time--;
-    //     time_checker = setTimeout("init_timer()", 1000);
-
-    //     // console.log("not_active_time :: ", not_active_setting_time);
-    //     // console.log("time_checker :: ",time_checker);
-    //   } else {
-    //     clearTimeout(time_checker);
-    //     flush_token();
-    //     alert("장시간 미사용으로 자동 로그아웃 처리되었습니다.");
-    //     top.location.replace("/");
-    //   }
-    // };
-
-    // onload = init_timer;
-    // document.onclick = init_timer;
-    // document.onkeypress = init_timer;
-    const dragArea = document.querySelector("#tab_header-list");
-    //new Sortable(dragArea, {
-    //    animation: 350
-    //});
-</script>
-</html>
+</div>

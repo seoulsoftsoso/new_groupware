@@ -472,11 +472,11 @@ def get_results(qs):
             charge_phone = ''
 
         if (row.code):
-            code_id = row.code.id
+            customer_id = row.code.id
             code_name = row.code.name
             code_code = row.code.code
         else:
-            code_id = ''
+            customer_id = ''
             code_name = ''
             code_code = ''
 
@@ -559,7 +559,7 @@ def get_results(qs):
             'id': row.id,
 
             'ordering_code': row.ordering_code,
-            'code_id': code_id,
+            'code_id': customer_id,
             'code_code': code_code,
             'code_name': code_name,
             'charge_name': charge_name,

@@ -1202,8 +1202,11 @@ class ItemMasterAdjustSerializer(BaseSerializer):
             bom_division_id = instance.bom_division.id
         else:
             bom_division_id = ''
-
-        adjusts = self.get_adjusts(instance)
+        itemAdjust = ItemAdjust.objects.filter(item_id=instance.id).last()
+        if (itemAdjust):
+            reason = itemAdjust.reason
+        else:
+            reason = ''
 
         if (instance.updated_by):
             username = instance.updated_by.username
@@ -1239,6 +1242,11 @@ class ItemMasterAdjustSerializer(BaseSerializer):
         else:
             safe_amount = ''
 
+        if (instance.location):
+            location = CodeMaster.objects.filter(id=instance.location).values_list('name', flat=True).first()
+        else:
+            location = ''
+
         return {
             'id': instance.id,  # id
             'code': instance.code,  # 품번
@@ -1263,16 +1271,20 @@ class ItemMasterAdjustSerializer(BaseSerializer):
 
             'moq': instance.moq,  # MOQ
             'etc': instance.etc,  # 비고
+            'reason': reason,  # 조정사유
             'standard_price': instance.standard_price,  # 표준단가
             'stock': instance.stock,  # 현 재고
 
             'bom_division_id': bom_division_id,  # BOM 구분
 
-            'adjusts': adjusts,
+            # 'adjusts': adjusts,
             'created_at': instance.created_at,  # 조정날짜
             'username': username,  # 작성자z
+            'current_amount': instance.current_amount,
+            'previous_amount': instance.previous_amount,
+            'adjust_created_at': instance.adjust_created_at,
+            'location': location
         }
-
 
 class ItemAdjustSerializer(BaseSerializer):
     previous_amount = serializers.IntegerField(read_only=True, required=False)
@@ -2942,7 +2954,7 @@ class OrdersSerializer(BaseSerializer):
         fields = '__all__'
 
     def create(self, instance):
-        instance['orders_code'] = generate_code('O', Orders, 'orders_code', self.context['request'].user)
+        instance['po_no'] = generate_code('O', Orders, 'po_no', self.context['request'].user)
         instance['in_status'] = ''
 
         return super(OrdersSerializer, self).create(instance)
@@ -2954,27 +2966,32 @@ class OrdersSerializer(BaseSerializer):
         else:
             username = ''
 
+        if (instance.finish_chk):
+            finish = "마감완료"
+        else :
+            finish = "미완료"
+
         return {
             'id': instance.id,  # id
-            'orders_code': instance.orders_code,  # 발주번호
-            'created_at': instance.created_at,  # 발주일자
+            'po_no': instance.po_no,  # 발주번호
+            'created_at': instance.created_at.strftime('%Y-%m-%d'),  # 발주일자
 
-            'code_id': instance.code.id,  # 거래처 코드
-            'code_name': instance.code.name,  # 거래처명
-            'licensee_number': instance.licensee_number,  # 사업자번호
-            'owner_name': instance.owner_name,  # 대표자명
-            'business_conditions': instance.business_conditions,  # 업태
-            'business_event': instance.business_event,  # 종목
-            'postal_code': instance.postal_code,  # 우편번호
-            'address': instance.address,  # 주소
-            'office_phone': instance.office_phone,  # 회사전화번호
-            'office_fax': instance.office_fax,  # 팩스번호
+            'customer_id': instance.customer.id,  # 거래처 코드
+            'customer_name': instance.customer.name,  # 거래처명
+            'licensee_number': instance.customer.licensee_number,  # 사업자번호
+            'owner_name': instance.customer.owner_name,  # 대표자명
+            'business_conditions': instance.customer.business_conditions,  # 업태
+            'business_event': instance.customer.business_event,  # 종목
+            'postal_code': instance.customer.postal_code,  # 우편번호
+            'address': instance.customer.address,  # 주소
+            'office_phone': instance.customer.office_phone,  # 회사전화번호
+            'office_fax': instance.customer.office_fax,  # 팩스번호
 
-            'charge_name': instance.charge_name,  # 거래처담당자
-            'charge_level': instance.charge_level,  # 직급
-            'charge_phone': instance.charge_phone,  # 담당자연락처
+            'charge_name': instance.customer.charge_name,  # 거래처담당자
+            'charge_level': instance.customer.charge_level,  # 직급
+            'charge_phone': instance.customer.charge_phone,  # 담당자연락처
 
-            'email': instance.email,  # 이메일
+            'email': instance.customer.email,  # 이메일
             'etc': instance.etc,  # 비고
 
             'pay_option': instance.pay_option,  # 결제조건
@@ -2987,8 +3004,11 @@ class OrdersSerializer(BaseSerializer):
             'provide_surtax': instance.provide_surtax,  # 부가세포함
             'username': username,  # 작성자
 
-            'send_chk': instance.send_chk,  # 발송여부
+            'finish_chk': finish,  # 마감여부
+            'finish_date': instance.finish_date.strftime('%Y-%m-%d') if instance.finish_date else "",
             'in_status': instance.in_status,  # 입고현황
+            'item_supply_total': instance.item_supply_total, #총합계
+            'updated_at': instance.updated_at.strftime('%Y-%m-%d'),  # 발주일자
         }
 
 

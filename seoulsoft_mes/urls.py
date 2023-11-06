@@ -80,6 +80,7 @@ from api.cost.CostProduct_views import CostProductViewSet
 from api.estimate.estimate_items_views_n import EstimateItems_read, EstimateItems_create, EstimateItems_update
 from api.estimate.estimate_views_n import Estimate_read, Estimate_create, Estimate_update, Estimate_in, \
     sendmail_to_company_pdf
+
 from api.log_views import write_log
 from api.order.in_views import OrderInViewSet
 from api.order.orders_view import OrdersViewSet, OrdersItemsViewSet, OrdersInItemsViewSet
@@ -126,10 +127,8 @@ from api.warehouse.item_views import ItemMasterWarehouseViewSet
 from api.warehouse.log_views import ItemWarehouseLogViewSet
 from api.warehouse.out_views import ItemWarehouseOutViewSet
 from api.warehouse.rein_views import ItemWarehouseReinViewSet
-from customer_manage.view_customer import CustomerAutoComplete, Code_108_AutoComplete
-from order_manage.view_labelprint import *
-from order_manage.view_labelprint_product import *
-from order_manage.view_labelprint_delivery import *
+
+
 from api.location.location import LocationItemCalculateView
 
 from web.views import *
@@ -320,6 +319,7 @@ urlpatterns = [
 
     # web
     path('', index),
+
     path('basic_information/codemaster/', codemaster),
     path('basic_information/menumaster/', Menumaster),
     path('basic_information/getlmenulist/', getLmenuList),
@@ -672,9 +672,6 @@ urlpatterns = [
     path('basic_information/alert', Alert),
     path('basic_information/rest_kpi', Rest_kpi),
 
-    # autocomplete 추가
-    url('autocomplete/customerName/$', CustomerAutoComplete.as_view(), name='customer_autocomplete'),  # Select2
-    url('autocomplete/code_108/$', Code_108_AutoComplete.as_view(), name='code_108_autocomplete'),  # Select2
 
     ## 거래처 기준정보 오토컴플릿
     url('autocomplete/code108$', Code_108_ac.as_view(), name='code108_name_ac'),  # 코드 108 - 거래처구분
@@ -733,26 +730,6 @@ urlpatterns = [
     url('autocomplete/menumaster/menulist_name_ac$', menulist_name_ac.as_view(), name='menulist_name_ac'),  # 사용자정보
 
 
-   # 2022-02-14 샛별식품 라벨프린터 건
-    path('ordering/label_print/', LabelPrint.as_view(), name='labelprint_list'),
-    path('ordering/label_print/<int:pk>', LabelPrint_Update.as_view(), name='labelprint_detail'),
-    path('ordering/label_print_delete/<int:pk>', LabelPrint_DeleteView.as_view(), name='labelprint_delete'),
-
-    path('ordering/label_print/excelupload/', LabelPrintExcel, name='labelprint_list_excelupload'),
-    path('ordering/label_print/labelprint_all/', LabelPrint_All, name='labelprint_all'),
-
-
-    path('ordering/label_print_product/', LabelPrint_productList.as_view(), name='labelprint_product_list'),
-    path('ordering/label_print_product/<int:pk>', LabelPrint_productUpdate.as_view(), name='labelprint_product_detail'),
-    path('ordering/label_print_product_delete/<int:pk>', LabelPrint_productDeleteView.as_view(), name='labelprint_product_delete'),
-
-    path('ordering/label_print_delivery/', LabelPrint_deliveryList.as_view(), name='labelprint_delivery_list'),
-    path('ordering/label_print_delivery/<int:pk>', LabelPrint_deliveryUpdate.as_view(), name='labelprint_delivery_detail'),
-    path('ordering/label_print_delivery_delete/<int:pk>', LabelPrint_deliveryDeleteView.as_view(), name='labelprint_delivery_delete'),
-
-    url('autocomplete/label_print_product/$', LabelPrint_productAutoComplete.as_view(), name='label_print_product_autocomplete'),  # Select2
-    url('autocomplete/label_print_delivery/$', LabelPrint_deliveryAutoComplete.as_view(), name='label_print_delivery_autocomplete'),  # Select2
-
     # 재고관리 TV autoComplete
     url('autocomplete/code/$', CodeAutoComplete.as_view(), name='code_autocomplete'),  # Select2
 
@@ -761,6 +738,7 @@ urlpatterns = [
     path('getAlivecheck/', views.getAlivecheck, name='getAlivecheck'),
 
     path('recognize/', views.recognize, name='recognize'),
+
 
 
 

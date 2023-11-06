@@ -22,7 +22,7 @@ class OrderingViewSet(viewsets.ModelViewSet):
 
         class Meta:
             model = Ordering
-            fields = ['id', 'code_id']
+            fields = ['id']
 
     queryset = Ordering.objects.all()
     serializer_class = OrderingSerializer
@@ -338,7 +338,7 @@ class OrderingPartViewSet(viewsets.ModelViewSet):
 
         class Meta:
             model = Ordering
-            fields = ['id', 'code_id']
+            fields = ['id']
 
     queryset = Ordering.objects.all()
     serializer_class = OrderingPartSerializer
