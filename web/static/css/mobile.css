@@ -1,0 +1,496 @@
+@media (max-width: 767px){
+body { max-width: 767px; margin: 0 auto; padding: 0; }
+
+/*#header #aside,*/
+/*#banner,*/
+/*#etc,*/
+/*#board,*/
+#header-top #topmenu_wrapper, .mobile-manage-menu { display: none !important; }
+
+
+/******************************************************************************************************************************************************************
+    로그인 화면
+******************************************************************************************************************************************************************/
+body.login, body.signup {background: #f8f8f8;}
+.login_box { padding: 0 30px; }
+.login_box p { text-align: center;}
+.login_box p #login_logo { margin: 100px auto 40px; text-align:center; width:100%; padding: 0 50px; }
+.login_box #login_div {padding: 26px 20px 20px 20px; margin: 50px auto 400px; height:300px; width: 100%; text-align:center; border: 1px solid #b1b1b1; border-radius:5px; background:white;}
+/*.login_box #login_div p {font-style:bold; color:red;}*/
+.login_box #login_div label {display:none;}
+.login_box #login_div #logo {margin-bottom:100px;}
+.login_box #login_div #id_username {width: 100%; height:35px; font-size:15px; margin: 15px auto;}
+.login_box #login_div #id_password {width: 100%; height:35px; font-size:15px; margin: 15px auto;}
+.login_box #login_div input {width:120px; height:35px; margin-bottom:15px;}
+.login_box #login_div button {width:100%; height:35px; text-decoration: none; margin-left:0px; margin-bottom: 10px;}
+.login_box #login_div button a {color:black;}
+
+/******************************************************************************************************************************************************************
+    회원가입 화면
+******************************************************************************************************************************************************************/
+.signup_box { padding: 30px; }
+.signup_box p {text-align: center;}
+.signup_box p #login_logo {margin:100px auto 40px; text-align:center; width: 100%; height: auto; }
+.signup_box h1 {font-size:24px; text-align:center; margin: 0px auto 30px; font-weight: 300;}
+.signup_box #signup_div {padding: 20px 20px 30px 20px; margin: 50px auto 400px; height:auto; width:100%; text-align:center; border: 1px solid #b1b1b1; border-radius:5px; background:white;}
+.signup_box #signup_div form { margin: 0px;}
+.signup_box #signup_div input {margin:0 auto; width:100%;}
+.signup_box #signup_div tr {height:80px;}
+.signup_box #signup_div .label {text-align:left; font-size:15px; color:black; font-weight:normal;}
+/*.signup_box #signup_div .critical {font-style:bold; color:red;}*/
+.signup_box #signup_div button {margin-top: 20px;}
+
+/******************************************************************************************************************************************************************
+    마이페이지
+******************************************************************************************************************************************************************/
+.user_info_box {clear:both; width:100%; margin: 100px auto; padding:0;}
+.user_info_box #user_info_div {width: 100%; margin:auto;}
+.user_info_box #user_info_div #id_password {display:none;}
+.user_info_box #user_info_div .label {font-size:15px; color:black; font-weight:normal; margin-top:30px;}
+.user_info_box #user_info_div input,
+.user_info_box #user_info_div textarea {margin:10px auto 30px;}
+.user_info_box #user_info_div button {float:right;}
+
+/********************************************************************************
+    헤더 이미지, 텍스트
+*********************************************************************************/
+#header_img #customer_bg { background: url('../img/customer_bg.png') center no-repeat;}
+#header_img #news_bg { background: url('../img/news_bg.png') center no-repeat;}
+#header_img #company_bg { background: url('../img/company_bg.png') center no-repeat;}
+#header_img #business_bg { background: url('../img/business_bg.png') center no-repeat;}
+#header_img .imgtext { display: block; width: 100%; margin: 0 auto; text-align: center; }
+#header_img .imgtext span { display: block; letter-spacing: 0; font-size: 44px; font-weight: 500; text-align: center; color: rgb(239, 239, 239); padding-top: 150px; }
+#header_img .imgtext p { font-weight: 300; font-size: 16px; color: rgb(242, 242, 242); text-align: center; margin: 0; padding-bottom: 100px; }
+
+/******************************************************************************************************************************************************************
+    header
+******************************************************************************************************************************************************************/
+/*#topmenu { display: none; }*/
+
+#topmenu_mb .menu-box {  }
+#topmenu_mb .menu-box .menu-btn { position: relative; float: left; width: 23px; height: 20px;  }
+#topmenu_mb .menu-box .menu-btn a.active { display: block; position: absolute; top: 30px; left: 0; z-index: 9999; height: 20px; color: #f00207; }
+#topmenu_mb .menu-box .menu-btn a.closes { display: block; position: absolute; top: 30px; left: 0; z-index: 0; height: 20px; color: #f00207; }
+#topmenu_mb .menu-box .menu-btn a.closes { color: #777; }
+#topmenu_mb .menu-box .logo { float: right; }
+#topmenu_mb .menu-box .logo a { display: block; width: 150px; height: 50px; margin: 13px 0; background: url(../img/logo.png) no-repeat; text-indent: -9999px; }
+#topmenu_mb .menu-box .md1 { width: 100%; position: absolute; top: 80px; left: -1000px; z-index: 9999; background: #222; margin: 0; padding: 20px 0 20px 0; list-style: none; margin: 0; }
+#topmenu_mb .menu-box .ml { float: left; width: 100%;  }
+#topmenu_mb .menu-box .ml .mla { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 12%; color: #fff; fon-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+#topmenu_mb .menu-box .ml .mb_menu { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 12%; color: #fff; fon-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+#topmenu_mb .menu-box .ml .md2 { float: left; width: 100%; list-style: none; margin: 0; padding: 0; }
+#topmenu_mb .menu-box .ml .md2 .cl { float: left; width: 100%; }
+#topmenu_mb .menu-box .ml .md2 .cl .cla { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 15%; color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+
+/******************************************************************************************************************************************************************
+    mainimage
+******************************************************************************************************************************************************************/
+#mainimg { width: 100%; height: 150px; }
+#mainimg .main_image { margin: 0 auto; padding: 0; height: 150px; }
+#mainimg .main_image ol { list-style: none; margin: 0; padding: 0; }
+#mainimg .main_image ol li { display: block; width: 100%; height: 150px; }
+#mainimg .main_image ol li.c1 a { display: block; width: 100%; height: 150px; background: url(../img/main1.jpg) no-repeat; background-size: cover; background-position: center top; opacity: 1; visibility: inherit; text-decoration: none; }
+#mainimg .main_image ol li.c2 a { display: block; width: 100%; height: 150px; background: url(../img/main2.jpg) no-repeat; background-size: cover; background-position: center top; opacity: 1; visibility: inherit; text-decoration: none; }
+#mainimg .main_image ol li.c3 a { display: block; width: 100%; height: 150px; background: url(../img/main3.jpg) no-repeat; background-size: cover; background-position: center top; opacity: 1; visibility: inherit; text-decoration: none; }
+#mainimg .main_image ol li.c4 a { display: block; width: 100%; height: 150px; background: url(../img/main4.jpg) no-repeat; background-size: cover; background-position: center top; opacity: 1; visibility: inherit; text-decoration: none; }
+#mainimg .main_image ol li a .imgtext { width: 130px; margin: 0 auto; text-align: left; }
+#mainimg .main_image ol li a .imgtext span { display: block; letter-spacing: 0px; font-size: 12px; font-weight: 500; text-align: inherit; color: rgb(239, 239, 239); padding-top: 40px; }
+#mainimg .main_image ol li a .imgtext p { display: none; font-weight: 300; font-size: 10px; color: rgb(242, 242, 242); text-align: left; margin: 0; padding: 0; }
+
+#mainimg .navigation_play_stop a { position: absolute; top: 60px;  z-index: 9998; display: block; width: 30px; height: 30px; margin: 0; padding: 0; cursor: pointer; color: #fff; text-align: center; line-height: 40px; border-radius: 50%; background: rgba(0,0,0,0.5); }
+#mainimg .navigation_play_stop .button_prev { left: 10px; }
+#mainimg .navigation_play_stop .button_next { right: 10px; }
+#mainimg .navigation_play_stop .button_play_stop { display: none; }
+#mainimg .navigation_status { display: none; }
+
+/******************************************************************************************************************************************************************
+    contents
+******************************************************************************************************************************************************************/
+#contents { width: 100%; margin: 0; padding: 30px 0 0 0; clear: both; }
+#contents:after { clear: both; display: block; content: ""; margin: 0; padding: 0; }
+#contents .contents_box { width: 100%; height: auto; }
+#contents .contents_box ul { display: block; width: 100%; margin: 0; padding: 0; }
+#contents .contents_box ul li { clear: both; float: none; width: 100%; margin: 0 0 10px 0; border-bottom: solid 1px #dfdfdf; }
+#contents .contents_box ul li a { width: 100%; height: auto; padding: 0 30px; }
+#contents .contents_box ul li a i { display: block; width: 40px; margin: 0 auto; font-size: 40px; }
+#contents .contents_box ul li a p { display: block; clear: both; }
+#contents .contents_box ul li a p strong { display: inline-block; clear: both; width: 100%; text-align: center; font-weight: 500; line-height: 24px; font-size: 13px; color: #444; padding: 0; margin: 0; }
+#contents .contents_box ul li a p span { display: inline-block; clear: both; margin-top: 5px; width: 100%; text-align: center; line-height: 20px; font-weight: 400; font-style: normal; color: #777; font-size: 10px; }
+#contents .contents_box ul li.mb-none { display: none; }
+
+/******************************************************************************************************************************************************************
+    footer
+******************************************************************************************************************************************************************/
+#footer { width: 100%; height: auto; clear: both; margin-top: -10px; }
+#footer .footer-box { width: 100%; margin: 0 auto; padding: 15px 10px; }
+#footer .footer-box p { clear: both; margin: 0; padding: 0; font-size: 9px; color: #818181; }
+#footer .footer-box p strong { color: #fff; font-size: 10px; }
+
+/******************************************************************************************************************************************************************
+    sub CSS
+******************************************************************************************************************************************************************/
+#sub { width: 100%; }
+#sub #sub_container { clear: both; width: 100%; }
+#sub_container #header { width: 100%; height: 60px; background-color: #e7e7e7; }
+#sub_container #header .header-box { clear: both; width: 100%; margin: 0 auto; }
+#sub_container #header .header-box .title { float: left; padding: 16px 10px 0 10px; }
+#sub_container #header .header-box .title h1 { float: left; text-transform: uppercase; font-size: 20px; line-height: 25px; color: #444; font-weight: 600; margin: 0; padding: 0; }
+#sub_container #header .header-box .title span { clear: both; font-weight: 400; font-size:13px; float: left; color: inherit; opacity: 0.7; }
+#sub_container #header .header-box p { display: none; }
+#sub_container #sub_contents { clear: both; width: 100%; padding: 20px 5px; }
+#sub #sub_container .px-20{padding: 20px 20px 0 20px;}
+#sub_contents .sub-contents-box { clear: both; width: 100%; margin: 0 auto; padding: 0; }
+
+
+
+
+/******************************************************************************************************************************************************************
+    * 여기부터 서브 페이지 CSS *
+
+    회사소개- CEO인사말
+******************************************************************************************************************************************************************/
+#intro { width: 100%; padding: 0 15px 0 15px;}
+#intro .wrapper_greetings { clear: both; width: 100%; }
+#intro .wrapper_greetings img { clear: both; margin: 0; width: 100%; height: auto; padding: 0; }
+#intro .ceo_message { clear: both; width: 100%; margin: 0; padding: 0; }
+#intro .ceo_message .ceo_title { width: 100%; margin: 0;  height: 20px; }
+#intro .ceo_title .blank_box { display: none; }
+#intro .ceo_message h1 { line-height: 20px; font-weight: 600; font-style: normal; color: #222; text-transform: uppercase; letter-spacing: 1px; font-size: 18px; }
+#intro .ceo_message p { clear: both; line-height: 20px; font-weight: 400; font-style: normal; color: #777; font-size: 13px; margin: 0; padding: 10px 0; text-align: left; }
+
+#intro .ceo_message h3 { line-height: 26px; font-weight: 600; font-style: normal; font-size: 18px; margin-top:20px; }
+#intro .ceo_message strong { text-align: right; }
+#intro .ceo_message span { line-height: 50%; }
+#intro .ceo_message .ceo_name { font-weight: bold; text-align:center; padding: 30px 0; }
+#intro .line_box { width: 100%; height: 11px; border-bottom: 1px solid; color: #777; }
+#intro .wrapper_mission { display: none; }
+
+/*************************************************************************************************************************
+    회사소개- 회사연혁
+*************************************************************************************************************************/
+#intro .history_message { font-style: normal; width:100%; height: auto; }
+#intro .history_message img { width:100%; height: auto; margin: 0 0 20px 0; }
+#intro .history_message h1 { clear: both; display: block; width: 100%; height: 25px; margin: 0; padding: 0; text-transform: uppercase; line-height: 20px; letter-spacing: 1px; font-size: 18px; font-weight: 600; float: left; background: #fff; }
+#intro .history_message h3 { clear: both; text-align: center; line-height: 26px; font-size: 16px; font-family: "Open Sans"; font-weight: 600; }
+#intro .history_message strong {color: #fa0e0e;}
+
+#intro .history_detail { clear: both; width:100%; }
+#intro .history_detail .history_col1,
+#intro .history_detail .history_col2 { clear: both; width: 100%; margin: 0; }
+
+#intro .history_detail .history_content2017,
+#intro .history_detail .history_content2016,
+#intro .history_detail .history_content2015,
+#intro .history_detail .history_content2014,
+#intro .history_detail .history_content2013 { width: 100%; }
+
+#intro .organization { clear: both; }
+#intro .organization .box2 { clear: both; margin: 30px 0 0 0; }
+#intro .organization .box2 h3 { clear: both; text-align: center; line-height: 26px; font-size: 16px; font-family: "Open Sans"; font-weight: 600; }
+#intro .organization_content { clear: both; width: 100%; height: auto; }
+#intro .organization_content img { clear: both; width: 100%; height: auto; margin: 30px 0; padding: 0; }
+
+#intro .history_title { position: relative; width: 100%; padding: 0 15px; }
+#intro .history_title .blank_box { display: none; }
+#intro .history_title .box1 { width: 100%; }
+#intro .history_title .box1 h1 { background: #fff; }
+#intro .history_title .box2 { clear: both; padding: 50px 0 0 0; }
+#intro .history_content {display:inline-block;}
+
+#intro .history_detail h4 { font-size: 16px; }
+
+
+/*************************************************************************************************************************
+    회사소개 - 오시는길
+*************************************************************************************************************************/
+#intro #map { width: 100%; height: auto; }
+#intro .moreinfo { font-family: 'Noto Sans KR', sans-serif !important; float: left; }
+#intro .moreinfo .moreinfo_title { width: 100%; height: 30px; margin-top: 30px; margin-bottom: 30px; }
+#intro .moreinfo h1 { text-transform: uppercase; font-weight:bold; line-height: 24px; letter-spacing: 1px; font-size: 18px; display: block; float:left; }
+#intro .moreinfo .blank_box { display: none; }
+
+#intro .moreinfo p { width: 100%; text-align:left; font-size: 12px; line-height: 22px;}
+#intro .moreinfo h4 { margin-top: 33px; margin-bottom: 30px;  font-size: 16px; font-weight:bold;}
+
+#intro .moreinfo i { color: #f00207; margin-right:20px; }
+#intro .getconnected { display: none; }
+#intro .getconnected { font-family: 'Noto Sans KR', sans-serif !important; margin-top: 100px; margin-bottom: 50px; float: left; width: 730px; height:30px; }
+#intro .getconnected h1 { margin-left:10px; margin-right: 20px; text-transform: uppercase; font-weight:bold; line-height: 24px; letter-spacing: 1px; font-size: 20px; display:inline-block; float:left; }
+#intro .getconnected .blank_box2 { border-bottom:1px solid #e1e1e1; width: 500px; height: 11px; float:left; margin-top: 24px; display:inline-block; }
+
+/*************************************************************************************************************************
+   사업분야 - Q-ERP
+*************************************************************************************************************************/
+#q_erp { width: 100%; }
+#q_erp .box{ display: block; width: 100%; margin-bottom: 30px; }
+#q_erp .container { width: 100%; }
+#q_erp .imgbox { width: 100%; height: auto; margin: 0 0 20px 0; padding: 0; }
+#q_erp .q_erp_main { width: 100%; height: auto; }
+#q_erp .txtbox, .imgbox { clear: both; width: 100%; padding: 20px 0; }
+#q_erp .block_title.column_title.inner-inline_border { position: relative; width: 100%; padding: 20px 0 0 0; }
+#q_erp .wpb_button, .wpb_content_element, ul.wpb_thumbnails-fluid>li { margin-bottom: 20px; }
+.vc_empty_space { display: none; }
+#q_erp .txtbox { width: 100%; padding: 0; }
+#q_erp .pdblock{ float: left; display: block; padding: 0px; }
+#q_erp .btn-bt.default { text-align: center; cursor: pointer; display: inline-block; outline: 0; position: relative; transition: all .3s ease; transform: translateZ(0); border-width: 2px; border-style: solid; float: left; padding: 5px 18px; border-radius: 3px; }
+#q_erp .btn-bt.default { margin: 0 10px 0 0; color: #222; background: rgba(255,255,255, 0.00); border-color: rgba(68,68,68, 0.20); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+#q_erp .btn-bt.default span:hover { position: relative; left: 0; transition: all .3s ease-out; }
+#q_erp .btn-bt.default i{ transform: translateY(-50%); }
+#q_erp .btn-bt.default i{ font-size: 12px; position: absolute; top: 50%; line-height: 20px; margin-top: 1px; left: 73%; -ms-filter: "alpha(Opacity=0)"; filter: alpha(opacity=0); opacity: 0; transition: all .3s ease-out; }
+#q_erp .divide2{ width: 100% }
+#q_erp .divide3{ width: 100% }
+#q_erp .divide4{ width: 50%; margin-bottom:20px; }
+#q_erp .divide5{ width: 50%; margin-bottom:20px;}
+#q_erp .divide6{ width: 50%; margin-bottom:20px; }
+#q_erp h1, h3{ line-height: 24px; font-size: 20px; margin-top: 0px; }
+#q_erp .icon_wrapper i, .list li.titledesc dl dt i, .services_large a:hover { color:#f00207 }
+#q_erp a, a:link { text-decoration: none; color: #444444; }
+#q_erp a { transition-duration: 0.4s; }
+#q_erp .vc_column_container>.vc_column-inner { box-sizing: border-box; padding-left: 15px; padding-right: 15px; width: 100%; }
+#q_erp .wpb_content_element:last-child { margin-bottom: 0; }
+#q_erp .block_title.column_title.inner-inline_border:after { display: block; height: 1px; content: ""; background: #e1e1e1; position: absolute; top: 50%; margin-top: -0.5px; width: 100%; z-index: 1; }
+#q_erp .block_title.column_title.inner-inline_border h1 { background: #fff; z-index: 5; position: relative; padding-right: 20px; width: auto; float: left; }
+#q_erp .belowimage{ width: 100%; height: auto; }
+#q_erp .aligncenter{ display: block; float: none !important; margin-left: 85px; margin-right: 85px; }
+
+/* 큰 크기 아이콘(구축절차) */
+#q_erp .services_large .icon_wrapper { width: 120px; height: 120px; position: relative; left: 50%; margin-left: -60px; background: #fff; transition-duration: 0.4s; }
+#q_erp .services_large:hover .icon_wrapper { background: #f00207;}
+#q_erp .services_large .icon_wrapper i { font-size: 64px; line-height: 120px; float: left; width: 100%; text-align: center; transition-duration: 0.8s; }
+#q_erp .services_large:hover .icon_wrapper i { color: #fff; }
+#q_erp .services_large { text-align: center; }
+#q_erp .services_large .icon_wrapper .top, .services_large .icon_wrapper .right, .services_large .icon_wrapper .bottom, .services_large .icon_wrapper .left { background: #e1e1e1; }
+#q_erp .services_large .icon_wrapper .top { position: absolute; width: 144px; top: 0; left: -12px; height: 1px; }
+#q_erp .services_large .icon_wrapper .left { position: absolute; width: 1px; top: -12px; left: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .right { position: absolute; width: 1px; top: -12px; right: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .bottom { position: absolute; width: 144px; bottom: 0; left: -12px; height: 1px; }
+
+
+/*************************************************************************************************************************
+    사업분야 - 플랫폼
+*************************************************************************************************************************/
+#platform #platform_head { clear: both; width: 100%; height: auto; margin: 0; padding: 0 15px 0 15px; }
+#platform #platform_head .platform_head { float:left; width: 100%; margin: 0 0 50px 0; font-size:11px; }
+#platform #platform_body { width: 100%; height: auto; margin: 0 0 50px 0; padding: 0 15px 0 15px; }
+#platform .inner-inline_border { clear: both; position: relative; width:100%; margin: 0 0 20px 0 !important; height:20px; }
+
+#platform #platform_head .platform_head img { width: 100%; height: auto; }
+
+#platform .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: 1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+#platform .textbox1 { font-size: 10px; }
+#platform .textbox1 p { font-size: 12px; color: #000; font-style:normal; line-height:20px; font-weight: 400; }
+#platform .textbox2 {  }
+#platform .textbox2 h3 { margin-top: 20px; }
+#platform .textbox2 p {  font-size: 12px; color: #000; font-style:normal; line-height:20px; font-weight: 400; }
+#platform #platform_head .btn-bt.default { text-align: center; cursor: pointer; display: inline-block; outline: 0; position: relative; border-width: 2px; border-style: solid; float: left; padding: 10px 38px; border-radius: 3px; color: #222; background: rgba(255,255,255, 0.00); border-color: rgba(68,68,68, 0.20); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 25px; margin-right: 20px;}
+#platform #platform_head .btn-bt.default:hover { text-decoration: none; }
+
+#platform .function { clear: both; width: 100%; }
+#platform .function .fnc-box { clear: both; width: 100%; height: 490px; padding: 30px 0 20px 0; border-bottom: none; }
+#platform .function .fnc-box.last { border-bottom: none; }
+#platform .function .fnc-box img { width: 100%; height: auto; margin: 0 20px 0 0; }
+#platform .function .fnc-box .text-box { width: 100%; height: auto; }
+#platform .function .fnc-box .text-box h1 { font-size:16px; margin: 0 0 20px 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222; }
+#platform .function .fnc-box .text-box strong { padding: 0 0 0 10px; font-size: 14px; }
+#platform .function .fnc-box .text-box p { padding: 5px 0 0 20px; font-size: 12px; color: #000; font-style: normal; line-height: 20px; font-weight: 400; }
+
+
+#platform #platform_body img { clear: both; display: block; width: 100%; height: auto; margin: 0; }
+
+#platform #platform_tail { clear: both; margin: 0 0 70px 0 ; padding: 0 15px 0 15px; }
+#platform .inner-inline_border h1,
+#platform .inner-list-title h5 { font-size:18px; position: absolute; top: 0; left: 0; z-index: 998; padding: 0 20px 0 0; margin: 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222;}
+
+#platform #platform_pic_outer { clear: both; margin: 50px 0 70px 0; }
+#platform .platform_pic { float:left; width: 100%; height: auto; margin: 0 0 20px 0; padding: 0; }
+#platform .platform_pic a { display: block; height: auto; text-decoration: none; margin: 0; padding: 0;  }
+#platform .platform_pic a img { width: 100%; height: auto; margin: 0 0 10px 0; }
+#platform .platform_pic a strong { clear: both; display: block; width: 100%; margin: 0; text-align: center; color: #f00207; }
+
+#platform_tail .circle { width:36px; height:36px; border: 1px solid #e7e7e7; border-radius: 50%; float:left; text-align:center;}
+#platform_tail .circle i {line-height:35px; font-size: 16px; width:100%; float:left; color: red;}
+
+#platform #platform_tail h6 { margin-top: 0px; font-size:14px; font-weight:600; line-height: 20px; }
+#platform #platform_tail h4 { padding: 40px 0 30px 0; }
+
+#platform .inner-list-title {position: relative; width:100%; margin-bottom: 30px; height:20px !important;}
+#platform .inner-list-title .line {position:absolute; top: 0; left: 0; z-index: 1; display:block; width:100%; height:11px; border-bottom: double 5px #e1e1e1;}
+
+#platform #platform_tail .function-list { }
+#platform #platform_tail ul { width: 100%; list-style:none; margin: 0; padding: 0; }
+#platform #platform_tail ul li { width: 100%; margin: 0; }
+#platform #platform_tail ul li div { width: 100%; height: auto; margin: 0; padding: 15px 0; }
+#platform #platform_tail ul li div h1 { display: block; text-align: center; margin: 0; padding: 0; font-size: 16px; }
+#platform #platform_tail ul li div h1 span { color: red; }
+#platform #platform_tail ul li div.text-box { text-align: center; padding: 15px 0 0 0px; }
+
+/*************************************************************************************************************************
+    사업분야 - ADAS
+*************************************************************************************************************************/
+#adas_head { width: 100%; height: auto; }
+.adas_head,
+.adas_tail_detail { width: 100%; height: auto; font-size:13px;}
+.adas_head img { width: 100%; height: auto; }
+.adas_head h1,
+#adas_tail h1 { font-size:20px; font-style:normal;}
+.adas_head p {color: #777; line-height:20px; font-weight:400; font-style:normal; font-size:13px; margin-top: 20px;}
+
+#adas_body { clear: both; height: auto;}
+#adas_body h3 { font-size:18px; margin-top: 30px;}
+#adas_body #hm310_img { max-width: 100%; float:none; height:90px; margin-top:20px;}
+#adas_spec,
+#adas_movie { width: 100%; height: auto; font-size:13px; padding: 0 7px 0 7px;}
+#adas_spec table { width:100%; height: auto; margin: 50px 0 0 0;}
+#adas_movie #movie { width: 100%; height: 250px; margin-top: 30px; margin-bottom: 30px; }
+
+#adas_tail { clear: both; margin: 10px 0 10px 0 ;}
+#adas_tail h4 { padding: 40px 0 30px 0;}
+#adas_tail .inner-inline_border h1 { display: block; width: 90px; height: 20px; background: #fff; }
+#adas_tail .inner-inline_border { clear: both; position: relative; width:100%; margin-bottom: 30px; height:20px; }
+#adas_tail .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: -1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+#adas_tail .category-3 ul li div {width:334px; height:150px; padding: 0 15px 0 15px; text-align:center;}
+#adas_tail ul {list-style:none; }
+#adas_tail ul li {float:left; padding: 0px 5px 0px 2px; color:#777;}
+#adas_tail ul li p {text-align:center;}
+#adas_tail .adas_tail_detail {height:300px;}
+
+#adas_tail .function { clear: both; width: 100%; }
+#adas_tail .function .fnc-box { clear: both; width: 100%; height: auto; padding: 0 0 10px 0; border-bottom: none; }
+#adas_tail .function .fnc-box.last { border-bottom: none; }
+#adas_tail .function .fnc-box img { float: none; width: 100%; height: auto; margin: 0 20px 0 0; padding: 20px 0; }
+#adas_tail .function .fnc-box .text-box { float: none; width: 100%; height: auto; }
+#adas_tail .function .fnc-box .text-box h1 { font-size:16px; margin: 0 0 20px 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222; }
+#adas_tail .function .fnc-box .text-box strong { padding: 0 0 0 10px; font-size: 14px; }
+#adas_tail .function .fnc-box .text-box p { padding: 5px 0 0 0; font-size: 14px; color: #000; font-style: normal; line-height: 20px; font-weight: 400; }
+
+/*************************************************************************************************************************
+    사업분야 - AVM
+*************************************************************************************************************************/
+#avm_head {height: auto;}
+.avm_head, .avm_detail {float:none; width:100%; height:auto; margin-right:30px; font-size:13px;}
+.avm_head img { width: 100%; height: auto; }
+.avm_head p {color: #777; line-height:20px; font-weight:400; font-style:normal; font-size:13px; margin-top: 20px;}
+.avm_head h1 { font-size:20px; font-style:normal;}
+#avm_spec { float:none; width: 100%; height: auto; font-size:13px; padding: 0; margin: 0; }
+#avm_body #hnd-avm_img { float:left; width: 25%; height:115px; margin-top:20px; padding: 0 0 0 20px; }
+#avm_spec ul { float:left; width: 75%; height:auto; margin: 0; padding: 10px 0 0 50px; color:#777;}
+#avm_spec ul li {line-height:20px; font-size:13px;}
+#avm_body { clear: both; height:auto;}
+#avm_body h3 { font-size:18px; margin-top:30px;}
+#avm_movie { clear: both; float: none; width: 100%; height: auto; font-size:13px; padding: 20px 0; margin: 0; }
+#avm_movie #movie { width: 100%; height:250px; margin: 20px 0 0 0; }
+.vp-player-layout { width: 100% !important; height:250px !important; }
+#avm_tail { clear: both; }
+#avm_tail .avm_detail {height:auto;}
+#avm_tail p {text-align:unset;}
+#avm_tail h1 {font-size:20px; }
+#avm_tail h3 {font-size:18px; }
+#avm_tail .avm_detail h4 {margin:0; padding:0;}
+#avm_tail .avm_detail ul {padding:0;}
+#avm_tail .avm_detail ul li {float:left; width:50%; height:55px; margin:20px 0 50px 0; list-style:none;}
+#avm_tail .avm_detail ul li i {font-size: 34px;}
+#avm_tail .avm_detail ul li div {float:left;}
+#avm_tail .avm_detail .icon_div {width:30%;}
+#avm_tail .avm_detail .text_div {width:50%; padding-top:10px;}
+#avm_tail .avm_detail .text_div h4{margin-bottom: 10px;}
+#avm_tail .function-list {height: 350px;}
+
+#avm_tail .category-3 { clear: both; margin: 0 0 30px 0; }
+#avm_tail .category-3 ul li div {width:100%; height:auto; padding: 0 15px 0 15px; text-align:center;}
+#avm_tail .category-3 ul {list-style:none; padding-left: 0; }
+#avm_tail .category-3 ul li {float:none; padding: 0px 5px 0px 2px; margin: 0 0 20px 0; color:#777; text-align:unset;}
+#avm_tail .category-4 { clear: both; height: auto; margin: 0 0 50px 0; }
+#avm_tail .category-4 .cg4 { width: 100%; margin: 0 auto; padding: 0 25px; }
+#avm_tail .category-4 .cg4 h4 { text-align: center; margin: 40px 0; }
+#avm_tail .category-4 .cg4 h4 strong { color: #E83B2B; }
+#avm_tail .category-4 .cg4 .fnc-box {  }
+#avm_tail .category-4 .cg4 .fnc-box img { display: block; float: none; width: 100%; height: 550px; margin: 0; }
+#avm_tail .category-4 .cg4 .fnc-box .text-box { display: block; float: none; width: 100%; padding: 0 0 0 10px; }
+#avm_tail .category-4 .cg4 .fnc-box .text-box p { padding: 0; }
+
+#avm_tail .inner-inline_border h1 { display: block; width: 120px; height: 20px; background: #fff; }
+#avm_tail .inner-inline_border { clear: both; position: relative; width:100%; margin-bottom: 30px; height:20px; }
+#avm_tail .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: -1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+
+/*************************************************************************************************************************
+    사업분야 - 스마트 팩토리
+*************************************************************************************************************************/
+#s_factory { width: 100%; }
+#s_factory .box{ display: block; width: 100%; margin-bottom: 30px; }
+#s_factory .container { width: 100%; }
+#s_factory .imgbox { width: 100%; height: auto; margin: 0 0 20px 0; padding: 0; }
+#s_factory .s_factory_main { width: 100%; height: auto; }
+#s_factory .txtbox, .imgbox { clear: both; width: 100%; padding: 20px 0; }
+#s_factory .block_title.column_title.inner-inline_border { position: relative; width: 100%; padding: 20px 0 0 0; }
+#s_factory .wpb_button, .wpb_content_element, ul.wpb_thumbnails-fluid>li { margin-bottom: 20px; }
+.vc_empty_space { display: none; }
+#s_factory .txtbox { width: 100%; padding: 0; }
+#s_factory .pdblock{ float: left; display: block; padding: 0px; }
+#s_factory .btn-bt.default { text-align: center; cursor: pointer; display: inline-block; outline: 0; position: relative; transition: all .3s ease; transform: translateZ(0); border-width: 2px; border-style: solid; float: left; padding: 5px 18px; border-radius: 3px; }
+#s_factory .btn-bt.default { margin: 0 10px 0 0; color: #222; background: rgba(255,255,255, 0.00); border-color: rgba(68,68,68, 0.20); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+#s_factory .btn-bt.default span:hover { position: relative; left: 0; transition: all .3s ease-out; }
+#s_factory .btn-bt.default i{ transform: translateY(-50%); }
+#s_factory .btn-bt.default i{ font-size: 12px; position: absolute; top: 50%; line-height: 20px; margin-top: 1px; left: 73%; -ms-filter: "alpha(Opacity=0)"; filter: alpha(opacity=0); opacity: 0; transition: all .3s ease-out; }
+#s_factory .divide2{ width: 100% }
+#s_factory .divide3{ width: 100% }
+#s_factory .divide4{ width: 50%; margin-bottom:20px; }
+#s_factory .divide5{ width: 50%; margin-bottom:20px;}
+#s_factory .divide6{ width: 50%; margin-bottom:20px; }
+#s_factory h1, h3{ line-height: 24px; font-size: 20px; margin-top: 0px; }
+#s_factory .icon_wrapper i, .list li.titledesc dl dt i, .services_large a:hover { color:#f00207 }
+#s_factory a, a:link { text-decoration: none; color: #444444; }
+#s_factory a { transition-duration: 0.4s; }
+#s_factory .vc_column_container>.vc_column-inner { box-sizing: border-box; padding-left: 15px; padding-right: 15px; width: 100%; }
+#s_factory .wpb_content_element:last-child { margin-bottom: 0; }
+#s_factory .block_title.column_title.inner-inline_border:after { display: block; height: 1px; content: ""; background: #e1e1e1; position: absolute; top: 50%; margin-top: -0.5px; width: 100%; z-index: 1; }
+#s_factory .block_title.column_title.inner-inline_border h1 { background: #fff; z-index: 5; position: relative; padding-right: 20px; width: auto; float: left; }
+#s_factory .belowimage{ width: 100%; height: auto; }
+#s_factory .aligncenter{ display: block; float: none !important; margin-left: 85px; margin-right: 85px; }
+#s_factory .section_clear .w-819{ width: 100%; }
+
+/* 큰 크기 아이콘(구축절차) */
+#q_erp .services_large .icon_wrapper { width: 120px; height: 120px; position: relative; left: 50%; margin-left: -60px; background: #fff; transition-duration: 0.4s; }
+#q_erp .services_large:hover .icon_wrapper { background: #f00207;}
+#q_erp .services_large .icon_wrapper i { font-size: 64px; line-height: 120px; float: left; width: 100%; text-align: center; transition-duration: 0.8s; }
+#q_erp .services_large:hover .icon_wrapper i { color: #fff; }
+#q_erp .services_large { text-align: center; }
+#q_erp .services_large .icon_wrapper .top, .services_large .icon_wrapper .right, .services_large .icon_wrapper .bottom, .services_large .icon_wrapper .left { background: #e1e1e1; }
+#q_erp .services_large .icon_wrapper .top { position: absolute; width: 144px; top: 0; left: -12px; height: 1px; }
+#q_erp .services_large .icon_wrapper .left { position: absolute; width: 1px; top: -12px; left: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .right { position: absolute; width: 1px; top: -12px; right: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .bottom { position: absolute; width: 144px; bottom: 0; left: -12px; height: 1px; }
+
+
+/*************************************************************************************************************************
+    게시판 작성페이지
+*************************************************************************************************************************/
+.sub-contents-box .board-box { clear: both; width: 100%; margin: 0 auto 30px auto; }
+.sub-contents-box .board-box form { clear: both; padding: 15px; border: 1px solid #e1e1e1; border-radius: 4px; overflow: hidden; }
+.sub-contents-box .board-box form .input-box { clear: both; width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #e1e1e1; }
+.sub-contents-box .board-box form .input-box input { width: 100%; outline: none; display: inline-block; height: 32px; line-height: 32px; padding: 0 1%; color: #777; background: #fbfbfb; border: 1px solid #cccdcf; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); border-radius: 3px; }
+.sub-contents-box .board-box form .subject-box { position: relative; clear: both; width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #e1e1e1; }
+.sub-contents-box .board-box form .subject-box label { position: absolute; top: 0px; left: 0px; width: 100%; padding: 6px 10px 0 10px; }
+.sub-contents-box .board-box form .subject-box .edit-title { display: none; }
+.sub-contents-box .board-box form .subject-box label span { display: block; width: 100%; height: 19px; color: #777; cursor: text; }
+.sub-contents-box .board-box form .text-box { clear: both; width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #e1e1e1; }
+.sub-contents-box .board-box form .text-box .django-ckeditor-widget { width: 100%; }
+.sub-contents-box .board-box form .text-box #cke_id_text { width: 100% !important; }
+.sub-contents-box .board-box form .uploadfile-box { clear: both; width: 100%; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #e1e1e1; }
+.sub-contents-box .board-box form .secret-box { width: 100%; height: 30px; clear: both; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dotted #e1e1e1; }
+.sub-contents-box .board-box form .secret-box label { float: left; display: block; width: 50px; height: 20px; margin: 0; padding: 0; }
+.sub-contents-box .board-box form .secret-box input { float: left; display: inline-block; width: 20px; height: 20px; margin: 0; padding: 0; }
+.sub-contents-box .board-box form button { display: inline-block; width: 100%; color: #fff; padding: 6px 12px; margin-bottom: 0; font-size: 14px; font-weight: 400; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; border: 1px solid transparent; border-radius: 4px; background: #666666; }
+.sub-contents-box .board-box form button:hover { background: #333; }
+
+.sub-contents-box .board-list #search { clear: both; margin: 0 auto;}
+/*.select2-container--default .select2-selection--single { padding }*/
+.sub-contents-box .board-list #search .select2-container { width: 80px !important;}
+.sub-contents-box .board-list #search .keyword-box { float: left; width: 148px; padding: 0 5px;}
+
+
+/*************************************************************************************************************************
+    게시판 글쓰기 페이지
+*************************************************************************************************************************/
+.board-box table.info{ white-space: nowrap; }
+.board-box table.info tr th { padding: 0 5px;}
+}

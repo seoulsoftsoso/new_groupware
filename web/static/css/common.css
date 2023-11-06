@@ -1,0 +1,1640 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+
+/* Document
+   ========================================================================== */
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in iOS.
+ */
+
+html {
+    line-height: 1.15; /* 1 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/* Sections
+   ========================================================================== */
+
+/**
+ * Remove the margin in all browsers.
+ */
+
+body {
+    margin: 0;
+}
+
+/**
+ * Render the `main` element consistently in IE.
+ */
+
+main {
+    display: block;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+    box-sizing: content-box; /* 1 */
+    height: 0; /* 1 */
+    overflow: visible; /* 2 */
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+pre {
+    font-family: monospace, monospace; /* 1 */
+    font-size: 1em; /* 2 */
+}
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * Remove the gray background on active links in IE 10.
+ */
+
+a {
+    background-color: transparent;
+}
+
+/**
+ * 1. Remove the bottom border in Chrome 57-
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+    border-bottom: none; /* 1 */
+    text-decoration: underline; /* 2 */
+    text-decoration: underline dotted; /* 2 */
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+    font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+samp {
+    font-family: monospace, monospace; /* 1 */
+    font-size: 1em; /* 2 */
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove the border on images inside links in IE 10.
+ */
+
+img {
+    border-style: none;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * 1. Change the font styles in all browsers.
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit; /* 1 */
+    font-size: 100%; /* 1 */
+    line-height: 1.15; /* 1 */
+    margin: 0; /* 2 */
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+
+button,
+input { /* 1 */
+    overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+
+button,
+select { /* 1 */
+    text-transform: none;
+}
+
+/**
+ * Correct the inability to style clickable types in iOS and Safari.
+ */
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    -webkit-appearance: button;
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+    outline: 1px dotted ButtonText;
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+
+fieldset {
+    padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+
+legend {
+    box-sizing: border-box; /* 1 */
+    color: inherit; /* 2 */
+    display: table; /* 1 */
+    max-width: 100%; /* 1 */
+    padding: 0; /* 3 */
+    white-space: normal; /* 1 */
+}
+
+/**
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress {
+    vertical-align: baseline;
+}
+
+/**
+ * Remove the default vertical scrollbar in IE 10+.
+ */
+
+textarea {
+    overflow: auto;
+}
+
+/**
+ * 1. Add the correct box sizing in IE 10.
+ * 2. Remove the padding in IE 10.
+ */
+
+[type="checkbox"],
+[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+    height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Remove the inner padding in Chrome and Safari on macOS.
+ */
+
+[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+    -webkit-appearance: button; /* 1 */
+    font: inherit; /* 2 */
+}
+
+/* Interactive
+   ========================================================================== */
+
+/*
+ * Add the correct display in Edge, IE 10+, and Firefox.
+ */
+
+details {
+    display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary {
+    display: list-item;
+}
+
+/* Misc
+   ========================================================================== */
+
+/**
+ * Add the correct display in IE 10+.
+ */
+
+template {
+    display: none;
+}
+
+/**
+ * Add the correct display in IE 10.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* for LANDSCAPE layout in print page */
+
+@media all and (min-width: 960px) {
+    body, button, input, select {
+        font-size: 0.8rem !important;
+    }
+
+    .content-body {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .table-content-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+@media all and (max-width: 959px) and (min-width: 576px) {
+    body, button, input, select {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media all and (max-width: 575px) and (min-width: 0px) {
+    body, button, input, select {
+        font-size: 0.8rem !important;
+    }
+
+    .content-body {
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+    }
+
+    .table-content-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.text-over {
+    text-overflow:ellipsis;
+    width:100px;
+    overflow:hidden;
+}
+
+.modal-content-body {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+    padding-top: 0 !important;
+    padding-bottom: 20px !important;
+}
+
+.login-text {
+    font-size: 1.5rem;
+}
+
+.login-input i {
+    position: absolute;
+}
+
+.icon {
+    padding: 10px;
+    min-width: 40px;
+}
+
+.login-input input {
+    width: 100%;
+    padding-left: 40px;
+}
+
+.search-input i {
+    position: absolute;
+    z-index: 1;
+}
+
+.search-input input {
+    width: 100%;
+    padding-left: 40px;
+}
+
+.text-control {
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6e707e;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.35rem;
+    -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+.w-1 {
+    width: 1% !important;
+}
+
+.w-5 {
+    width: 5% !important;
+}
+
+.w-20 {
+    width: 20% !important;
+}
+
+.w-25 {
+    width: 25% !important;
+}
+.w-30 {
+    width: 30% !important;
+}
+
+.w-35 {
+    width: 35% !important;
+}
+
+.w-40 {
+    width: 40% !important;
+}
+
+.w-45 {
+    width: 45% !important;
+}
+
+.w-60 {
+    width: 60% !important;
+}
+
+.w-70 {
+    width: 70% !important;
+}
+.w-80 {
+    width: 80% !important;
+}
+.w-85 {
+    width: 85% !important;
+}
+
+.w-90 {
+    width: 90% !important;
+}
+
+.w-95 {
+    width: 95% !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+.th-width-6 tr > th {
+    width: 16.666666666666667%;
+}
+
+.offset-0point5 {
+    margin-left: 4.16666% !important;
+}
+
+.offset-1point5 {
+    margin-left: 12.5% !important;
+}
+
+.offset-8point5 {
+    margin-left: 70.8333% !important;
+}
+
+
+.col-md-0point5 {
+    flex: 0 0 4.16666%;
+    max-width: 4.16666%;
+}
+
+.col-md-1point5 {
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
+}
+
+.col-md-2point5 {
+    flex: 0 0 20.83333%;
+    max-width: 20.83333%;
+}
+
+.col-md-3point5 {
+    flex: 0 0 29.1666666667%;
+    max-width: 29.1666666667%;
+}
+
+.col-md-4point5 {
+    flex: 0 0 37.5%;
+    max-width: 37.5%;
+}
+
+.col-md-5point5 {
+    flex: 0 0 45.83333%;
+    max-width: 45.83333%;
+}
+
+.col-md-6point5 {
+    flex: 0 0 54.16666%;
+    max-width: 54.16666%;
+}
+
+.col-md-7point5 {
+    flex: 0 0 62.50000%;
+    max-width: 62.50000%;
+}
+
+.col-md-8point5 {
+    flex: 0 0 70.83333%;
+    max-width: 70.83333%;
+}
+
+.col-md-9point5 {
+    flex: 0 0 79.16666%;
+    max-width: 79.16666%;
+}
+
+.col-md-10point5 {
+    flex: 0 0 87.50000%;
+    max-width: 87.50000%;
+}
+
+.col-md-11point5 {
+    flex: 0 0 95.83333%;
+    max-width: 95.83333%;
+}
+
+.modal-lg {
+    max-width: 40%;
+}
+
+.modal-xl {
+    max-width: 60% !important;
+}
+
+.row.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+
+&
+> [class^="col-"],
+
+&
+> [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+}
+
+.myFrame { position: absolute; width: 960px; height: 670px; overflow: hidden;}
+.myFrame iframe {
+    -moz-transform: scale(0.9);
+    -moz-transform-origin: 0 0;
+
+    -o-transform: scale(0.9);
+    -o-transform-origin: 0 0;
+
+    -webkit-transform: scale(0.9);
+    -webkit-transform-origin: 0 0;
+
+    transform: scale(0.9);
+    transform-origin: 0 0;
+    top:0; left:0; width:110%; height:110%;
+}
+
+
+/* tab nav-tab nav-link 색상 바꾸기 */
+ul.nav > li.nav-item > a.nav-link{
+    color: #495057;
+}
+ul.nav > li.nav-item > a.nav-link.active{
+    color: #007bff;
+}
+
+.plpr-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.table-personnel > thead > tr > th {
+    width: 16%;
+}
+
+.table-fourinsurance > thead > tr > th {
+    width: 25%;
+}
+
+.table-fourinsurance > tbody > tr > td:nth-child(n+5) {
+    display: none;
+}
+
+.table-routebasicinfo > thead > tr > th {
+    width: 11.111%;
+    white-space: nowrap;
+}
+
+.table-routetimetable > thead > tr > th {
+    width: 20%;
+}
+
+.offset-0 {
+    margin-left: 0;
+}
+
+/* 버스 정보 추가 테이블 */
+#table-businfo-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+}
+#table-businfo-add > tbody > tr > td,
+#table-businfo-add > tfoot > tr > td {
+    padding:0;
+}
+#table-businfo-add > tbody > tr > td > input,
+#table-businfo-add .select2-selection--single,
+#table-businfo-add select {
+    width:100%;
+    border-radius: 0;
+    border:0;
+}
+
+.businfo-table > thead > tr > th {
+    width: 10%;
+}
+
+.table-empoloyee-list > thead > tr > th {
+    width: 10%;
+}
+
+.table-salary-info > thead > tr > th {
+    width: 9.0909%;
+}
+
+.table-salary-table > thead > tr > th {
+    width: 14.285%;
+}
+
+.table-daily-dispatch > thead > tr > th {
+    width: 10%;
+}
+
+.table-accident-list > thead > tr > th {
+    width: 16.66667%;
+}
+
+.button-middle {
+    width: 130px;
+    height: 38px;
+}
+
+.table-license > thead > tr > th {
+    width: 25%;
+}
+
+.table-study > thead > tr > th:first-child {
+    width: 10%;
+}
+
+.table-study > thead > tr > th:nth-child(2) {
+    width: 30%;
+}
+
+.table-study > thead > tr > th:nth-child(3) {
+    width: 60%;
+}
+
+.table-punishment > thead > tr > th:first-child {
+    width: 10%;
+}
+
+.table-punishment > thead > tr > th:nth-child(2) {
+    width: 30%;
+}
+
+.table-punishment > thead > tr > th:nth-child(3) {
+    width: 60%;
+}
+
+.table-traffic-accident > thead > tr > th {
+    width: 16.6%;
+}
+/* 사고 추가 테이블 */
+.table-accident-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+}
+.table-accident-add > tbody > tr > td {
+    padding:0;
+    width:21.3333%;
+}
+.table-accident-add > tbody > tr > td input,
+.table-accident-add .select2-selection--single,
+.table-accident-add > tbody > tr > td select{
+    border-radius:0 !important;
+    border:0 !important;
+}
+.table-accident-add.table-accident-add-injury > tbody > tr > th {
+    width:8%;
+}
+.table-accident-add.table-accident-add-injury > tbody > tr > td {
+    width:17%
+}
+
+/* 범칙금 추가 테이블 */
+#table-penalty-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+}
+#table-penalty-add > tbody > tr > td {
+    padding:0;
+}
+#table-penalty-add > tbody > tr > td input:not(.btn),
+#table-penalty-add .select2-selection--single,
+#table-penalty-add select{
+    border-radius:0;
+    border:0;
+}
+
+/* 재고 관리 테이블-자재 출고,입고 */
+.table-inventory > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+    padding-top:0.3rem;
+}
+.table-inventory > tbody > tr > td {
+    padding:0;
+    width:21.333%;
+}
+.table-inventory > tbody > tr > td input {
+    width:100%;
+    height:100%;
+    border-radius:0;
+    border:0;
+}
+
+ /* 재고품번관리 추가 테이블 */
+.table-stock-add th{
+    text-align:right;
+    background-color: #f8f9fa;
+    width:10%;
+}
+.table-stock-add > tbody > tr > td {
+    padding:0;
+}
+.table-stock-add input {
+    width:100%;
+    border-radius:0;
+    border:0;
+}
+
+/* 사용자 관리 추가 테이블 */
+.table-user-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:8%;
+}
+.table-user-add > tbody > tr > td {
+    padding:0;
+}
+.table-user-add > tbody > tr > td input,
+.table-user-add > tbody > tr > td select {
+    border-radius:0;
+    border:0;
+}
+
+.table-user-add1 {
+    border-top:0;
+}
+.table-user-add1 > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+}
+.table-user-add1 td {
+    border-top:1px solid #dee2e6;
+    border-left:0;
+    border-bottom:0;
+    border-right:0;
+    justify-content: center;
+}
+.table-user-add1 li {
+    list-style: none;
+    float:left;
+}
+.table-user-add1 ul {
+    margin:0;
+    padding:0;
+}
+.table-user-add1 label {
+    margin-bottom:0;
+    margin-left:15px;
+}
+.table-user-add1 label input{
+    vertical-align:middle;
+}
+/* 지점 정보 추가 테이블 */
+.table-location-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+}
+.table-location-add > tbody > tr > td {
+    padding:0;
+}
+.table-location-add > tbody > tr > td input:not(.btn) {
+    border-radius:0;
+    border:0;
+}
+
+/* 노선 정보 및 배차 시간표 추가 테이블 */
+.table-route-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:10%;
+}
+.table-route-add > tbody > tr > td {
+    width:23%;
+    padding:0;
+}
+.table-route-add > tbody > tr > td > input,
+.table-route-add > tbody > tr > td > .search-input >input,
+.table-route-add > tbody > tr > td > select {
+    border-radius:0;
+    border:0;
+    height:31px;
+}
+.table-route-add > tbody > tr > td > .custom-file,
+.table-route-add > tbody > tr > td > .custom-file > input {
+    height:fit-content;
+}
+
+.table-route-add > tbody > tr > td > .custom-file > label {
+    height:fit-content;
+    border:0;
+    border-radius:0;
+}
+.table-route-add > tbody > tr > td > .custom-file > label::after {
+    height:fit-content;
+    border-radius:0;
+}
+.table-route-add.table-route-add-first > tbody > tr > th {
+    width:10%;
+}
+.table-route-add.table-route-add-first > tbody > tr > td {
+    width:15%!important;
+}
+
+/* 계정 과목 조회 추가 테이블 */
+
+.table-account-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+    padding-top:0.4rem;
+}
+.table-account-add > tbody > tr > td {
+    width: 21.3333%;
+    padding:0;
+}
+.table-account-add > tbody > tr > td input:not(.form-check-input),
+.table-account-add > tbody > tr > td select {
+    width:100%;
+    border-radius:0;
+    border:0;
+}
+
+
+/* 매입 매출처 조회 테이블 */
+
+.table-customer-list > thead > tr > th {
+    width: 10%;
+}
+.table-customer-list > thead > tr > th:nth-child(2) {
+    width: 12%;
+}
+.table-customer-list > tbody > tr > td:nth-child(12) {
+    display:none;
+}
+
+.table-userList > thead > tr > th {
+    width: 20%;
+}
+
+#myTabContent i.fas, i.fab {
+    color: Dodgerblue;
+}
+
+.table-accident-table01 > thead > tr > th,
+.table-accident-table02 > thead > tr > th {
+    width: 10%;
+}
+
+.table-accident-table01 > thead > tr > th:nth-child(2) {
+    width: 15%;
+}
+
+.table-accident-table01 > thead > tr > th:nth-child(3) {
+    width: 15%;
+}
+
+.table-accident-table03 > thead > tr > th {
+    width: 7.6923%;
+}
+
+.table-hr-manage > thead > tr > th,
+.table-hr-manage > tbody > tr > td {
+    width: 3%;
+    white-space: nowrap;
+}
+
+.table-hr-manage > thead > tr > th:nth-child(-n+5),
+.table-hr-manage > tbody > tr > th:nth-child(-n+5) {
+    width: 9.04%;
+    white-space: nowrap;
+}
+
+
+/*   Petition list table   */
+.table-petition-list > thead > tr > th:nth-child(n+6),
+.table-petition-list > tbody > tr > td:nth-child(n+6) {
+    width:8.333%;}
+
+
+/* 급여 조건표 테이블 */
+.table-salary-add > tbody > tr > td {
+    padding:0;
+}
+.table-salary-add > tbody > tr > td > input {
+    border-radius:0;
+}
+.table-salary-add > thead > tr > th:nth-child(n+13),
+.table-salary-add > tbody > tr > td:nth-child(n+13) {
+    display:none;
+}
+
+/* 급여 조건표 추가 조회 테이블 */
+.table-salary-add2 > tbody > tr > th {
+   text-align:right;
+   background-color: #f8f9fa;
+   width:10%;
+}
+.table-salary-add2 > tbody > tr > td {
+    padding:0;
+    width:15%;
+}
+.table-salary-add2 > tbody > tr > td input {
+   border-radius:0;
+   border:0;
+}
+
+.table-employee-grade > thead > tr > th {
+    width: 30%;
+}
+
+/* 매입 매출처 추가 테이블 */
+.table-customer-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+}
+.table-customer-add > tbody > tr > td {
+    padding:0;
+}
+.table-customer-add > tbody > tr > td input:not(.btn),
+.table-customer-add > tbody > tr > td select,
+.table-customer-add > tbody > tr > td .select2,
+.table-customer-add > tbody > tr > td .select2 span {
+    width:100%;
+    border-radius:0;
+    border:0;
+}
+
+/* 회사 공지사항 목록 테이블 */
+.table-notice-list > thead > tr > th:first-child,
+.table-notice-list > tbody > tr > td:first-child {
+    width:5%;
+}
+.table-notice-list > thead > tr > th:nth-child(2),
+.table-notice-list > tbody > tr > td:nth-child(2) {
+    width:70%;
+}
+.table-notice-list > thead > tr > th:nth-child(n+3),
+.table-notice-list > tbody > tr > td:nth-child(n+3) {
+    width:12.5%;
+}
+
+/* 재무제표 당기 전기 테이블 */
+.table-ledger > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:8%;
+    padding-top:0.4rem;
+}
+.table-ledger > tbody > tr > td {
+    padding:0;
+}
+.table-ledger > tbody > tr > td:nth-child(2) {
+    width:20%;
+}
+.table-ledger > tbody > tr > td:nth-child(4) {
+    width:4%;
+}
+.table-ledger > tbody > tr > td:nth-child(6) {
+    width:3%;
+    padding-top:0.25rem;
+    text-align:center;
+}
+.table-ledger > tbody > tr > td:nth-child(2n+5) {
+    width:22%;
+}
+.table-ledger > tbody > tr > td input,
+.table-ledger > tbody > tr > td select,
+.table-ledger > tbody > tr > td button {
+    height:calc(1.8125rem + 2px); /* height 값을 통일했습니다. */
+    width:100%;
+    border-radius:0;
+    border:0;
+}
+
+/* 직원 정보 추가 테이블 */
+
+.table-employee-add > tbody > tr > td > .custom-file,
+.table-employee-add > tbody > tr > td > .custom-file > input {
+    height: calc(2rem + 2px) !important;
+}
+.table-employee-add > tbody > tr > td > .custom-file > label {
+   border:0;
+   border-radius:0;
+}
+.table-employee-add > tbody > tr > td > .custom-file > label::after {
+   height: calc(2rem + 2px) !important;
+   border-radius:0;
+}
+.table-employee-add > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:12%;
+    padding-top:0.4rem;
+    padding-bottom:0.4rem;
+}
+.table-employee-add > tbody > tr > td {
+    padding:0;
+}
+.table-employee-add > tbody > tr:first-child > td:last-child {
+    width:25%;
+    text-align:center;
+    vertical-align: middle;
+    /*font-size:30px;*/
+}
+.table-employee-add > tbody > tr > td > input:not(.btn),
+.table-employee-add > tbody > tr > td > span > input,
+.table-employee-add > tbody > tr > td > select,
+.table-employee-add > tbody > tr > td > span > select,
+.table-employee-add > tbody > tr > td label{
+    width:100%;
+    height: 34px !important;
+    border-radius:0;
+    border:0;
+    margin:0;
+}
+.table-employee-add > tbody > tr > td label::after {
+    height: calc(2.25rem + 2px);
+}
+
+
+.table-employee-grade > thead > tr > th:nth-child(2n+4),
+.table-employee-grade > tbody > tr > td:nth-child(2n+4) {
+    display: none;
+}
+
+
+.readonly-text-background {
+    background-color: white !important;
+}
+
+/* 기본 설정 페이지 테이블 */
+.table-basic-setting > tbody > tr > th {
+    text-align:right;
+    background-color: #f8f9fa;
+    width:10%;
+}
+.table-basic-setting > tbody > tr > td {
+    padding:0;
+}
+.table-basic-setting ul {
+    margin-bottom: 0;
+    padding:0;
+    display:flex;
+    justify-content:center;
+}
+.table-basic-setting ul li {
+    display: inline-block;
+    list-style-type: none;
+    padding-right: 20px;
+}
+.table-basic-setting ul li label {
+    margin: 0 !important;
+}
+.table-basic-setting ul li input[type=radio] {
+    margin-bottom: 0 !important;
+    vertical-align:-10%;
+}
+.table-basic-setting> tbody > tr > td {
+    width:23.33333%;
+}
+
+
+/* div table */
+.div-table {
+    border: 1px solid #dee2e6;
+    display: inline-table;
+    width: 100%;
+    overflow: hidden;
+}
+
+.div-table-header {
+    padding: .25rem !important;
+    font-weight: bold;
+    color: #858796;
+    background-color: #f8f9fa;
+}
+
+.div-table-header div {
+    text-align: center;
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.div-table-body input[type=text], .div-table-body select, .div-table-body .select2-selection {
+    height: 100%;
+   border-radius: 0;
+   border: 0 !important;
+}
+.div-table-body ul li input[type=radio],
+.div-table-body input[type=checkbox]{
+    margin-bottom: 0 !important;
+    vertical-align:-10%;
+}
+
+/* 청원 div Table */
+div.CheongWonTable {
+    border: 0;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+.divTable.CheongWonTable .divTableBody .divTableCell {
+    font-size: 13px;
+}
+.divTable.CheongWonTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.divTable.CheongWonTable .divTableHead,
+.divTable.CheongWonTable .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.divTable.CheongWonTable input,
+.divTable.CheongWonTable select {
+  border:0;
+  border-radius:0;
+}
+
+/* 휴일 및 휴가 설정 제목 */
+div.holiday-title {
+    border: 1px solid #dee2e6;
+    background-color: #e9ecef;
+}
+
+/* 절 div table */
+div.jeolTable {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+.divTable.jeolTable .divTableBody .divTableCell {
+    font-size: 13px;
+}
+.divTable.jeolTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.divTable.jeolTable .divTableHead,
+.divTable.jeolTable .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.divTable.jeolTable input,
+.divTable.jeolTable select {
+  border:0;
+  border-radius:0;
+}
+
+/* 공휴일 설정 테이블 */
+div.publicHolidayTable {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+.divTable.publicHolidayTable .divTableBody .divTableCell {
+    font-size: 13px;
+}
+.divTable.publicHolidayTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.divTable.publicHolidayTable .divTableHead,
+.divTable.publicHolidayTable .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.divTable.publicHolidayTable input,
+.divTable.publicHolidayTable select {
+  border:0;
+  border-radius:0;
+}
+/* Employee Edit-학력 table */
+div.careerTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+div.careerTable > .divTableHeading > .divTableRow > .divTableHead,
+div.careerTable > .divTableBody > .divTableRow > .divTableCell{
+  border: 1px solid #dee2e6;
+}
+div.careerTable input,
+div.careerTable select {
+  border:0;
+}
+
+/* 사고 추가 div table */
+.divTable.accidentTable {
+  white-space:nowrap;
+  overflow:scroll;
+  text-align: center;
+  border: 0 solid #000000;
+  width: 100%;
+  border-collapse: collapse;
+}
+.divTable.accidentTable > .divTableHeading > .divTableRow > .divTableHead,
+.divTable.accidentTable > .divTableBody > .divTableRow > .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.divTable.accidentTable input,
+.divTable.accidentTable select {
+  border:0;
+  border-radius:0;
+  width: 100%;
+}
+
+/* Employee Edit-가족 table */
+div.familyTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+div.familyTable .divTableBody .divTableCell,
+div.familyTable .divTableHeading .divTableHead {
+  border: 1px solid #dee2e6;
+}
+div.familyTable > .divTableHeading > .divTableRow > .divTableHead:nth-child(n+6) {
+    width:5%;
+}
+div.familyTable input,
+div.familyTable select {
+  border:0;
+  border-radius:0;
+}
+div.familyTable ul,
+div.familyTable li:last-child {
+  padding:0;
+}
+
+/* Employee Edit- table */
+.sudangTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.sudangTable .divTableHead,
+.sudangTable .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.sudangTable input,
+.sudangTable select {
+  border:0;
+  border-radius:0;
+}
+ .sudangTable .divTableBody .divTableCell:last-child {
+    padding:0.5rem;
+}
+.sudangTable .divTableBody .divTableCell ul {
+    margin: 0;
+    padding: 0;
+}
+.divTableCell ul{
+    margin-bottom: 0 !important;
+    vertical-align:middle;
+}
+.divTableCell li label {
+    margin: 0 !important;
+}
+.divTableCell li {
+    display: inline-block;
+    list-style-type: none;
+    padding-right: 20px;
+}
+
+/* Employee Edit- table */
+div.penaltyTable {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.penaltyTable .divTableHead,
+.penaltyTable .divTableCell {
+  border: 1px solid #dee2e6;
+}
+.penaltyTable input,
+.penaltyTable select {
+  border:0;
+  border-radius:0;
+}
+
+
+/* 노선별 배차 리스트 설정 divTable */
+div.dispatchTable {
+   width: 100%;
+   text-align: center;
+   border-collapse: collapse;
+}
+.divTable.dispatchTable .divTableBody .divTableCell {
+   font-size: 13px;
+}
+.divTable.dispatchTable {
+ width: 100%;
+ text-align: center;
+ border-collapse: collapse;
+}
+.divTable.dispatchTable .divTableHead,
+.divTable.dispatchTable .divTableCell {
+ border: 1px solid #dee2e6;
+}
+.divTable.dispatchTable select,
+.divTable.dispatchTable .select2-selection--single,
+.divTable.dispatchTable input {
+ padding:0;
+ border-radius:0;
+ border:0;
+ height: 100%;
+}
+
+
+.divTable.dispatchTable select:first-child {
+ border-right:1px solid #dee2e6;
+}
+.divTable .divTableHeading {
+   background: #E9ECEF;
+}
+
+.divTable .divTableHeading {
+    background: #E9ECEF;
+}
+
+/* basic setting div table */
+.divTable.settingTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.divTable .divTableHead {
+    padding: 0.3rem;
+    background: #f8f9fa;
+}
+.divTable.settingTable .divTableHead,
+.divTable.settingTable .divTableCell {
+    font-weight: bold;
+    color: #858796;
+    border: 1px solid #dee2e6;
+}
+
+.divTable.settingTable input[type=text],
+.divTable.settingTable input[type=number] {
+ padding:0.3rem;
+ border-radius:0;
+ border:0;
+ width:100%;
+}
+.settingTable ul {
+    margin-bottom: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+.divTable.settingTable.settingTable-row1 .divTableCell {
+    width:80%;
+}
+.divTable.settingTable.settingTable-row2 .divTableCell {
+    width:35%;
+}
+
+
+/* input의 border를 제거하는 부분 */
+.divTable input[type=text] {
+    border-radius:0 !important;
+}
+
+
+.divTable{ display: table; }
+.divTableRow { display: table-row; }
+.divTableHeading { display: table-header-group;}
+.divTableCell, .divTableHead { display: table-cell;}
+.divTableFoot { display: table-footer-group;}
+.divTableBody { display: table-row-group;}
+/* div */
+
+/* pivot table style
+table.dataframe {
+    border:2px solid #e3e6f0
+}
+table.dataframe > tbody > tr > th {
+    background-color: #f8f9fa;
+}
+*/
+/* number input  */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* employee  dropdown */
+.dropdown {
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+}
+
+.dropdown dd,
+.dropdown dt {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown ul {
+    margin: 0;
+    list-style: none;
+}
+
+.dropdown dd {
+    position: relative;
+}
+
+.dropdown a,
+.dropdown a:visited {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+    font-size: 12px;
+}
+
+.dropdown dt a {
+    display: block;
+    min-height: 25px;
+    line-height: 24px;
+    overflow: hidden;
+    border: 0;
+}
+
+.dropdown dt a span,
+.multiSel span {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.dropdown dd ul {
+    width:100%;
+    border: 1px solid #ced4da !important;
+    background-color: white;
+    display: none;
+    left: 0;
+    padding: 0;
+    position: absolute;
+    top: 8px;
+    list-style: none;
+    height: 100px;
+    overflow: auto;
+    z-index: 1;
+}
+
+.dropdown dd ul li {
+    list-style: none;
+    padding: 0 5px;
+}
+
+.dropdown span.value {
+    display: none;
+}
+
+.dropdown dd ul li a:hover {
+    background-color: #fff;
+}
+
+select:focus, input[type=text]:focus, input[type=number]:focus, input[type=password]:focus, input[type=email]:focus, textarea:focus{
+    box-shadow: 0 0 0 0 !important;
+    outline:1px solid #0066ff !important;
+}
+
+/* 수익금 공동 관리위원회 sugongwi table */
+.table-sugongwi > thead > tr > th:first-child {
+    width:1%;
+}
+/* error 페이지 css 시작입니다. */
+#notfound {
+    position: relative;
+    height: 100vh;
+}
+    #notfound .notfound {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    line-height: 1.4;
+}
+    .notfound-404{
+    margin-bottom: 30px;
+    }
+    .notfound .notfound-404 h1>span {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background-image: url(/static/img/bus.png);
+    background-size: cover;
+    margin-left:30px;
+}
+    .notfound-404 h1 {
+    font-size: 90px;
+    font-weight: 700;
+    margin: 0;
+    color: #486DD9;
+}
+    .notfound h2 {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0;
+    color: #486DD9;
+}
+    .notfound p {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 15px 0 30px 0;
+}
+    .notfound-404 img{
+    width: 90px;
+    height: 90px;
+    }
+    /* error 페이지 css 끝입니다. */
+
+
+.bg-thead-light {
+    background-color: #E4E7EB;
+    border-color: #D7DBE0;
+}
+
+.bg-light-custom {
+    background-color: rgba( 228, 231, 235, 0.5 );
+}
