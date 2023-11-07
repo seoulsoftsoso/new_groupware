@@ -1,0 +1,265 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<!--menu 로드-->
+{% include 'menu.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_metaverse.css' %}">
+
+  <div class="main_img">
+    <img src="{% static 'admin/img/메타버스 배경이미지.png' %}" alt="메타버스 배경">
+    <!-- <h1>VR/AR</h1>        -->
+  </div>
+
+  <div id="senter_menu">
+    <ul class="senter_button">
+        <li>VR/AR</li>
+    </ul>
+  </div>
+
+
+  <!-- 메타버스 영역 -->
+
+  <div class="container vr_allbox">
+    <div class="text-center vr_tit">
+        <h6 class="visually-hidden">Virtual Reality</h6>
+        <h1 class="display-5 fw-bold">VR</h1>
+        <p>“인공 현실감”이나 “가상 현실”로 번역되며, <br>컴퓨터 등을 사용한 실제와 유사한 인공적인 기술을 뜻합니다.</p>
+    </div>
+
+    <h2 class="text-center">적용분야</h2>
+
+    <div class="vr_cardbox" data-aos="fade-down">
+        <div class="vr_cardbox1">
+            <div class="card mb-3 vr_card1" style="max-width: 540px; border: none;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{% static 'admin/img/vr_제조.png' %}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h4 class="card-title">제조</h4>
+                      <p class="card-text">제품 테스트, 조립, 수리, 모니터링 분야<br> 활용이 가능합니다.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="card mb-3 vr_card2" style="max-width: 540px; border: none;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{% static 'admin/img/vr_교육.png' %}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h4 class="card-title">교육</h4>
+                      <p class="card-text">의료용 실습, 화재 현장, 군사 훈련 등<br> 참여가 가능합니다.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="vr_cardbox2">
+            <div class="card mb-3 vr_card3" style="max-width: 540px; border: none;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{% static 'admin/img/vr_서비스.png' %}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body vr_card3_p">
+                      <h4 class="card-title">서비스</h4>
+                      <p class="card-text">길찾기, 교통,  고객서비스, 전자상거래 등<br> 활용이 가능합니다.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="card mb-3 vr_card4" style="max-width: 540px; border: none;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{% static 'admin/img/vr_의료.png' %}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h4 class="card-title">의료</h4>
+                      <p class="card-text">환자 간병인 교육, 장애인 및 환자 보조기기 등<br> 활용이 가능합니다.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="text-center vr_skil_tit" style="color: #012D3A; font-weight: bold;">VR 주요 기능</h1>
+
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3 erp_contents" data-aos="fade-up">
+        <div class="col">
+          <div class="card shadow-sm border vr_box">
+            <img src="{% static 'admin/img/vr_가상체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+            <h3>가상체험</h3>
+            <div class="card-body text-center">
+                <p>가상의 공간에서 공간적, <br>시간적체험이 가능합니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+            <div class="card shadow-sm border vr_box">
+              <img src="{% static 'admin/img/vr_오감체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                <h3>오감체험</h3>
+              <div class="card-body text-center">
+                <p>실제와 유사한 특정 환경 속에서<br>오감 체험이 가능합니다.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card shadow-sm vr_box border">
+              <img src="{% static 'admin/img/vr_상호작용.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                <h3>상호작용</h3>
+              <div class="card-body text-center">
+                <p>실제하는 디바이스를 이용해<br>실시간 조작, 명령이 가능합니다.</p>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+
+
+  <!-- AR 컨텐츠 영역 -->
+
+
+
+  <div style="background: rgba(242, 246, 250, 0.5); padding-bottom: 100px;">
+    <div class="container ar_allbox">
+        <div class="text-center ar_tit">
+            <h6 class="visually-hidden">Augmented Reality</h6>
+            <h1 class="display-5 fw-bold">AR</h1>
+            <p>가상현실의 한 분야로 현실세계에 가상 물체를 겹쳐<br>보여주는 컴퓨터 그래픽 기술을 뜻합니다.</p>
+        </div>
+
+        <h2 class="text-center">적용분야</h2>
+
+        <div class="ar_cardbox" data-aos="fade-down">
+            <div class="ar_cardbox1">
+                <div class="card mb-3 ar_card1" style="max-width: 540px; border: none;">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="{% static 'admin/img/ar_서비스.png' %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h4 class="card-title">서비스</h4>
+                          <p class="card-text">길찾기, 교통, 고객서비스, 전자상거래 등<br> 활용이 가능합니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="card mb-3 ar_card2" style="max-width: 540px; border: none;">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="{% static 'admin/img/ar_교육.png' %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h4 class="card-title">교육</h4>
+                          <p class="card-text">의료용 실습, 화재 현장, 군사 훈련 등<br> 참여가 가능합니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ar_cardbox2">
+                <div class="card mb-3 ar_card3" style="max-width: 540px; border: none;">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="{% static 'admin/img/ar_엔터테인먼트.png' %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body ar_card3_p">
+                          <h4 class="card-title">인테리어</h4>
+                          <p class="card-text">원하는 제품을 원하는 장소에 배치하여<br> 인테리어 확인이 가능합니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="card mb-3 ar_card4" style="max-width: 540px; border: none;">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="{% static 'admin/img/ar_쇼핑.png' %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h4 class="card-title">쇼핑</h4>
+                          <p class="card-text">쇼핑을 하면서 착용하지 않고도 어울리는지<br> 간편하게 확인이 가능합니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-center ar_skil_tit" style="color: #012D3A; font-weight: bold;">AR 주요 기능</h1>
+
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3 erp_contents" data-aos="fade-up">
+            <div class="col">
+              <div class="card shadow-sm border ar_box">
+                <img src="{% static 'admin/img/ar_증간현실체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                <h3>증강현실체험</h3>
+                <div class="card-body text-center">
+                    <p>현실기반의 가상대상<br> 결합 체험이 가능합니다.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm border ar_box">
+                  <img src="{% static 'admin/img/ar_선택적 가상체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                    <h3>선택적 가상체험</h3>
+                  <div class="card-body text-center">
+                    <p>추가되는 정보만 가상체험이 가능합니다.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card shadow-sm ar_box border">
+                  <img src="{% static 'admin/img/ar_실시간 적용.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
+                    <h3>실시간 적용</h3>
+                  <div class="card-body text-center">
+                    <p>스마트폰, 태블릿 PC, 안경 등의 기기를<br> 통해 실시간 부가정보 적용이 가능합니다.</p>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+  <h1 class="text-center" style="color: #012D3A; font-weight: bold; margin-top: 150px;">VR/AR 도입문의</h1>
+
+  <div class="row viewmore_btn">
+    <a href="/menu/0106/">
+        <button class="viewmore con1_viewmore" style="cursor: pointer; margin-left: 0px; position: inherit;"><span class="btn_text">Viewmore</span></button>
+    </a>
+  </div>
+  </div>
+
+
+
+
+<div class="slide_wrapper" style="display: none">
+  <ul class="slides">
+      <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+      <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+  </ul>
+  
+</div>
+
+<p class="controls">
+  <span class="prev"></span>
+  <span class="next"></span>
+</p>
+
+<!--footer 로드-->
+{% include 'footer.html' %}
