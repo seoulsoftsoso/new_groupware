@@ -96,8 +96,7 @@ ROOT_URLCONF = 'seoulsoft_mes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,9 +129,9 @@ WSGI_APPLICATION = 'seoulsoft_mes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mes_smart',
+        'NAME': 'sweb',
         'USER': 'root',
-        'PASSWORD': 'root00',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -249,4 +248,5 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:7000',
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]

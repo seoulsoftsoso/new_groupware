@@ -328,6 +328,13 @@ urlpatterns = [
     path('basic_information/columnconfig/', ColumnConfig),
     #path('basic_information/columnview/', columnViewSet.as_view({'get': 'list', 'patch':'partial_update'}), name='column-view'),
 
+    # 작성자 : 홍재성
+    path('menu/0101/', menu0101),
+    path('menu/0102/', menu0102),
+    path('menu/0103/', menu0103),
+    path('menu/0104/', menu0104),
+    path('menu/010402/', menu010402),
+
     url('basic_information/codemasters/', CodeMaster_in.as_view(), name='basic_information_codemasters'),
     url('basic_information/codemasters_create/', CodeMaster_create.as_view(),
         name='basic_information_codemasters_create'),
@@ -735,10 +742,7 @@ urlpatterns = [
 
     url(r'ordering/api/$', OrderingAPI.as_view(), name='ktv_dispatch_api'),
 
-    path('getAlivecheck/', views.getAlivecheck, name='getAlivecheck'),
-
-    path('recognize/', views.recognize, name='recognize'),
-
+    path('menu/01/', erp_pages)
 
 
 
@@ -751,3 +755,4 @@ if settings.DEBUG:
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     ]
+
