@@ -22,7 +22,6 @@ from django.views.generic import View, TemplateView, FormView, ListView
 def index(request):
     return render(request, 'index.html', {})
 
-
 def login_page(request):
     return render(request, 'login.html', {})
 
