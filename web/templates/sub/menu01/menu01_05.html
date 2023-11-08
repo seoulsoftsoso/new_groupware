@@ -1,0 +1,89 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<!--menu 로드-->
+{% include 'menu.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_introduce.css' %}">
+<link rel="stylesheet" href="{% static 'admin/css/introduce2.css' %}">
+
+<div class="main_img">
+  <img src="{% static 'admin/img/회사소개 배경이미지.png' %}" alt="회사소개 배경">
+  <!-- <h1>회사소개</h1>        -->
+</div>
+
+<div id="senter_menu">
+  <ul class="senter_button">
+      <li><a href="/menu/0105/">개요</a></li>
+      <li><a href="/menu/010502/">연혁</a></li>
+  </ul>
+</div>
+
+          <!-- 모션 영역 -->
+
+          <div class="container introduce_tit">
+              <div class="text-center">
+                  <h6 class="visually-hidden history_h5">SUMMARY</h6>
+                  <h1 class="display-5 history_h1">개요</h1>
+              </div>
+                  <div class="outer">
+                      <div class="borderbox">
+                      <img src="{% static 'admin/img/서울소프트 개요 로고.svg' %}" alt="" class="img-fluid introduce_logo">
+                      <div class="satellite_wrap">
+                        <div class="satellite_box satellite_box1">
+                          <p><img src="{% static 'admin/img/개요_1 택시.png' %}" alt="" class="img-fluid"></p>
+                        </div>
+                        <div class="satellite_box satellite_box2">
+                          <p><img src="{% static 'admin/img/개요_2 버스.png' %}" alt="" class="img-fluid"></p>
+                        </div> 
+                        <div class="satellite_box satellite_box3">
+                          <p><img src="{% static 'admin/img/개요_3 화물.png' %}" alt="" class="img-fluid"></p>
+                        </div>
+                        <div class="satellite_box satellite_box4">
+                          <p><img src="{% static 'admin/img/개요_4 공방.png' %}" alt="" class="img-fluid"></p>
+                        </div>
+                        <div class="satellite_box satellite_box5">
+                          <p><img src="{% static 'admin/img/개요_5 팩토리.png' %}" alt="" class="img-fluid"></p>
+                        </div>
+                        <div class="satellite_box satellite_box6">
+                          <p><img src="{% static 'admin/img/개요_6 VR.png' %}" alt="" class="img-fluid"></p>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+          </div>
+
+
+      <!-- 조직도 영역 -->
+
+          <div class="text-center chartbox" data-aos="fade-down">
+              <h6 class="visually-hidden chart_h6">ORGANIZATION CHART</h6>
+              <h1 class="display-5 fw-bold chart_h1">조직도</h1>
+              <div class="overflow-hidden" style="max-height: 200vh; margin-bottom: 250px;">
+                <div class="container px-5">
+                  <img src="{% static 'admin/img/회사소개_조직도.svg' %}" class="img-fluid" alt="Example image">
+                </div>
+              </div>
+          </div>
+
+
+          <div class="slide_wrapper" style="display: none;">
+            <ul class="slides">
+                <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+            </ul>
+            
+        </div>
+        <p class="controls">
+            <span class="prev"></span>
+            <span class="next"></span>
+        </p>
+
+
+<!--footer 로드-->
+{% include 'footer.html' %}

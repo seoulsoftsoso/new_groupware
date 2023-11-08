@@ -1,0 +1,164 @@
+{% load static %}
+
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_contact.css' %}">
+
+
+<!--menu 로드-->
+{% include 'menu.html' %}
+
+<div class="main_img">
+    <img src="{% static 'admin/img/문의하기 이미지.PNG' %}" alt="구축실적 배경">
+    <!-- <h1>문의하기</h1>        -->
+</div>
+
+
+<div id="senter_menu">
+    <ul class="senter_button">
+        <li><a href="/menu/0106/">문의하기</a></li>
+        <li><a href="/menu/010602/">오시는길</a></li>
+    </ul>
+</div>
+
+
+<!-- 문의하기 콘텐츠 -->
+
+
+<section class="contactbox container">
+
+    <div class="py-5 text-center contact_tit">
+      <h6>CONTACT US</h6>
+      <h1>문의하기</h1>
+    </div>
+
+    <section class="content_wrap">
+     <form class="needs-validation gform" id="gform" method="post" action="https://script.google.com/macros/s/AKfycbzgO-zZ3jjRq7xLfY8UEn4_B2E_uvM6M2ON4C0WXg/exec" name="contactus">
+       <fieldset>
+         <div class="formlist">
+          <div class="col-md-7 col-lg-8">
+              <div class="row g-3 befor">
+
+                <label for="Name" class="form-label label_list col-12">문의종류<sub>*</sub></label>
+
+                <div class="checkbox_all">
+                  <label for="checkbox1" class="option_item">
+                    <input type="radio" class="checkbox1" id="checkbox1" name="answer" value="ERP" required>
+                      <div class="option_inner form-group">
+                        <div class="name">운송ERP</div>
+                      </div>
+                  </label>
+                  <label for="checkbox2" class="option_item">
+                    <input type="radio" class="checkbox1" id="checkbox2" name="answer" value="스마트서비스" required>
+                      <div class="option_inner form-group">
+                        <div class="name">스마트서비스</div>
+                      </div>
+                  </label>
+                  <label for="checkbox3" class="option_item">
+                    <input type="radio" class="checkbox1" id="checkbox3" name="answer" value="일반" required>
+                      <div class="option_inner form-group">
+                        <div class="name">일반</div>
+                      </div>
+                  </label>
+                </div>
+
+                <label for="Name" class="form-label label_list_checkbox col-12">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요?<sub>*</sub></label>
+                <div class="form-group col-12 chkbox">
+                  <input type="radio" id="chk1" name="chk" value="같은 업종의 업체 추천" required>
+                  <label for="chk1"><em class="chknumber1"></em>같은 업종의 업체 추천</label>
+                  <input type="radio" id="chk2" name="chk" value="인터넷 검색" required>
+                  <label for="chk2"><em class="chknumber2"></em>인터넷 검색</label>
+                  <input type="radio" id="chk3" name="chk" value="네이버 블로그" required>
+                  <label for="chk3"><em class="chknumber3"></em>네이버 블로그</label>
+                  <input type="radio" id="chk4" name="chk" value="SNS" required>
+                  <label for="chk4"><em class="chknumber4"></em>SNS(인스타그램,페이스북 등)</label>
+                  <input type="radio" id="chk5" name="chk" value="기타" required>
+                  <label for="chk5"><em class="chknumber5"></em>기타</label>
+                </div>
+                <div class="form-group col-12 inputbox">
+                  <label for="usr" class="form-labe label_list">이름<sub>*</sub></label>
+                  <input type="text" class="form-control" id="usr" name="이름" required placeholder="이름을 입력 하세요." autocomplete="off" required>
+                </div>
+    
+                <div class="form-group col-12 inputbox">
+                  <label for="company" class="form-label label_list">기업(기관)명<sub>*</sub></label>
+                  <input type="text" class="form-control" id="company" name="기업(기관)명" placeholder="기업(기관)명을 입력 하세요." autocomplete="off" required>
+                </div>
+
+                <div class="form-group col-12 inputbox">
+                  <label for="jop" class="form-labe label_list">직책/직급<sub>*</sub></label>
+                  <input type="text" class="form-control" id="jop" name="직책/직급" placeholder="직책/직급을 입력 하세요." autocomplete="off">
+                </div>
+
+               <div class="form-group col-12 inputbox">
+                  <label for="department" class="form-label label_list">부서명<sub>*</sub></label>
+                  <input type="text" class="form-control" id="department" name="부서명" placeholder="부서명을 입력 하세요." autocomplete="off">
+               </div>
+
+               <div class="form-group col-12 inputbox">
+                  <label for="Tel" class="form-label label_list">연락처<sub>*</sub></label>
+                  <input type="text" class="form-control" id="Tel" name="연락처" placeholder="연락처를 입력 하세요." autocomplete="off" pattern="[0-9]+">
+               </div>
+               <div class="form-group col-12 inputbox">
+                  <label for="email" class="form-label label_list">이메일<sub>*</sub></label>
+                  <input type="email" class="form-control" id="email" name="이메일" placeholder="이메일을 입력 하세요" autocomplete="off" required>
+                </div>
+                <div class="form-group col-12 py-2 inputbox">
+                  <label for="exampleFormControlTextarea1" class="form-label label_list">문의내용<sub>*</sub></label>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" name="문의내용" rows="6" style="resize: none;"></textarea>
+                </div>
+              </div>
+
+              <hr class="my-5">
+    
+              <div class="form-check form-group">
+                <input type="checkbox" class="form-check-input" id="same-address" name="checklead" required>
+                <label class="form-check-label chk_text" for="same-address" style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.</label>
+              </div>
+      
+            <div class="btn_box form-group" style="margin-left: 230px;">
+                <button type="submit" class="viewmore">Submit</button>
+            </div>
+          
+            <div class="thankyou_message">
+              <div class="thankyou_box">
+                <h1>작성 완료되었습니다.</h1>
+                <p>확인 후 빠르게 답변 드리겠습니다.</p>
+                <div class="btn_box2">
+                  <a href="#" class="commbtn close">닫기</a>
+                </div>
+              </div>
+            </div>
+
+   
+       </fieldset>
+     </form>
+    </section>
+    
+ </section>
+
+
+
+   <div class="slide_wrapper" style="display: none;">
+    <ul class="slides">
+        <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+    </ul>
+    
+</div>
+<p class="controls">
+    <span class="prev"></span>
+    <span class="next"></span>
+</p>
+
+
+<script src="{% static 'admin/js/build.js' %}" type="text/javascript"></script>
+<script src="{% static 'admin/js/form-submission-handler.js' %}"></script>
+
+
+<!--footer 로드-->
+{% include 'footer.html' %}

@@ -1,0 +1,56 @@
+{% load static %}
+
+{% include 'header.html' %}
+
+<!--menu 로드-->
+{% include 'menu.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_history.css' %}">
+
+
+<div class="main_img">
+  <img src="{% static 'admin/img/회사소개 배경이미지.png' %}" alt="회사소개 배경">
+  <!-- <h1>회사소개</h1>        -->
+</div>
+
+<div id="senter_menu">
+  <ul class="senter_button">
+      <li><a href="/menu/0105/">개요</a></li>
+      <li><a href="/menu/010502">연혁</a></li>
+  </ul>
+</div>
+
+
+<div class="container history_box">
+    <div class="text-center">
+        <h6 class="visually-hidden history_h5">HISTORY</h6>
+        <h1 class="display-5 history_h1">연혁</h1>
+        <div class="history_img_box">
+            <div class="row px-5 history_img">
+            <img src="{% static 'admin/img/회사소개_연혁.svg' %}" class="img-fluid" alt="연혁">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+          <div class="slide_wrapper" style="display: none;">
+            <ul class="slides">
+                <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+                <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+            </ul>
+            
+        </div>
+        <p class="controls">
+            <span class="prev"></span>
+            <span class="next"></span>
+        </p>
+
+
+<!--footer 로드-->
+{% include 'footer.html' %}
