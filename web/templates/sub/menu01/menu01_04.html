@@ -9,11 +9,121 @@
 
 
 <!-- 구축실적 영역 -->
-<!-- 구축실적 이미지때문에 오류발생 -->
+
 <div class="main_img">
-   <img src="{% static 'admin/img/구축실적 이미지.PNG' %}" alt="구축실적 배경">
-   &lt;!&ndash; <h1>구축실적</h1>        &ndash;&gt;
+    <img src="{% static 'admin/img/구축실적 이미지.PNG' %}" alt="구축실적 배경">
+    <!-- <h1>구축실적</h1>        -->
 </div>
+
+<div id="senter_menu">
+    <ul class="senter_button">
+        <li><a href="/menu/0104/">운송ERP</a></li>
+        <li><a href="/menu/010402/">MES</a></li>
+    </ul>
+</div>
+
+<div class="container-xl contents_box">
+    <div class="row contents">
+        <div class="col-md-12 contents_tit">
+            <h6>CONSTRUCTION PERFORMANCE</h6>
+            <h1>구축실적</h1><br><br><br>
+        </div>
+        <div class="row-cols-1 buildlist">
+            <h1>버스·택시·화물 ERP 누적건수</h1>
+            <div class="mes_build">
+                <div class="card build1">
+                    <div class="box">
+                        <h5>시내버스</h5>
+                        <span>업체공급 및 유지보수</span>
+                        <h2>100</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_시내버스 이미지.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="card build1">
+                    <div class="box2">
+                        <h5>마을버스</h5>
+                        <span>업체공급 및 유지보수</span>
+                        <h2>512</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_마을버스 이미지.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="card build1">
+                    <div class="box3">
+                        <h5>전세버스</h5>
+                        <span>업체공급 및 유지보수</span>
+                        <h2>200</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_전세버스 이미지.png' %}" alt="">
+                    </div>
+                </div>
+              </div>
+
+              <div class="mes_build2">
+                <div class="card build1 card3" data-aos="fade-right">
+                    <div class="box4">
+                        <div class="bg"></div>
+                        <h5>모바일 통합 웹 ERP 개발 업체공급</h5>
+                        <h2>18</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_ERP 업체공급 이미지.png' %}" alt="" class="img-fluid">
+                    </div>
+                </div>
+                <div class="card build1 card3" data-aos="fade-left" data-aos-offset="400">
+                    <div class="box5">
+                        <div class="bg"></div>
+                        <h5><span>택시</span> 업체공급 및 유지보수</h5>
+                        <h2>26</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_택시 공급업체 이미지.png' %}" alt="" class="img-fluid">
+                    </div>
+                </div>
+              </div>
+
+              <div class="mes_build3">
+                <div class="card build1" data-aos="fade-right">
+                    <div class="box6">
+                        <h5><span class="span1">화물운송업체</span> <span class="span2">ERP 개발</span></h5>
+                        <h2>48</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_화물운송개발 ERP 이미지.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="card build1 card4" data-aos="fade-left">
+                    <div class="box7">
+                        <h5><span class="span1">위치기반 지능형</span><br><span class="span2">화물운송플랫폼</span> <span class="span3">개발</span></h5>
+                        <h2>32</h2>
+                        <p>건</p>
+                        <img src="{% static 'admin/img/구축실적_위치기반지능형 이미지.png' %}" alt="" class="img-fluid">
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="slide_wrapper" style="display: none;">
+    <ul class="slides">
+        <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
+        <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
+    </ul>
+
+</div>
+<p class="controls">
+    <span class="prev"></span>
+    <span class="next"></span>
+</p>
+
+<!--footer 로드-->
+{% include 'footer.html' %}
 
 
 

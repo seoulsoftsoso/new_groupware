@@ -314,24 +314,10 @@ custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
 
 urlpatterns = [
-
-    path('users/login/', custom_obtain_auth_token),         # login
-
-    # web
     path('', index),
+    path('users/login/', custom_obtain_auth_token),
 
-
-    # 작성자 : 홍재성
-    path('menu/0101/', menu0101),
-    path('menu/0102/', menu0102),
-    path('menu/0103/', menu0103),
-    path('menu/0104/', menu0104),
-    path('menu/010402/', menu010402),
-
-
-
-
-
+    path('menu/<str:menu_num>/', SubView, name='sub'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

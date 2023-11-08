@@ -8,7 +8,7 @@ def index(request):
 
 
 def login_page(request):
-    return render(request, 'login.html', {})
+    return render(request, 'registration/login.html', {})
 
 
 def register_page(request):
@@ -18,23 +18,12 @@ def register_page(request):
 def register_ok(request):
     return render(request, 'register_ok.html', {})
 
-
-# 작성자 : 홍재성
-def menu0101(request):
-    return render(request, 'sub/menu01/menu01_01.html', {})
-
-
-def menu0102(request):
-    return render(request, 'sub/menu01/menu01_02.html', {})
-
-
-def menu0103(request):
-    return render(request, 'sub/menu01/menu01_03.html', {})
+def SubView(request, menu_num):
+    menucode1 = menu_num[:2]
+    menucode2 = menu_num[2:]
+    filename = 'sub/menu' + menucode1 + '/menu' + menucode1 + '_' + menucode2 + '.html'
+    #filename = 'sub/menu01/menu01_01.html'
+    print(filename)
+    return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
 
 
-def menu0104(request):
-    return render(request, 'sub/menu01/menu01_04.html', {})
-
-
-def menu010402(request):
-    return render(request, 'sbu/menu01/menu01_0402.html', {})
