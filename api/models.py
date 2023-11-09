@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 """
 This models.py is initially written based on '데이터베이스설계서(유니로보틱스).hwp' of which version 1.0
@@ -23,7 +24,6 @@ class EnterpriseMaster(models.Model):
 
     # permissions = models.BigIntegerField(verbose_name='권한')
     permissions = models.CharField(max_length=100, verbose_name='권한')
-
 
 
 class GroupCodeMaster(models.Model):
@@ -151,8 +151,21 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='user_master_enterprise',
                                    verbose_name='업체', null=True)
 
-
     is_active = models.BooleanField(default=1, verbose_name='활성여부')
     is_staff = models.BooleanField(default=0, verbose_name='사내직원여부')
 
 
+class Question(models.Model):
+    Question_type = models.CharField(max_length=1, null=False, verbose_name='문의종류')
+    Question_path = models.CharField(max_length=1, null=False, verbose_name='검색경로')
+    Question_name = models.CharField(max_length=128, null=False, verbose_name='이름')
+    Question_company = models.CharField(max_length=128, null=False, verbose_name='기업(기관)명')
+    Question_position = models.CharField(max_length=128, null=False, verbose_name='직책/직급')
+    Question_department = models.CharField(max_length=128, null=False, verbose_name='부서명')
+    Question_phone = models.CharField(max_length=16, null=False, verbose_name='연락처')
+    Question_email = models.CharField(max_length=68, null=False, verbose_name='이메일')
+    Question_content = models.TextField(null=False, verbose_name='문의내용')
+    Question_date = models.DateTimeField(default=timezone.now, null=False, verbose_name='문의 작성시간')
+
+    def __str__(self):
+        return str(self.id)
