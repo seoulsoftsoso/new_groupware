@@ -5,8 +5,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from api.base.base_form import customer_fm, user_fm
-from api.models import CustomerMaster, UserMaster, CodeMaster
+from api.base.base_form import user_fm
+from api.models import UserMaster, CodeMaster
 from lib import Pagenation
 from msgs import msg_create_fail, msg_error, msg_pk, msg_delete_fail, msg_update_fail
 
@@ -56,39 +56,7 @@ class UserMaster_create(View):
         d_today = datetime.today().strftime('%Y-%m-%d')
 
         try:
-            obj = CustomerMaster.objects.create(
-
-                code=code,  # 거래처코드
-                name=name,  # 거래처명
-                division_id=division,  # 거래구분
-
-                licensee_number=licensee_number,  # 사업자번호, it will cause bad occasions..
-                owner_name=owner_name,  # 대표자명
-                business_conditions=business_conditions,  # 업태
-                business_event=business_event,  # 종목
-                postal_code=postal_code,  # 우편번호
-                address=address,  # 주소
-                office_phone=office_phone,  # 회사전화번호, it will cause bad occasions..
-                office_fax=office_fax,  # 회사팩스번호, it will cause bad occasions..
-                charge_name=charge_name,  # 담당자, it will cause bad occasions..
-                charge_phone=charge_phone,  # 담당자연락처, it will cause bad occasions..
-                charge_level=charge_level,  # 직급
-                email=email,  # 6/5 설계서 email
-                enable=1,  # 사용구분
-                etc=etc,  # 비고
-
-                created_by=user,  # 최초작성자
-                updated_by=user,  # 최종작성자
-                created_at=d_today,  # 최초작성일
-                updated_at=d_today,  # 최종작성일
-                enterprise=user.enterprise,  # 업체
-            )
-
-            if obj:
-                context = get_res(context, obj)
-            else:
-                msg = msg_create_fail
-                return JsonResponse({'error': True, 'message': msg})
+            print()
 
         except Exception as e:
 
@@ -201,40 +169,7 @@ class UserMaster_update(View):
 
         try:
 
-            obj = CustomerMaster.objects.get(pk=int(pk))
-
-            obj.code = code  # 코드
-            obj.name = name  # 거래처명
-            obj.division_id = division  # 거래구분
-
-            obj.licensee_number = licensee_number  # 사업자번호
-            obj.owner_name = owner_name  # 대표자명
-            obj.business_conditions = business_conditions  # 업태
-            obj.business_event = business_event  # 종목
-            obj.postal_code = postal_code  # 우편번호
-            obj.address = address  # 주소
-            obj.office_phone = office_phone  # 회사전화번호
-            obj.office_fax = office_fax  # 팩스
-
-            obj.charge_name = charge_name  # 담당자
-            obj.charge_phone = charge_phone  # 연락처
-            obj.charge_level = charge_level  # 직급
-            obj.email = email  # 메일
-            # 사용구분
-            obj.etc = etc  # 비고
-
-            obj.updated_by = user  # 최종 작성자
-            obj.updated_at = d_today  # 최종 작성일
-
-            obj.enterprise = user.enterprise  # 업체
-
-            obj.save()
-
-            if obj:
-                context = get_res(context, obj)
-            else:
-                msg = msg_update_fail
-                return JsonResponse({'error': True, 'message': msg})
+           print()
 
         except Exception as e:
             msg = msg_error
@@ -259,12 +194,7 @@ class UserMaster_delete(View):
             msg = msg_pk
             return JsonResponse({'error': True, 'message': msg})
 
-        try:
-            inv = CustomerMaster.objects.get(pk=int(pk))
-            inv.delete()
-        except Exception as e:
-            msg = msg_delete_fail
-            return JsonResponse({'error': True, 'message': msg})
+
 
         context = {}
         context['id'] = pk

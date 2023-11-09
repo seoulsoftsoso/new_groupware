@@ -8,9 +8,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.bom.excel import excel_parser
-from api.models import CustomerMaster, CodeMaster, ItemMaster, BomMaster
-from api.serializers import BomSerializer, ItemMasterSerializer, CustomerMasterSerializer, CodeMasterSerializer
 
 
 def excel_basic_customer_parser(path):
@@ -29,33 +26,3 @@ def excel_basic_customer_parser(path):
 
     return items
 
-
-class CustomerExcelView(viewsets.ModelViewSet):
-
-    permission_classes = [IsAuthenticated, ]
-
-    @transaction.atomic
-    def create(self, request, *args, **kwargs):
-        excel = request.FILES['excel']
-
-        base = 'data/'
-        prefix = datetime.today().strftime('%Y_%m_%d_%H_%M_%S')
-        path = base + prefix + excel.name
-        with open(path, 'wb+') as f:
-            for chunk in excel.chunks():
-                f.write(chunk)
-
-        items = excel_basic_customer_parser(path)
-        insert = []
-        for idx, item in enumerate(items):
-            one = {}
-            for k, v in item.items():
-                one[k] = v
-
-            insert.append(one)
-
-        cms = CustomerMasterSerializer(data=insert, many=True, context={'request': request})
-        cms.is_valid(raise_exception=True)
-        cms.save()
-
-        return Response(status=status.HTTP_200_OK)

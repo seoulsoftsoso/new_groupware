@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from api.models import CodeMaster, CustomerMaster, EnterpriseMaster, UserMaster
+from api.models import CodeMaster,EnterpriseMaster, UserMaster
 from api.permission import MesPermission
 from api.serializers import CodeMasterSerializer, EnterpriseMasterSerializer
 

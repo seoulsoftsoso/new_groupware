@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from api.models import UserMaster, CodeMaster, ItemMaster, EnterpriseMaster
+from api.models import UserMaster, CodeMaster, EnterpriseMaster
 from lib import Pagenation
 from msgs import msg_create_fail, msg_error, msg_pk, msg_delete_fail, msg_update_fail
 

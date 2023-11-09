@@ -3,7 +3,7 @@
 import os
 import sys
 
-from KPI.kpi import KPICALL
+
 
 
 def main():

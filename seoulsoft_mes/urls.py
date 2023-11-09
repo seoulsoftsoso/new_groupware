@@ -22,114 +22,34 @@ from drf_yasg import openapi
 from django.conf.urls import url
 
 from api import views
-from api.Item.cost_calculate_views import ItemCostCalculateViewSet
-from api.Item.mobile_views import ItemInMobileViewSet
-from api.Item.n_item_in_views import Material_input_read
-from api.Item.out_order_views import ItemOutOrderViewSet
-from api.Item.rein_views import ItemReinViewSet
-from api.QRCode.QRCodeManager import QRCodeTestURL
-from api.QRCode.RQCodeReceiver import *
-from api.auto_complete import Code_108_ac, Customer_name_ac, Code_104_ac, Code_113_ac, Code_112_ac, Code_114_ac, \
+
+from api.auto_complete import Code_108_ac, Code_104_ac, Code_113_ac, Code_112_ac, Code_114_ac, \
     Code_109_ac, Code_110_ac, Code_111_ac, Code_105_ac, Code_106_ac, Code_115_ac, Code_116_ac, Code_118_ac, Code_119_ac, \
-    Code_127_ac, Code_128_ac, Oc_name_ac, Gc_name_ac, Customer_code_ac, Item_code_ac, Item_name_ac, Company_division_ac, \
-    Item_code_name_ac, Item_nice_number_ac, Item_fee_rate, enterprise_name_ac, client_name_ac, menulist_name_ac, \
+    Code_127_ac, Code_128_ac, Gc_name_ac, enterprise_name_ac, client_name_ac, \
     Code_107_ac
 from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.codemaster_views_n import CodeMaster_in, CodeMaster_create, CodeMaster_read, CodeMaster_update, \
     CodeMaster_delete
-from api.base.customer_excel_views import CustomerExcelView
-from api.base.customer_views import CustomerMasterViewSet, CustomerMasterSelectView, CustomerMasterPartView
+
+
 from api.base.enterprise_views import EnterpriseMasterViewSet
 from api.base.enterprise_views_n import EnterpriseMaster_in, EnterpriseMaster_create, EnterpriseMaster_read, \
     EnterpriseMaster_update, EnterpriseMaster_delete
-from api.base.facilities_files_views import FacilitiesFilesViewSet
-from api.base.facilities_views import FacilitiesMasterViewSet
-from api.base.facilities_views_n import FacilitiesMaster_in, FacilitiesMaster_create, FacilitiesMaster_read, \
-    FacilitiesMaster_update, FacilitiesMaster_delete
+
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
-from api.base.groupcodemaster_views_n import GroupCode_in, GroupCode_create, GroupCode_read, GroupCode_update
-from api.base.item_excel_views import ItemExcelView, YuseongItemExcelView
-from api.base.item_views_n import ItemMaster_in, ItemMaster_create, ItemMaster_read, ItemMaster_update, \
-    ItemMaster_delete, ItemMaster_qr_update
-from api.base.menu_view import Menuauth, getSubMenuList, getLmenuList, columnViewSet
-from api.base.myinfo_views import MyInfoViewSet
-from api.base.customer_views_n import CustomerMaster_in, CustomerMaster_create, CustomerMaster_delete, \
-    CustomerMaster_update, CustomerMaster_read, CustomerMaster_excel
-from api.base.myinfo_views_n import MyInfoMaster_in, MyInfoMaster_create, MyInfoMaster_read, MyInfoMaster_update, \
-    MyInfoMaster_delete
-from api.base.order_company import OrderCompanyViewSet
-from api.base.order_company_n import OrderCompany_in, OrderCompany_create, OrderCompany_read, OrderCompany_update, \
-    OrderCompany_delete
-from api.base.unitprice_views import customer_unitprice, UnitPriceSubViewSet, customer_unitprice_update, \
-    customer_unitprice_delete
+
+
+
+
+
+
+
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
-from api.base.item_views import ItemMasterViewSet, ItemMasterSelectViewSet, ItemMasterPartViewSet, ItemMasterViewSet5, \
-    ItemMasterLedViewSet
-from api.base.user_views_n import UserMaster_in, UserMaster_create, UserMaster_read, UserMaster_update, \
-    UserMaster_delete
-from api.bom.excel_views import BomExcelView
-from api.bom.item_views import BomItemViewSet
-from api.bom.master_views import BomMasterViewSet, BomMasterSelectViewSet, BomMasterViewSet10
-from api.bom.bom_views import BomViewSet, BomSelectViewSet
-from api.bom.log_views import BomLogViewSet
-from api.Item.calculate_views import ItemCalculateViewSet, ItemCalculateAlertViewSet, ItemCalculateZeroViewSet
-from api.Item.in_views import ItemInViewSet
-from api.Item.out_views import ItemOutViewSet
-from api.Item.adjust_views import ItemAdjustViewSet, ItemMasterAdjustViewSet
-from api.cost.CostProduct_views import CostProductViewSet
-from api.estimate.estimate_items_views_n import EstimateItems_read, EstimateItems_create, EstimateItems_update
-from api.estimate.estimate_views_n import Estimate_read, Estimate_create, Estimate_update, Estimate_in, \
-    sendmail_to_company_pdf
 
-from api.log_views import write_log
-from api.order.in_views import OrderInViewSet
-from api.order.orders_view import OrdersViewSet, OrdersItemsViewSet, OrdersInItemsViewSet
-from api.order.views import OrderViewSet
-from api.ordering.ordering_items_view_n import OrderingItems_read, OrderingItems_create
-from api.ordering.ordering_view_n import Ordering_read, Ordering_create, OrderingAPI
-from api.orderpurchase.order_purchase_pay_views import Order_purchase_pay_read, Order_purchase_pay_create, \
-    Order_purchase_pay_update, Order_purchase_pay_delete
-from api.orderpurchase.order_purchase_views import Order_purchase_read
-from api.orderpurchase.order_sales_pay_views import Order_sales_pay_create, Order_sales_pay_read, \
-    Order_sales_pay_update, Order_sales_pay_delete
-from api.orderpurchase.order_sales_views import Order_sales_read
-from api.outsourcing.outsourcing_views import OutsourcingItemViewSet, OutsourcingInItemsViewSet
-from api.ordering.ordering_view import OrderingViewSet, OrderingItemsViewSet, OrderingExItemsViewSet, \
-    OrderingPartViewSet, OrderingItemsPartViewSet
-from api.estimate.estimate_views import EstimateViewSet, EstimateItemsViewSet
-from api.process.subprocesstemplet_views import SubprocessTempletViewSet
-from api.quality.Rotator_view import RotatorViewSet
-from api.quality.Stator_view import StatorViewSet
-from api.quality.unbalance_view import UnbalanceViewSet, UnbalanceDetailViewSet
-from api.request.request_items_views_n import RequestItems_read, RequestItems_create
-from api.request.request_views import RequestViewSet, RequestItemsViewSet
-from api.process.management_views import ProcessManagementViewSet, ProcessHasFaultReasonViewSet, ProcessHasFaultReasonSelectViewSet
-from api.process.progress_views import SubprocessProgressManagementViewSet
-from api.process.sataus_views import ProcessStatusViewSet
-from api.process.subprocess_views import SubprocessManagementViewSet, SubprocessManagementAlertViewSet, SubprocessManagementLookupViewSet
-from api.process.fault_manage_views import SubprocessFaultManagementViewSet
-from api.rental.master_views import RentalMasterViewSet
-from api.rental.views import RentalViewSet
-from api.request.request_views_n import Request_read, Request_create
-from api.sensor.value_views import SensorValueViewSet
-from api.sensor.value_views_H2 import SensorH2ValueViewSet
-from api.sensor.views import SensorViewSet
-from api.sensor.views_H2 import SensorH2ViewSet
-from api.production.production import DeviceViewSet
-from api.temp_volt_monitoring.value_views import SensorPCValueViewSet, SensorPCValueBPViewSet
-from api.temp_volt_monitoring.views import SensorPCViewSet
-from api.user.views import CustomObtainAuthToken, MenuHandler
+from api.user.views import CustomObtainAuthToken
 from api.views import *
-from api.warehouse.adjust_views import ItemWarehouseAdjustViewSet, ItemMasterWarehouseAdjustViewSet
-from api.warehouse.calculate_views import ItemWarehouseCalculateViewSet
-from api.warehouse.in_views import ItemWarehouseInViewSet
-from api.warehouse.item_views import ItemMasterWarehouseViewSet
-from api.warehouse.log_views import ItemWarehouseLogViewSet
-from api.warehouse.out_views import ItemWarehouseOutViewSet
-from api.warehouse.rein_views import ItemWarehouseReinViewSet
 
 
-from api.location.location import LocationItemCalculateView
 
 from web.views import *
 
@@ -200,124 +120,35 @@ schema_view = get_schema_view(
 # define router
 #########################
 router = DefaultRouter()
-# BOM
-router.register(r'bom/log', BomLogViewSet)
-router.register(r'bom/master', BomMasterViewSet)
-router.register(r'bom/master10', BomMasterViewSet10)
-router.register(r'bom/master_select', BomMasterSelectViewSet)
-router.register(r'bom/select', BomSelectViewSet)
-router.register(r'bom', BomViewSet)
 
-# materials
-router.register(r'items/in', ItemInViewSet)
-router.register(r'items/out', ItemOutViewSet)
-router.register(r'items/outorder', ItemOutOrderViewSet)
-router.register(r'items/rein', ItemReinViewSet)
-router.register(r'items/adjust/status', ItemMasterAdjustViewSet)
-router.register(r'items/adjust', ItemAdjustViewSet)
-router.register(r'items/calculate', ItemCalculateViewSet)
-router.register(r'items/calculatezero', ItemCalculateZeroViewSet)
-router.register(r'items/calculate_alert', ItemCalculateAlertViewSet)
-router.register(r'items/cost/calculate', ItemCostCalculateViewSet)  # 원자재 원가조회
-router.register(r'items/mobile', ItemInMobileViewSet)  # 모바일 QR 조회
-
-router.register(r'cost/product/search', CostProductViewSet)
-
-# warehouse(창고관리)
-router.register(r'wh/items', ItemMasterWarehouseViewSet)
-router.register(r'wh/in', ItemWarehouseInViewSet)
-router.register(r'wh/out', ItemWarehouseOutViewSet)
-router.register(r'wh/rein', ItemWarehouseReinViewSet)
-router.register(r'wh/adjust/status', ItemMasterWarehouseAdjustViewSet)
-router.register(r'wh/adjust', ItemWarehouseAdjustViewSet)
-router.register(r'wh/calculate', ItemWarehouseCalculateViewSet)
-router.register(r'wh/log', ItemWarehouseLogViewSet)
-# process
-router.register(r'process/sub/progress', SubprocessProgressManagementViewSet)
-router.register(r'process/sub', SubprocessManagementViewSet)
-router.register(r'process/sub_alert', SubprocessManagementAlertViewSet)
-router.register(r'process/sub_lookup', SubprocessManagementLookupViewSet)
-router.register(r'process/subtemplet', SubprocessTempletViewSet)
-router.register(r'process/status', ProcessStatusViewSet)
-router.register(r'process/sub_fault', SubprocessFaultManagementViewSet)
-router.register(r'process/has_fault', ProcessHasFaultReasonViewSet)
-router.register(r'process/has_fault_select', ProcessHasFaultReasonSelectViewSet)
-router.register(r'process', ProcessManagementViewSet)
-# rental
-router.register(r'rental/master', RentalMasterViewSet)
-router.register(r'rental', RentalViewSet)
-# sensor
-router.register(r'sensors/values', SensorValueViewSet)
-router.register(r'sensors', SensorViewSet)
-# 온습도 H2_PS T2_EX
-router.register(r'sensors_h2/values', SensorH2ValueViewSet)
-router.register(r'sensors_h2', SensorH2ViewSet)
-router.register(r'production/device', DeviceViewSet)
-# sensor pc
-router.register(r'sensor_pc/values/add', SensorPCValueBPViewSet)
-router.register(r'sensor_pc/values', SensorPCValueViewSet)
-router.register(r'sensor_pc', SensorPCViewSet)
-# order
-router.register(r'orders/in', OrderInViewSet)
-router.register(r'orders', OrderViewSet)
-router.register(r'order_s', OrdersViewSet)  # 발주관리 리뉴얼
-router.register(r'order_s_items', OrdersItemsViewSet)  # 발주상세 항목
-router.register(r'order_s_in_items', OrdersInItemsViewSet)  # 발주입고 항목
-# 외주관리
-router.register(r'outsourcings/in', OutsourcingInItemsViewSet)
-router.register(r'outsourcings', OutsourcingItemViewSet)
 # 기준정보
 router.register(r'enterprises', EnterpriseMasterViewSet)
 router.register(r'group_codes', GroupCodeMasterViewSet)
 router.register(r'generate_codes', GenerateCodeMaster)
 router.register(r'codes', CodeMasterViewSet)
 router.register(r'codes_select', CodeMasterSelectView)
-router.register(r'customers', CustomerMasterViewSet)
-router.register(r'customers_select', CustomerMasterSelectView)
-router.register(r'customers_part', CustomerMasterPartView)
 
 router.register(r'users', UserMasterViewSet)
 router.register(r'users_select', UserMasterSelectViewSet)
-router.register(r'items', ItemMasterViewSet)
-router.register(r'items5', ItemMasterViewSet5)
-router.register(r'items_select', ItemMasterSelectViewSet)
-router.register(r'items_part', ItemMasterPartViewSet)
-router.register(r'items_led', ItemMasterLedViewSet)
 
-router.register(r'facilities/files', FacilitiesFilesViewSet)       # TODO: 'facilities/<int>/files/' 형태
-router.register(r'facilities', FacilitiesMasterViewSet)
-router.register(r'order/company', OrderCompanyViewSet)
-router.register(r'myinfo', MyInfoViewSet)
 
-router.register(r'unitprice/sub', UnitPriceSubViewSet) #거래처별 단가관리 업체조회, 등록
-router.register(r'getMenulist', MenuHandler)  #업체,사용자별 메뉴 조회
-router.register(r'basic_information/columnview', columnViewSet)
 
-# 주문관리
-router.register(r'ordering_input', OrderingViewSet)
-router.register(r'ordering_input_part', OrderingPartViewSet)
-router.register(r'ordering_items_input', OrderingItemsViewSet)
-router.register(r'ordering_items_input_part', OrderingItemsPartViewSet)
-router.register(r'ordering_ex_items_input', OrderingExItemsViewSet)
-router.register(r'estimate_input', EstimateViewSet)
-router.register(r'estimate_items_input', EstimateItemsViewSet)
-router.register(r'request_input', RequestViewSet)
-router.register(r'request_items_input', RequestItemsViewSet)
 
-# 품질측정관리
-router.register(r'Unbalance', UnbalanceViewSet)
-router.register(r'UnbalanceDetail', UnbalanceDetailViewSet)
-router.register(r'Rotator', RotatorViewSet)
-router.register(r'Stator', StatorViewSet)
+
+
+
 
 custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
 
 urlpatterns = [
     path('', index),
+    path('admins/index/', admin_index_page),
+    path('login/', login_page),
     path('users/login/', custom_obtain_auth_token),
 
     path('menu/<str:menu_num>/', SubView, name='sub'),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

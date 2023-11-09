@@ -1,88 +1,8 @@
 from django.db.models import Q, F
 from django.db.models.functions import Coalesce
 
-from api.models import ItemMaster, CustomerMaster, GroupCodeMaster, CodeMaster, UserMaster, OrderCompany, MyInfoMaster, \
-    EnterpriseMaster, MenuMaster
+from api.models import GroupCodeMaster, CodeMaster, UserMaster, EnterpriseMaster
 from dal import autocomplete
-
-
-# 거래처 코드
-class Customer_code_ac(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = CustomerMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(code__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.code
-
-
-# 거래처 명
-class Customer_name_ac(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = CustomerMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(name__contains=self.q)
-        print(self)
-        return qs
-
-    def get_result_label(self, item):
-        return item.name
-
-
-# api\vies.py 중복?, # 재고관리 TV autoComplete 체크
-# class CodeAutoComplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         qs = ItemMaster.objects.filter(
-#             enterprise__name=self.request.COOKIES['enterprise_name'],
-#         )
-#
-#         if self.q:
-#             qs = qs.filter(name__contains=self.q).order_by('-id')
-#
-#         return qs
-
-
-# # 그룹코드
-# class GroupCode_code_ac(autocomplete.Select2QuerySetView):
-#
-#     def get_queryset(self):
-#         qs = GroupCodeMaster.objects.filter(
-#             enterprise__name=self.request.COOKIES['enterprise_name'], enable=True,
-#         )
-#
-#         if self.q:
-#             qs = qs.filter(name__contains=self.q).order_by('-id')
-#
-#         return qs
-#
-#     def get_result_label(self, item):
-#         return item.code
-#
-#
-# # 그룹명
-# class GroupCode_name_ac(autocomplete.Select2QuerySetView):
-#
-#     def get_queryset(self):
-#         qs = GroupCodeMaster.objects.filter(
-#             enterprise__name=self.request.COOKIES['enterprise_name'], enable=True,
-#         )
-#
-#         if self.q:
-#             qs = qs.filter(name__contains=self.q).order_by('-id')
-#
-#         return qs
-#
-#     def get_result_label(self, item):
-#         return item.name
 
 
 # 공장구분 104
@@ -374,76 +294,6 @@ class Code_128_ac(autocomplete.Select2QuerySetView):
         return item.name
 
 
-# 품번
-class Item_code_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        qs = ItemMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(code__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        # print(item)
-
-        # return item.detail + item.name
-        return item.code
-
-
-# 품명
-class Item_name_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        qs = ItemMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(name__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.name
-
-
-class Item_nice_number_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        qs = ItemMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(nice_number__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.nice_number
-
-
-# 품번:품명
-class Item_code_name_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        qs = ItemMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        )
-
-        if self.q:
-            qs = qs.filter(Q(code__contains=self.q) | Q(name__contains=self.q))
-
-        return qs.order_by('-id')
-
-    def get_result_label(self, item):
-        return item.code + ' : ' + item.name
-
-
 # 사번
 class User_code_ac(autocomplete.Select2QuerySetView):
 
@@ -495,21 +345,6 @@ class User_code_or_name_ac(autocomplete.Select2QuerySetView):
         return item.code + ' : ' + item.username
 
 
-# 납품기업 명
-class Oc_name_ac(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = OrderCompany.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('name')
-
-        if self.q:
-            qs = qs.filter(name__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.name
-
 
 # 그룹코드 명
 class Gc_name_ac(autocomplete.Select2QuerySetView):
@@ -555,39 +390,6 @@ class Gc_name_ac(autocomplete.Select2QuerySetView):
         return str(item.code) + ' (' + item.name + ')'
 
 
-# 사업장 구분
-class Company_division_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        qs = MyInfoMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('id')
-
-        if self.q:
-            qs = qs.filter(company_division__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.company_division
-
-
-# 수수료율 (스마트름뱅이)
-class Item_fee_rate(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = ItemMaster.objects.filter(
-            enterprise__name=self.request.COOKIES['enterprise_name'],
-        ).order_by('-id')
-
-        if self.q:
-            qs = qs.filter(nice_number__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, item):
-        return item.fee_rate
-
-
 # 회사 정보 조회
 class enterprise_name_ac(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -628,32 +430,3 @@ class client_name_ac(autocomplete.Select2QuerySetView):
     def get_result_label(self, result):
         return result.username
 
-
-# 메뉴리스트
-class menulist_name_ac(autocomplete.Select2QuerySetView):
-
-    def get_queryset(self):
-        menutype = ['S']
-
-        user = UserMaster.objects.get(enterprise_id=self.request.COOKIES['enterprise_id'],
-                                      id=self.request.COOKIES['user_id'])
-
-        if user.is_superuser:
-            menutype.append('M')
-
-        qs = MenuMaster.objects.filter(
-            Q(menuauth__use_flag='Y') &
-            Q(menuauth__enterprise_id=user.enterprise_id) &
-            Q(menuauth__user_id=user.id) &
-            Q(type__in=menutype)
-        ).annotate(
-            alias=Coalesce('menuauth__alias', F('name'))
-        )
-
-        if self.q:
-            qs = qs.filter(alias__contains=self.q)
-
-        return qs
-
-    def get_result_label(self, result):
-        return result.alias

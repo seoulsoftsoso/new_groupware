@@ -21,8 +21,8 @@ function api_login(username, password, done_callback) {
             document.cookie = "enterprise_name=" + json.user.enterprise_name + "; path=/;";
             document.cookie = "enterprise_manage=" + json.user.enterprise_manage + "; path=/;";
             document.cookie = "order_company=" + json.user.order_company + "; path=/;";
-            document.cookie = "snd_auth=" + json.user.snd_auth + "; path=/;";
-            document.cookie = "location=" + json.location + "; path=/;";
+            document.cookie = "is_active=" + json.user.is_active + "; path=/;";
+            document.cookie = "is_staff=" + json.user.is_staff + "; path=/;";
             done_callback();
         })
         .fail(handle_error);
