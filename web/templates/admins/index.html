@@ -1,0 +1,146 @@
+
+{% load i18n static %}
+
+<div id="content-main">
+    <div class="container" style="max-width: 1960px">
+        <div class="good-quote mb-4" style="height: 100px; border: 1px solid lightgray; padding-left: 15px;">
+            <h5 class="mb-3" style="color: black; font-weight: bold;">오늘의 좋은 글</h5>
+            <ul class="article_list">
+            {% if daily_good_post %}
+                {% for post in daily_good_post %}
+                    <li onclick="gotoPost({{ post.pk }}, {{ post.board_id }})">
+                        <div class="article_wrap">
+                            <h5 class="title" style="font-size: 18px;">{{ post.content|striptags }}</h5>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>오늘의 좋은글이 아직 작성되지 않았습니다.</li>
+            {% endif %}
+            </ul>
+        </div>
+
+        <div class="row mb-4" style="margin-left: 0 !important; margin-right: 0 !important;">
+            <div class="col recent-notice" style="height: 300px; width: 40%; border: 1px solid lightgray; margin-right: 15px">
+                <h5 class="mb-3" style="color: black; font-weight: bold;">전사 공지사항 최근 글</h5>
+                <ul class="article_list">
+                {% for post in recent_posts %}
+                    <li onclick="gotoPost({{ post.pk }}, {{ post.board_id }})">
+                        <div class="article_wrap">
+                            <span class="title" style="font-size: 18px; cursor: pointer; {% if post.notice == 1 %}color: #D51000;{% endif %}">{{ post.title }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col recent-board" style="height: 300px; width: 40%; border: 1px solid lightgray">
+                <h5 class="mb-3" style="color: black; font-weight: bold;">전사 게시판 최근 글</h5>
+                <ul class="article_list">
+                {% for post in normal_recent_posts %}
+                    <li onclick="gotoPost({{ post.pk }}, {{ post.board_id }})">
+                        <div class="article_wrap">
+                            <h4 class="title" style="font-size: 18px; cursor: pointer;">{{ post.title }}</h4>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="row mb-4" style="margin-left: 0 !important; margin-right: 0 !important;">
+            <div class="col-md-3 approvals" style="height: 1008px; border: 1px solid lightgray">
+                <h5 class="mb-3" style="color: black; font-weight: bold;">빈 공간</h5>
+                <p>추후 결재 등 다른 내용이 들어갈 예정</p>
+            </div>
+
+            <div class="col-md-9 schedule" style="padding-right: 0 !important;">
+                <h5 class="mb-3" style="color: black; font-weight: bold;">전사일정</h5>
+                <p>{{ calendar }}</p>
+
+                <div class="today-vacation mt-3"  style="height: 100px; border: 1px solid lightgray; padding-left: 15px;">
+                    <h5 class="mb-3" style="color: black; font-weight: bold;">오늘의 휴가</h5>
+                    {% if todays_vacations %}
+                        {% for vacation in todays_vacations %}
+                            <p>{{ vacation.employee.name }}: {{ vacation.VacationType }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>오늘은 휴가자가 없습니다.</p>
+                    {% endif %}
+                </div>
+
+                <div class="today-business-trip mt-3"  style="height: 100px; border: 1px solid lightgray; padding-left: 15px;">
+                    <h5 class="mb-3" style="color: black; font-weight: bold;">오늘의 출장</h5>
+                    <p>내용...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{#{% if app_list %}#}
+{#    <!--{% for app in app_list %}-->#}
+{#        <!--<div class="app-{{ app.app_label }} module">-->#}
+{#        <!--<table>-->#}
+{#        <!--<caption>-->#}
+{#            <!--<a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">{{ app.name }}</a>-->#}
+{#        <!--</caption>-->#}
+{#        <!--{% for model in app.models %}-->#}
+{#            <!--<tr class="model-{{ model.object_name|lower }}">-->#}
+{#            <!--{% if model.admin_url %}-->#}
+{#                <!--<th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>-->#}
+{#            <!--{% else %}-->#}
+{#                <!--<th scope="row">{{ model.name }}</th>-->#}
+{#            <!--{% endif %}-->#}
+{#            <!--</tr>-->#}
+{#        <!--{% endfor %}-->#}
+{#        <!--</table>-->#}
+{#        <!--</div>-->#}
+{#    <!--{% endfor %}-->#}
+{#{% else %}#}
+{#    <p>{% trans "You don't have permission to edit anything." %}</p>#}
+{#{% endif %}#}
+</div>
+<script>
+    function gotoPost(postId, boardId) {
+        window.location.href = '/admin/board/' + boardId + '/post/' + postId;
+    }
+</script>
+
+
+{% block extrahead %}
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent actions' %}</h2>
+        <h3>{% trans 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br/>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type }}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}
