@@ -143,16 +143,17 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     is_master = models.BooleanField(default=False, verbose_name='마스터 아이디')
 
     # permissions = models.BigIntegerField(default=0, verbose_name='권한')
-    permissions = models.CharField(default='0', max_length=100, verbose_name='권한')
+    # permissions = models.CharField(default='0', max_length=100, verbose_name='권한')
 
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='user_created_by',
                                    verbose_name='최초작성자')  # 최초작성자
     created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
-    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, related_name='user_master_enterprise',
-                                   verbose_name='업체', null=True)
+    enterprise = models.ForeignKey('EnterpriseMaster', models.PROTECT, default=1, related_name='user_master_enterprise',
+                                   verbose_name='업체', null=False)
 
     is_active = models.BooleanField(default=1, verbose_name='활성여부')
     is_staff = models.BooleanField(default=0, verbose_name='사내직원여부')
+    last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
 
 
 class Question(models.Model):
