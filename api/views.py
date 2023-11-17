@@ -1,16 +1,17 @@
 import time
 import traceback
-
 import requests
-
 import numpy as np
-
+from django.shortcuts import render, redirect
+from rest_framework.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
-# Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 
+from .models import Question
 
+
+# Create your views here.
 
 
 @csrf_exempt
@@ -41,4 +42,7 @@ def checkIn(request):
     Pxxx  :  센서의 정보를 보내줍니다. <timestamp>|<ch1센서값>|<ch2센서값|<ch3센서값>|......
     * 센서값: NULL : 센서없음.
 '''
+
+
+
 

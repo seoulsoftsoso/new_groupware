@@ -1,7 +1,8 @@
 import datetime
 
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import PermissionsMixin, User
 from django.db import models
 from django.db.models import Model
 from django.db.models.signals import pre_save
@@ -154,6 +155,9 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=1, verbose_name='활성여부')
     is_staff = models.BooleanField(default=0, verbose_name='사내직원여부')
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
+    useremailreceive = models.BooleanField(default=False)
+    userintro = models.TextField(blank=True, null=True)
+    #snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
 
 class Question(models.Model):

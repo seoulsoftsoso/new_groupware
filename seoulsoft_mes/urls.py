@@ -142,13 +142,18 @@ custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
 
 urlpatterns = [
-    path('', index),
-    path('admins/index/', admin_index_page),
+    path('', index, name='index'),
+    path('admins/index/', admin_index_page, name="adminIndex"),
     path('login/', login_page),
+    path('logout/', logout_view, name='logout'),
     path('users/login/', custom_obtain_auth_token),
+    path('signup/', signup_page, name='signup'),
+    path('check-duplicate/', check_duplicate, name='check_duplicate'),
+    path('users/signup/', UserCreate, name='UserCreate'),
+
 
     path('menu/<str:menu_num>/', SubView, name='sub'),
-
+    path('submit_question/', submit_question, name='submit_question'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

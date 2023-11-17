@@ -77,10 +77,10 @@
                         <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
                     {% endif %}
                     <li><a href=""><span class="user">{{request.COOKIES.username}}</span></a></li>
-                    <li><a href=""><span>로그아웃</span></a></li>
+                    <li><a href="{% url 'logout' %}" id="logout"><span>로그아웃</span></a></li>
                     <li><a href=""><span>ADAS/AVM</span></a></li>
                     {% else %}
-                    <li><a href=""><span>회원가입</span></a></li>
+                    <li><a href="/signup/"><span>회원가입</span></a></li>
                     <li><a href="/login/"><span>로그인</span></a></li>
                     {% endif %}
                 </ul>
@@ -349,6 +349,24 @@
         $('#menu-list_mb').hide('slide', { 'direction': 'left', 'easing': 'easeInOutCubic', }, 650);
         $('#collapsed-topmenu-shadow').addClass('d-none');
     });
+
+    $("#logout").click(function () {
+        flush_token();
+        window.location.href = "/logout/";
+    });
+
+    function flush_token() {
+    document.cookie = 'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'username=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'is_superuser=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'is_master=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'is_active=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'permissions=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'enterprise_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 
 
 

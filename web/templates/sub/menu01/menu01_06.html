@@ -32,7 +32,9 @@
     </div>
 
     <section class="content_wrap">
-     <form class="needs-validation gform" id="gform" method="post" action="https://script.google.com/macros/s/AKfycbzgO-zZ3jjRq7xLfY8UEn4_B2E_uvM6M2ON4C0WXg/exec" name="contactus">
+     <form class="needs-validation gform" id="gform" method="post" action="{% url 'submit_question' %}" name="contactus">
+       {% csrf_token %}
+         {{ form }}
        <fieldset>
          <div class="formlist">
           <div class="col-md-7 col-lg-8">
@@ -42,19 +44,19 @@
 
                 <div class="checkbox_all">
                   <label for="checkbox1" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox1" name="answer" value="ERP" required>
+                    <input type="radio" class="checkbox1" id="checkbox1" name="Question_type" value="E" required>
                       <div class="option_inner form-group">
                         <div class="name">운송ERP</div>
                       </div>
                   </label>
                   <label for="checkbox2" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox2" name="answer" value="스마트서비스" required>
+                    <input type="radio" class="checkbox1" id="checkbox2" name="Question_type" value="S" required>
                       <div class="option_inner form-group">
                         <div class="name">스마트서비스</div>
                       </div>
                   </label>
                   <label for="checkbox3" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox3" name="answer" value="일반" required>
+                    <input type="radio" class="checkbox1" id="checkbox3" name="Question_type" value="G" required>
                       <div class="option_inner form-group">
                         <div class="name">일반</div>
                       </div>
@@ -63,48 +65,48 @@
 
                 <label for="Name" class="form-label label_list_checkbox col-12">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요?<sub>*</sub></label>
                 <div class="form-group col-12 chkbox">
-                  <input type="radio" id="chk1" name="chk" value="같은 업종의 업체 추천" required>
+                  <input type="radio" id="chk1" name="Question_path" value="A" required>
                   <label for="chk1"><em class="chknumber1"></em>같은 업종의 업체 추천</label>
-                  <input type="radio" id="chk2" name="chk" value="인터넷 검색" required>
+                  <input type="radio" id="chk2" name="Question_path" value="B" required>
                   <label for="chk2"><em class="chknumber2"></em>인터넷 검색</label>
-                  <input type="radio" id="chk3" name="chk" value="네이버 블로그" required>
+                  <input type="radio" id="chk3" name="Question_path" value="C" required>
                   <label for="chk3"><em class="chknumber3"></em>네이버 블로그</label>
-                  <input type="radio" id="chk4" name="chk" value="SNS" required>
+                  <input type="radio" id="chk4" name="Question_path" value="D" required>
                   <label for="chk4"><em class="chknumber4"></em>SNS(인스타그램,페이스북 등)</label>
-                  <input type="radio" id="chk5" name="chk" value="기타" required>
+                  <input type="radio" id="chk5" name="Question_path" value="E" required>
                   <label for="chk5"><em class="chknumber5"></em>기타</label>
                 </div>
                 <div class="form-group col-12 inputbox">
                   <label for="usr" class="form-labe label_list">이름<sub>*</sub></label>
-                  <input type="text" class="form-control" id="usr" name="이름" required placeholder="이름을 입력 하세요." autocomplete="off" required>
+                  <input type="text" class="form-control" id="usr" name="Question_name" placeholder="이름을 입력 하세요." autocomplete="off" required maxlength="128">
                 </div>
     
                 <div class="form-group col-12 inputbox">
                   <label for="company" class="form-label label_list">기업(기관)명<sub>*</sub></label>
-                  <input type="text" class="form-control" id="company" name="기업(기관)명" placeholder="기업(기관)명을 입력 하세요." autocomplete="off" required>
+                  <input type="text" class="form-control" id="company" name="Question_company" placeholder="기업(기관)명을 입력 하세요." autocomplete="off" required maxlength="128">
                 </div>
 
                 <div class="form-group col-12 inputbox">
                   <label for="jop" class="form-labe label_list">직책/직급<sub>*</sub></label>
-                  <input type="text" class="form-control" id="jop" name="직책/직급" placeholder="직책/직급을 입력 하세요." autocomplete="off">
+                  <input type="text" class="form-control" id="jop" name="Question_position" placeholder="직책/직급을 입력 하세요." autocomplete="off" required maxlength="128">
                 </div>
 
                <div class="form-group col-12 inputbox">
                   <label for="department" class="form-label label_list">부서명<sub>*</sub></label>
-                  <input type="text" class="form-control" id="department" name="부서명" placeholder="부서명을 입력 하세요." autocomplete="off">
+                  <input type="text" class="form-control" id="department" name="Question_department" placeholder="부서명을 입력 하세요." autocomplete="off" required maxlength="128">
                </div>
 
                <div class="form-group col-12 inputbox">
                   <label for="Tel" class="form-label label_list">연락처<sub>*</sub></label>
-                  <input type="text" class="form-control" id="Tel" name="연락처" placeholder="연락처를 입력 하세요." autocomplete="off" pattern="[0-9]+">
+                  <input type="text" class="form-control" id="Tel" name="Question_phone" placeholder="연락처를 입력 하세요." autocomplete="off" pattern="[0-9]+" required maxlength="16">
                </div>
                <div class="form-group col-12 inputbox">
                   <label for="email" class="form-label label_list">이메일<sub>*</sub></label>
-                  <input type="email" class="form-control" id="email" name="이메일" placeholder="이메일을 입력 하세요" autocomplete="off" required>
+                  <input type="email" class="form-control" id="email" name="Question_email" placeholder="이메일을 입력 하세요" autocomplete="off" required maxlength="68">
                 </div>
                 <div class="form-group col-12 py-2 inputbox">
                   <label for="exampleFormControlTextarea1" class="form-label label_list">문의내용<sub>*</sub></label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" name="문의내용" rows="6" style="resize: none;"></textarea>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" name="Question_content" rows="6" style="resize: none;" required></textarea>
                 </div>
               </div>
 
@@ -128,8 +130,8 @@
                 </div>
               </div>
             </div>
-
-   
+          </div>
+         </div>
        </fieldset>
      </form>
     </section>
@@ -158,7 +160,6 @@
 
 <script src="{% static 'admin/js/build.js' %}" type="text/javascript"></script>
 <script src="{% static 'admin/js/form-submission-handler.js' %}"></script>
-
 
 <!--footer 로드-->
 {% include 'footer.html' %}

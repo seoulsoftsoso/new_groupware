@@ -1,0 +1,165 @@
+{% load static %}
+{% include 'header.html' %}
+
+{% if user.is_active %}
+<script>history.back(-1);</script>
+{% else %}
+<div id="sub_contents">
+  <div class="signup_box">
+    <p><a href="/"><img id="login_logo" src="{% static 'img/big_logo.png' %}"></a></p>
+
+    <div id="signup_div">
+    <p class="label" style="color: #777; margin-bottom: 30px;"><span class="critical">* </span> 표시된 항목은 필수 정보입니다.</p>
+    <form action="{% url 'UserCreate' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <!-- 이름 필드 -->
+        <div class="form-group row mb-4">
+            <label for="id_username" class="col-sm-2 col-form-label"><span class="critical">* </span>이름</label>
+            <div class="col-sm-10">
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="이름을 입력해주세요." required>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_user_id" class="col-sm-2 col-form-label"><span class="critical">* </span> 아이디</label>
+            <div class="col-sm-8">
+                <input type="text" name="user_id" id="id_user_id" class="form-control"
+                       placeholder="아이디를 입력해주세요." required>
+            </div>
+
+        </div>
+        <div class="col-sm-11 offset-sm-1" style="margin-top: -30px; margin-bottom: 30px; justify-content: center">
+            <button type="button" id="check-duplicate" class="btn btn-secondary w-30 h-100 mr-2" style="width: 90px">중복 확인</button>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_password1" class="col-sm-2 col-form-label"><span class="critical">* </span> 비밀번호</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" id="id_password1" class="form-control"
+                       placeholder="비밀번호는 최소 8자 이상이어야 합니다." minlength="8" required>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_password2" class="col-sm-2 col-form-label"><span class="critical">* </span> 비밀번호 확인</label>
+            <div class="col-sm-10">
+                <input type="password" name="password2" id="id_password2" class="form-control"
+                       placeholder="확인을 위해 이전과 동일한 비밀번호를 입력하세요." minlength="8" required oninput="checkPasswordMatch()">
+                <p id="password-match-message" style="color: red;"></p>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_email" class="col-sm-2 col-form-label"><span class="critical">* </span> 이메일</label>
+            <div class="col-sm-10">
+                <input type="email" name="email" id="id_email" class="form-control"
+                       placeholder="foo@bar.com 형식으로 입력하세요." required>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_useremailreceive" class="col-sm-2 col-form-label">이메일 수신 여부</label>
+            <div class="col-sm-10" style="padding-top: 15px">
+                <input type="checkbox" style="width: 13px; height: 13px;" name="useremailreceive" id="id_useremailreceive">
+                <label class="form-check-label chk_text" for="same-address" style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.</label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="id_userintro" class="col-sm-2 col-form-label">소개</label>
+            <div class="col-sm-10">
+                <textarea name="userintro" id="id_userintro" class="form-control" rows="3"
+                          placeholder="만나서 반갑습니다."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-11 offset-sm-1">
+                <button type="submit" id="signup_btn" class="btn btn-primary">가입</button>
+            </div>
+        </div>
+    </form>
+</div>
+  </div>
+
+  <script>
+    $('body').addClass('signup');
+
+    $('#id_username').addClass('form-control');
+
+    $('#id_password').addClass('form-control');
+    $('#id_password').attr("placeholder", "비밀번호");
+
+    $('#signup').click(function(){
+        location.href = '{% url 'signup' %}'
+    });
+  </script>
+</div>
+
+
+<script>
+    function checkPasswordMatch() {
+        var password1 = document.getElementById("id_password1").value;
+        var password2 = document.getElementById("id_password2").value;
+        var message = document.getElementById("password-match-message");
+
+        if (password1 !== password2) {
+            message.innerHTML = "비밀번호가 일치하지 않습니다.";
+        } else {
+            message.innerHTML = "";
+        }
+    }
+</script>
+<script>
+    $("#check-duplicate").click(function() {
+    var userId = $("#id_user_id").val();
+    var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+    $.ajax({
+        url: "/check-duplicate/",
+        method: "POST",
+        data: {
+            user_id: userId,
+            csrfmiddlewaretoken: csrfToken
+        },
+        success: function(response) {
+            if (response.is_duplicate) {
+                alert("이미 사용 중인 아이디입니다.");
+            } else {
+                alert("사용 가능한 아이디입니다.");
+            }
+        },
+        error: function() {
+            console.error("중복 확인 중 오류가 발생했습니다.");
+        }
+    });
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#signup_btn").click(function () {
+            var isFormValid = validateForm();
+
+            if (isFormValid) {
+                alert('회원가입이 완료되었습니다.');
+            } else {
+                alert('필수 항목을 입력하세요.');
+            }
+        });
+    });
+
+    function validateForm() {
+        var requiredFields = ["id_username", "id_user_id", "id_password1", "id_password2", "id_email"];
+        for (var i = 0; i < requiredFields.length; i++) {
+            var fieldId = requiredFields[i];
+            var fieldValue = $("#" + fieldId).val();
+            if (!fieldValue) {
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+{% endif %}
+{% include 'footer.html' %}
