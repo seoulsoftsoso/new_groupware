@@ -1,0 +1,1143 @@
+*{
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+/* body{ -ms-overflow-style: none; } ::-webkit-scrollbar { display: none; } */
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+a#topBtn{
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    display: none;
+    right: 1%;
+    bottom: 20px;
+    z-index: 999;
+    font-size: 35px;
+}
+
+.nav_popup{
+    display: none;
+    position: absolute;
+    right: 32px;
+    font-size: 24px;
+}
+
+.main_logo{
+    display: flex;
+    margin-left: 120px;
+    margin-top: 10px;
+
+}
+
+.navber{
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid #fff;
+    z-index: 10;
+    /* background-color: violet; */
+}
+
+.menu{
+    display: flex;
+    height: 100%;
+    padding-left: 10rem;
+}
+
+
+
+.menu > li{
+    position: relative;
+    font-size: 1vw;
+    padding: 30px 50px;
+    color: #fff;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.menu > li > a::after {
+    width: 0;
+    height: 0.3vw;
+    background: #0eb3d3;
+    z-index: 10;
+  }
+
+ .menu > li > a:hover::after {
+    width: 100%;
+    left: 0;
+    transition: all 0.3s;
+    
+  }
+
+  ul li a::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+
+.popup{
+    padding: 30px;
+}
+
+
+.submenu{
+    top: 100%;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    text-align:center;
+    display: none;
+    background-color: rgba( 255, 255, 255, 0.1 );
+}
+
+
+.submenu li{
+    padding: 10px;
+    transition: all 0.5s;
+}
+
+#senter_menu{
+    clear: both;
+    width: 100%;
+    height: 2.5vw;
+    background-color: rgba( 255, 255, 255, 0.1);
+    text-align: center;
+    position: absolute;
+    top: 25.2vw;
+    display: flex;
+}
+
+
+.senter_button > li{
+    width: 10vw;
+    height: 2.6vw;
+    padding-top: 8px;
+    font-weight: bold;
+    float: left;
+    color: #fff;
+    font-size: 1vw;
+}
+
+.senter_button > li:nth-child(1){
+    background-color: #fff;
+    color: #000;
+}
+
+.main_img img{
+    width: 100%;
+    height: auto;
+}
+
+.main_img h1{
+    position: absolute;
+    top: 14vw;
+    left: 44.8vw;
+    font-size: 2.5vw;
+    color: #fff;
+}
+
+@media screen and (max-width: 1303px) {
+    .navber{
+        position: absolute;
+        top: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: #012D3A;
+    }
+
+
+    .navber .menu{
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: auto;
+        margin-top: 90px;
+        padding-right: 150px;
+        background-color: #012D3A;
+        display: none;
+    }
+
+    .submenu li{
+        display: none;
+    }
+
+    .popup{
+        display: none;
+    }
+
+    .nav_popup{
+        display: block;
+        padding: 20px;
+    }
+
+   .navber .active{
+       display: flex;
+   }
+
+   .main_logo img{
+       position: absolute;
+       left: 5%;
+   }
+
+   .swiper{
+    margin-top: 100px;
+}
+
+}
+
+
+
+
+@media screen and (max-width: 768px) {
+
+    .main_img img{
+        margin-top: 100px;
+        height: 200px;
+    }
+
+    .main_img h1{
+        position: absolute;
+        top: 17%;
+        left: 38.5%;
+        font-size: 6vw;
+        font-weight: 600;
+    }
+    
+    #senter_menu{
+        position: absolute;
+        height: 40px;
+        top: 260px;
+    }
+
+    .senter_button li{
+        width: 100px;
+    }
+
+    #senter_menu > ul > li{
+        height: 40px;
+        font-size: 1em;
+        padding-top: 8px;
+    }
+
+    .senter_button li:nth-child(1){
+        padding-top: 13px;
+    }
+
+
+    .navber{
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: #012D3A;
+    }
+
+
+    .navber .menu{
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: auto;
+        margin-top: 90px;
+        padding-right: 130px;
+        background-color: #012D3A;
+        display: none;
+        font-size: 15px;
+    }
+
+
+    .submenu li{
+        display: none;
+    }
+
+
+    .nav_popup{
+        display: block;
+        padding: 20px;
+    }
+
+   .navber .active{
+       display: flex;
+   }
+
+   .main_logo img{
+    position: absolute;
+    left: 5%;
+    }
+
+    .contents{
+        margin-bottom: -150px;
+    }
+}
+
+
+/* 버스ERP CSS 영역 */
+
+.erpbox{
+    width: 100%;
+    height: auto;
+}
+
+
+.erpbox > h2{
+    margin-top: 150px;
+    color: #025FBE;
+    font-weight: bold;
+}
+
+
+
+.erp_tit{
+    margin-top: 150px;
+}
+
+.erp_tit h6{
+    color: #999;
+    margin-bottom: 30px;
+}
+
+.erp_tit h1{
+    font-weight: bold;
+}
+
+.erp_tit p{
+    margin-top: 70px;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+
+.erp_contents{
+    margin-bottom: 70px;
+}
+
+.card-body{
+    padding: 10px 0;
+}
+
+.erp_cardbox2 .card-body, .erp_cardbox3 .card-body{
+    padding: 17px 0;
+}
+
+
+.erp_cardbox1{
+    display: flex;
+    margin-top: 100px;
+}
+
+.erp_cardbox1 h4{
+    font-size: 21px;
+}
+
+.erp_cardbox2 h4{
+    font-size: 21px;
+}
+
+.erp_cardbox3 h4{
+    font-size: 21px;
+}
+
+.erp_cardbox2{
+    display: flex;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.erp_cardbox3{
+    display: flex;
+    margin-top: 100px;
+}
+
+.erp_cardbox4{
+    display: flex;
+    margin-top: 100px;
+}
+
+.erp_card1, .erp_card2, .erp_card3, .erp_card4, .erp_card5, .erp_card6, .erp_card7, .erp_card8{
+    width: 100%;
+    font-size: 13px;
+}
+
+.erp_card2, .erp_card4, .erp_card6, .erp_card8{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 5%;
+}
+
+.erp_card1, .erp_card3, .erp_card5, .erp_card7{
+    position: relative;
+    top: 0;
+    left: 5%;
+}
+
+
+.erp_skil_tit{
+    margin: 200px 0 50px;
+}
+
+.erp_skil{
+    float: left;
+    margin: 0;
+}
+
+.skill ul{
+    margin-bottom: 30px;
+}
+
+
+.erp_skil li{
+    list-style: disc;
+    font-size: 12px;
+    text-align: left;
+    margin-bottom: 5px;
+    margin-left: 30px;
+    color: #444;
+}
+
+.erp_skil2 li{
+    list-style: disc;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #444;
+}
+
+.erp_skil3 li{
+    list-style: disc;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #444;
+}
+
+
+.erp_box{
+    height: 420px;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+
+.erp_box > .card-body{
+    position: absolute;
+    top: 0;
+    left: 40%;
+}
+
+.erp_box img{
+    margin-top: 0;
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+#box6{
+    margin-left: 40px;
+}
+
+.erp_box h3{
+    font-size: 22px;
+    margin-left: 45px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #555;
+}
+
+.erp_box h5{
+    margin-top: 10px;
+    color: #025FBE;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.erp_box2{
+    height: 300px;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+
+.erp_box2 > .card-body{
+    position: absolute;
+    top: 0;
+    left: 40%;
+}
+
+.erp_box2 img{
+    margin-top: 30px;
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+.erp_box2 h3{
+    font-size: 22px;
+    margin-left: 50px;
+    font-weight: bold;
+    color: #555;
+}
+
+.erp_box2 h5{
+    margin-top: 10px;
+    color: #025FBE;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.erp_box2 .erp_box2_h3{
+    margin-left: 30px;
+}
+
+
+.erp_box2 .erp_skil{
+    margin-top: 35px;
+}
+
+
+.erp_arrow{
+    margin-top: 270px;
+}
+
+
+.erp_skil_text h2{
+    display: flex;
+    float: left;
+    padding-right: 40px;
+}
+
+.erp_skil_text li{
+    list-style: disc;
+    text-align: left;
+    font-size: 13px;
+    padding-top: 1px;
+    color: #555;
+}
+
+
+.erp_skil_text2 h2{
+    display: flex;
+    float: left;
+    padding-right: 40px;
+}
+
+.erp_skil_text2 li{
+    list-style: disc;
+    text-align: left;
+    font-size: 13px;
+    padding-top: 6px;
+    color: #555;
+}
+
+
+.card-body h4{
+    font-weight: 600;
+}
+
+
+
+.con1_viewmore{
+    width: 150px;
+    height: 53px;
+    background-color: royalblue;
+    color: #fff;
+    border: 0;
+    outline: 0;
+    border-radius: 5px;
+    margin-top: 50px;
+    margin-bottom: 150px;
+}
+
+.con1_viewmore:hover{
+    background: rgb(0,3,255);
+    background: linear-gradient(0deg, rgba(0,3,255,1) 0%, rgba(2,126,251,1) 100%);
+    outline: none;
+}
+
+/* 버스ERP 미디어쿼리 */
+
+@media screen and (max-width: 768px) {
+    .erp_arrow{
+        display: none;
+    }
+    .erp_cardbox{
+        margin-left: 70px;
+    }
+
+    .card-title{
+        text-align: center;
+    }
+
+    .erp_cardbox1 .card-body{
+        margin-left: -45px;
+    }
+
+    .erp_cardbox2 .card-body{
+        margin-left: -45px;
+    }
+
+    .erp_cardbox3 .card-body{
+        margin-left: -45px;
+    }
+
+    .erp_cardbox4 .card-body{
+        margin-left: -45px;
+    }
+
+    .erp_card2, .erp_card4, .erp_card6{
+        padding-left: 20px;
+    }
+
+    .erp_skil{
+        position: absolute;
+        left: 30%;
+        width: 300px;
+    }
+
+    .erp_skil li{
+        font-size: 12px;
+    }
+
+    .erp_contents .col:nth-child(9){
+        margin-left: 0;
+    }
+
+    .erp_card_body{
+        margin-left: 10px;
+        width: 180px;
+    }
+
+    .erp_card6 .erp_card_body .card-text{
+        padding-top: 23px;
+    }
+
+    .row{
+        margin-right: 0;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .erp_cardbox{
+        padding-left: 130px;
+    }
+
+    .erp_cardbox2, .erp_cardbox3{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .erp_skil li{
+        font-size: 11px;
+    }
+}
+
+
+/* 택시ERP CSS 영역 */
+
+.taxierpbox{
+    width: 100%;
+    height: auto;
+}
+
+
+.taxierpbox > h2{
+    margin-top: 150px;
+    color: #025FBE;
+    font-weight: bold;
+}
+
+
+.taxierp_cardbox2 .card-body, .taxierp_cardbox3 .card-body{
+    padding: 17px 0;
+}
+
+
+.taxierp_cardbox1{
+    display: flex;
+    margin-top: 100px;
+}
+
+.taxierp_cardbox1 h4{
+    font-size: 21px;
+}
+
+.taxierp_cardbox2 h4{
+    font-size: 21px;
+}
+
+.taxierp_cardbox3 h4{
+    font-size: 21px;
+}
+
+.taxierp_cardbox4 h4{
+    font-size: 21px;
+}
+
+.taxierp_cardbox2{
+    display: flex;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.taxierp_cardbox3{
+    display: flex;
+    margin-top: 100px;
+}
+
+.taxierp_cardbox4{
+    display: flex;
+    margin-top: 100px;
+}
+
+.taxierp_card1, .taxierp_card2, .taxierp_card3, .taxierp_card4, .taxierp_card5, .taxierp_card6, .taxierp_card7, .taxierp_card8{
+    width: 100%;
+    font-size: 1em;
+}
+
+.taxierp_card2, .taxierp_card4, .taxierp_card6, .taxierp_card8{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 5%;
+}
+
+.taxierp_card1, .taxierp_card3, .taxierp_card5, .taxierp_card7{
+    position: relative;
+    top: 0;
+    left: 5%;
+}
+
+
+
+/* 택시ERP 미디어쿼리 */
+
+@media screen and (max-width: 768px) {
+
+    .taxierp_cardbox{
+        margin-left: 70px;
+    }
+
+    .taxierp_cardbox1 .card-body{
+        margin-left: -45px;
+    }
+
+    .taxierp_cardbox2 .card-body{
+        margin-left: -45px;
+    }
+
+    .taxierp_cardbox3 .card-body{
+        margin-left: -45px;
+    }
+
+    .taxierp_cardbox4 .card-body{
+        margin-left: -45px;
+    }
+
+    .taxierp_card_body{
+        margin-left: 10px;
+        width: 180px;
+    }
+
+    .taxierp_card2, .taxierp_card4, .taxierp_card6, .taxierp_card8{
+        padding-left: 20px;
+    } 
+
+    .taxierp_card2 .taxierp_card_body .card-text{
+        padding-top: 23px;
+    }
+
+    .taxierp_card3 .taxierp_card_body .card-text{
+        padding-top: 27px;
+    }
+
+    .taxierp_card8 .taxierp_card_body .card-text{
+        padding-top: 23px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .taxierp_cardbox{
+        padding-left: 130px;
+    }
+
+    .taxierp_cardbox2, .taxierp_cardbox3, .taxierp_cardbox4{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+
+
+/* 푸터 css */
+
+.footer_background{
+    width: 100%;
+    height: auto;
+    background-color: #565656;
+}
+
+.footer_background img{
+    width: 220px;
+    height: auto;
+    margin-top: 3.4vw;
+    margin-left: -4vw;
+}
+
+.footer_nav{
+    color: #fff;
+    font-size: 0.7vw;
+    margin-top: 20px;
+    padding-left: 30px;
+}
+
+.sns_icon{
+    padding-top: 95px;
+}
+
+.icon-sns1, .icon-sns2, .icon-sns3, .icon-sns4 {
+    margin-left: 20px;
+    background-color: #fff;
+    height: 40%;
+    width: 12%;
+    display: flex;
+    float: left;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.sns_icon i{
+    font-size: 1vw;
+}
+
+
+.icon-sns1:hover{
+    background-color: #2DB400;
+    color: #fff;
+}
+
+.blog:hover{
+    color: #fff;
+}
+
+
+.icon-sns2:hover{
+    background-color: #c4302b;
+    color: #fff;
+}
+
+.youtube:hover{
+    color: #fff;
+}
+
+
+.icon-sns3:hover{
+    background-color: #ffe8ee;
+    color: #dc143c;
+}
+
+.ingstagram:hover{
+    color: #dc143c;
+}
+
+
+.icon-sns4:hover{
+    background-color: #3b5998;
+    color: #fff;
+}
+
+.facebook:hover{
+    color: #fff
+}
+
+
+.footer_background p{
+    color: #fff;
+}
+.copyright_p{
+    font-size: 0.5vw;
+    padding-left: 34%;
+}
+.footer_p{
+    position: absolute;
+    top: 1vw;
+    left: 1vw;
+}
+
+.copy_p1{
+    font-size: 0.8vw;
+    margin-top: 90px;
+}
+
+.copy_p1 a:hover{
+    color: #ccffff;
+}
+
+
+.sns_span{
+    margin-left: 20px;
+    margin-top: 30px;
+    font-size: 0.5vw;
+    color: #fff;
+}
+
+.non{
+    height: 2px;
+}
+
+
+
+
+@media screen and (max-width: 768px) {
+
+    .icon-sns1, .icon-sns2, .icon-sns3, .icon-sns4 {
+        margin-left: 30px;
+        background-color: #fff;
+        height: 200%;
+        width: 6%;
+        display: flex;
+        float: left;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+
+    .copy_p1{
+        padding-left: 280px;
+        margin-top: 0;
+    }
+
+    .footer_background img{
+        margin-bottom: 20px;
+    }
+
+    .sns_span{
+        margin-right: 40px;
+    }
+
+    .footer_background p{
+        margin-left: -123px;
+    }
+
+    
+    .sns_icon{
+        display: flex;
+        width: 70%;
+        margin: -70px 27px 20px;
+    }
+
+    .non{
+        height: 30px;
+    }
+
+    .copyright_p{
+        padding-left: 37%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .copyright_p{
+        padding-left: 36%;
+    }
+
+    .sns_icon{
+        display: flex;
+        width: 70%;
+        margin: -70px 27px 20px 7px;
+    }
+}
+
+
+
+@media screen and (max-width: 380px){
+
+    /* 메인 380 css */
+    .navber{
+        position: absolute;
+        top: 0;
+    }
+
+    .menu li{
+        width: 100px;
+        padding-left: 0;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .menu > li > a:hover::after{
+        display: none;
+    }
+
+    .main_img h1{
+        position: absolute;
+        top: 150px;
+        left: 36%;
+        font-weight: 600;
+        font-size: 7vw;
+
+    }
+    
+    #senter_menu{
+        position: absolute;
+        top: 260px;
+        height: 40px;
+    }
+
+
+    #senter_menu > ul > li{
+        padding-top: 8px;
+        font-size: 1em;
+    }
+
+    /* erp 380 css */
+
+    .erp_box{
+        width: 100%;
+        height: 500px;
+    }
+
+
+    .erp_cardbox{
+        padding-left: 13%;
+    }
+
+    .erp_cardbox2, .erp_cardbox3{
+        padding-left: 0;
+    }
+
+    .erp_skil_text li{
+        font-size: 3vw;
+    }
+
+    .erp_skil_text2 li{
+        font-size: 3vw;
+    }
+
+    .taxierp_cardbox{
+        padding-left: 13%;
+    }
+
+
+    .erp_box img{
+        margin-top: 0;
+        margin-left: 40%;
+        width: 60px;
+        height: 60px;
+    }
+
+    .erp_box h3{
+        margin-left: 39%;
+        font-size: 1em;
+    }
+
+    .erp_skil{
+        margin-top: 130px;
+        margin-left: -75px;
+    }
+
+    .erp_skil h5{
+        font-size: 0.7em;
+    }
+
+    .skill ul{
+        margin-bottom: 0;
+    }
+
+    #box6{
+        margin-left: 37%;
+    }
+
+    .erp_box2{
+        width: 100%;
+        height: 300px;
+    }
+
+    .erp_box2 img{
+        margin-top: 0;
+        margin-left: 40%;
+        width: 60px;
+        height: 60px;
+    }
+
+    .erp_box2 h3{
+        margin-left: 39%;
+        font-size: 1em;
+    }
+
+    .erp_box2 .erp_box2_h3{
+        margin-left: 35%;
+    }
+
+    .erp_box2 .erp_skil{
+        margin-top: 105px;
+        margin-left: -75px;
+    }
+
+    .con1_viewmore{
+        margin-left: 15px;
+    }
+
+    /* footer 380 css */
+
+    .footer_background img{
+        margin-bottom: 20px;
+    }
+
+    .sns_span{
+        margin-right: 40px;
+    }
+
+    .footer_background p{
+        margin-left: -123px;
+    }
+
+    .footer_nav{
+        font-size: 10px;
+    }
+
+    .non{
+        height: 40px;
+    }
+
+    .footer_copy_list{
+        margin-top: 5px;
+    }
+
+    
+    .sns_icon{
+        display: flex;
+        margin: -100px 0 20px -22px;
+        padding-left: 37px;
+    }
+
+    .copyright_p{
+        width: 410px;
+        padding-left: 168px;
+        font-size: 1vw;
+    }
+
+    .icon-sns1, .icon-sns2, .icon-sns3, .icon-sns4 {
+        background-color: #fff;
+        display: flex;
+        float: left;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+
+    .copy_p1{
+        font-size: 12px;
+        padding-left: 220px;
+        margin-top: 0;
+    }
+
+
+
+}

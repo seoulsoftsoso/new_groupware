@@ -1,0 +1,349 @@
+/* 2018-08-14 CSS 수정*/
+body { width: 100%; margin: 0; padding: 0; }
+
+.container { width: 100%; margin: 0; padding: 0; }
+
+.container .top { width: 100%; border-bottom: solid 1px #dfdfdf; background: #fff; }
+.container .top div { padding: 10px 0 10px 20px; }
+.container .content { clear: both; display: block; width: 100%; min-height: 900px; background: #FF2B2B; }
+.container .content:after { clear: both; content: ""; margin: 0; padding: 0; }
+.container .content #menu { float: left; width: 12%; margin: 0; padding: 0; border-right: solid 1px #dfdfdf; }
+.container .content .content-box { float: left; width: 88%; min-height: 900px; background: #fff; padding: 15px 15px; }
+
+#mobile-manage-menu { display: none; }
+
+ul { list-style: none; }
+/* --------------------------------------------------------------------- */
+
+/******************************************************************************************************************************************************************
+    공용 CSS
+******************************************************************************************************************************************************************/
+
+/* tab메뉴 */
+ul.nav-tabs { border:none; }
+ul.nav-tabs li a { width: 80px; background: #E5E5E5; color: #979797; margin: 0; text-align: center; }
+ul.nav-tabs li.active a { border: 1px solid red; color: white; font-weight: bold; background-color: #FF2B2B; }
+.tab-pane {  }
+.tab-content { border:1px solid #ddd; padding: 15px;}
+
+input[type="file"] { padding: 4px; display: inline; }
+span.required_symbol { color: red; }
+
+.bundle { width:300px; float:right; }
+
+th, td { text-align: center; vertical-align: middle; }
+th { font-weight: bold; }
+
+.search { margin-bottom: 20px; }
+.search input { display: inline; }
+.search select { display: inline; }
+.search .w150 { width: 150px; }
+.search .w120 { width: 120px; }
+.search .w100 { width: 100px; }
+.search .w80 { width: 80px; }
+
+
+/* 페이징 */
+ul.pagination { margin: 0 auto; display: table; }
+ul.pagination li {  }
+ul.pagination li a { border-radius: 50%; margin: 0 5px; color: black; background-color: snow; border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
+ul.pagination li.active a { border-radius: 50%; background-color: red; color: white; border: 1px solid #ddd; }
+ul.pagination li a span {  }
+.pagination>li:last-child>a, .pagination>li:last-child>span { border-bottom-right-radius: 50%; border-top-right-radius: 50%; }
+
+/* modal */
+.modal-body .table tr th { vertical-align: middle; text-align: center; background-color: rgba(0,0,0, .03); }
+.modal-body .table tr td { vertical-align: middle; text-align: left; }
+.modal-body .table tr td ul { list-style: none; display: inline-flex; margin: 0; padding: 0; }
+.modal-body .table tr td ul li { float: left; height: 25px; margin: 0; padding: 0; }
+.modal-body .table tr td ul li label { width: 100px; height: 25px; margin: 0; padding: 0; vertical-align: middle; }
+.modal-body .table tr td ul li label input { display: inline-block; width: 25px; height: 25px !important; margin: 0 5px 0 0; vertical-align: middle; }
+.modal-body .table tr td ul.type1 li { float: left; width: 100px; }
+.modal-body .table tr td ul.type1 li label { float: left; display: block; width: 50px; height: 30px; margin: 0 10px; padding: 0; }
+.modal-body .table tr td ul.type1 li input { float: left; display: block; width: 20px; height: 20px; margin: 0; padding: 0; }
+.modal-body .button_box  { width: 170px; margin: 0 auto; }
+
+
+p.count { display: block; width: 100%; height: 30px; text-align: left; margin: 10px 0; padding: 0 0 0 10px; font-size: 16px; font-weight: bold; }
+
+/******************************************************************************************************************************************************************
+    메뉴(menu) 화면
+******************************************************************************************************************************************************************/
+#menu { width:10%; min-height: 100vh; background-color: #FF2B2B; }
+#menu .m1 { clear: both; list-style: none; margin: 0; padding: 0; }
+#menu .m1 .c1 { display: block; clear: both; width: 100%; padding: 0;}
+#menu .m1 .c1 a { display: block; width: 100%; height: 50px; padding: 10px 0; text-decoration: none; border-bottom: solid 1px #fff;  }
+#menu .m1 .c1 a span { line-height: 30px; font-size: 16px; color: #fff; font-weight: bold; padding: 0 0 0 20px; }
+#menu .m1 .c1 .m2 { clear: both; list-style: none; margin: 0; padding: 0; background: #fff; }
+#menu .m1 .c1 .m2 .c2 {  }
+#menu .m1 .c1 .m2 .c2 a { display: block; width: 100%; height: 40px; padding: 5px 0; margin: 0; text-decoration: none; border-bottom: solid 1px #eee; }
+#menu .m1 .c1 .m2 .c2 a span { line-height: 30px; font-size: 14px; color: #637079; padding: 0 0 0 30px; }
+/*
+#menu { width:10%; min-height: 100vh; font-size: 15pt; background-color: #25412a; color: white; }
+#menu div.menu { text-align: center; margin: 25px 0; }
+#menu div.subject { font-weight: bolder; font-size: 20pt; font-style: oblique; color: chartreuse; }
+#menu div span.m { font-style: oblique; font-weight: bold; padding: 20px 0; display: block; width: 100%; cursor: pointer; }
+#menu div.menu div.sub_menu { text-align: center; font-size: 15px; background-color: seagreen; }
+#menu div.menu div.sub_menu span { cursor: pointer; font-style: oblique; font-weight: bold; padding: 10px 0; display: block; width: 100%; }
+*/
+
+/******************************************************************************************************************************************************************
+    영업 모달창
+******************************************************************************************************************************************************************/
+#sales_modal { top: 20%; left: 17%; position: absolute;  }
+#sales_modal .modal-dialog {  }
+#sales_modal .modal-dialog .modal-content {  }
+#sales_modal .modal-dialog .modal-content .modal-header {  }
+#sales_modal .modal-dialog .modal-content .modal-header button.close {  }
+#sales_modal .modal-dialog .modal-content .modal-header h4.modal-title {  }
+#sales_modal .modal-dialog .modal-content .modal-body {  }
+#sales_modal .modal-dialog .modal-content .modal-body {  }
+#sales_modal .modal-dialog .modal-content .modal-body .table {  }
+#sales_modal .modal-dialog .modal-content .modal-body .table tr {  }
+#sales_modal .modal-dialog .modal-content .modal-body .table tr th { vertical-align: middle; text-align: center; }
+#sales_modal .modal-dialog .modal-content .modal-body .table tr td { vertical-align: middle; }
+#sales_modal .modal-dialog .modal-content .modal-body .table tr td input { text-align: center; }
+#sales_modal .modal-dialog .modal-content .modal-body .button_box  { text-align: right; }
+#sales_modal .modal-dialog .modal-content .modal-body .button_box .sales_del_btn { display: none; }
+
+
+/******************************************************************************************************************************************************************
+    영업 리스트 화면
+******************************************************************************************************************************************************************/
+.content .sales_list_box { margin: 0 auto; width: 100%; }
+.content .sales_list_box button.sales_add_btn { margin-bottom: 15px; }
+.content .sales_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .sales_list_box table thead {  }
+.content .sales_list_box table thead tr { cursor: pointer; }
+.content .sales_list_box table tbody {  }
+.content .sales_list_box table tbody tr { cursor: pointer; }
+.content .sales_list_box table tbody tr td {  }
+.content .sales_list_box input.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+
+/******************************************************************************************************************************************************************
+    Car List 화면
+******************************************************************************************************************************************************************/
+.content .car_list_box { margin: 0 auto; width: 100%; }
+.content .car_list_box button.car_add_btn { margin-bottom: 15px; }
+.content .car_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .car_list_box table thead {  }
+.content .car_list_box table thead tr { cursor: pointer; }
+.content .car_list_box table tbody {  }
+.content .car_list_box table tbody tr { cursor: pointer; }
+.content .car_list_box table tbody tr td {  }
+.content .car_list_box a.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+.car_list_box .btn-box { float: right; }
+.car_list_box .btn-box .fleft { float: left; margin: 0 5px 0 0; }
+.car_list_box .btn-box .fleft input { float: left; width: 120px; margin: 0 5px 0 0; }
+.car_list_box .btn-box .fleft button { float: left; }
+.car_list_box .btn-box button { float: left; }
+
+/******************************************************************************************************************************************************************
+    Car Write 화면
+******************************************************************************************************************************************************************/
+.content .car_write_box { margin: 0 auto; width: 70%; }
+.content .car_write_box form { margin: 50px auto; width: 100%; }
+.content .car_write_box form table { border-top: solid 2px red; border-bottom: solid 2px red; margin: 20px auto; padding: 10px; width: 100%; text-align: center; font-weight: bold; }
+.content .car_write_box form table tbody {  }
+.content .car_write_box form table tbody tr {  }
+.content .car_write_box form table tbody tr th { text-align: center; vertical-align: middle; font-size: 15px; background-color: rgba(0,0,0, .03); }
+.content .car_write_box form table tbody tr td { text-align: center; vertical-align: middle; padding: 12px; }
+.content .car_write_box form table tbody tr td input { text-align: center; }
+.content .car_write_box form table tbody tr td ul {  }
+.content .car_write_box form table tbody tr td ul li { float:left; padding:10px; }
+
+.content .car_write_box form table tbody tr td p.file-box { border: 1px dashed black; padding: 15px; margin: 15px auto; width: 70%; }
+
+.content .car_write_box .button_box { width: 170px; margin: 0 auto;  }
+
+/******************************************************************************************************************************************************************
+    Car 상세 화면
+******************************************************************************************************************************************************************/
+.content .car_detail_box { margin: 0 auto; width: 100%; }
+.content .car_detail_box table { font-size: 15px; margin: 20px auto; padding: 10px; width: 70%; text-align: center; font-weight: bold; border: 2px groove red; border-left: none; border-right: none; }
+.content .car_detail_box table tbody {  }
+.content .car_detail_box table tbody tr {  }
+.content .car_detail_box table tbody tr th { text-align: center; vertical-align: middle; border: 1px solid #ddd; background-color: rgba(0,0,0, .03); }
+.content .car_detail_box table tbody tr td { text-align: center; vertical-align: middle; border: 1px solid #ddd; background-color: white; padding: 10px 10px; }
+.content .car_detail_box table tbody tr td p { margin: 0; padding: 0; }
+.content .car_detail_box table tbody tr td p a { float: left; display: block; width: 100px; height: 25px; margin: 0 15px; line-height: 25px; color: #fff; background: #0E81CC; border-radius: 5px; text-decoration: none; }
+.content .car_detail_box table tbody tr td textarea { cursor: default; background-color: white; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap { width: 100%; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul { list-style: none; margin: 0; padding: 0; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li { float: left; width: 190px; height: 210px; margin: 10px 5px; border: solid 1px #dfdfdf; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li a { display: block; width: 170px; height: 150px; margin: 10px 10px; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li a img { width: 170px; height: 150px; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li p { width: 100%; height: 30px; margin: 0; padding: 0; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li p a { display: block; width: 170px; height: 25px; margin: 0 0 0 10px; padding: 0; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li .empty { width: 190px; height: 210px; }
+.content .car_detail_box table tbody tr td div.installed_photo_wrap ul li .empty img { margin: 10px 0 0 0; width: 170px; height: 190px; }
+
+.content .car_detail_box .button_box { width: 180px; margin: 0 auto;  }
+.content .car_detail_box .button_box input { margin: 0 1px; font-weight: bold; }
+
+
+/******************************************************************************************************************************************************************
+    A/S 모달창
+******************************************************************************************************************************************************************/
+#as_modal {  }
+#as_modal .modal-dialog {  }
+#as_modal .modal-dialog .modal-content {  }
+#as_modal .modal-dialog .modal-content .modal-header {  }
+#as_modal .modal-dialog .modal-content .modal-header button.close {  }
+#as_modal .modal-dialog .modal-content .modal-header h4.modal-title {  }
+#as_modal .modal-dialog .modal-content .modal-body {  }
+#as_modal .modal-dialog .modal-content .modal-body .table {  }
+#as_modal .modal-dialog .modal-content .modal-body .table tr {  }
+#as_modal .modal-dialog .modal-content .modal-body .table tr th { vertical-align: middle; text-align: center; background-color: rgba(0,0,0, .03); }
+#as_modal .modal-dialog .modal-content .modal-body .table tr td { vertical-align: middle; }
+#as_modal .modal-dialog .modal-content .modal-body .table tr td input { text-align: center; }
+#as_modal .modal-dialog .modal-content .modal-body .button_box  { text-align: right; }
+#as_modal .modal-dialog .modal-content .modal-body .button_box .sales_del_btn { display: none; }
+
+
+/******************************************************************************************************************************************************************
+    A/S 리스트 화면
+******************************************************************************************************************************************************************/
+.content .as_list_box { margin: 0 auto; width: 100%; }
+.content .as_list_box button.as_add_btn { margin-bottom: 15px; }
+.content .as_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .as_list_box table thead {  }
+.content .as_list_box table thead tr { cursor: pointer; }
+.content .as_list_box table tbody {  }
+.content .as_list_box table tbody tr { cursor: pointer; }
+.content .as_list_box table tbody tr td {  }
+.content .as_list_box input.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+
+
+/******************************************************************************************************************************************************************
+    대리점 리스트 화면
+******************************************************************************************************************************************************************/
+.content .agency_list_box { margin: 0 auto; width: 100%; }
+.content .agency_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .agency_list_box table thead {  }
+.content .agency_list_box table thead tr { cursor: pointer; }
+.content .agency_list_box table tbody {  }
+.content .agency_list_box table tbody tr { cursor: pointer; }
+.content .agency_list_box table tbody tr td {  }
+.content .agency_list_box input.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+
+
+/******************************************************************************************************************************************************************
+    설치팀 리스트 화면
+******************************************************************************************************************************************************************/
+.content .install_team_list_box { margin: 0 auto; width: 100%; }
+.content .install_team_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .install_team_list_box table thead {  }
+.content .install_team_list_box table thead tr { cursor: pointer; }
+.content .install_team_list_box table tbody {  }
+.content .install_team_list_box table tbody tr { cursor: pointer; }
+.content .install_team_list_box table tbody tr td {  }
+.content .install_team_list_box input.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+
+
+/******************************************************************************************************************************************************************
+    재고 모달창
+******************************************************************************************************************************************************************/
+#stock_modal { top: 20%; left: 17%; position: absolute;  }
+#stock_modal .modal-dialog {  }
+#stock_modal .modal-dialog .modal-content {  }
+#stock_modal .modal-dialog .modal-content .modal-header {  }
+#stock_modal .modal-dialog .modal-content .modal-header button.close {  }
+#stock_modal .modal-dialog .modal-content .modal-header h4.modal-title {  }
+#stock_modal .modal-dialog .modal-content .modal-body {  }
+#stock_modal .modal-dialog .modal-content .modal-body {  }
+#stock_modal .modal-dialog .modal-content .modal-body .table {  }
+#stock_modal .modal-dialog .modal-content .modal-body .table tr {  }
+#stock_modal .modal-dialog .modal-content .modal-body .table tr th { vertical-align: middle; text-align: center; }
+#stock_modal .modal-dialog .modal-content .modal-body .table tr td { vertical-align: middle; }
+#stock_modal .modal-dialog .modal-content .modal-body .table tr td input { text-align: center; }
+#stock_modal .modal-dialog .modal-content .modal-body .button_box  { text-align: right; }
+#stock_modal .modal-dialog .modal-content .modal-body .button_box .sales_del_btn { display: none; }
+
+/******************************************************************************************************************************************************************
+    재고 추가 모달창
+******************************************************************************************************************************************************************/
+#stock_create_modal { top: 5%; left: 17%; position: absolute;  }
+#stock_create_modal .modal-dialog {  }
+#stock_create_modal .modal-dialog .modal-content {  }
+#stock_create_modal .modal-dialog .modal-content .modal-header {  }
+#stock_create_modal .modal-dialog .modal-content .modal-header button.close {  }
+#stock_create_modal .modal-dialog .modal-content .modal-header h4.modal-title {  }
+#stock_create_modal .modal-dialog .modal-content .modal-body {  }
+#stock_create_modal .modal-dialog .modal-content .modal-body {  }
+#stock_create_modal .modal-dialog .modal-content .modal-body .table {  }
+#stock_create_modal .modal-dialog .modal-content .modal-body .table tr {  }
+#stock_create_modal .modal-dialog .modal-content .modal-body .table tr th { vertical-align: middle; text-align: center; }
+#stock_create_modal .modal-dialog .modal-content .modal-body .table tr td { vertical-align: middle; }
+#stock_create_modal .modal-dialog .modal-content .modal-body .table tr td input { text-align: center; }
+#stock_create_modal .modal-dialog .modal-content .modal-body .button_box  { text-align: right; }
+#stock_create_modal .modal-dialog .modal-content .modal-body .button_box .sales_del_btn { display: none; }
+
+/******************************************************************************************************************************************************************
+    재고 리스트 화면
+******************************************************************************************************************************************************************/
+.content .stock_list_box { margin: 0 auto; width: 100%; }
+.content .stock_list_box table { margin: 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .stock_list_box .btn_box { float: right; }
+.content .btn_box button { margin: 0 3px 10px 3px; }
+.content .stock_list_box table thead {  }
+.content .stock_list_box table thead tr { cursor: pointer; }
+.content .stock_list_box table tbody {  }
+.content .stock_list_box table tbody tr { cursor: pointer; }
+.content .stock_list_box table tbody tr td {  }
+.content .stock_list_box input.btn { background-color: red; color: white; margin-top: 20px; border: 1px solid #ddd; }
+
+/******************************************************************************************************************************************************************
+    재고 통계 화면
+******************************************************************************************************************************************************************/
+.content .stock_statistic_box { margin: 0 auto; width: 100%; }
+.content .stock_statistic_box button.stock_add_btn { margin-bottom: 15px; }
+.content .stock_statistic_box table { margin: 50px 0; width: 100%; text-align: center; background-color: white; border-radius: 7px; }
+.content .stock_statistic_box table caption { font-size: 17pt; font-weight: bold; margin-bottom: 20px; }
+.content .stock_statistic_box table tr { cursor: pointer; }
+.content .stock_statistic_box table {  }
+.content .stock_statistic_box table tr { cursor: pointer; }
+.content .stock_statistic_box table tr td {  }
+
+/******************************************************************************************************************************************************************
+    발주 통계 화면
+******************************************************************************************************************************************************************/
+.order_table tr th,
+.order_table tr td { vertical-align:middle !important; }
+
+/******************************************************************************************************************************************************************
+    정산관리 > 설치팀
+******************************************************************************************************************************************************************/
+
+
+/******************************************************************************************************************************************************************
+    정산관리 > 영업팀
+******************************************************************************************************************************************************************/
+.calculate_sales .btn-box { float: right; margin: 0 0 20px 0; }
+.calculate_sales {  }
+.calculate_sales .search {  }
+
+/******************************************************************************************************************************************************************
+    정산관리 > 내부정산
+******************************************************************************************************************************************************************/
+.sales-admin .btn_box { float: right; }
+.sales-admin .btn_box button { margin: 0 3px 10px 3px; }
+
+/******************************************************************************************************************************************************************/
+
+.btn-print { display: block; width: 50px; height: 30px; margin: 0 auto; padding: 0; background: #428bca; color: #fff; border-radius: 5px; text-decoration: none; }
+.btn-print:hover,
+.btn-print:focus { background: #fff; border: solid 1px #428bca; color: #000; text-decoration: none; }
+.btn-print span { display: block; width: 100%; height: 30px; line-height: 30px; }
+
+
+@page { size: A4; margin: 0; }
+@media print {
+/*
+    html, body { width: 210mm; height: 297mm; }
+    #page2  { margin: 0; border: initial; border-radius: initial; width: initial; min-height: initial; box-shadow: initial; background: initial; page-break-after: always; margin-bottom: 50px; }
+    * { box-sizing: border-box; -moz-box-sizing: border-box;}
+*/
+    .top,
+    .menu-box { display: none; }
+}
