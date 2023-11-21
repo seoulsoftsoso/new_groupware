@@ -157,7 +157,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
-    #snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
+    # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
 
 class Question(models.Model):
@@ -174,3 +174,44 @@ class Question(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class BoardMaster(models.Model):
+    title = models.CharField(max_length=128, null=False, verbose_name='제목')
+    content = models.TextField(null=False, verbose_name='내용')
+    file_flag = models.BooleanField(default=False, null=True, verbose_name='파일첨부')  # true:첨부, False:없음
+    fixed_flag = models.BooleanField(default=False, null=True, verbose_name='상단공지')  # true:상단공지, False:없음
+    temp_flag = models.BooleanField(default=False, null=True, verbose_name='임시저장')  # true:임시저장
+    click_cnt = models.IntegerField(default=0, null=False, verbose_name='조회수')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부') # N: 삭제안함, Y: 삭제
+
+    created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='board_user_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='board_up_user_by',
+                                   verbose_name='수정자')
+    updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
+
+
+class FileBoardMaster(models.Model):
+    parent = models.ForeignKey('BoardMaster', models.CASCADE, related_name='board_file_master', verbose_name='파일첨부')
+    file_path = models.CharField(max_length=128, null=False)
+    created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_user_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_up_user_by',
+                                   verbose_name='수정자')
+    updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+
+
+class ReplyMaster(models.Model):
+    parent = models.ForeignKey('BoardMaster', models.CASCADE, related_name='reply_board', verbose_name='상위게시판')
+    reply = models.TextField(null=False, verbose_name='내용')
+    created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='reply_user_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='reply_up_user_by',
+                                   verbose_name='수정자')
+    updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
