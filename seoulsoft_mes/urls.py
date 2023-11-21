@@ -31,25 +31,16 @@ from api.base.codemaster_views import CodeMasterViewSet, CodeMasterSelectView
 from api.base.codemaster_views_n import CodeMaster_in, CodeMaster_create, CodeMaster_read, CodeMaster_update, \
     CodeMaster_delete
 
-
 from api.base.enterprise_views import EnterpriseMasterViewSet
 from api.base.enterprise_views_n import EnterpriseMaster_in, EnterpriseMaster_create, EnterpriseMaster_read, \
     EnterpriseMaster_update, EnterpriseMaster_delete
 
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
 
-
-
-
-
-
-
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 
 from api.user.views import CustomObtainAuthToken
 from api.views import *
-
-
 
 from web.views import *
 
@@ -104,17 +95,17 @@ DESCRIPTION = """
 
 # drf yasg
 schema_view = get_schema_view(
-   openapi.Info(
-      title=TITLE,
-      default_version=VERSION,
-      description=DESCRIPTION,
-      # terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="grammaright@gmail.com"),
-      license=openapi.License(name="MIT License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
-   )
+    openapi.Info(
+        title=TITLE,
+        default_version=VERSION,
+        description=DESCRIPTION,
+        # terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="grammaright@gmail.com"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 #########################
 # define router
@@ -131,36 +122,30 @@ router.register(r'codes_select', CodeMasterSelectView)
 router.register(r'users', UserMasterViewSet)
 router.register(r'users_select', UserMasterSelectViewSet)
 
-
-
-
-
-
-
-
 custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
-
 urlpatterns = [
-    path('', index, name='index'),
-    path('admins/index/', admin_index_page, name="adminIndex"),
-    path('login/', login_page),
-    path('logout/', logout_view, name='logout'),
-    path('users/login/', custom_obtain_auth_token),
-    path('signup/', signup_page, name='signup'),
-    path('check-duplicate/', check_duplicate, name='check_duplicate'),
-    path('users/signup/', UserCreate, name='UserCreate'),
+                  path('', index, name='index'),
+                  path('login/', login_page),
+                  path('logout/', logout_view, name='logout'),
+                  path('users/login/', custom_obtain_auth_token),
+                  path('signup/', signup_page, name='signup'),
+                  path('check-duplicate/', check_duplicate, name='check_duplicate'),
+                  path('users/signup/', UserCreate, name='UserCreate'),
 
+                  path('admins/index/', admin_index_page, name="adminIndex"),
+                  path('admins/work_schedule/', admin_work_schedule_page, name="adminWorkSchedule"),
+                  path('admins/notice', admin_notice_page, name="adminNotice"),
+                  path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWrite"),
 
-    path('menu/<str:menu_num>/', SubView, name='sub'),
-    path('submit_question/', submit_question, name='submit_question'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+                  path('menu/<str:menu_num>/', SubView, name='sub'),
+                  path('submit_question/', submit_question, name='submit_question'),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += [
-    # drf yasg
-    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+        # drf yasg
+        re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+        re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     ]
-

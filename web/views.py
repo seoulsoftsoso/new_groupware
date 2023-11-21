@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -13,6 +14,7 @@ from api.board import SignUpForm, QuestionForm
 from api.models import UserMaster
 
 
+
 def index(request):
     return render(request, 'index.html', {})
 
@@ -21,6 +23,24 @@ def admin_index_page(request):
     context = {}
     context['block'] = ''
     return render(request, 'admins/index.html', context)
+
+
+def admin_work_schedule_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/work_schedule.html')
+
+
+def admin_notice_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/notice.html')
+
+
+def amdin_noticewrite_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/notice_write.html')
 
 
 def login_page(request):

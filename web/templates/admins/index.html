@@ -1,185 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
-{% load static %}
 <head>
     <meta charset="utf-8"/>
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 
-    <title>서울소프트 관리자페이지</title>
-
-    <meta name="description" content=""/>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'img/logo.png' %}"/>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-            rel="stylesheet"/>
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/fonts/boxicons.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/fonts/fontawesome.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/fonts/flag-icons.css' %}"/>
-
-    <!-- Core CSS -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/core.css' %}" class="template-customizer-core-css"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/theme-default.css' %}"
-          class="template-customizer-theme-css"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/css/demo.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/core.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/theme-default.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/css/demo.css' %}"/>
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/typeahead-js/typeahead.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/select2/select2.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/@form-validation/umd/styles/index.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/apex-charts/apex-charts.css' %}"/>
-
-    <!-- Page CSS -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/pages/app-calendar.css' %}"/>
-    <!-- Helpers -->
-    <script src="{% static 'sneat/assets/vendor/js/helpers.js' %}"></script>
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{% static 'sneat/assets/js/config.js' %}"></script>
+    {% include 'admins/admin_header.html' %}
 
 </head>
-<style>
-    #change_clr:hover,
-    #change_clr:focus {
-        background-color: #9da8b5;
-    }
-
-    #change_clr:active {
-        background-color: #9da8b5;
-    }
-</style>
 
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
 
-        <!-- 사이드바 메뉴 aside=vertical -->
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-            <div class="app-brand demo" style="margin-left: 25px; margin-bottom: 10px; ">
-                <a href="{% url 'adminIndex' %}" class="app-brand-link">
-                    <img src="{% static 'img/logo.jpg' %}">
-                </a>
-            </div>
-
-            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-                 id="layout-navbar"
-                 style="display: flex; flex-direction: column; height: auto; padding-top: 30px;">
-                <div>
-                    <div style="margin-bottom: 20px; margin-top: -20px; text-align: left">
-                        <span id="currentDate"></span>
-                    </div>
-                    <div style="margin-top: -20px; margin-bottom: 20px; width: 100%; text-align: left">
-                        <strong style="font-size: large;">나의 근태 현황</strong>
-                    </div>
-                    <div>
-                        <div style="margin-top: 10px">
-                            <span>🕒 오늘 총 근무 시간</span>
-                            <div style="text-align: left; margin-left: 25px">
-                                <h10>0h 0m 0s</h10>
-                            </div>
-                        </div>
-                        <div style="margin-top: 10px; width: auto">
-                            <span>🕒 이번주 누적 시간</span>
-                            <div style="text-align: left; margin-left: 25px">
-                                <h10>0h 0m 0s</h10>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div style="display: flex; flex-direction: row; margin-top: 20px">
-                        <button class="btn btn-primary me-2" id="workon_btn" onclick="toggleButton(this)"
-                                style="background-color: #6c757d; border-color: #6c757d; margin-left: 4px; font-size: 14px">출근
-                        </button>
-                        <button class="btn btn-primary me-2" id="workoff_btn" onclick="toggleButton(this)"
-                                style="background-color: #6c757d; border-color: #6c757d; font-size: 14px">퇴근
-                        </button>
-                    </div>
-                     <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px"></div>
-                </div>
-                <div class="menu-inner-shadow"></div>
-                <ul class="menu-inner py-1">
-                    <li class="menu-item" style="margin-top: 30px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div class="text-truncate" data-i18n="Page 1">공지사항</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">게시판</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="width: 150px; margin-top: 10px;">
-                        <a href="{% url 'adminIndex' %}" class="menu-link" style="display: block; text-align: center;"
-                           id="change_clr">
-                            <div class="text-truncate" data-i18n="Page 1">근태관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">휴가관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">출장관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">법인차량관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">캘린더</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">전자결재</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">자료실</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px; margin-bottom: 30px">
-                        <a href="" class="menu-link" style="display: block; text-align: center;" id="change_clr">
-                            <div data-i18n="Basic">조작관리</div>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
+       {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
         <div class="layout-page" style="">
-            <div class="layout-navbar container-fluid navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-                 id="layout-navbar" style="">
-                <div style="width: 100%; text-align: right">
-                    <span>홍재성 /</span>
-                    <span>내 정보 /</span>
-                    <span>설정 /</span>
-                    <span>로그아웃</span>
-                </div>
-            </div>
+            {% include 'admins/index_header.html' %}
 
             <!-- body1 -->
             <div style="display: flex; flex-direction: row">
@@ -389,77 +227,8 @@
 
 </div>
 
-</div>
-
-
-<div class="content-backdrop fade"></div>
-
-<div class="layout-overlay layout-menu-toggle"></div>
-
-<div class="drag-target"></div>
-
-<!-- Core JS -->
-<!-- build:js assets/vendor/js/core.js -->
-
-<script src="{% static 'sneat/assets/vendor/libs/jquery/jquery.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/popper/popper.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/js/bootstrap.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/hammer/hammer.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/i18n/i18n.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/typeahead-js/typeahead.js' %}"></script>
-
-<script src="{% static 'sneat/assets/vendor/libs/apex-charts/apexcharts.js' %}"></script>
-<script src="{% static 'sneat/assets/js/dashboards-analytics.js' %}"></script>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-
-<!-- endbuild -->
-
-<!-- Vendors JS -->
-<script src="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/@form-validation/umd/bundle/popular.min.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/select2/select2.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.js' %}"></script>
-<script src="{% static 'sneat/assets/vendor/libs/moment/moment.js' %}"></script>
-
-<!-- Main JS -->
-<script src="{% static 'sneat/assets/js/main.js' %}"></script>
-
-<!-- Page JS -->
-<script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
-<script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
-
-
 </body>
 
-<script>
-    function getCurrentDate() {
-        var today = new Date();
-        var year = today.getFullYear();
-        var month = (today.getMonth() + 1).toString().padStart(2, '0');
-        var day = today.getDate().toString().padStart(2, '0');
-
-        return year + '-' + month + '-' + day;
-    }
-
-    document.getElementById('currentDate').innerHTML = getCurrentDate();
-</script>
-<script>
-    function toggleButton(button) {
-        var workonButton = document.getElementById('workon_btn');
-        var workoffButton = document.getElementById('workoff_btn');
-
-        if (button.id === 'workon_btn') {
-            // 출근 버튼을 클릭한 경우
-            workonButton.style.opacity = '0.5';
-            workoffButton.style.opacity = '1';
-        } else if (button.id === 'workoff_btn') {
-            // 퇴근 버튼을 클릭한 경우
-            workonButton.style.opacity = '1';
-            workoffButton.style.opacity = '0.5';
-        }
-    }
-</script>
+    <!--footer-->
+    {% include 'admins/admin_footer.html' %}
 </html>
