@@ -1,0 +1,55 @@
+body	{ clear: both; padding: 0; margin: 0; font-family: sans-serif, '나눔고딕', NanumGothic, '돋움', Dotum, '맑은 고딕', Malgun Gothic, '굴림', Gulim, Helvetica; color: #4b4b4b; font-size: 13px; line-height: 1.7em; word-spacing: 0.1em; }
+
+body.login #header,
+body.login #sidemenu { display: block; width: 0; height: 0; margin: 0; padding: 0; overflow: hidden; }
+body.login #container { width: 1000px; margin: 100px auto; border: solid 1px #dfdfdf; }
+body.login #content { width: 300px; margin: 0 350px; }
+
+#header { height: 66px !important; background: #fff; border-bottom: solid 3px #dfdfdf; color: #000; }
+#header #user-tools a { color: #000; }
+#header #site-name a { display: block; width: 150px; height: 66px; background: url(../img/logo.jpg); color: #000; text-indent: -9999px; }
+
+div.breadcrumbs { border-bottom: solid 1px #dfdfdf; }
+.module h2, .module caption, .inline-group h2 {background: #404040;}
+a:link, a:visited {color:black;}
+div.breadcrumbs{background:#404040;}
+
+#sidemenu { float: left; width: 200px; margin: 0; padding: 0; border-left: 1px solid #656659; overflow: hidden; }
+#content{ float:left; width:600px; background: #fff; }
+
+#sidemenu ul { list-style: none; margin: 0; padding: 0; }
+#sidemenu ul li { display: block; list-style: none; margin: 0; padding: 0;  }
+#sidemenu ul li .menutitle { display: block; width: 190px; height: 40px; line-height: 40px; padding: 0 0 0 10px; background: #D51000; color: #fff; font-weight: bold; font-size: 13px; cursor: pointer; border: 1px solid #ba2f14; }
+.submenutitle { list-style: none; margin: 0; padding: 0; }
+.submenutitle li a { display: block; width: 190px; height: 30px; line-height: 30px; font-size: 12px; padding: 0 0 0 10px; background: #f7f7f7; border-bottom: 1px solid #d4d4d4; border-top: none; color: #676767; text-decoration: none; }
+.submenutitle li a:hover,
+.submenutitle li a:focus,
+.submenutitle li a:active { color: #e94f31; font-weight: bold; }
+.menutitle2 { display: block; width: 190px; height: 30px; line-height: 30px; font-size: 12px; padding: 0 0 0 10px; background: #f7f7f7; border-bottom: 1px solid #d4d4d4; border-top: none; color: #676767; text-decoration: none; cursor: pointer;}
+.subsubmenu { list-style: none; margin: 0; padding: 0; display: none;}
+.subsubmenu li a { display: block; width: 190px; height: 30px; line-height: 30px; font-size: 12px; padding: 0 0 0 10px; background: #d4d4d4; border-bottom: 1px solid #d4d4d4; border-top: none; color: #676767; text-decoration: none; }
+.subsubmenu li a:hover,
+.subsubmenu li a:focus,
+.subsubmenu li  a:active { color: #0e0d0d; font-weight: bold; }
+
+
+#tabbuttonul {list-style:none; display:block; clear:both; height: 40px; margin: 20px 0 0 0; padding: 0; }
+#tabbuttonul .clicked { background: red; color:white;}
+#tabbuttonul .clicked span {font-weight: bold}
+#tabbuttonul li {list-style:none; border:solid #ccc 1px; border-bottom: none; border-radius: 5px 5px 0 0 ; margin-right: 10px; float:left; height:40px; width:80px; text-align:center; line-height:40px;}
+
+#tab { display:block; padding: 0; border:1px #ccc solid; border-radius:0px 5px 5px 5px; padding-bottom: 55px; }
+#tab .tabs:not(.current) {display:none;}
+#tab .tabs .tab-box { width: 100%; padding: 0 15px; }
+#tab .add {float:right; margin: 10px 0 10px 0;}
+
+#tab .listtable tr,
+#tab .listtable tr th,
+#tab .listtable tr td { height: 20px; text-align: center; font-size: 13px; }
+#tab .listtable tr td button { height: 30px; line-height: 15px; }
+
+
+#tab .listtable .hidden {display : none;}
+
+#tab #clienttable #company {width:110px;}
+#tab #clienttable #manager {width:90px;}

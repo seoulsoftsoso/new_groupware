@@ -1,0 +1,427 @@
+﻿/********************************************************************************
+    헤더 이미지, 텍스트
+*********************************************************************************/
+#header_img #customer_bg { background: url('../img/customer_bg.png') center no-repeat;}
+#header_img #news_bg { background: url('../img/news_bg.png') center no-repeat;}
+#header_img #company_bg { background: url('../img/company_bg.png') center no-repeat;}
+#header_img #business_bg { background: url('../img/business_bg.png') center no-repeat;}
+#header_img .imgtext { display: block; width: 100%; margin: 0 auto; text-align: center; }
+#header_img .imgtext span { display: block; letter-spacing: 0; font-size: 44px; font-weight: 500; text-align: center; color: rgb(239, 239, 239); padding-top: 225px; }
+#header_img .imgtext p { font-weight: 300; font-size: 16px; color: rgb(242, 242, 242); text-align: center; margin: 0; padding-bottom: 100px; }
+
+/*************************************************************************************************************************
+    회사소개- CEO인사말
+*************************************************************************************************************************/
+/*#intro .wrapper_greetings { clear: both; width: 100%; height: 465px; }*/
+#intro #img_ceo img { width: 345px; height: 258px; }
+.ceo_title { text-align: center; margin: 30px 0; }
+#intro .ceo_message { margin: 0; padding: 0 15px; }
+#intro .ceo_message h1 { line-height: 24px; font-weight: 600; font-style: normal; color: #222; text-transform: uppercase; letter-spacing: 1px; font-size: 20px; float:left; }
+#intro .ceo_message p { line-height: 20px; font-weight: 500; font-style: normal; color: #777; font-size: 13px; margin: 0; padding: 0; text-align: left;}
+#intro .ceo_message h3 { line-height: 26px; font-weight: 600; font-style: normal; font-size: 18px; margin-top:10px}
+#intro .ceo_message strong { text-align: right; }
+#intro .ceo_message span { line-height: 50%; }
+#intro .ceo_message .ceo_name { font-weight: bold; text-align:right;}
+#intro .line_box { width:293px; height:11px; border-bottom:1px solid; color: #777; }
+
+/*************************************************************************************************************************
+    회사소개- CEO인사말 - 미션&가치
+*************************************************************************************************************************/
+#intro .mission_title {margin-bottom: 85px; width: 100%; height: 24px;}
+#intro .mission_title .blank_box2 {border-bottom:1px solid #e1e1e1; margin-top: 24px; margin-left:20px; width: 868px; height: 11px; float:left; }
+#intro .wrapper_mission h1 {line-height: 24px; font-weight: 600; font-size: 20px; text-align: left; float:left; }
+#intro .wrapper_mission {text-align: center; padding-top:60px; }
+#intro .wrapper_mission i {color: #f00207; font-size: 64px; line-height: 120px; float: left; width: 100%; text-align: center; }
+#intro .wrapper_mission .mission1 {float: left; width: 33%; padding-bottom:85px; }
+#intro .wrapper_mission .mission2 {float: left; width: 33%; }
+#intro .wrapper_mission .mission3 {float: left; width: 33%; }
+#intro .wrapper_mission h4 {line-height: 24px; font-weight: 600; font-size: 16px; margin-top: 25px; text-transform: uppercase; letter-spacing: 1px;}
+
+/*************************************************************************************************************************
+    회사소개- 회사연혁
+*************************************************************************************************************************/
+#intro .history_title { position: relative; width: 100%; }
+#intro .history_title .blank_box { position: absolute; left: 0; top: 12px; border-bottom:1px solid #e1e1e1; width: 100%; }
+#intro .history_title .box1 { width: 100%; }
+#intro .history_title .box1 h1 { background: #fff; }
+#intro .history_title .box2 { clear: both; padding: 50px 0 0 0; }
+#intro .history_message {font-style: normal; width:100%; }
+#intro .history_message h1 { position: absolute; top: 0; left: 0; z-index: 1; display: block; width: 113px; height: 25px; margin: 0; padding: 0 20px 0 0; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-size: 20px; font-weight: 600; float: left; background: #fff; }
+#intro .history_content {display:inline-block;}
+#intro .history_message h3 {text-align: center; line-height: 26px; font-size: 18px; font-family: "Open Sans"; font-weight: 600; }
+#intro .history_message strong {color: #fa0e0e;}
+#intro .history_detail { max-width:100% }
+#intro .history_detail h4 { font-size: 16px; }
+#intro .history_detail .history_col1,
+#intro .history_detail .history_col2 { float: left; width: 50%; margin-bottom: 85px; }
+
+#intro .history_detail .history-detail-box{display:table; width:100%;}
+#intro .history_detail .history-detail-box dl { margin-bottom: 0; }
+#intro .history_detail .history-detail-box dt, .history-detail-box dd{display:table-cell; vertical-align:top;}
+#intro .history_detail .history-detail-box dt{width:150px; text-align: center;}
+#intro .history_detail .history-detail-box dt > strong{display:block; font-size:36px; line-height:50px; color:#222; font-weight:500; letter-spacing:-0.5px; background:url(/images/content/history_line.jpg) no-repeat right center;}
+#intro .history_detail .history-detail-box dl:first-child dt > strong{color:red;}
+#intro .history_detail .history-detail-box dd{position:relative; padding-bottom:50px;}
+#intro .history_detail .history-detail-box dd:before{position:absolute;top:0;left:0;display:block;content:"";width:1px;height:100%;background-color: black;}
+#intro .history_detail .history-detail-box dl:first-child dd:before{top:18px;}
+#intro .history_detail .history-detail-con{position:relative;}
+#intro .history_detail .history-detail-con > p{*zoom:1;position:relative;padding:11px 0;}
+#intro .history_detail .history-detail-con > p:after{display:block; content:""; clear:both;}
+#intro .history_detail .history-detail-con > p:first-child:before{position:absolute; top:18px; left:-7px; display:inline-block; content:""; width:15px; height:15px; background-color:#fff; border:3px solid red; border-radius:100%; -moz-border-radius:100%; -webkit-border-radius:100%; -o-border-radius:100%;}
+#intro .history_detail .history-detail-con > p b, .history-detail-con > p span{float:left; display:block; line-height:28px;}
+#intro .history_detail .history-detail-con > p b{position:relative; width:180px; text-align:center; font-size:16px; color:#000; letter-spacing:-0.5px; font-weight:500;}
+#intro .history_detail .history-detail-con > p span{width:calc(100% - 180px); font-size:15px; color:#2f2e2e; letter-spacing:-0.25px; font-weight:300;}
+
+/*************************************************************************************************************************
+    회사소개- 회사연혁 - 조직도
+*************************************************************************************************************************/
+#intro .organization .box1 { float:left; width:100%; }
+#intro .organization .box1 .blank_box2 { margin-top: 11px; border-bottom: 1px solid #e1e1e1; width: 100%; text-align: left; }
+#intro .organization .box1 h1 { position:relative; z-index: 1; margin: 0; padding: 0; font-size:40px; font-weight:bold; text-transform: uppercase; text-align: center; background: #fff; }
+#intro .organization .box2 { margin-top: 80px; margin-bottom: 35px; float:left; text-align: center; width:100%; }
+#intro .organization .box2 strong {color: #fa0e0e;}
+#intro .organization .box2 h3 { font-family: "Open Sans"; font-size:18px; font-weight: 600; text-align: center;  }
+#intro .organization img { margin: auto; width: 732px; height:560px; text-align: center;}
+
+/*************************************************************************************************************************
+    회사소개 - 오시는길
+*************************************************************************************************************************/
+#intro .moreinfo { font-family: 'Noto Sans KR', sans-serif !important; float: left; }
+#intro .moreinfo .moreinfo_title { width: 350px; height: 30px; }
+#intro .moreinfo h1 { text-transform: uppercase; font-weight:bold; line-height: 24px; letter-spacing: 1px; font-size: 20px; display: block; float:left; }
+#intro .moreinfo p { text-align:left; font-size: 19px; line-height: 22px;}
+#intro .moreinfo h4 { margin-top: 33px; margin-bottom: 85px;  font-size: 16px; font-weight:bold;}
+#intro .moreinfo .blank_box { border-bottom:1px solid #e1e1e1; width: 105px; height: 11px; float:left; margin-top: 24px; }
+#intro .moreinfo img { margin-right:1rem; margin-bottom: 1rem; max-width: 100%; max-height: 100%; }
+#intro .getconnected { font-family: 'Noto Sans KR', sans-serif !important; margin-top: 100px; margin-bottom: 50px; float: left; width: 730px; height:30px; }
+#intro .getconnected h1 { margin-left:10px; margin-right: 20px; text-transform: uppercase; font-weight:bold; line-height: 24px; letter-spacing: 1px; font-size: 20px; display:inline-block; float:left; }
+#intro .getconnected .blank_box2 { border-bottom:1px solid #e1e1e1; width: 500px; height: 11px; float:left; margin-top: 24px; display:inline-block; }
+
+/****************************************************************************************************************************************************************************************/
+/* 황승민 작업내용 */
+
+
+/*************************************************************************************************************************
+    공용 코드
+*************************************************************************************************************************/
+
+.title { text-align: center; margin: 30px 0; }
+#q_erp .box{ float: left; display: block; margin-bottom: 85px; width: 100%; }
+#q_erp .q_erp_main { width: 530px; height: 370px; float: left; display: block; }
+#q_erp .pdblock{ float: left; padding: 0 15px; display: block; }
+#q_erp .mgblock{ float: left; margin: 0 0 30px 0; }
+#q_erp .txtbox, .imgbox{ width: 50% }
+#q_erp h1, h3{ line-height: 24px; font-size: 20px; margin-top: 0px; }
+#q_erp .container { margin-right: auto; margin-left: auto; }
+#q_erp .icon_wrapper i, .list li.titledesc dl dt i, .services_large a:hover { color:#f00207 }
+#q_erp a, a:link { text-decoration: none; color: #444444; }
+#q_erp a { transition-duration: 0.4s; }
+
+#q_erp .vc_column_container>.vc_column-inner { box-sizing: border-box; padding-left: 15px; padding-right: 15px; width: 100%; }
+#q_erp .block_title.column_title.inner-inline_border { position: relative; float: left; width: 100%; }
+
+#q_erp .wpb_content_element:last-child { margin-bottom: 0; }
+#q_erp .wpb_button, .wpb_content_element, ul.wpb_thumbnails-fluid>li { margin-bottom: 35px; }
+#q_erp .block_title.column_title.inner-inline_border:after { display: block; height: 1px; content: ""; background: #e1e1e1; position: absolute; top: 50%; margin-top: -0.5px; width: 100%; z-index: 1; }
+#q_erp .block_title.column_title.inner-inline_border h1 { background: #fff; z-index: 5; position: relative; padding-right: 20px; width: auto; float: left; }
+#q_erp .belowimage{ width: 338px; height: 226px; }
+#q_erp .aligncenter{ display: block; float: none !important; margin-left: 85px; margin-right: 85px; }
+
+.sub-content-comm-title{padding-bottom:20px;}
+.sub-content-comm-title > p{position:relative; padding-left:37px; font-size:30px; color:#111; font-weight:400; letter-spacing:-0.75px;}
+.sub-content-comm-title p span{
+    font-size: 16px;
+    padding-left: 10px;
+    color: #555;
+}
+.sub-content-comm-title > p:before{
+    position:absolute; top:3.5px; left:19px; display:inline-block; content:""; width:5px; height:24px; background-color:#DC0016;
+    -ms-transform:rotate(10deg); -webkit-transform:rotate(10deg); -moz-transform:rotate(10deg); -o-transform:rotate(10deg); transform:rotate(10deg);
+    border-radius: 15px;
+}
+.box-in-tab {
+    padding: 1rem;
+    border: 5px solid #EBEBEB;
+    min-height: 230px;
+    max-height: 100%;
+}
+.box-in-tab ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+    color: #707070;
+}
+.box-in-tab2 {
+    padding: 2.5rem 1.5rem;
+    border: 1px solid #b9b9b9;
+    min-height: 275px;
+    height: 100%;
+}
+.box-in-tab2 h5 strong:first-child {
+    color: #DC0016;
+    margin-right: 10px;
+}
+.box-in-tab2 p, .p-lightgray p {
+    color: #707070;
+    margin-bottom: 0.2rem;
+}
+.box-in-tab2 p:last-child {
+    margin-bottom: 0;
+}
+.erp_process h5:nth-child(2) {
+     color: #F9474B;
+}
+
+/*************************************************************************************************************************
+    Q-ERP 메인 페이지
+*************************************************************************************************************************/
+
+/* 크기 분할 */
+#q_erp .divide2{ width: 50% }
+#q_erp .divide3{ width: 33.333333% }
+#q_erp .divide4{ width: 25% }
+#q_erp .divide5{ width: 20% }
+#q_erp .divide6{ width: 16.666667% }
+
+/* 큰 크기 아이콘(구축절차) */
+#q_erp .services_large .icon_wrapper { width: 120px; height: 120px; position: relative; left: 50%; margin-left: -60px; background: #fff; transition-duration: 0.4s; }
+#q_erp .services_large:hover .icon_wrapper { background: #f00207;}
+#q_erp .services_large .icon_wrapper i { font-size: 64px; line-height: 120px; float: left; width: 100%; text-align: center; transition-duration: 0.8s; }
+#q_erp .services_large:hover .icon_wrapper i { color: #fff; }
+#q_erp .services_large { text-align: center; }
+#q_erp .services_large .icon_wrapper .top, .services_large .icon_wrapper .right, .services_large .icon_wrapper .bottom, .services_large .icon_wrapper .left { background: #e1e1e1; }
+#q_erp .services_large .icon_wrapper .top { position: absolute; width: 144px; top: 0; left: -12px; height: 1px; }
+#q_erp .services_large .icon_wrapper .left { position: absolute; width: 1px; top: -12px; left: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .right { position: absolute; width: 1px; top: -12px; right: 0px; height: 144px; }
+#q_erp .services_large .icon_wrapper .bottom { position: absolute; width: 144px; bottom: 0; left: -12px; height: 1px; }
+
+/* 버튼 */
+#q_erp .btn-bt.default { text-align: center; cursor: pointer; display: inline-block; outline: 0; position: relative; transition: all .3s ease; transform: translateZ(0); border-width: 2px; border-style: solid; float: left; padding: 10px 38px; border-radius: 3px; }
+#q_erp .btn-bt.default { color: #222; background: rgba(255,255,255, 0.00); border-color: rgba(68,68,68, 0.20); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+#q_erp .btn-bt.default span:hover { position: relative; left: 0; transition: all .3s ease-out; }
+#q_erp .btn-bt.default i{ transform: translateY(-50%); }
+#q_erp .btn-bt.default i{ font-size: 14px; position: absolute; top: 50%; line-height: 20px; margin-top: 1px; left: 73%; -ms-filter: "alpha(Opacity=0)"; filter: alpha(opacity=0); opacity: 0; transition: all .3s ease-out; }
+
+/*************************************************************************************************************************
+    Q-ERP 파생 페이지 (버스, 트럭, 택시)
+*************************************************************************************************************************/
+
+/* 주요기능, 특징 항목 list 요소 */
+#q_erp .list ul { margin: 0; padding: 0; list-style: none; }
+#q_erp .list li.titledesc h6 { font-weight: 600; margin-top: 0; }
+#q_erp .list li.titledesc dl dt { width: 45px; height: 45px; border-radius: 50%; }
+#q_erp .list li.titledesc dl dt .circle { width: 36px; height: 36px; border-radius: 50%; float: left; margin-left: 2px; margin-top: 2px; border: 1px solid #e7e7e7; }
+#q_erp .list li.titledesc dl dt i { font-size: 16px; text-align: center; width: 100%; line-height: 36px; float: left; }
+#q_erp .list li.titledesc dl dd { margin-left: 50px; }
+#q_erp dt, dd { line-height: 20px; }
+#q_erp .dl-horizontal dt { float: left; width: 45px; height: 45px; overflow: hidden; clear: left; text-align: right; text-overflow: ellipsis; white-space: nowrap; font-weight: bold;}
+
+/* 제목 구분선- 한줄, 두줄 */
+#q_erp .vc_separator h4 { line-height: 1em; font-size: 100%; margin: 0; padding: 0 .8em 0 0; word-wrap: break-word; flex: 0 1 auto; font-weight: 600; display: block; float: left; }
+#q_erp .vc_separator .vc_sep_holder { height: 1px; position: relative; -webkit-box-flex: 1; -webkit-flex: 1 1 auto; -ms-flex: 1 1 auto; flex: 1 1 auto; min-width: 10%; }
+#q_erp .vc_separator .vc_sep_color_grey .vc_sep_line { border-color: #EBEBEB }
+#q_erp .vc_separator.vc_sep_double .vc_sep_line { border-bottom: 1px solid #EBEBEB; border-top: 1px solid #EBEBEB; height: 5px; }
+#q_erp .vc_separator .vc_sep_holder .vc_sep_line { display: block; position: relative; top: 1px; width: 100%; }
+#q_erp .vc_separator.vc_sep_double { height: 3px; }
+#q_erp .vc_sep_pos_align_center { margin-left: auto; margin-right: auto; }
+#q_erp .vc_sep_width_100, .wpb_single_image img.vc_img-placeholder { width: 100%; }
+#q_erp .vc_separator { display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; flex-direction: row; flex-wrap: nowrap; -webkit-box-align: center; align-items: center; }
+#q_erp .vc_separator.vc_separator_align_left .vc_sep_holder.vc_sep_holder_l, .vc_separator.vc_separator_align_right .vc_sep_holder.vc_sep_holder_r { display: none; }
+
+
+/* 황승민 작업내용 끝 */
+/****************************************************************************************************************************************************************************************/
+
+
+/*************************************************************************************************************************
+    사업분야 - 플랫폼
+*************************************************************************************************************************/
+#platform #platform_head { clear: both; max-width: 1100px; height: 440px; margin: 0; padding: 0; }
+#platform #platform_head .platform_head { float:left; width:520px; margin-right:30px; font-size:13px; }
+#platform #platform_head .platform_head img { max-width: 100%; height: auto; }
+#platform .inner-inline_border { clear: both; position: relative; width:100%; margin-bottom: 30px; height:20px; }
+#platform .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: 1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+#platform .textbox1 {  }
+#platform .textbox1 p { font-size: 14px; color: #000; font-style:normal; line-height:20px; font-weight: 400; }
+#platform .textbox2 {  }
+#platform .textbox2 h3 { margin-top: 55px; }
+#platform .textbox2 p {  font-size: 14px; color: #000; font-style:normal; line-height:20px; font-weight: 400; }
+#platform #platform_head .btn-bt.default { text-align: center; cursor: pointer; display: inline-block; outline: 0; position: relative; border-width: 2px; border-style: solid; float: left; padding: 10px 38px; border-radius: 3px; color: #222; background: rgba(255,255,255, 0.00); border-color: rgba(68,68,68, 0.20); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 25px; margin-right: 20px;}
+#platform #platform_head .btn-bt.default:hover { text-decoration: none; }
+
+#platform .function { clear: both; width: 100%; }
+#platform .function .fnc-box { clear: both; width: 100%; height: 410px; padding: 30px 0 20px 0; border-bottom: solid 1px #e1e1e1; }
+#platform .function .fnc-box.last { border-bottom: none; }
+#platform .function .fnc-box img { float: left; width: 650px; height: 350px; margin: 0 20px 0 0; }
+#platform .function .fnc-box .text-box { float: left; width: 430px; height: 350px; }
+#platform .function .fnc-box .text-box h1 { font-size:16px; margin: 0 0 20px 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222; }
+#platform .function .fnc-box .text-box strong { padding: 0 0 0 10px; font-size: 14px; }
+#platform .function .fnc-box .text-box p { padding: 5px 0 0 20px; font-size: 14px; color: #000; font-style: normal; line-height: 20px; font-weight: 400; }
+
+#platform #platform_body { width: 1100px; height: 302px; margin: 0 0 100px 0; padding: 0; }
+#platform #platform_body img { clear: both; display: block; width: 596px; height: 302px; margin: 0 250px; }
+
+#platform #platform_tail { clear: both; margin: 0 0 70px 0 ; }
+#platform .inner-inline_border h1,
+#platform .inner-list-title h5 { font-size:14px; margin-top:0px; position: absolute; top: 0; left: 0; z-index: 998; padding: 0 20px 0 0; margin: 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222;}
+
+#platform #platform_pic_outer { clear: both; margin: 50px 0 70px 0; }
+#platform .platform_pic { float:left; width: 520px; margin: 0; padding: 0 15px; }
+#platform .platform_pic a { display: block; height: 250px; text-decoration: none; margin: 0; padding: 0;  }
+#platform .platform_pic a img { width: 300px; height: 210px; margin: 0 110px; }
+#platform .platform_pic a strong { clear: both; display: block; width: 300px; margin: 0 110px; text-align: center; color: #f00207; }
+
+#platform_tail .circle { width:36px; height:36px; border: 1px solid #e7e7e7; border-radius: 50%; float:left; text-align:center;}
+#platform_tail .circle i {line-height:35px; font-size: 16px; width:100%; float:left; color: red;}
+
+#platform #platform_tail h6 { margin-top: 0px; font-size:14px; font-weight:600; line-height: 20px; }
+#platform #platform_tail h4 { padding: 40px 0 30px 0; }
+
+#platform .inner-list-title {position: relative; width:100%; margin-bottom: 30px; height:20px !important;}
+#platform .inner-list-title .line {position:absolute; top: 0; left: 0; z-index: 1; display:block; width:100%; height:11px; border-bottom: double 5px #e1e1e1;}
+
+#platform #platform_tail .function-list { }
+#platform #platform_tail ul { list-style:none; margin: 0 0 0 25px; padding: 0; }
+#platform #platform_tail ul li { float:left; width: 300px; margin: 0 25px; }
+#platform #platform_tail ul li div { width: 300px; height:150px; margin: 0; }
+#platform #platform_tail ul li div h1 { display: block; text-align: center; margin: 0; padding: 0; font-size: 16px; }
+#platform #platform_tail ul li div h1 span { color: red; }
+#platform #platform_tail ul li div.text-box { text-align: center; padding: 15px 0 0 0px; }
+
+
+/*************************************************************************************************************************
+    사업분야 - ADAS
+*************************************************************************************************************************/
+#adas_head {height:400px;}
+.adas_head,
+.adas_tail_detail { height:auto; font-size:13px;}
+.adas_head img { max-width: 100%; max-height: 100%; }
+.adas_head h1,
+#adas_tail h1 { font-size:20px; font-style:normal;}
+.adas_head p {color: #777; line-height:20px; font-weight:400; font-style:normal; font-size:13px; margin-top: 20px;}
+
+#adas_body { }
+#adas_body h3 { font-size:18px; margin-top:20px;}
+#adas_body #hm310_img { height:90px; margin:25px 0;}
+#adas_spec { height:500px; font-size:13px; padding: 0 7px 0 7px;}
+#adas_movie { height:500px; font-size:13px; padding: 0 7px 0 7px;}
+#adas_spec table { }
+#adas_spec table tr td{ }
+#adas_movie #movie {margin-top: 30px;}
+
+#adas_tail {margin:100px 0 70px 0 ;}
+#adas_tail h4 { padding: 40px 0 30px 0;}
+#adas_tail .inner-inline_border h1 { display: block; width: 90px; height: 20px; background: #fff; }
+#adas_tail .inner-inline_border { clear: both; position: relative; width:100%; margin-bottom: 30px; height:20px; }
+#adas_tail .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: -1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+#adas_tail .category-3 ul li div {width:334px; height:150px; padding: 0 15px 0 15px; text-align:center;}
+#adas_tail ul {list-style:none; }
+#adas_tail ul li {float:left; padding: 0px 5px 0px 2px; color:#777;}
+#adas_tail ul li p {text-align:center;}
+#adas_tail .adas_tail_detail {height:300px;}
+
+#adas_tail .function { clear: both; width: 100%; }
+#adas_tail .function .fnc-box { clear: both; width: 100%; height: 310px; padding: 20px 0 10px 0; border-bottom: solid 1px #e1e1e1; }
+#adas_tail .function .fnc-box.last { border-bottom: none; }
+#adas_tail .function .fnc-box img { float: left; width:100%; max-height: 100%; }
+#adas_tail .function .fnc-box .text-box { float: left; width: 630px; height: 310px; }
+#adas_tail .function .fnc-box .text-box h1 { font-size:16px; margin: 0 0 20px 0; background: #fff; text-align: left; text-transform: uppercase; line-height: 24px; letter-spacing: 1px; font-weight: 600; color: #222; }
+#adas_tail .function .fnc-box .text-box strong { padding: 0 0 0 10px; font-size: 14px; }
+#adas_tail .function .fnc-box .text-box p { padding: 5px 0 0 20px; font-size: 14px; color: #000; font-style: normal; line-height: 20px; font-weight: 400; }
+
+/*************************************************************************************************************************
+    사업분야 - AVM
+*************************************************************************************************************************/
+#avm_head {height:400px;}
+.avm_head, .avm_detail { height:auto; font-size:13px;}
+.avm_head img { max-width: 100%; max-height: 100%; }
+.avm_head p {color: #777; line-height:20px; font-weight:400; font-style:normal; font-size:13px; margin-top: 20px;}
+
+.avm_head h1 { font-size:20px; font-style:normal;}
+
+#avm_body { }
+#avm_body h3 { font-size:18px; margin-top:55px;}
+#avm_body #hnd-avm_img { max-width: 100%; max-height: 100%;  float:left; margin-top:80px;}
+#avm_spec,
+#avm_movie {float:left; width:550px; height:500px; font-size:13px; padding: 0 7px 0 7px;}
+#avm_spec ul {width:360px; height:300px; float:right; margin: 50px 30px 0 0; color:#777;}
+#avm_spec ul li {line-height:20px; font-size:13px;}
+#avm_movie #movie {margin-top: 30px;}
+
+#avm_tail { }
+#avm_tail .avm_detail { height: 250px; }
+#avm_tail p {text-align:unset;}
+#avm_tail h1 {font-size:20px; }
+#avm_tail h3 {font-size:18px; }
+#avm_tail .avm_detail h4 {margin:0; padding:0;}
+#avm_tail .avm_detail ul {padding:0;}
+
+#avm_tail .avm_detail ul li {float:none; height:55px; margin:20px 0 40px 0; list-style:none;}
+#avm_tail .avm_detail ul li i {font-size: 34px;}
+#avm_tail .avm_detail ul li div {float:left;}
+#avm_tail .avm_detail .icon_div {width:50px;}
+#avm_tail .avm_detail .text_div {width:450px; padding-top:10px;}
+#avm_tail .avm_detail .text_div h4{margin-bottom: 10px;}
+#avm_tail .function-list {}
+
+#avm_tail .category-3 { clear: both; }
+#avm_tail .category-3 ul li div {width:334px; height:50px; padding: 0 15px 0 15px; text-align:center;}
+#avm_tail .category-3 ul {list-style:none; }
+#avm_tail .category-3 ul li {float:left; padding: 0px 5px 0px 2px; color:#777; text-align:unset;}
+#avm_tail .category-4 { clear: both; height: 500px; margin: 0 0 50px 0; padding: 30px 0; }
+#avm_tail .category-4 .cg4 { width: 600px; margin: 0 auto; padding: 0 25px; }
+#avm_tail .category-4 .cg4 h4 { text-align: center; margin: 40px 0; }
+#avm_tail .category-4 .cg4 h4 strong { color: #E83B2B; }
+#avm_tail .category-4 .cg4 .fnc-box {  }
+#avm_tail .category-4 .cg4 .fnc-box img { display: block; float: left; width: 200px; height: 400px; margin: 0 30px 30px 0; }
+#avm_tail .category-4 .cg4 .fnc-box .text-box { display: block; float: left; width: 300px; padding: 0 0 0 10px; }
+#avm_tail .category-4 .cg4 .fnc-box .text-box p { padding: 0 0 0 10px; }
+
+
+#avm_tail .inner-inline_border h1 { display: block; width: 120px; height: 20px; background: #fff; }
+#avm_tail .inner-inline_border { clear: both; position: relative; width:100%; margin-bottom: 30px; height:20px; }
+#avm_tail .inner-inline_border .line { position:absolute; top: 0; left: 0; z-index: -1; display:block; width:100%; height:11px; border-bottom: solid 1px #e1e1e1; }
+
+/*************************************************************************************************************************
+    사업분야 - 스마트 팩토리
+*************************************************************************************************************************/
+
+#s_factory .box{ float: left; display: block; margin-bottom: 85px; width: 100%; }
+#s_factory .s_factory_main { width: 530px; height: 370px; float: left; display: block; }
+#s_factory .pdblock{ float: left; padding: 0 15px; display: block; }
+#s_factory .mgblock{ float: left; margin: 0 0 30px 0; }
+#s_factory .txtbox, .imgbox{ width: 50% }
+#s_factory h1, h3{ line-height: 24px; font-size: 20px; margin-top: 0px; }
+#s_factory .container { margin-right: auto; margin-left: auto; }
+#s_factory .icon_wrapper i, .list li.titledesc dl dt i, .services_large a:hover { color:#f00207 }
+/*#s_factory a, a:link { text-decoration: none; color: #444444; }*/
+#s_factory a { transition-duration: 0.4s; }
+
+#s_factory .vc_column_container>.vc_column-inner { box-sizing: border-box; padding-left: 15px; padding-right: 15px; width: 100%; }
+#s_factory .block_title.column_title.inner-inline_border { position: relative; float: left; width: 100%; }
+
+#s_factory .wpb_content_element:last-child { margin-bottom: 0; }
+#s_factory .wpb_button, .wpb_content_element, ul.wpb_thumbnails-fluid>li { margin-bottom: 35px; }
+#s_factory .block_title.column_title.inner-inline_border:after { display: block; height: 1px; content: ""; background: #e1e1e1; position: absolute; top: 50%; margin-top: -0.5px; width: 100%; z-index: 1; }
+#s_factory .block_title.column_title.inner-inline_border h1 { background: #fff; z-index: 5; position: relative; padding-right: 20px; width: auto; float: left; }
+#s_factory .belowimage{ width: 338px; height: 226px; }
+#s_factory .aligncenter{ display: block; float: none !important; margin-left: 85px; margin-right: 85px; }
+#s_factory .section_clear .w-819{ width: 819px; }
+
+/* 크기 분할 */
+#s_factory .divide2{ width: 50% }
+#s_factory .divide3{ width: 33.333333% }
+#s_factory .divide4{ width: 25% }
+#s_factory .divide5{ width: 20% }
+#s_factory .divide6{ width: 16.666667% }
+
+/* 큰 크기 아이콘(구축절차) */
+#s_factory .services_large .icon_wrapper { width: 120px; height: 120px; position: relative; left: 50%; margin-left: -60px; background: #fff; transition-duration: 0.4s; }
+#s_factory .services_large:hover .icon_wrapper { background: #f00207;}
+#s_factory .services_large .icon_wrapper i { font-size: 64px; line-height: 120px; float: left; width: 100%; text-align: center; transition-duration: 0.8s; }
+#s_factory .services_large:hover .icon_wrapper i { color: #fff; }
+#s_factory .services_large { text-align: center; }
+#s_factory .services_large .icon_wrapper .top, .services_large .icon_wrapper .right, .services_large .icon_wrapper .bottom, .services_large .icon_wrapper .left { background: #e1e1e1; }
+#s_factory .services_large .icon_wrapper .top { position: absolute; width: 144px; top: 0; left: -12px; height: 1px; }
+#s_factory .services_large .icon_wrapper .left { position: absolute; width: 1px; top: -12px; left: 0px; height: 144px; }
+#s_factory .services_large .icon_wrapper .right { position: absolute; width: 1px; top: -12px; right: 0px; height: 144px; }
+#s_factory .services_large .icon_wrapper .bottom { position: absolute; width: 144px; bottom: 0; left: -12px; height: 1px; }

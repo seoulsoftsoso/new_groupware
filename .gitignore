@@ -14,4 +14,3 @@ __pycache__/
 data/
 log/
 uwsgi.ini
-static/

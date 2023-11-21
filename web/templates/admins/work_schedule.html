@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    {% include 'admins/admin_header.html' %}
+</head>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+       {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+
+            <!-- 근태관리(데이터 테이블) -->
+              <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px">
+                <h5 class="card-header">근태 관리</h5>
+                 <!--Search Form -->
+                <div class="card-body">
+                  <form class="dt_adv_search" method="POST">
+                    <div class="row">
+                      <div class="col-12">
+                          <div class="row g-3" style="margin-left: 800px;">
+
+                              <div class="col-md-6 col-12 mb-4" style="margin-top: 30px; width: 100%; height: 40px; display: flex; flex-direction: row;">
+                                  <div class="input-group input-daterange" id="bs-datepicker-daterange" style="width: 500px">
+                                      <input type="date" id="dateRangePicker" placeholder="시작 날짜"
+                                             class="form-control"/>
+                                      <span class="input-group-text">to</span>
+                                      <input type="date" placeholder="끝 날짜" class="form-control"/>
+                                  </div>
+                                  <div style="width: 200px; display: flex; flex-direction: row; margin-left: 10px">
+                                      <input type="text" placeholder="성명" class="form-control"/>
+                                      <button class="btn btn-primary btn-compose" data-bs-toggle="modal"
+                                              style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;" >검색
+                                      </button>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                  <!--Search form-->
+                <div class="card-datatable table-responsive">
+                  <table class="dt-multilingual table border-top">
+                    <thead>
+                    <tr style="text-align: center; width: auto; height: auto; background-color: lightgray;">
+                        <!-- 각 <th> 태그에 스타일을 추가하여 글자 크기를 조절 -->
+                        <th style="font-size: medium; font-weight: bold">근무일자</th>
+                        <th style="font-size: medium; font-weight: bold">성명</th>
+                        <th style="font-size: medium; font-weight: bold">직급</th>
+                        <th style="font-size: medium; font-weight: bold">부서</th>
+                        <th style="font-size: medium; font-weight: bold">출근시간</th>
+                        <th style="font-size: medium; font-weight: bold">퇴근시간</th>
+                        <th style="font-size: medium; font-weight: bold">근무시간</th>
+                        <th style="font-size: medium; font-weight: bold">연장근로</th>
+                        <th style="font-size: medium; font-weight: bold">지각시간</th>
+                        <th style="font-size: medium; font-weight: bold">조퇴시간</th>
+                        <th style="font-size: medium; font-weight: bold">출근IP</th>
+                        <th style="font-size: medium; font-weight: bold">퇴근IP</th>
+                    </tr>
+                      <tr style="text-align: center">
+                        <td>2023.11.17</td>
+                        <td>홍재성</td>
+                        <td>프로</td>
+                        <td>SW개발센터</td>
+                        <td>09:00</td>
+                        <td>18:00</td>
+                        <td>08:00</td>
+                        <td>00:00</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>127.0.0.1</td>
+                        <td>127.0.0.1</td>
+                    </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <!--/ Multilingual -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+    {% include 'admins/admin_footer.html' %}
+</html>
