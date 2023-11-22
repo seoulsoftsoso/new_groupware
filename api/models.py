@@ -191,6 +191,7 @@ class BoardMaster(models.Model):
     updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='board_up_user_by',
                                    verbose_name='수정자')
     updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
+    boardcode = models.ForeignKey('CodeMaster', models.CASCADE, related_name='board_code', verbose_name='게시판구분')
 
 
 class FileBoardMaster(models.Model):
