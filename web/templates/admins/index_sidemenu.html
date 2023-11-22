@@ -1,4 +1,13 @@
 {% load static %}
+<style>
+   #change_clr:hover,
+   #change_clr:focus {
+       background-color: #9da8b5;
+   }
+   #change_clr:active {
+       background-color: #9da8b5;
+   }
+</style>
 <body>
      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo" style="margin-left: 25px; margin-bottom: 10px; ">
@@ -43,58 +52,98 @@
                      <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px"></div>
                 </div>
                 <div class="menu-inner-shadow"></div>
-                <ul class="menu-inner py-1">
+                <ul class="menu-inner py-1 ps">
                     <li class="menu-item" style="margin-top: 30px; width: 100%;">
-                        <a href="{% url 'adminNotice' %}" class="menu-link" style="display: block; text-align: left; margin-left: -10px" id="change_clr">
-                            <div class="text-truncate" data-i18n="Page 1"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px">공지사항</div>
+                        <a href="{% url 'adminNotice' %}" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"> <!-- Font Awesome bell icon -->
+                                <span data-i18n="공지사항">공지사항</span>
+                            </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/wpf_note.png' %}" style="margin-right: 8px">게시판</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="width: 150px; margin-top: 10px;">
-                        <a href="{% url 'adminWorkSchedule' %}" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div class="text-truncate" data-i18n="Page 1"><img src="{% static 'admin/img/indexImg/ic_outline-work-history.png'%}" style="margin-right: 8px">근태관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/icon-park-outline_vacation.png'%}" style="margin-right: 8px">휴가관리</div>
-                        </a>
-                    </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/material-symbols_business-center-outline.png' %}" style="margin-right: 8px">출장관리</div>
+                     <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="{% url 'adminBoard' %}" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/wpf_note.png' %}" style="margin-right: 8px">
+                                <span data-i18n="게시판">게시판</span>
+                            </div>
                         </a>
                     </li>
                     <li class="menu-item" style="margin-top: 10px; width: 100%;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/ri_car-line.png' %}" style="margin-right: 8px">법인차량관리</div>
+                        <a href="{% url 'adminWorkSchedule' %}" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/ic_outline-work-history.png'%}" style="margin-right: 8px">
+                                <span data-i18n="근태관리">근태관리</span>
+                            </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/uil_calender.png' %}" style="margin-right: 8px">캘린더</div>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/icon-park-outline_vacation.png'%}" style="margin-right: 8px">
+                                <span data-i18n="휴가관리">휴가관리</span>
+                            </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/lets-icons_paper-alt.png' %}" style="margin-right: 8px">전자결재</div>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/material-symbols_business-center-outline.png' %}" style="margin-right: 8px">
+                                <span data-i18n="출장관리">출장관리</span>
+                            </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px;">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/ph_floppy-disk-bold.png' %}" style="margin-right: 8px">자료실</div>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/ri_car-line.png' %}" style="margin-right: 8px">
+                                <span data-i18n="법인차량관리">법인차량관리</span>
+                            </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 150px; margin-bottom: 30px">
-                        <a href="" class="menu-link" style="display: block; text-align: left; margin-left: -10px;" id="change_clr">
-                            <div data-i18n="Basic"><img src="{% static 'admin/img/indexImg/icon-park-outline_system.png' %}" style="margin-right: 8px">조직관리</div>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/uil_calender.png' %}" style="margin-right: 8px">
+                                <span data-i18n="캘린더">캘린더</span>
+                            </div>
                         </a>
                     </li>
-                </ul>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/lets-icons_paper-alt.png' %}" style="margin-right: 8px">
+                                <span data-i18n="전자결재">전자결재</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/ph_floppy-disk-bold.png' %}" style="margin-right: 8px">
+                                <span data-i18n="자료실">자료실</span>
+                            </div>
+                        </a>
+                    </li>
+	                <li class="menu-item" style="margin-top: 10px; margin-bottom: 30px; width: 100%;">
+                        <a href="" class="menu-link"
+                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                            <div class="text-truncate">
+                                <img src="{% static 'admin/img/indexImg/icon-park-outline_system.png' %}" style="margin-right: 8px">
+                                <span data-i18n="조직관리">조직관리</span>
+                            </div>
+                        </a>
+                    </li>
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 4px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
             </nav>
      </aside>
 </body>

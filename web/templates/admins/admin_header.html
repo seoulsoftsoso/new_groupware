@@ -1,6 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
 
@@ -24,21 +22,17 @@
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/fonts/flag-icons.css' %}"/>
 
     <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/core.css' %}"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/theme-default.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/core.css' %}" class="template-customizer-core-css"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/css/demo.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/core.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/theme-default.css' %}"/>
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/typeahead-js/typeahead.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/select2/select2.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/typography.css' %}" />
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}" />
+
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/@form-validation/umd/styles/index.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/apex-charts/apex-charts.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
@@ -49,25 +43,15 @@
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/pickr/pickr-themes.css' %}" />
 
 
-    <!-- Page CSS -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/pages/app-calendar.css' %}"/>
+
     <!-- Helpers -->
     <script src="{% static 'sneat/assets/vendor/js/helpers.js' %}"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static 'sneat/assets/js/config.js' %}"></script>
 
-<style>
-   #change_clr:hover,
-   #change_clr:focus {
-       background-color: #9da8b5;
-   }
-   #change_clr:active {
-       background-color: #9da8b5;
-   }
-</style>
+
 </head>
 <body>
 
 </body>
-</html>

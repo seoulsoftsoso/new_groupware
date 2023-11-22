@@ -1,26 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+
     {% include 'admins/admin_header.html' %}
 
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
-
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/core.css' %}"
-          class="template-customizer-core-css"/>
-    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/theme-default.css' %}"
-          class="template-customizer-theme-css"/>
+
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/core.css' %}" class="template-customizer-core-css"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/rtl/theme-default.css' %}" class="template-customizer-theme-css"/>
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/typography.css' %}"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
+
 
 
 </head>
@@ -36,120 +32,92 @@
         <div class="layout-page" style="">
             {% include 'admins/index_header.html' %}
 
-
-            <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px; height: 100%;">
-                <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0"
-                     style="margin-bottom: -30px">
-                    <div class="mb-xl-0 mb-4" style="height: auto; margin-top: 30px">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-
-                            <div class="d-flex justify-content-end" style="margin-bottom: 30px;">
-                                <!--상단공지등록-->
-                                <div style="margin-right: 30px; margin-top: 8px; ">
-                                    <span>상단공지등록</span>
-                                    <label class="switch switch-danger" style="margin-right: 30px;">
-                                        <input type="checkbox" class="switch-input">
-                                        <span class="switch-toggle-slider">
-                                            <span class="switch-on">
-                                                <i class="bx bx-check"></i>
-                                            </span>
-                                            <span class="switch-off">
-                                                <i class="bx bx-x"></i>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <!--임시저장-->
-                                <button type="button" class="btn btn-label-secondary" style="margin-right: 20px;">임시 저장</button>
-                                <!--글 작성-->
-                                <button type="button" class="btn btn-label-secondary">글 작성</button>
-                            </div>
-
-                            <!-- 제목 입력 필드 -->
-                            <div class="form-group">
-                                <div style="display: flex; margin-bottom: 30px;">
-                                    <label for="defaultFormControlInput" class="form-label"
-                                           style="font-size: large; width: auto; margin-right: 40px; margin-top: 7px">제
-                                        목</label>
-                                    <input type="text" class="form-control" id="defaultFormControlInput"
-                                           placeholder="제목을 입력해주세요" aria-describedby="defaultFormControlHelp"
-                                           style="width: 90%;">
-                                </div>
-                            </div>
-                            <!-- 파일 첨부 필드 -->
-                            <!-- Content wrapper -->
+            <!-- Content -->
 
 
-                            <div style="width: auto; display: flex; margin-bottom: 30px;">
-                                <label for="defaultFormControlInput" class="form-label"
-                                       style="font-size: large; margin-right: 40px; margin-top: 7px">파일첨부</label>
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <h4 class="py-3 mb-4"><span class="text-muted fw-light">Forms /</span> File upload</h4>
 
-                                <div class="row">
+                <div class="row">
+                    <!-- Multi  -->
+                    <div class="col-12">
+                        <div class="card">
+                            <h5 class="card-header">파일첨부</h5>
+                            <div class="card-body">
+                                <form action="/upload" class="dropzone needsclick" id="dropzone-multi">
 
-                                    <!-- Multi  -->
-                                    <div class="col-12">
-                                        <div class="card" style="">
-                                            <div class="card-body" style="border: 2px dashed #d9dee3; width: 1300px">
-                                                <form action="/upload" class="dropzone needsclick" id="dropzone-multi">
-                                                    <div class="dz-message needsclick" style="color: lightgrey">
-                                                        이곳에 파일을 올려주세요.
+                                    <!-- 제목 필드 -->
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">제목</label>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                               placeholder="제목을 입력하세요">
+                                    </div>
+
+                                    <div class="dz-message needsclick" style="border: lightgrey dashed 2px;">
+                                        Drop files here or click to upload
+                                        <span class="note needsclick">(This is just a demo dropzone. Selected files are <span
+                                                class="fw-medium">not</span> actually uploaded.)</span>
+                                    </div>
+                                    <div class="fallback">
+                                        <input name="file" type="file"/>
+                                    </div>
+
+                                    <!-- Content wrapper -->
+                                    <div class="content-wrapper">
+
+
+                                        <!-- Content -->
+                                        <div class="container-xxl flex-grow-1 container-p-y">
+                                            <h4 class="py-3 mb-4"><span class="text-muted fw-light">Forms /</span>
+                                                Editors</h4>
+
+                                            <div class="row">
+
+                                                <!-- Full Editor -->
+                                                <div class="col-12">
+                                                    <div class="card">
+                                                        <h5 class="card-header">Full Editor</h5>
+                                                        <div class="card-body">
+                                                            <div id="full-editor">
+
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="fallback">
-                                                        <input name="file" placeholder="이곳에 파일을 올려주세요" type="file"/>
-                                                    </div>
-                                                </form>
+                                                </div>
+                                                <!-- /Full Editor -->
+
+
                                             </div>
                                         </div>
+                                        <!-- / Content -->
+
+
+
                                     </div>
-                                    <!-- Multi  -->
-                                </div>
+                                </form>
                             </div>
-                            <!-- / Content -->
 
-                            <div id="summernote" style="margin-top: 50px;"></div>
-                            <script>
-                                $(document).ready(function () {
-                                    $('#summernote').summernote({
-                                        placeholder: '내용을 입력해주세요.',
-                                        width: 1550,
-                                        height: 500,
-                                        minHeight: 500,
-                                        maxHeight: 500,
-                                        lang: 'ko-KR',
-                                        toolbar: [
-                                            ['style', ['style']],
-                                            ['font', ['bold', 'underline', 'clear']],
-                                            ['color', ['color']],
-                                            ['para', ['ul', 'ol', 'paragraph']],
-                                            ['table', ['table']],
-                                            ['insert', ['link', 'picture', 'video']],
-                                            ['view', ['fullscreen', 'help']]
-                                        ]
-                                    });
-                                });
-                            </script>
-
-                        </form>
+                        </div>
                     </div>
+                    <!-- / Content -->
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
-
 <!-- Vendors JS -->
 <script src="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+</body>
+{% include 'admins/admin_footer.html' %}
+
+
+
+<script src="{% static 'sneat/assets/vendor/libs/quill/katex.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/quill/quill.js' %}"></script>
+
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/forms-file-upload.js' %}"></script>
-</body>
-
-
+<script src="{% static 'sneat/assets/js/forms-editors.js' %}"></script>
 </html>

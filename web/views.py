@@ -43,6 +43,18 @@ def amdin_noticewrite_page(request):
     return render(request, 'admins/notice_write.html')
 
 
+def amdin_noticedetail_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/notice_detail.html')
+
+
+def amdin_board_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/board.html')
+
+
 def login_page(request):
     return render(request, 'login.html', {})
 

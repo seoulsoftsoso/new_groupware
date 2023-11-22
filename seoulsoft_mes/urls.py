@@ -137,6 +137,8 @@ urlpatterns = [
                   path('admins/work_schedule/', admin_work_schedule_page, name="adminWorkSchedule"),
                   path('admins/notice', admin_notice_page, name="adminNotice"),
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWrite"),
+                  path('admins/notice/detail', amdin_noticedetail_page, name="noticeDetail"),
+                  path('admins/board', amdin_board_page, name="adminBoard"),
 
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),

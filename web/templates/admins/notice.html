@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     {% include 'admins/admin_header.html' %}
@@ -32,13 +32,13 @@
                     <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0" style="margin-bottom: -30px">
                         <div class="mb-xl-0 mb-4">
                             <div class="d-flex svg-illustration mb-3 gap-2">
-                                <span class="app-brand-text demo text-body fw-bold">공지사항 홈</span>
+                                <strong style="font-size: x-large;">공지사항 홈</strong>
                             </div>
                         </div>
                     </div>
                     <div style="margin-left: 94em; margin-bottom: 20px;">
                         <a href="{% url 'noticeWrite' %}">
-                            <button type="button" class="btn btn-label-secondary" style="width: 150px;">글쓰기</button>
+                            <button type="button" class="btn btn-label-secondary" style="width: 120px;">글쓰기</button>
                         </a>
                     </div>
 
@@ -57,7 +57,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
+                             <tr style="cursor: pointer;" onclick="window.location='{% url 'noticeDetail' %}'">
                                 <td style="color: red"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
                                 <td style="color: red">HTML Admin Template</td>
                                 <td style="color: red">$32</td>
@@ -67,7 +67,7 @@
                             </tr>
                             <tr>
                                 <td style="color: red"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
-                                <td style="color: red">Angular Admin Template</td>
+                                <td style="color: red"><a href="" style="color: red">Angular Admin Template</a></td>
                                 <td style="color: red">$22</td>
                                 <td style="color: red">2023-11-20 17:00:20</td>
                                 <td style="color: red">$22.00</td>
