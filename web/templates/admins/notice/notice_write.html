@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+
+{% include 'admins/admin_header.html' %}
+
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/typography.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}"/>
+
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        {% include 'admins/index_sidemenu.html' %}
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="row">
+                        <!-- Full Editor -->
+                        <div class="col-12">
+                            <div class="card">
+                             <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">공지사항 글쓰기</strong>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
+                                    <label class="switch switch-danger" style="margin-right: 60px; margin-top: 8px;">
+                                        <input type="checkbox" class="switch-input">
+                                        <span class="switch-label">상단공지등록</span>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on">
+                                                <i class="bx bx-check"></i>
+                                            </span>
+                                            <span class="switch-off">
+                                                <i class="bx bx-x"></i>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <button type="button" class="btn btn-label-secondary" style="margin-right: 20px;">임시저장</button>
+                                    <button type="button" class="btn btn-label-secondary">작성완료</button>
+                                </div>
+                                <!--제목 필드-->
+                                <h5 class="card-header">제목</h5>
+                                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp" style="width: 97%; margin-left: 20px;">
+                                <!--내용 필드-->
+                                <h5 class="card-header" style="margin-top: 30px;">내용</h5>
+                                <div class="card-body">
+                                    <div id="full-editor">
+                                        <!--내용 입력-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Full Editor -->
+
+
+                        <!-- Multi  -->
+                        <div class="col-12" style="margin-top: 30px;">
+                            <div class="card">
+                                <h5 class="card-header">Multiple</h5>
+                                <div class="card-body">
+                                    <form action="#" class="dropzone needsclick" id="dropzone-multi">
+                                        <div class="dz-message needsclick" style="color: lightgrey; font-size: large">
+                                            이 곳에 파일을 올려주세요.
+                                        </div>
+                                        <div class="fallback">
+                                            <input name="file" type="file"/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Multi  -->
+
+                    </div>
+                </div>
+                <!-- / Content -->
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<!-- Vendors JS -->
+<script src="{% static 'sneat/assets/vendor/libs/quill/katex.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/quill/quill.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+
+
+<!-- Page JS -->
+<script src="{% static 'sneat/assets/js/forms-editors.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-file-upload.js' %}"></script>
+</html>

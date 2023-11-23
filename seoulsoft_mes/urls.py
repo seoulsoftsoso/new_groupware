@@ -139,6 +139,8 @@ urlpatterns = [
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWrite"),
                   path('admins/notice/detail', amdin_noticedetail_page, name="noticeDetail"),
                   path('admins/board', amdin_board_page, name="adminBoard"),
+                  path('admins/board/write', admin_boardwrite_page, name="boardWrite"),
+
 
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),

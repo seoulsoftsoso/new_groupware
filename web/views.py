@@ -14,7 +14,6 @@ from api.board import SignUpForm, QuestionForm
 from api.models import UserMaster
 
 
-
 def index(request):
     return render(request, 'index.html', {})
 
@@ -34,25 +33,31 @@ def admin_work_schedule_page(request):
 def admin_notice_page(request):
     context = {}
     context['block'] = ''
-    return render(request, 'admins/notice.html')
+    return render(request, 'admins/notice/notice.html')
 
 
 def amdin_noticewrite_page(request):
     context = {}
     context['block'] = ''
-    return render(request, 'admins/notice_write.html')
+    return render(request, 'admins/notice/notice_write.html')
 
 
 def amdin_noticedetail_page(request):
     context = {}
     context['block'] = ''
-    return render(request, 'admins/notice_detail.html')
+    return render(request, 'admins/notice/notice_detail.html')
 
 
 def amdin_board_page(request):
     context = {}
     context['block'] = ''
-    return render(request, 'admins/board.html')
+    return render(request, 'admins/board/board.html')
+
+
+def admin_boardwrite_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/board/board_write.html')
 
 
 def login_page(request):
