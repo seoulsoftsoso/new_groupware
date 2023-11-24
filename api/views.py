@@ -44,5 +44,18 @@ def checkIn(request):
 '''
 
 
+def admin_notice_write(request):
+    if request.method == 'POST':
+        # POST로 전송된 데이터 확인
+        title = request.POST.get('title')
+        content = request.POST.get('ql-editor')
+        fixed_flag = request.POST.get('fixed_flag')
 
+        # 데이터 출력
+        print(f'Title: {title}')
+        print(f'Content: {content}')
+        print(f'Fixed Flag: {fixed_flag}')
 
+        return HttpResponse('폼1이 제출')
+
+    return render(request, 'admins/index.html')

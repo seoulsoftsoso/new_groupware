@@ -18,15 +18,22 @@
             <div class="content-wrapper">
                 <div class="container-xxl flex-grow-1 container-p-y">
                     <div class="row">
+
                         <!-- Full Editor -->
                         <div class="col-12">
                             <div class="card">
-                             <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">공지사항 글쓰기</strong>
-                                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
-                                    <label class="switch switch-danger" style="margin-right: 60px; margin-top: 8px;">
-                                        <input type="checkbox" class="switch-input">
-                                        <span class="switch-label">상단공지등록</span>
-                                        <span class="switch-toggle-slider">
+                                <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">공지사항
+                                    글쓰기</strong>
+
+
+                                <form action="{% url 'noticewrite' %}" method="post" id="textform">
+                                    {% csrf_token %}
+                                    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
+                                        <label class="switch switch-danger"
+                                               style="margin-right: 60px; margin-top: 8px;">
+                                            <input type="checkbox" class="switch-input" name="fixed_flag" value="T">
+                                            <span class="switch-label">상단공지등록</span>
+                                            <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <i class="bx bx-check"></i>
                                             </span>
@@ -34,20 +41,27 @@
                                                 <i class="bx bx-x"></i>
                                             </span>
                                         </span>
-                                    </label>
-                                    <button type="button" class="btn btn-label-secondary" style="margin-right: 20px;">임시저장</button>
-                                    <button type="button" class="btn btn-label-secondary">작성완료</button>
-                                </div>
-                                <!--제목 필드-->
-                                <h5 class="card-header">제목</h5>
-                                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp" style="width: 97%; margin-left: 20px;">
-                                <!--내용 필드-->
-                                <h5 class="card-header" style="margin-top: 30px;">내용</h5>
-                                <div class="card-body">
-                                    <div id="full-editor">
-                                        <!--내용 입력-->
+                                        </label>
+                                        <!--임시저장 버튼-->
+                                        {% include 'admins/notice/temporarySave_modal.html' %}
+                                        <button type="submit" class="btn btn-label-secondary">등록</button>
                                     </div>
-                                </div>
+                                    <!--제목 필드-->
+
+                                    <input type="text" class="form-control" id="defaultFormControlInput"
+                                           placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp"
+                                           style="width: 97%; margin-left: 20px;" name="title">
+                                    <!--내용 필드-->
+
+                                    <div class="card-body">
+                                        <div id="full-editor">
+                                            <input type="text" id="hiddenContentInput" name="content">
+                                            <!--내용 입력-->
+                                        </div>
+                                    </div>
+                                </form>
+
+
                             </div>
                         </div>
                         <!-- /Full Editor -->
