@@ -140,7 +140,8 @@ urlpatterns = [
                   path('admins/notice/detail', amdin_noticedetail_page, name="noticeDetail"),
                   path('admins/board', amdin_board_page, name="adminBoard"),
                   path('admins/board/write', admin_boardwrite_page, name="boardWrite"),
-
+                  path('admins/board/list', admin_boardList_page, name="boardList"),
+                  path('admins/board/detail', admin_boardDetail_page, name="boardDetail"),
 
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),
