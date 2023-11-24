@@ -183,7 +183,7 @@ class BoardMaster(models.Model):
     fixed_flag = models.BooleanField(default=False, null=True, verbose_name='상단공지')  # true:상단공지, False:없음
     temp_flag = models.BooleanField(default=False, null=True, verbose_name='임시저장')  # true:임시저장
     click_cnt = models.IntegerField(default=0, null=False, verbose_name='조회수')
-    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부') # N: 삭제안함, Y: 삭제
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
 
     created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='board_user_by',
                                    verbose_name='최초작성자')  # 최초작성자
@@ -219,10 +219,13 @@ class ReplyMaster(models.Model):
 
 
 class Attendance(models.Model):
-    date = models.DateField() #근무일자
-    employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='attend_user', verbose_name='사용자')
-    jobTitle = models.ForeignKey('CodeMaster', null=True, on_delete=models.DO_NOTHING, related_name='attend_job', verbose_name='직위')
-    department = models.ForeignKey('CodeMaster', on_delete=models.DO_NOTHING, related_name='attend_depart', verbose_name='부서')
+    date = models.DateField()  # 근무일자
+    employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='attend_user',
+                                 verbose_name='사용자')
+    jobTitle = models.ForeignKey('CodeMaster', null=True, on_delete=models.DO_NOTHING, related_name='attend_job',
+                                 verbose_name='직위')
+    department = models.ForeignKey('CodeMaster', on_delete=models.DO_NOTHING, related_name='attend_depart',
+                                   verbose_name='부서')
     attendanceTime = models.TimeField(null=True)  # 출근시간
     offworkTime = models.TimeField(null=True)  # 퇴근시간
     workTime = models.TimeField(null=True)  # 근무시간
@@ -230,10 +233,29 @@ class Attendance(models.Model):
     extendTime = models.TimeField(null=True)  # 연장시간
     latenessTime = models.TimeField(null=True)  # 지각시간
     earlyleaveTime = models.TimeField(null=True)  # 조퇴시간
-    attendance_ip = models.CharField(null=True, max_length=16) #출근IP
-    offwork_ip = models.CharField(null=True, max_length=16) #퇴근IP
-    is_offwork = models.BooleanField(default=False) #퇴근처리 여부 (0: 정상, 1: 퇴근처리x)
-    create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자', related_name='attend_creat')  # 최초작성자
+    attendance_ip = models.CharField(null=True, max_length=16)  # 출근IP
+    offwork_ip = models.CharField(null=True, max_length=16)  # 퇴근IP
+    is_offwork = models.BooleanField(default=False)  # 퇴근처리 여부 (0: 정상, 1: 퇴근처리x)
+    create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
+                                  related_name='attend_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)
-    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='attend_update', verbose_name='수정자')
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='attend_update',
+                                   verbose_name='수정자')
     update_at = models.DateTimeField(null=True, auto_now_add=True)
+
+
+class EventMaster(Model):
+    url = models.CharField(max_length=128, null=True, verbose_name='URL')
+    title = models.CharField(max_length=128, null=False, verbose_name='제목')
+    start_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='시작일')
+    end_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='종료일')
+    allDay = models.BooleanField(verbose_name='종일여부') #True : 종일
+    event_type = models.CharField(max_length=1, null=False, verbose_name='구분')  # V:연차, H:반차, B:출장, C:차량, L:자리비움
+    create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
+                                  related_name='event_creat')  # 최초작성자
+    create_at = models.DateTimeField(auto_now_add=True)
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='event_update',
+                                   verbose_name='수정자')
+    update_at = models.DateTimeField(null=True, auto_now_add=True)
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+
