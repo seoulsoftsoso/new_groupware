@@ -217,3 +217,24 @@ class ReplyMaster(models.Model):
                                    verbose_name='수정자')
     updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+
+
+class Attendance(models.Model):
+    date = models.DateField() #근무일자
+    employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='attend_user', verbose_name='사용자')
+    jobTitle = models.ForeignKey('CodeMaster', null=True, on_delete=models.DO_NOTHING, related_name='attend_job', verbose_name='직위')
+    department = models.ForeignKey('CodeMaster', on_delete=models.DO_NOTHING, related_name='attend_depart', verbose_name='부서')
+    attendanceTime = models.TimeField(null=True)  # 출근시간
+    offworkTime = models.TimeField(null=True)  # 퇴근시간
+    workTime = models.TimeField(null=True)  # 근무시간
+    workTime_holiday = models.TimeField(null=True)  # 휴일근로
+    extendTime = models.TimeField(null=True)  # 연장시간
+    latenessTime = models.TimeField(null=True)  # 지각시간
+    earlyleaveTime = models.TimeField(null=True)  # 조퇴시간
+    attendance_ip = models.CharField(null=True, max_length=16) #출근IP
+    offwork_ip = models.CharField(null=True, max_length=16) #퇴근IP
+    is_offwork = models.BooleanField(default=False) #퇴근처리 여부 (0: 정상, 1: 퇴근처리x)
+    create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자', related_name='attend_creat')  # 최초작성자
+    create_at = models.DateTimeField(auto_now_add=True)
+    updated_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='attend_update', verbose_name='수정자')
+    update_at = models.DateTimeField(null=True, auto_now_add=True)
