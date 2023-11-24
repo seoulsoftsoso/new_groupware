@@ -60,6 +60,18 @@ def admin_boardwrite_page(request):
     return render(request, 'admins/board/board_write.html')
 
 
+def admin_boardList_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/board/board_list.html')
+
+
+def admin_boardDetail_page(request):
+    context = {}
+    context['block'] = ''
+    return render(request, 'admins/board/board_detail.html')
+
+
 def login_page(request):
     return render(request, 'login.html', {})
 

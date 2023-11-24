@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}"/>
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}"/>
+
 
 <body>
 <div class="layout-wrapper layout-content-navbar">
@@ -21,12 +23,29 @@
                         <!-- Full Editor -->
                         <div class="col-12">
                             <div class="card">
-                             <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">게시판 글쓰기</strong>
-                                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
-                                    <label class="switch switch-danger" style="margin-right: 60px; margin-top: 8px;">
-                                        <input type="checkbox" class="switch-input">
-                                        <span class="switch-label">상단공지등록</span>
-                                        <span class="switch-toggle-slider">
+                                <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">게시판
+                                    글쓰기</strong>
+
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 20px; margin-right: 20px;">
+                                    <div style="width: 60%;">
+                                        <!-- Basic -->
+                                        <div class="col-md-6 mb-4" style="margin-top: 33px; margin-left: 30px;">
+                                            <select id="selectpickerBasic" class="selectpicker w-100"
+                                                    data-style="btn-default" required>
+                                                <option disabled selected>--게시판을 선택해주세요--</option>
+                                                <option>전사게시판</option>
+                                                <option>부서게시판</option>
+                                                <option>프로젝트게시판</option>
+                                                <option>주간업무보고</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center;">
+                                        <label class="switch switch-danger"
+                                               style="margin-right: 60px; margin-top: 8px;">
+                                            <input type="checkbox" class="switch-input">
+                                            <span class="switch-label">상단공지등록</span>
+                                            <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <i class="bx bx-check"></i>
                                             </span>
@@ -34,13 +53,20 @@
                                                 <i class="bx bx-x"></i>
                                             </span>
                                         </span>
-                                    </label>
-                                    <button type="button" class="btn btn-label-secondary" style="margin-right: 20px;">임시저장</button>
-                                    <button type="button" class="btn btn-label-secondary">작성완료</button>
+                                        </label>
+                                        <button type="button" class="btn btn-label-secondary"
+                                                style="margin-right: 20px;">
+                                            임시저장
+                                        </button>
+                                        <button type="button" class="btn btn-label-secondary">작성완료</button>
+                                    </div>
+
                                 </div>
                                 <!--제목 필드-->
                                 <h5 class="card-header">제목</h5>
-                                <input type="text" class="form-control" id="defaultFormControlInput" placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp" style="width: 97%; margin-left: 20px;">
+                                <input type="text" class="form-control" id="defaultFormControlInput"
+                                       placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp"
+                                       style="width: 97%; margin-left: 20px;">
                                 <!--내용 필드-->
                                 <h5 class="card-header" style="margin-top: 30px;">내용</h5>
                                 <div class="card-body">
@@ -89,9 +115,13 @@
 <script src="{% static 'sneat/assets/vendor/libs/quill/katex.js' %}"></script>
 <script src="{% static 'sneat/assets/vendor/libs/quill/quill.js' %}"></script>
 <script src="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/bootstrap-select/bootstrap-select.js' %}"></script>
 
 
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/forms-editors.js' %}"></script>
 <script src="{% static 'sneat/assets/js/forms-file-upload.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-selects.js' %}"></script>
+
+
 </html>

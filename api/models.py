@@ -195,7 +195,8 @@ class BoardMaster(models.Model):
 
 
 class FileBoardMaster(models.Model):
-    parent = models.ForeignKey('BoardMaster', models.CASCADE, related_name='board_file_master', verbose_name='파일첨부')
+    parent = models.ForeignKey('BoardMaster', models.CASCADE, null=True, related_name='board_file_master', verbose_name='파일첨부')
+    replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, verbose_name='댓글 고유식별자')
     file_path = models.CharField(max_length=128, null=False)
     created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_user_by',
                                    verbose_name='최초작성자')  # 최초작성자
