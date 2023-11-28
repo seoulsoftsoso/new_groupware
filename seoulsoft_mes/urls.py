@@ -133,17 +133,23 @@ urlpatterns = [
                   path('check-duplicate/', check_duplicate, name='check_duplicate'),
                   path('users/signup/', UserCreate, name='UserCreate'),
 
+
+                  #관리자페이지(그룹웨어)
                   path('admins/index/', admin_index_page, name="adminIndex"),
                   path('admins/work_schedule/', admin_work_schedule_page, name="adminWorkSchedule"),
+
                   path('admins/notice', admin_notice_page, name="adminNotice"),
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWritePage"),
                   path('admins/notice/write', admin_notice_write, name="noticewrite"),
-                  path('admins/notice/detail', amdin_noticedetail_page, name="noticeDetail"),
+                  path('admins/notice/detail/<int:notice_id>/', amdin_noticedetail_page, name="noticeDetail"),
+
                   path('admins/board', amdin_board_page, name="adminBoard"),
                   path('admins/board/write_form', admin_boardwrite_page, name="boardWritePage"),
                   path('admins/board/list', admin_boardList_page, name="boardList"),
                   path('admins/board/detail', admin_boardDetail_page, name="boardDetail"),
 
+
+                  #메인페이지
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

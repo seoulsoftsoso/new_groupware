@@ -1,7 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 
-    {% include 'admins/admin_header.html' %}
+{% include 'admins/admin_header.html' %}
+
+
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/typography.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
 
 <body>
 
@@ -16,19 +21,17 @@
 
             <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px">
 
-                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0" style="margin-bottom: -30px">
-                        <div class="mb-xl-0 mb-4">
-                            <div class="d-flex svg-illustration mb-3 gap-2">
-                                <strong style="font-size: x-large;">공지사항</strong>
-                            </div>
+                <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large;">공지사항</strong>
                         </div>
                     </div>
-
-
+                </div>
 
                 <!--공지사항 제목-->
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: x-large; margin-left: 40px">[공지] 전 직원 도시락 DAY 공지 [0]</span>
+                    <span style="font-size: x-large; margin-left: 40px">{{ notice.title }}</span>
                     <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
                             <img src="{% static 'admin/img/indexImg/menu.png' %}">
@@ -45,57 +48,35 @@
                 </div>
 
                 <div style="margin-left: 30px; margin-bottom: 100px;">
-                    <span style="color: lightgrey; font-size: small">김OO 2023년 11월 9일 오전 (2023년 11월 9일 11:26 오전 수정됨</span>
+                    <span style="color: lightgrey; font-size: small">{{ notice.created_by.username }} {{ notice.created_at|date:"Y년 m월 d일 A g:i" }}</span>
                 </div>
-
-
 
                 <!--공지사항 내용-->
-                <div style="width: 85%; font-size: large; margin-left: 100px">
-                    오늘 낮 동안에는 볕이 따스했는데요.
-
-해가 지는 저녁 퇴근길 무렵에는 공기가 빠르게 식어가고 있습니다.
-
-내일도 맑은 날씨 속에 낮과 밤의 기온 차이가 크게 벌어질 뿐 심한 추위는 없겠습니다.
-
-한편, 강원 동해안을 비롯한 동해안 지방의 대기는 매우 건조한데요.
-
-바람도 약간 강하게 불어서 불조심하셔야겠습니다.
-
-자세한 지역별 내일 날씨입니다.
-
-내일 전국의 하늘이 종일 맑겠고, 동해안 지방은 너울성 파도가 강하게 밀려오겠습니다.
-
-자세한 아침 최저 기온을 보시면 서울이 2도, 청주와 대구 1도, 전주 2도 등으로 오늘과 비슷하겠고요.
-
-낮 기온이 오늘보다 2도에서 5도가량 높아지겠습니다.
-
-서울 14도, 광주와 대구 17도, 강릉은 20도까지 오르겠습니다.
-
-목요일에는 수도권을 비롯한 중부지방에 비가 오겠고요.
-
-금요일에는 충남과 호남 지방에 눈이 오겠는데요.
-
-이후에는 다시 영하권 추위가 찾아올 전망입니다.
-
-날씨였습니다.
+                <div id="content-container" style="width: 85%; font-size: large; margin-left: 100px">
 
                 </div>
-
 
                 <!--공지사항 댓글--->
                 <div style="width: 90%; margin-left: 60px; margin-top: 100px;">
-                        <label for="exampleFormControlTextarea1" class="form-label">댓글 0개 | 조회 43</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="댓글을 입력해보세요."></textarea>
+                    <label for="exampleFormControlTextarea1" class="form-label">댓글 0개 | 조회 43</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="댓글을 입력해보세요."></textarea>
                 </div>
-
 
             </div>
         </div>
     </div>
 </div>
 
-
-</body>
 {% include 'admins/admin_footer.html' %}
+</body>
+<!-- Vendors JS -->
+<script src="{% static 'sneat/assets/vendor/libs/quill/katex.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/quill/quill.js' %}"></script>
+
+<!-- Page JS -->
+<script src="{% static 'sneat/assets/js/forms-editors.js' %}"></script>
+<script>
+    let data = '{{ notice.content|safe }}'
+    $('#content-container').
+</script>
 </html>
