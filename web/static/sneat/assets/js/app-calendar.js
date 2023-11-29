@@ -17,6 +17,24 @@ if (isRtl) {
   direction = 'rtl';
 }
 
+let calendar;
+
+  function handleEventsData(data) {
+    // 여기서 data를 사용하여 필요한 작업 수행
+
+    events_data = data;
+
+    // 예: 달력에 이벤트 추가 등
+  }
+  getDatas().then(events_data => {
+
+      handleEventsData(events_data);
+      // currentEvents로 무언가를 수행
+  }).catch(error => {
+      console.error(error);
+      // 에러 처리
+  });
+
 document.addEventListener('DOMContentLoaded', function () {
   (function () {
     const calendarEl = document.getElementById('calendar'),
@@ -24,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
       addEventSidebar = document.getElementById('addEventSidebar'),
       appOverlay = document.querySelector('.app-overlay'),
       calendarsColor = {
-        Business: 'primary',
+        Business : 'primary',
         Holiday: 'success',
         Personal: 'danger',
         Family: 'warning',
@@ -48,11 +66,13 @@ document.addEventListener('DOMContentLoaded', function () {
       filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
       inlineCalendar = document.querySelector('.inline-calendar');
 
+
     let eventToUpdate,
-      currentEvents = events, // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
+      currentEvents = events_data,// Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
       isFormValid = false,
       inlineCalInstance;
 
+      console.log(currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
@@ -220,13 +240,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // --------------------------------------------------------------------------------------------------
     function fetchEvents(info, successCallback) {
       // Fetch Events from API endpoint reference
-      /* $.ajax(
+       /*$.ajax(
         {
-          url: '../../../app-assets/data/app-calendar-events.js',
+          /!*url: '../../../app-assets/data/app-calendar-events.js',*!/
+          /!*url: '{% static "sneat/assets/js/app-calendar-events.js" %}',*!/
           type: 'GET',
           success: function (result) {
             // Get requested calendars as Array
-            var calendars = selectedCalendars();
+            let calendars = selectedCalendars();
 
             return [result.events.filter(event => calendars.includes(event.extendedProps.calendar))];
           },
@@ -234,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(error);
           }
         }
-      ); */
+      );*/
 
       let calendars = selectedCalendars();
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
@@ -250,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Init FullCalendar
     // ------------------------------------------------
-    let calendar = new Calendar(calendarEl, {
+    calendar = new Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       events: fetchEvents,
       plugins: [dayGridPlugin, interactionPlugin, listPlugin, timegridPlugin],

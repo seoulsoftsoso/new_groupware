@@ -196,7 +196,7 @@ class BoardMaster(models.Model):
 
 class FileBoardMaster(models.Model):
     parent = models.ForeignKey('BoardMaster', models.CASCADE, null=True, related_name='board_file_master', verbose_name='파일첨부')
-    replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, verbose_name='댓글 고유식별자')
+    replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, related_name='fiel_reply', verbose_name='댓글 고유식별자')
     file_path = models.CharField(max_length=128, null=False)
     created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_user_by',
                                    verbose_name='최초작성자')  # 최초작성자
@@ -251,7 +251,9 @@ class EventMaster(Model):
     start_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='시작일')
     end_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='종료일')
     allDay = models.BooleanField(verbose_name='종일여부') #True : 종일
-    event_type = models.CharField(max_length=1, null=False, verbose_name='구분')  # V:연차, H:반차, B:출장, C:차량, L:자리비움
+    event_type = models.CharField(max_length=64, null=False, verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, ETC:차량, Personal:자리비움
+    description = models.TextField(null=True, verbose_name='내용')
+    location = models.CharField(max_length=128, null=True, verbose_name='장소')
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
                                   related_name='event_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)

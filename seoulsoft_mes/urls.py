@@ -38,6 +38,7 @@ from api.base.enterprise_views_n import EnterpriseMaster_in, EnterpriseMaster_cr
 from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeMaster
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
+from api.calendar.common import get_eventDataAll
 
 from api.user.views import CustomObtainAuthToken
 from api.views import *
@@ -152,6 +153,8 @@ urlpatterns = [
                   #메인페이지
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),
+
+                  path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll')
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
