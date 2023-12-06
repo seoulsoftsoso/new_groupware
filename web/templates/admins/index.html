@@ -351,14 +351,11 @@
 
         var csrfToken = '{{ csrf_token }}';
 
-        var startdate = new Date($("#eventStartDate").val());
-        var endDate = new Date($("#eventEndDate").val());
-
         var formData = {
             eventTitle: $("#eventTitle").val(),
             eventLabel: $("#eventLabel").val(),
-            eventStartDate: startdate,
-            eventEndDate: endDate,
+            eventStartDate: $("#eventStartDate").val(),
+            eventEndDate: $("#eventEndDate").val(),
             allDay: $(".allDay-switch").prop("checked") === true,
             eventURL: $("#eventURL").val(),
             eventGuests: $("#eventGuests").val(),
@@ -366,6 +363,8 @@
             eventDescription: $("#eventDescription").val(),
             csrfmiddlewaretoken: csrfToken
         };
+
+        console.log('폼데이터 : ', formData)
 
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, (data) => {
             console.log('등록데이터', formData);
@@ -380,8 +379,6 @@
         e.preventDefault();
 
         var csrfToken = '{{ csrf_token }}';
-        var startdate = new Date($("#eventStartDate").val());
-        var endDate = new Date($("#eventEndDate").val());
 
         console.log('d아이디 : ', updateEventId)
 
@@ -389,8 +386,8 @@
             updateEventId: updateEventId,
             eventTitle: $("#eventTitle").val(),
             eventLabel: $("#eventLabel").val(),
-            eventStartDate: startdate,
-            eventEndDate: endDate,
+            eventStartDate: $("#eventStartDate").val(),
+            eventEndDate: $("#eventEndDate").val(),
             allDay: $(".allDay-switch").prop("checked") === true,
             eventURL: $("#eventURL").val(),
             eventGuests: $("#eventGuests").val(),
@@ -399,10 +396,17 @@
             csrfmiddlewaretoken: csrfToken
         };
 
-         api_gp("/event/get_event_all/" + updateEventId + "/", "PATCH", eventData, () => {
-             console.log('수정데이터', eventData)
-         });
+        console.log('이벤트데이터', eventData)
 
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(eventData),
+            success: function () {
+                console.log('수정데이터', eventData);
+            }
+        });
 
     });
 

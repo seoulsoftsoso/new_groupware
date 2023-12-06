@@ -1,6 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import transaction
+from django.shortcuts import render
+from django.utils.dateparse import parse_datetime
 
 from api.models import EventMaster
 from django.views import View
@@ -24,18 +26,11 @@ class get_eventDataAll(View):
 
             print(request.POST.get('eventStartDate'))
 
-            # 프론트에서 넘어오는 날짜 파싱
-            def parse_date(date_str):
-                date_str = date_str.replace("GMT+0900 (한국 표준시)", "+0900")
-                date_obj = datetime.strptime(date_str, "%a %b %d %Y %H:%M:%S %z")
-                date_obj = date_obj.replace(tzinfo=None)
-                return date_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
-
-            date_str = request.POST.get('eventStartDate')
-            end_date_str = request.POST.get('eventEndDate')
-
-            formatted_date_str = parse_date(date_str)
-            end_formatted_date_str = parse_date(end_date_str)
+            # 날짜,시간 파싱
+            startDate_str = request.POST.get('eventStartDate')
+            endDate_str = request.POST.get('eventEndDate')
+            start_date = parse_datetime(startDate_str)
+            end_date = parse_datetime(endDate_str)
 
             allDay_str = request.POST.get('allDay')
             allDay = True if allDay_str.lower() == 'true' else False
@@ -43,8 +38,8 @@ class get_eventDataAll(View):
             event_add = EventMaster(
                 url=request.POST.get('eventURL'),
                 title=request.POST.get('eventTitle'),
-                start_date=formatted_date_str,
-                end_date=end_formatted_date_str,
+                start_date=start_date,
+                end_date=end_date,
                 allDay=allDay,
                 event_type=request.POST.get('eventLabel'),
                 create_by_id=created_by_id,
@@ -56,50 +51,38 @@ class get_eventDataAll(View):
             event_add.save()
             response_data = {'message': '성공'}
             return JsonResponse(response_data)
-
-        else:
-            print('db저장 실패')
 
         return HttpResponse("Invalid Request")
 
     @transaction.atomic
-    def partial_update(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         if request.method == 'PATCH':
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+            eventData = body_data
+            updateEventId = eventData.get('updateEventId')
+            event = EventMaster.objects.get(id=updateEventId)
 
-            created_by_id = request.COOKIES.get('user_id')
+            if event:
+                allDay = eventData.get('allDay', False)
 
-            print(request.POST.get('eventStartDate'))
+                # 날짜,시간 파싱
+                startDate_str = eventData.get('eventStartDate')
+                endDate_str = eventData.get('eventEndDate')
+                start_date = parse_datetime(startDate_str)
+                end_date = parse_datetime(endDate_str)
 
-            # 프론트에서 넘어오는 날짜 파싱
-            def parse_date(date_str):
-                date_str = date_str.replace("GMT+0900 (한국 표준시)", "+0900")
-                date_obj = datetime.strptime(date_str, "%a %b %d %Y %H:%M:%S %z")
-                date_obj = date_obj.replace(tzinfo=None)
-                return date_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
+                event.start_date = start_date
+                event.end_date = end_date
+                event.url = eventData.get('eventURL')
+                event.title = eventData.get('eventTitle')
+                event.allDay = allDay
+                event.event_type = eventData.get('eventLabel')
+                event.create_by_id = request.COOKIES.get('user_id')
+                event.updated_by_id = request.COOKIES.get('user_id')
+                event.description = eventData.get('eventDescription')
+                event.location = eventData.get('eventLocation')
 
-            date_str = request.POST.get('eventStartDate')
-            end_date_str = request.POST.get('eventEndDate')
+                event.save()
 
-            formatted_date_str = parse_date(date_str)
-            end_formatted_date_str = parse_date(end_date_str)
-
-            allDay_str = request.POST.get('allDay')
-            allDay = True if allDay_str.lower() == 'true' else False
-
-            event_add = EventMaster(
-                updateEventId=request.POST.get('updateEventId'),
-                url=request.POST.get('eventURL'),
-                title=request.POST.get('eventTitle'),
-                start_date=formatted_date_str,
-                end_date=end_formatted_date_str,
-                allDay=allDay,
-                event_type=request.POST.get('eventLabel'),
-                create_by_id=created_by_id,
-                updated_by_id=created_by_id,
-                description=request.POST.get('eventDescription'),
-                location=request.POST.get('eventLocation')
-            )
-
-            event_add.save()
-            response_data = {'message': '성공'}
-            return JsonResponse(response_data)
+            return render(request, 'admins/board/board.html')
