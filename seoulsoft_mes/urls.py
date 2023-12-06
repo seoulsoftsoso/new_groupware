@@ -174,7 +174,8 @@ urlpatterns = [
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),
 
-                  path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll')
+                  path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll'),
+                  path('event/get_event_all/<int:updateEventId>/', get_eventDataAll.as_view(), name='get_eventDataAll'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

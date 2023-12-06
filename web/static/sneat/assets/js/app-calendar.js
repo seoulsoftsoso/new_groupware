@@ -19,6 +19,8 @@ if (isRtl) {
 
 let calendar;
 
+let updateEventId;
+
   function handleEventsData(data) {
     // 여기서 data를 사용하여 필요한 작업 수행
 
@@ -71,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isFormValid = false,
       inlineCalInstance;
 
-      console.log('이벤트 출력', currentEvents)
+    console.log('이벤트 출력', currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
@@ -168,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
-      console.log('이벤트투업데이트', eventToUpdate)
+      updateEventId= eventToUpdate._def.publicId
       if (eventToUpdate.url) {
         info.jsEvent.preventDefault();
         window.open(eventToUpdate.url, '_blank');
@@ -392,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // ? You can write below code to AJAX call success response
 
       currentEvents.push(eventData);
-      calendar.refetchEvents();
+      // calendar.refetchEvents();
 
       // ? To add event directly to calender (won't update currentEvents object)
       // calendar.addEvent(eventData);
@@ -401,7 +403,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update Event
     // ------------------------------------------------
     function updateEvent(eventData) {
-      console.log(eventData)
       // ? Update existing event data to current events object and refetch it to display on calender
       // ? You can write below code to AJAX call success response
       eventData.id = parseInt(eventData.id);
@@ -409,10 +410,10 @@ document.addEventListener('DOMContentLoaded', function () {
       calendar.refetchEvents();
 
       // ? To update event directly to calender (won't update currentEvents object)
-      // let propsToUpdate = ['id', 'title', 'url'];
-      // let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
+      let propsToUpdate = ['id', 'title', 'url'];
+      let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
 
-      // updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
+      updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
     }
 
     // Remove Event
@@ -457,6 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var propName = extendedPropsToUpdate[index];
         existingEvent.setExtendedProp(propName, updatedEventData.extendedProps[propName]);
       }
+
     };
 
     // Remove Event In Calendar (UI Only)

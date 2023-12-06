@@ -376,7 +376,6 @@
         headers: { "X-CSRFToken": '{{ csrf_token }}' }
     });
 
-
     $(document).on('click', '.btn-update-event', function (e) {
         e.preventDefault();
 
@@ -384,9 +383,10 @@
         var startdate = new Date($("#eventStartDate").val());
         var endDate = new Date($("#eventEndDate").val());
 
-
+        console.log('d아이디 : ', updateEventId)
 
         eventData = {
+            updateEventId: updateEventId,
             eventTitle: $("#eventTitle").val(),
             eventLabel: $("#eventLabel").val(),
             eventStartDate: startdate,
@@ -399,13 +399,12 @@
             csrfmiddlewaretoken: csrfToken
         };
 
-        api_gp("{%  url 'get_eventDataAll' %}", "PATCH", eventData, (eventData) => {
-            console.log('수정데이터', eventData)
-        });
+         api_gp("/event/get_event_all/" + updateEventId + "/", "PATCH", eventData, () => {
+             console.log('수정데이터', eventData)
+         });
 
 
     });
-
 
 </script>
 

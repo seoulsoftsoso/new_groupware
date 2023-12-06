@@ -63,30 +63,43 @@ class get_eventDataAll(View):
         return HttpResponse("Invalid Request")
 
     @transaction.atomic
-    def patch(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode('utf-8'))
-        print('데이터 : ', data)
+    def partial_update(self, request, *args, **kwargs):
+        if request.method == 'PATCH':
 
-        event_id = request.POST.get('eventId')
-        event = EventMaster.objects.get(id=event_id)
+            created_by_id = request.COOKIES.get('user_id')
 
-        if event:
+            print(request.POST.get('eventStartDate'))
+
+            # 프론트에서 넘어오는 날짜 파싱
+            def parse_date(date_str):
+                date_str = date_str.replace("GMT+0900 (한국 표준시)", "+0900")
+                date_obj = datetime.strptime(date_str, "%a %b %d %Y %H:%M:%S %z")
+                date_obj = date_obj.replace(tzinfo=None)
+                return date_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+            date_str = request.POST.get('eventStartDate')
+            end_date_str = request.POST.get('eventEndDate')
+
+            formatted_date_str = parse_date(date_str)
+            end_formatted_date_str = parse_date(end_date_str)
+
             allDay_str = request.POST.get('allDay')
             allDay = True if allDay_str.lower() == 'true' else False
 
-            event.url = request.POST.get('eventURL')
-            event.title = request.POST.get('eventTitle')
-            event.start_date = request.POST.get('eventStartDate')
-            event.end_date = request.POST.get('eventEndDate')
-            event.allDay = allDay
-            event.event_type = request.POST.get('eventLabel')
-            event.create_by_id = request.COOKIES.get('user_id')
-            event.updated_by_id = request.COOKIES.get('user_id')
-            event.description = request.POST.get('eventDescription')
-            event.location = request.POST.get('eventLocation')
+            event_add = EventMaster(
+                updateEventId=request.POST.get('updateEventId'),
+                url=request.POST.get('eventURL'),
+                title=request.POST.get('eventTitle'),
+                start_date=formatted_date_str,
+                end_date=end_formatted_date_str,
+                allDay=allDay,
+                event_type=request.POST.get('eventLabel'),
+                create_by_id=created_by_id,
+                updated_by_id=created_by_id,
+                description=request.POST.get('eventDescription'),
+                location=request.POST.get('eventLocation')
+            )
 
-            event.save()
-
-            return JsonResponse({'message': '성공'}, status=200)
-        else:
-            return HttpResponse("Invalid Request", status=400)
+            event_add.save()
+            response_data = {'message': '성공'}
+            return JsonResponse(response_data)
