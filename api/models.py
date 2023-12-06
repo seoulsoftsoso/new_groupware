@@ -193,10 +193,33 @@ class BoardMaster(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
     boardcode = models.ForeignKey('CodeMaster', models.CASCADE, related_name='board_code', verbose_name='게시판구분')
 
+    def get_reply_count(self):
+        return ReplyMaster.objects.filter(parent_id=self.id).count()
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'file_flag': self.file_flag,
+            'fixed_flag': self.fixed_flag,
+            'temp_flag': self.temp_flag,
+            'click_cnt': self.click_cnt,
+            'delete_flag': self.delete_flag,
+            'created_by': self.created_by.username if self.created_by else None,
+            'created_at': self.created_at,
+            'updated_by': self.updated_by.username if self.updated_by else None,
+            'updated_at': self.updated_at,
+            'boardcode': self.boardcode.code if self.boardcode else None,
+            "reply_count": self.get_reply_count()
+        }
+
 
 class FileBoardMaster(models.Model):
-    parent = models.ForeignKey('BoardMaster', models.CASCADE, null=True, related_name='board_file_master', verbose_name='파일첨부')
-    replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, related_name='fiel_reply', verbose_name='댓글 고유식별자')
+    parent = models.ForeignKey('BoardMaster', models.CASCADE, null=True, related_name='board_file_master',
+                               verbose_name='파일첨부')
+    replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, related_name='fiel_reply',
+                                    verbose_name='댓글 고유식별자')
     file_path = models.CharField(max_length=128, null=False)
     created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_user_by',
                                    verbose_name='최초작성자')  # 최초작성자
@@ -248,10 +271,11 @@ class Attendance(models.Model):
 class EventMaster(Model):
     url = models.CharField(max_length=128, null=True, verbose_name='URL')
     title = models.CharField(max_length=128, null=False, verbose_name='제목')
-    start_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='시작일')
-    end_date = models.DateTimeField(auto_now_add=True, null=False, verbose_name='종료일')
-    allDay = models.BooleanField(verbose_name='종일여부') #True : 종일
-    event_type = models.CharField(max_length=64, null=False, verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, ETC:차량, Personal:자리비움
+    start_date = models.DateTimeField(auto_now_add=False, null=False, verbose_name='시작일')
+    end_date = models.DateTimeField(auto_now_add=False, null=False, verbose_name='종료일')
+    allDay = models.BooleanField(verbose_name='종일여부')  # True : 종일
+    event_type = models.CharField(max_length=64, null=False,
+                                  verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, ETC:차량, Personal:자리비움
     description = models.TextField(null=True, verbose_name='내용')
     location = models.CharField(max_length=128, null=True, verbose_name='장소')
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
@@ -261,4 +285,3 @@ class EventMaster(Model):
                                    verbose_name='수정자')
     update_at = models.DateTimeField(null=True, auto_now_add=True)
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
-

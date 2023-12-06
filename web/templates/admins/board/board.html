@@ -3,6 +3,7 @@
 
     <meta charset="UTF-8">
      {% include 'admins/admin_header.html' %}
+
  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <style>
     .list-container {
@@ -46,132 +47,60 @@
 
 
                                         <!-- Default Modal -->
-                    <div class="col-lg-4 col-md-6" style="margin-bottom: 20px;">
-                      <div class="mt-3">
-                        <!-- Button trigger modal -->
-                        <button
-                          style="width: 150px; "
-                          type="button"
-                          class="btn btn-primary"
-                          data-bs-toggle="modal"
-                          data-bs-target="#basicModal"><img src="{% static 'admin/img/indexImg/add-to-queue-regular-24.png' %}">
-                          게시판 추가
-                        </button>
-
-                        <!-- Modal -->
-                      <form action="#" method="post">
-                       <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel1">게시판 추가</h5>
-                                <button
-                                  type="button"
-                                  class="btn-close"
-                                  data-bs-dismiss="modal"
-                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                <div class="row">
-                                  <div class="col mb-3">
-                                    <label for="nameBasic" class="form-label">게시판 이름</label>
-                                    <input type="text" id="nameBasic" class="form-control" placeholder="게시판 이름을 입력해주세요." />
-                                  </div>
-                                </div>
-
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
-                                <button type="button" class="btn btn-primary" id="addBoardBtn">등록완료</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                        </form>
-
-
-                    </div>
-
-                                    </div>
-                                    <div class="list-container">
-                                        <li class="d-flex justify-content-between">
-                                            <a href="{% url 'boardList' %}">
-                                                <span style="letter-spacing: 1px;">전사게시판</span>
-                                            </a>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                        <div class="col-lg-4 col-md-6" style="margin-bottom: 20px;">
+                                            <div class="mt-3">
+                                                <!-- Button trigger modal -->
+                                                <button
+                                                        style="width: 150px; margin-bottom: 20px;"
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#basicModalAdd"><img
+                                                        src="{% static 'admin/img/indexImg/add-to-queue-regular-24.png' %}">게시판 추가
                                                 </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-edit-alt me-1"></i> 편집</a
-                                                    >
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-trash me-1"></i> 삭제</a
-                                                    >
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="d-flex justify-content-between">
-                                            <a href="#">
-                                                <span style="letter-spacing: 1px;">부서게시판</span>
-                                            </a>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                {% include 'admins/board/boardGroupAdd.html' %}
+                                                 <button
+                                                        style="width: 150px; "
+                                                        type="button"
+                                                        class="btn btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#basicModal">
+                                                     <i class="bx bx-edit-alt me-1"></i>
+                                                     게시판 수정
                                                 </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-edit-alt me-1"></i> 편집</a
-                                                    >
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-trash me-1"></i> 삭제</a
-                                                    >
-                                                </div>
+                                                {% include 'admins/board/boardGroupEdit.html' %}
+
                                             </div>
-                                        </li>
-                                        <li class="d-flex justify-content-between">
-                                            <a href="#">
-                                                <span style="letter-spacing: 1px;">프로젝트게시판</span>
-                                            </a>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-edit-alt me-1"></i> 편집</a
-                                                    >
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-trash me-1"></i> 삭제</a
-                                                    >
-                                                </div>
-                                            </div>
-                                        </li>
-                                       <li class="d-flex justify-content-between">
-                                           <a href="#">
-                                                <span style="letter-spacing: 1px;">주간업무보고</span>
-                                           </a>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-edit-alt me-1"></i> 편집</a
-                                                    >
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-trash me-1"></i> 삭제</a
-                                                    >
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!--추가될 게시판-->
-                                    </div>
+
+                                        </div>
+
+
+
+                                        <div class="list-container">
+                                            {% for cm in codemaster %}
+                                                <li class="d-flex justify-content-between">
+                                                    <a href="{% url 'boardList' cm.id %}">
+                                                        <span style="letter-spacing: 1px;">{{ cm.name }}</span>
+                                                    </a>
+
+                                                    <!--게시판 그룹 편집,삭제-->
+                                                    <div class="dropdown">
+                                                        <button type="button"
+                                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                                data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                                <i class="bx bx-trash me-1"></i> 삭제</a>
+                                                        </div>
+                                                    </div>
+                                                    <!--/게시판 그룹 편집,삭제-->
+                                                </li>
+                                            {% endfor %}
+
+                                        </div>
+
                                     </div>
                                 </ul>
                             </div>
@@ -187,198 +116,55 @@
                     </div>
                       <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
                           <div>
+                              {% for cm in codemaster %}
                               <div class="card-body">
                                   <div style="margin-bottom: 20px;">
-                                      <strong style="font-size: large">전사게시판</strong>
+                                      <strong style="font-size: large">{{ cm.name }}</strong>
                                   </div>
                                   <div style="margin-top: 30px;">
                                       <table class="table border-top m-0">
                                           <thead>
                                           <tr style="background-color: lightgray">
                                               <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">제목</th>
-                                              <th style="font-size: medium; font-weight: bold">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
-                                              <th style="font-size: medium; font-weight: bold">조회</th>
-                                              <th style="font-size: medium; font-weight: bold">댓글</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 40%">제목</th>
+                                              <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 20%;">작성일시</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
                                           </tr>
                                           </thead>
                                           <tbody>
-                                          <tr style="cursor: pointer;"
-                                              onclick="window.location='{% url 'boardDetail' %}'">
-                                              <td style="color: red"><img
-                                                      src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
-                                                      style="margin-right: 8px"></td>
-                                              <td style="color: red">HTML Admin Template</td>
-                                              <td style="color: red">$32</td>
-                                              <td style="color: red">2023-11-20 15:53:20</td>
-                                              <td style="color: red">$32.00</td>
-                                              <td style="color: red">$32.00</td>
+                                          {% for bm in fixed_board %}
+                                          <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
+                                              {% if bm.boardcode_id == cm.id and bm.fixed_flag %}
+                                              <td style="color: red"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
+                                              <td style="color: red">{{ bm.title }}</td>
+                                              <td style="color: red">{{ bm.created_by }}</td>
+                                              <td style="color: red">{{ bm.updated_at }}</td>
+                                              <td style="color: red"></td>
+                                              <td style="color: red"></td>
+                                              {% endif %}
                                           </tr>
-                                          <tr>
-                                              <td>1</td>
-                                              <td>HTML Admin Template</td>
-                                              <td>$17</td>
-                                              <td>2023-11-20 09:53:20</td>
-                                              <td>$34.00</td>
-                                              <td>$34.00</td>
+                                              {% endfor %}
+
+                                          {% for bm in boardmaster %}
+                                          <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
+                                              {% if bm.boardcode_id == cm.id %}
+                                              <td>{{ forloop.counter }}</td>
+                                              <td>{{ bm.title }}</td>
+                                              <td>{{ bm.created_by }}</td>
+                                              <td>{{ bm.updated_at }}</td>
+                                              <td></td>
+                                              <td></td>
+                                              {% endif %}
                                           </tr>
-                                          <tr>
-                                              <td>2</td>
-                                              <td>React Admin Template</td>
-                                              <td>$66</td>
-                                              <td>2023-11-20 14:53:20</td>
-                                              <td>$66.00</td>
-                                              <td>$66.00</td>
-                                          </tr>
+                                              {% endfor %}
                                           </tbody>
                                       </table>
                                   </div>
                               </div>
-                              <div class="card-body">
-                                  <div>
-                                      <strong style="font-size: large">부서게시판</strong>
-                                  </div>
-                                  <div style="margin-top: 30px;">
-                                      <table class="table border-top m-0">
-                                          <thead>
-                                          <tr style="background-color: lightgray">
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">제목</th>
-                                              <th style="font-size: medium; font-weight: bold">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
-                                              <th style="font-size: medium; font-weight: bold">조회</th>
-                                              <th style="font-size: medium; font-weight: bold">댓글</th>
-                                          </tr>
-                                          </thead>
-                                          <tbody>
-                                          <tr style="cursor: pointer;"
-{#                                              onclick="window.location='#'">#}
-                                              <td style="color: red"><img
-                                                      src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
-                                                      style="margin-right: 8px"></td>
-                                              <td style="color: red">HTML Admin Template</td>
-                                              <td style="color: red">$32</td>
-                                              <td style="color: red">2023-11-20 15:53:20</td>
-                                              <td style="color: red">$32.00</td>
-                                              <td style="color: red">$32.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>1</td>
-                                              <td>HTML Admin Template</td>
-                                              <td>$17</td>
-                                              <td>2023-11-20 09:53:20</td>
-                                              <td>$34.00</td>
-                                              <td>$34.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>2</td>
-                                              <td>React Admin Template</td>
-                                              <td>$66</td>
-                                              <td>2023-11-20 14:53:20</td>
-                                              <td>$66.00</td>
-                                              <td>$66.00</td>
-                                          </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </div>
-                              <div class="card-body">
-                                  <div>
-                                      <strong style="font-size: large">프로젝트게시판</strong>
-                                  </div>
-                                  <div style="margin-top: 30px;">
-                                      <table class="table border-top m-0">
-                                          <thead>
-                                          <tr style="background-color: lightgray">
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">제목</th>
-                                              <th style="font-size: medium; font-weight: bold">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
-                                              <th style="font-size: medium; font-weight: bold">조회</th>
-                                              <th style="font-size: medium; font-weight: bold">댓글</th>
-                                          </tr>
-                                          </thead>
-                                          <tbody>
-                                          <tr style="cursor: pointer;"
-{#                                              onclick="window.location='{% url '' %}'">#}
-                                              <td style="color: red"><img
-                                                      src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
-                                                      style="margin-right: 8px"></td>
-                                              <td style="color: red">HTML Admin Template</td>
-                                              <td style="color: red">$32</td>
-                                              <td style="color: red">2023-11-20 15:53:20</td>
-                                              <td style="color: red">$32.00</td>
-                                              <td style="color: red">$32.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>1</td>
-                                              <td>HTML Admin Template</td>
-                                              <td>$17</td>
-                                              <td>2023-11-20 09:53:20</td>
-                                              <td>$34.00</td>
-                                              <td>$34.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>2</td>
-                                              <td>React Admin Template</td>
-                                              <td>$66</td>
-                                              <td>2023-11-20 14:53:20</td>
-                                              <td>$66.00</td>
-                                              <td>$66.00</td>
-                                          </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </div>
-                              <div class="card-body">
-                                  <div>
-                                      <strong style="font-size: large">주간업무보고</strong>
-                                  </div>
-                                  <div style="margin-top: 30px;">
-                                      <table class="table border-top m-0">
-                                          <thead>
-                                          <tr style="background-color: lightgray">
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">제목</th>
-                                              <th style="font-size: medium; font-weight: bold">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
-                                              <th style="font-size: medium; font-weight: bold">조회</th>
-                                              <th style="font-size: medium; font-weight: bold">댓글</th>
-                                          </tr>
-                                          </thead>
-                                          <tbody>
-                                          <tr style="cursor: pointer;"
-{#                                              onclick="window.location='{% url 'noticeDetail' %}'">#}
-                                              <td style="color: red"><img
-                                                      src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
-                                                      style="margin-right: 8px"></td>
-                                              <td style="color: red">HTML Admin Template</td>
-                                              <td style="color: red">$32</td>
-                                              <td style="color: red">2023-11-20 15:53:20</td>
-                                              <td style="color: red">$32.00</td>
-                                              <td style="color: red">$32.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>1</td>
-                                              <td>HTML Admin Template</td>
-                                              <td>$17</td>
-                                              <td>2023-11-20 09:53:20</td>
-                                              <td>$34.00</td>
-                                              <td>$34.00</td>
-                                          </tr>
-                                          <tr>
-                                              <td>2</td>
-                                              <td>React Admin Template</td>
-                                              <td>$66</td>
-                                              <td>2023-11-20 14:53:20</td>
-                                              <td>$66.00</td>
-                                              <td>$66.00</td>
-                                          </tr>
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </div>
+
+                              {% endfor %}
                           </div>
                       </div>
 
@@ -399,6 +185,110 @@
 
 </body>
 
+<script>
+    $("#addBoardBtn").click(function (e) {
+        e.preventDefault();
+
+        var boardCodeInput = document.getElementById('board_group_code');
+        var boardNameInput = document.getElementById('board_group_name');
+
+        if (!boardCodeInput.checkValidity() || !boardNameInput.checkValidity()) {
+            Swal.fire({
+                        title: 'Error!',
+                        text: '입력값이 올바르지 않습니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
+        } else {
+
+            var formdata = new FormData();
+
+            formdata.append('board_group_code', $('#board_group_code').val());
+            formdata.append('board_group_name', $('#board_group_name').val());
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            console.log('데이터들', formdata)
+
+            $.ajax({
+                url: "{% url 'boardGroupAdd' %}",
+                type: "POST",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '게시판이 등록되었습니다.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{% url 'adminBoard' %}";
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: '관리자에게 문의 바랍니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $("#editBoardBtn").click(function (e) {
+        e.preventDefault();
+        console.log('board_group_code:', $('#board_group_edit_code').val());
+        console.log('board_group_name:', $('#board_group_edit_name').val());
+
+
+        var selectedBoardId = $('#selectpickerBasic').val();
+
+            var formdata = new FormData();
+
+            formdata.append('id', selectedBoardId)
+            formdata.append('board_group_edit_code', $('#board_group_edit_code').val());
+            formdata.append('board_group_edit_name', $('#board_group_edit_name').val());
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            $.ajax({
+                url: "{% url 'boardGroupEdit' %}",
+                type: "POST",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '수정이 완료되었습니다.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{% url 'adminBoard' %}";
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: '관리자에게 문의 바랍니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
+                }
+            })
+
+    });
+</script>
+
 {% include 'admins/admin_footer.html' %}
+
 
 </html>

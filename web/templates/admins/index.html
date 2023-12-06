@@ -208,7 +208,8 @@
                           aria-label="Close"></button>
                       </div>
                       <div class="offcanvas-body">
-                        <form class="event-form pt-0" id="eventForm" onsubmit="return false">
+                        <form class="event-form pt-0" id="eventForm" onsubmit="return false" method="post">
+                            {% csrf_token %}
                           <div class="mb-3">
                             <label class="form-label" for="eventTitle">Title</label>
                             <input
@@ -272,12 +273,12 @@
                               id="eventGuests"
                               name="eventGuests"
                               multiple>
-                              <option data-avatar="1.png" value="Jane Foster">Jane Foster</option>
-                              <option data-avatar="3.png" value="Donna Frank">Donna Frank</option>
-                              <option data-avatar="5.png" value="Gabrielle Robertson">Gabrielle Robertson</option>
-                              <option data-avatar="7.png" value="Lori Spears">Lori Spears</option>
-                              <option data-avatar="9.png" value="Sandy Vega">Sandy Vega</option>
-                              <option data-avatar="11.png" value="Cheryl May">Cheryl May</option>
+                              <option value="Jane Foster">Jane Foster</option>
+                              <option value="Donna Frank">Donna Frank</option>
+                              <option value="Gabrielle Robertson">Gabrielle Robertson</option>
+                              <option value="Lori Spears">Lori Spears</option>
+                              <option value="Sandy Vega">Sandy Vega</option>
+                              <option value="Cheryl May">Cheryl May</option>
                             </select>
                           </div>
                           <div class="mb-3">
@@ -315,15 +316,6 @@
             </div>
             <!-- / Content -->
 
-
-
-
-
-
-
-
-
-
         </div>
 
 
@@ -334,14 +326,14 @@
 
 </body>
 
-    <!--footer-->
-    {% include 'admins/admin_footer.html' %}
+<!--footer-->
+{% include 'admins/admin_footer.html' %}
 
 <!-- Vendors JS -->
-    <script src="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.js' %}"></script>
 
- <!-- Main JS -->
-    <script src="{% static 'sneat/assets/js/main.js' %}"></script>
+<!-- Main JS -->
+<script src="{% static 'sneat/assets/js/main.js' %}"></script>
 
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
@@ -355,5 +347,66 @@
         }, 500);
     });
 
+    $(document).on('click', '.btn-add-event', function() {
+
+        var csrfToken = '{{ csrf_token }}';
+
+        var startdate = new Date($("#eventStartDate").val());
+        var endDate = new Date($("#eventEndDate").val());
+
+        var formData = {
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: startdate,
+            eventEndDate: endDate,
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventURL: $("#eventURL").val(),
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            csrfmiddlewaretoken: csrfToken
+        };
+
+        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, (data) => {
+            console.log('등록데이터', formData);
+        });
+
+    })
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
+
+
+    $(document).on('click', '.btn-update-event', function (e) {
+        e.preventDefault();
+
+        var csrfToken = '{{ csrf_token }}';
+        var startdate = new Date($("#eventStartDate").val());
+        var endDate = new Date($("#eventEndDate").val());
+
+
+
+        eventData = {
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: startdate,
+            eventEndDate: endDate,
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventURL: $("#eventURL").val(),
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            csrfmiddlewaretoken: csrfToken
+        };
+
+        api_gp("{%  url 'get_eventDataAll' %}", "PATCH", eventData, (eventData) => {
+            console.log('수정데이터', eventData)
+        });
+
+
+    });
+
+
 </script>
+
 </html>

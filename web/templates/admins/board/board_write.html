@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}"/>
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/bootstrap-select/bootstrap-select.css' %}"/>
 
-
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -20,30 +19,34 @@
             <div class="content-wrapper">
                 <div class="container-xxl flex-grow-1 container-p-y">
                     <div class="row">
+
                         <!-- Full Editor -->
                         <div class="col-12">
                             <div class="card">
-                                <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">게시판
-                                    글쓰기</strong>
+                                <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">게시판 글쓰기</strong>
 
-                                <div style="display: flex; justify-content: space-between;  margin-right: 20px;">
-                                    <div style="width: 60%;">
+
+                                <form action="{% url 'boardWriteAdd' %}" method="post" id="textform">
+                                    {% csrf_token %}
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
+                                    <div style="width: 60%; margin-right: auto">
                                         <!-- Basic -->
                                         <div class="col-md-6 mb-4" style="margin-top: 33px; margin-left: 30px;">
                                             <select id="selectpickerBasic" class="selectpicker w-100"
                                                     data-style="btn-default" required>
                                                 <option disabled selected>--게시판을 선택해주세요--</option>
-                                                <option>전사게시판</option>
-                                                <option>부서게시판</option>
-                                                <option>프로젝트게시판</option>
-                                                <option>주간업무보고</option>
+                                                {% for cm in codemaster %}
+                                                    <option name="boardcode" value="{{ cm.id }}">{{ cm.name }}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
-                                    <div style="display: flex; align-items: center;">
+
+                                    <div style="margin-top: 30px;">
                                         <label class="switch switch-danger"
                                                style="margin-right: 60px; margin-top: 8px;">
-                                            <input type="checkbox" class="switch-input">
+                                            <input type="hidden" name="fixed_flag" value="false">
+                                            <input type="checkbox" class="switch-input" name="fixed_flag" value="true">
                                             <span class="switch-label">상단공지등록</span>
                                             <span class="switch-toggle-slider">
                                             <span class="switch-on">
@@ -54,21 +57,29 @@
                                             </span>
                                         </span>
                                         </label>
-                                        {% include 'admins/board/temporarySave_modal.html' %}
-                                        <button type="button" class="btn btn-label-secondary">등록</button>
+                                        <!--임시저장 버튼-->
+                                        {% include 'admins/notice/temporarySave_modal.html' %}
+                                        <button type="submit" class="btn btn-label-secondary" id="submitBtn">등록</button>
+                                    </div>
                                     </div>
 
-                                </div>
-                                <!--제목 필드-->
-                                <input type="text" class="form-control" id="defaultFormControlInput"
-                                       placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp"
-                                       style="width: 97%; margin-left: 20px;">
-                                <!--내용 필드-->
-                                <div class="card-body">
-                                    <div id="full-editor">
-                                        <!--내용 입력-->
+
+
+
+                                    <!--제목 필드-->
+                                    <input type="text" class="form-control" id="defaultFormControlInput"
+                                           placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp"
+                                           style="width: 97%; margin-left: 20px;" name="title">
+
+                                    <!-- 내용 필드 -->
+                                    <div class="card-body">
+                                        <div id="editor"></div>
+                                        <!-- Hidden input for content -->
+                                        <input type="hidden" name="content" id="content-input">
                                     </div>
-                                </div>
+                                </form>
+
+
                             </div>
                         </div>
                         <!-- /Full Editor -->
@@ -77,9 +88,9 @@
                         <!-- Multi  -->
                         <div class="col-12" style="margin-top: 30px;">
                             <div class="card">
-                                <h5 class="card-header">파일첨부</h5>
+                                <h5 class="card-header">파일 업로드</h5>
                                 <div class="card-body">
-                                    <form action="#" class="dropzone needsclick" id="dropzone-multi">
+                                    <form action="{% url 'boardWriteAdd' %}" class="dropzone needsclick" id="dropzone-multi" method="post" enctype="multipart/form-data">
                                         <div class="dz-message needsclick" style="color: lightgrey; font-size: large">
                                             이 곳에 파일을 올려주세요.
                                         </div>
@@ -96,13 +107,16 @@
                 </div>
                 <!-- / Content -->
             </div>
-
-
         </div>
     </div>
 
 
 </div>
+
+
+
+
+
 </body>
 {% include 'admins/admin_footer.html' %}
 
@@ -119,4 +133,93 @@
 <script src="{% static 'sneat/assets/js/forms-selects.js' %}"></script>
 
 
+<script>
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        [{'header': 1}, {'header': 2}],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'script': 'sub'}, {'script': 'super'}],
+        [{'indent': '-1'}, {'indent': '+1'}],
+        [{'direction': 'rtl'}],
+        [{'size': ['small', false, 'large', 'huge']}],
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+        [{'color': []}, {'background': []}],
+        [{'font': []}],
+        [{'align': []}],
+        ['clean']
+    ];
+
+    var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+    });
+
+    document.querySelector('form').addEventListener('submit', function (event) {
+
+        var content = JSON.stringify(quill.getContents());
+
+
+        document.querySelector('#content-input').value = content;
+    });
+</script>
+<script>
+
+   $("#submitBtn").click(function(e) {
+    e.preventDefault();
+
+    var formdata = new FormData($("#textform")[0]);
+    formdata.append('title', $("#defaultFormControlInput").val());
+    formdata.append('content', JSON.stringify(quill.getContents()));
+    formdata.append('fixed_flag', $("input[name='fixed_flag']:checked").val());
+    formdata.append('boardcode', $("#selectpickerBasic").val());
+
+    var fileData = $("#dropzone-multi").get(0).dropzone.files;
+
+    for (var i = 0; i < fileData.length; i++) {
+        formdata.append('file', fileData[i]);
+    }
+
+       var iterator = formdata.entries();
+       var result = iterator.next();
+       while (!result.done) {
+           console.log(result.value);
+           result = iterator.next();
+       }
+
+    $.ajax({
+      url: "{% url 'boardWriteAdd' %}",
+      type: "POST",
+      xhrFields: {
+            withCredentials: true
+       },
+      data: formdata,
+      processData: false,
+      contentType: false,
+        success: function (response) {
+            Swal.fire({
+                title: 'Success!',
+                text: '작성글이 등록되었습니다.',
+                icon: 'success',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{% url 'adminBoard' %}";
+                }
+            });
+        },
+        error: function (error) {
+            console.log(error);
+            Swal.fire({
+                title: 'Error!',
+                text: '관리자에게 문의 바랍니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+        }
+    });
+  });
+</script>
 </html>

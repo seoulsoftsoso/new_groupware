@@ -23,7 +23,6 @@ let calendar;
     // 여기서 data를 사용하여 필요한 작업 수행
 
     events_data = data;
-
     // 예: 달력에 이벤트 추가 등
   }
   getDatas().then(events_data => {
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isFormValid = false,
       inlineCalInstance;
 
-      console.log(currentEvents)
+      console.log('이벤트 출력', currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
@@ -169,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
+      console.log('이벤트투업데이트', eventToUpdate)
       if (eventToUpdate.url) {
         info.jsEvent.preventDefault();
         window.open(eventToUpdate.url, '_blank');
@@ -401,6 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update Event
     // ------------------------------------------------
     function updateEvent(eventData) {
+      console.log(eventData)
       // ? Update existing event data to current events object and refetch it to display on calender
       // ? You can write below code to AJAX call success response
       eventData.id = parseInt(eventData.id);

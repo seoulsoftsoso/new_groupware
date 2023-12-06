@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/typography.css' %}"/>
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/katex.css' %}"/>
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/quill/editor.css' %}"/>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}"/>
+
 
 <body>
 
@@ -52,31 +54,144 @@
                 </div>
 
                 <!--공지사항 내용-->
-                <div id="content-container" style="width: 85%; font-size: large; margin-left: 100px">
+                <div id="content-container" style="width: 85%; font-size: large; margin-left: 100px; border: 0px;">
 
+                </div>
+                <div class="card-body" style="width: 90%; margin-left: 60px; display: grid; background-color: #fff2d6">
+
+                {% load custom_filters %}
+                    {% if files %}
+                        {% for file in files %}
+                           <a href="{% url 'download_file' file.id %}" download>{{ file.file_path|basename }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <div>첨부파일이 없습니다.</div>
+                    {% endif %}
                 </div>
 
                 <!--공지사항 댓글--->
                 <div style="width: 90%; margin-left: 60px; margin-top: 100px;">
-                    <label for="exampleFormControlTextarea1" class="form-label">댓글 0개 | 조회 43</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="댓글을 입력해보세요."></textarea>
+                    <label for="exampleFormControlTextarea1" class="form-label">댓글 0개 | 조회 0</label>
+                    <div class="form-group">
+                        <form onsubmit="addComment(event)">
+                            <div class="form-group" style="display: flex;">
+                                <input type="text" class="form-control" style="margin-right: 30px;" placeholder="댓글을 입력하세요" required>
+                                <button type="submit" class="btn btn-primary" style="width: 120px;">댓글등록</button>
+                            </div>
+                        </form>
+                        <!--댓글 표시되는 div-->
+                        <div class="card my-3 comments" style="justify-content: center">
+                            {% for reply in replies %}
+                                <div class="card-body">
+                                    <p class="card-text">{{ reply.reply }}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted" style="margin-right: 5px;">{{ reply.created_by.username }}</small>
+                                        <small class="text-muted">{{ reply.created_at|date:"Y년 m월 d일 A g:i" }}</small>
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
                 </div>
 
-            </div>
         </div>
     </div>
 </div>
+</div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Quill 에디터 초기화
+    var quill = new Quill('#content-container', {
+      readOnly: true,
+      theme: 'snow',
+        modules: {
+        toolbar: false,
+      },
+    });
+
+    var postDelta = {{ notice.content|safe }};
+
+    quill.setContents(postDelta.ops);
+
+  });
+
+    function editItem() {
+    // 현재 페이지 URL에서 기본 경로 가져오기 (예: 현재 페이지가 '/notices/detail/1'이면 '/notices'를 가져옴)
+    var basePath = window.location.pathname.split('/').slice(0, -1).join('/');
+
+    // Edit 페이지로 이동
+    window.location.href = basePath + '/edit';
+    }
+
+    function deleteItem(){
+        var pathArray = window.location.pathname.split('/');
+        var notice_id = pathArray[pathArray.length - 2];
+
+        console.log('게시글 아이디',notice_id)
+
+        $.ajax({
+            url: "{% url 'noticeDelete' %}",
+            method: 'POST',
+            data: {
+                'notice_id': notice_id,
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                if (response.status === 'ok') {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '작성글이 등록되었습니다.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{% url 'adminNotice' %}";
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+</script>
+<script>
+    function addComment(event) {
+        event.preventDefault();
+        let notice_id = {{ notice.id }}
+
+        var commentInput = event.target.querySelector("input");
+        var reply = commentInput.value;
+
+
+        $.ajax({
+            url: "{% url 'replyAdd' %}",
+            method: 'POST',
+            data: {
+                'reply': reply,
+                'parent_id': notice_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                commentInput.value = "";
+            },
+            error: function(error) {
+                console.error("실패 ", error);
+            }
+        });
+    }
+</script>
 {% include 'admins/admin_footer.html' %}
 </body>
 <!-- Vendors JS -->
 <script src="{% static 'sneat/assets/vendor/libs/quill/katex.js' %}"></script>
 <script src="{% static 'sneat/assets/vendor/libs/quill/quill.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.js' %}"></script>
 
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/forms-editors.js' %}"></script>
-<script>
-    let data = '{{ notice.content|safe }}'
-    $('#content-container').
-</script>
+<script src="{% static 'sneat/assets/js/forms-file-upload.js' %}"></script>
+
+
 </html>

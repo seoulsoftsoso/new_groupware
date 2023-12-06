@@ -25,7 +25,7 @@
                                 <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">공지사항 글쓰기</strong>
 
 
-                                <form action="{% url 'noticeWriteAdd' %}" method="post" id="textform">
+                                <form action="{% url 'noticeWriteEdit' notice.id %}" method="post" id="textform">
                                     {% csrf_token %}
                                     <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
                                         <label class="switch switch-danger"
@@ -47,16 +47,17 @@
                                          <button type="submit" class="btn btn-label-secondary" id="submitBtn">등록</button>
                                     </div>
                                     <!--제목 필드-->
-
                                     <input type="text" class="form-control" id="defaultFormControlInput"
                                            placeholder="제목을 입력해주세요." aria-describedby="defaultFormControlHelp"
-                                           style="width: 97%; margin-left: 20px;" name="title">
+                                           style="width: 97%; margin-left: 20px;" name="title"
+                                           value="{{ notice.title }}">
 
                                     <!-- 내용 필드 -->
                                     <div class="card-body">
                                         <div id="editor"></div>
                                         <!-- Hidden input for content -->
-                                        <input type="hidden" name="content" id="content-input">
+                                        <input type="hidden" name="content" id="content-input"
+                                               value="{{ notice.content|safe }}">
                                     </div>
                                 </form>
 
@@ -69,14 +70,30 @@
                         <!-- Multi  -->
                         <div class="col-12" style="margin-top: 30px;">
                             <div class="card">
-                                <h5 class="card-header">파일 업로드</h5>
+                                <h5 class="card-header">파일 업로드 수정</h5>
+                                <div style="margin-left: 60px;">
+                                                {% load custom_filters %}
+                                                {% if files %}
+                                                    {% for file in files %}
+                                                        <div class="edit_div" style="margin-bottom: 20px; display: flex;">
+                                                            <a href="{% url 'download_file' file.id %}" download>{{ file.file_path|basename }}</a>
+                                                            <div style="margin-top: 2px;">
+                                                                 <a href="#" class="delete-file" data-file-id="{{ file.id }}" style="margin-left: 30px;">삭제</a>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <div>첨부파일이 없습니다.</div>
+                                                {% endif %}
+                                            </div>
                                 <div class="card-body">
-                                    <form action="{% url 'noticeWriteAdd' %}" class="dropzone needsclick" id="dropzone-multi" method="post" enctype="multipart/form-data">
+                                    <form action="{% url 'noticeWriteEdit' notice.id %}" class="dropzone needsclick" id="dropzone-multi" method="post" enctype="multipart/form-data">
                                         <div class="dz-message needsclick" style="color: lightgrey; font-size: large">
                                             이 곳에 파일을 올려주세요.
                                         </div>
                                         <div class="fallback">
                                             <input name="file" type="file"/>
+
                                         </div>
                                     </form>
                                 </div>
@@ -136,6 +153,7 @@
         theme: 'snow'
     });
 
+    // 에디터에서 작성된 내용,디자인,서식 서버로 저장
     document.querySelector('form').addEventListener('submit', function (event) {
 
         var content = JSON.stringify(quill.getContents());
@@ -143,6 +161,25 @@
 
         document.querySelector('#content-input').value = content;
     });
+
+    // 서버에서 가져온 내용,디자인,서식 delta format 형식
+    var delta = {{ notice.content|safe }};
+    quill.setContents(delta);
+
+    // delta 값 렌더링
+    function deltaToText(delta) {
+        return delta.ops.map(function (op) {
+            if (op.insert) {
+                return op.insert;
+            } else if (op.attributes && op.attributes.link) {
+                return op.attributes.link; // 링크 있는 경우, 필요한 처리 추가
+            }
+            return "";
+        }).join("");
+    }
+
+    // 변환된 텍스트를 콘솔에 출력
+    console.log('수정 원본글:', deltaToText(delta));
 </script>
 <script>
 
@@ -168,7 +205,7 @@
        }
 
     $.ajax({
-      url: "{% url 'noticeWriteAdd' %}",
+      url: "{% url 'noticeWriteEdit' notice.id %}",
       type: "POST",
       xhrFields: {
             withCredentials: true
@@ -179,7 +216,7 @@
         success: function (response) {
             Swal.fire({
                 title: 'Success!',
-                text: '작성글이 등록되었습니다.',
+                text: '수정이 완료되었습니다.',
                 icon: 'success',
                 confirmButtonText: '확인'
             }).then((result) => {
@@ -199,5 +236,30 @@
         }
     });
   });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".delete-file").on("click", function (e) {
+            e.preventDefault();
+            var fileId = $(this).data("file-id");
+
+            $.ajax({
+                url: "{% url 'delete_file' %}",
+                type: "POST",
+                data: { file_id: fileId, csrfmiddlewaretoken: "{{ csrf_token }}" },
+                success: function (response) {
+                    // 삭제 성공 시 화면에서 해당 파일 엘리먼트 제거
+                    if (response.success) {
+                        $(e.target).closest(".edit_div").remove();
+                    } else {
+                        console.error("파일 삭제 실패");
+                    }
+                },
+                error: function (error) {
+                    console.error("파일 삭제 요청 실패: ", error);
+                }
+            });
+        });
+    });
 </script>
 </html>

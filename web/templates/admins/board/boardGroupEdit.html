@@ -1,0 +1,65 @@
+<!-- Modal -->
+<form action="{% url 'boardGroupEdit' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">게시판 수정</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+
+                <!-- Basic -->
+                <div class="col-md-6 mb-4" style="margin-top: 33px; margin-left: 30px;">
+                    <label for="nameBasic" class="form-label">게시판 선택</label>
+                    <select id="selectpickerBasic" class="selectpicker w-100"
+                            data-style="btn-default" required>
+                        <option disabled selected>--게시판을 선택해주세요--</option>
+                        {% for cm in codemaster %}
+                            <option name="boardcode" value="{{ cm.id }}">{{ cm.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">게시판 코드</label>
+                            <input type="text" id="board_group_edit_code"
+                                   name="board_group_edit_code"
+                                   class="form-control"
+                                   placeholder="영문 또는 숫자로 3글자 이상 입력해주세요."
+                                   pattern="^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{3,}$"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">게시판 이름</label>
+                            <input type="text" id="board_group_edit_name"
+                                   name="board_group_edit_name"
+                                   class="form-control"
+                                   placeholder="게시판 이름을 입력해주세요."
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-label-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                id="editBoardBtn">수정완료
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

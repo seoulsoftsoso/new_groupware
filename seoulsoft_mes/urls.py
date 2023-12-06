@@ -42,8 +42,12 @@ from api.calendar.common import get_eventDataAll
 
 from api.user.views import CustomObtainAuthToken
 from api.views import *
-
+from api.notice.views import *
+from api.board.views import *
+from api.reply.views import *
+from api.attendance.views import *
 from web.views import *
+
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -139,15 +143,31 @@ urlpatterns = [
                   path('admins/index/', admin_index_page, name="adminIndex"),
                   path('admins/work_schedule/', admin_work_schedule_page, name="adminWorkSchedule"),
 
+                  path('check-in/', check_in, name='check_in'),
+                  path('check-out/', check_out, name='check_out'),
+
                   path('admins/notice', admin_notice_page, name="adminNotice"),
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWritePage"),
-                  path('admins/notice/write', admin_notice_write, name="noticewrite"),
+                  path('admins/notice/detail/<int:notice_id>/edit/', admin_noticeEdit_page, name="noticeEdit"),
                   path('admins/notice/detail/<int:notice_id>/', amdin_noticedetail_page, name="noticeDetail"),
+                  path('admins/notice/write', admin_noticewrite_add, name="noticeWriteAdd"),
+                  path('admins/notice/edit/<int:notice_id>/', admin_noticewrite_edit, name="noticeWriteEdit"),
+                  path('admins/notice/delete', admin_notice_delete, name="noticeDelete"),
+
+                  path('admins/reply_add/', reply_add, name="replyAdd"),
+
+                  path('download/<int:file_id>/', download_File, name='download_file'),
+                  path('delete_file/', delete_file, name="delete_file"),
 
                   path('admins/board', amdin_board_page, name="adminBoard"),
                   path('admins/board/write_form', admin_boardwrite_page, name="boardWritePage"),
-                  path('admins/board/list', admin_boardList_page, name="boardList"),
-                  path('admins/board/detail', admin_boardDetail_page, name="boardDetail"),
+                  path('admins/board/detail/<int:board_id>/edit/', admin_boardEdit_page, name="boardEdit"),
+                  path('admins/board/detail/<int:board_id>/', amdin_boardDetail_page, name="boardDetail"),
+                  path('admins/boardlist/<int:code>/', admin_boardList_page, name="boardList"),
+                  path('admins/board/write', admin_boardwrite_add, name="boardWriteAdd"),
+                  path('admins/board/edit/<int:board_id>/', admin_boardwrite_edit, name="boardWriteEdit"),
+                  path('admins/board/group_add', admin_boardGroup_add, name="boardGroupAdd"),
+                  path('admins/board/group_edit', admin_boardGroup_edit, name="boardGroupEdit"),
 
 
                   #메인페이지

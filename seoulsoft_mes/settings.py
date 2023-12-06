@@ -15,10 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import sys
 
-from django.template.context_processors import media
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -32,7 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'api.UserMaster'
-
 
 # Application definition
 
@@ -52,18 +48,17 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
 
-
     'dal',
     'dal_select2',
     'mathfilters',
     'django_summernote',
 ]
 SWAGGER_SETTINGS = {
-   'DEFAULT_INFO': 'import.path.to.urls.api_info',
+    'DEFAULT_INFO': 'import.path.to.urls.api_info',
 }
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',        # TODO: To test
+        'rest_framework.authentication.BasicAuthentication',  # TODO: To test
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # 'api.user.authentication.ExpiredTokenCheck',
@@ -91,7 +86,6 @@ MIDDLEWARE = [
 
 ]
 
-
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 ROOT_URLCONF = 'seoulsoft_mes.urls'
 
@@ -112,16 +106,12 @@ TEMPLATES = [
     },
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
 WSGI_APPLICATION = 'seoulsoft_mes.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': 'mes2021_final',
@@ -130,7 +120,7 @@ WSGI_APPLICATION = 'seoulsoft_mes.wsgi.application'
 #        'HOST': '127.0.0.1',
 #        'PORT': '3306',
 #    }
-#}
+# }
 
 DATABASES = {
     'default': {
@@ -180,7 +170,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -193,7 +182,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -237,12 +225,9 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 
 # url
-# MEDIA_URL = 'http://175.212.116.77:8238/data/'  # For debug
-# MEDIA_URL = 'http://mes.seoulsoft.kr/data/'  # For debug
-MEDIA_URL = 'http://127.0.0.1:8002/data/'  # For debug
-# MEDIA_URL = 'http://192.168.0.12:9000/data/'  # For debug
+# MEDIA_URL = 'http://127.0.0.1:8002/data/'  # For debug
+MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
-
 
 # Token
 # AUTH_TOKEN_EXPIRE_SECONDS = 60 * 60 * 60 * 60 *60  # 10분
