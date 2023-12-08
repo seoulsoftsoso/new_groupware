@@ -164,14 +164,11 @@ def admin_boardGroup_edit(request):
         code = request.POST.get('board_group_edit_code')
         name = request.POST.get('board_group_edit_name')
 
-        # 수정하고자 하는 CodeMaster 객체를 데이터베이스에서 가져옵니다.
         code_master_to_edit = CodeMaster.objects.get(id=id)
 
-        # 가져온 객체의 값을 변경합니다.
         code_master_to_edit.code = code
         code_master_to_edit.name = name
 
-        # 변경된 객체를 저장합니다.
         code_master_to_edit.save()
 
         return JsonResponse({"success": True})

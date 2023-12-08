@@ -145,6 +145,7 @@ urlpatterns = [
 
                   path('check-in/', check_in, name='check_in'),
                   path('check-out/', check_out, name='check_out'),
+                  path('last_attendance/', last_attendance, name='last_attendance'),
 
                   path('admins/notice', admin_notice_page, name="adminNotice"),
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWritePage"),

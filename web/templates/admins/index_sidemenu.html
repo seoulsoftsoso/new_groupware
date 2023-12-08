@@ -40,15 +40,8 @@
 
                     </div>
                     <div class="work-check" style="display: flex; flex-direction: row; margin-top: 20px">
-                        <form id="checkInForm" action="{% url 'check_in' %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-primary me-2" id="checkInBtn">출근</button>
-                        </form>
-
-                        <form id="checkOutForm" action="{% url 'check_out' %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-primary me-2" id="checkOutBtn">퇴근</button>
-                        </form>
+                        <button class="btn btn-primary me-2" id="checkInBtn">출근</button>
+                        <button class="btn btn-primary me-2" id="checkOutBtn">퇴근</button>
                     </div>
                 </div>
                      <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px; margin-left: 15px; width: 70%;"></div>
@@ -153,40 +146,127 @@
                 </ul>
      </aside>
 </body>
-
 <script>
     function getCurrentDate() {
-        var today = new Date();
-        var year = today.getFullYear();
-        var month = (today.getMonth() + 1).toString().padStart(2, '0');
-        var day = today.getDate().toString().padStart(2, '0');
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = (today.getMonth() + 1).toString().padStart(2, '0');
+            var day = today.getDate().toString().padStart(2, '0');
 
-        return year + '-' + month + '-' + day;
-    }
+            return year + '-' + month + '-' + day;
+        }
 
-    document.getElementById('currentDate').innerHTML = getCurrentDate();
+        document.getElementById('currentDate').innerHTML = getCurrentDate();
 </script>
 <script>
+    const checkInBtn = document.getElementById('checkInBtn');
+    const checkOutBtn = document.getElementById('checkOutBtn');
+
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+
+            if (name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        return null;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        const checkInForm = document.getElementById('checkInForm');
-        const checkOutForm = document.getElementById('checkOutForm');
-        const checkInBtn = document.getElementById('checkInBtn');
-        const checkOutBtn = document.getElementById('checkOutBtn');
-
-        // 초기 설정: 출근 버튼은 활성화, 퇴근 버튼은 비활성화
-        checkInBtn.disabled = false;
-        checkOutBtn.disabled = true;
-
-        // 출근 버튼 클릭 시
-        checkInForm.addEventListener('submit', function () {
-            checkInBtn.disabled = true;
-            checkOutBtn.disabled = false;
-        });
-
-        // 퇴근 버튼 클릭 시
-        checkOutForm.addEventListener('submit', function () {
-            checkInBtn.disabled = false;
-            checkOutBtn.disabled = true;
+        // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
+        $.ajax({
+            url: "{% url 'last_attendance' %}",
+            type: "GET",
+            data: {
+                user_id: getCookie('user_id')
+            },
+            success: function (response) {
+                if (response.is_offwork) {
+                    checkInBtn.disabled = false;
+                    checkOutBtn.disabled = true;
+                } else {
+                    checkInBtn.disabled = true;
+                    checkOutBtn.disabled = false;
+                }
+            }
         });
     });
+
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
+
+    $('#checkInBtn').click(() => {
+
+        const se = document.createElement('script');
+        se.src = 'https://ipinfo.io?callback=checkInFunction';
+        document.body.appendChild(se);
+        document.body.removeChild(se);
+    });
+
+     $('#checkOutBtn').click(() => {
+
+        const se = document.createElement('script');
+        se.src = 'https://ipinfo.io?callback=checkOutFunction';
+        document.body.appendChild(se);
+        document.body.removeChild(se);
+    });
+
+    //출근버튼 함수
+    function checkInFunction(data) {
+
+        var attendance_ip = data.ip
+        console.log('출근아이피', attendance_ip)
+
+        var formdata = {
+            ip: attendance_ip
+        }
+
+         $.ajax({
+             url: "{% url 'check_in' %}",
+             type: "POST",
+             data: formdata,
+             success: function (response) {
+                 Swal.fire({
+                     title: 'Success!',
+                     text: '출근이 등록되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 });
+                 checkInBtn.disabled = true;
+                 checkOutBtn.disabled = false;
+             }
+         });
+    }
+
+    // 퇴근버튼 함수
+    function checkOutFunction(data) {
+
+        var attendance_ip = data.ip
+        console.log('퇴근아이피', attendance_ip)
+
+        var formdata = {
+            ip: attendance_ip
+        }
+
+         $.ajax({
+             url: "{% url 'check_out' %}",
+             type: "POST",
+             data: formdata,
+             success: function (response) {
+                 Swal.fire({
+                     title: 'Success!',
+                     text: '퇴근이 등록되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 });
+                 checkInBtn.disabled = false;
+                 checkOutBtn.disabled = true;
+             }
+         });
+    }
 </script>

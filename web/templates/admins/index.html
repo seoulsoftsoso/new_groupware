@@ -347,9 +347,12 @@
         }, 500);
     });
 
-    $(document).on('click', '.btn-add-event', function() {
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
 
-        var csrfToken = '{{ csrf_token }}';
+    $(document).on('click', '.btn-add-event', function(e) {
+         e.preventDefault();
 
         var formData = {
             eventTitle: $("#eventTitle").val(),
@@ -361,26 +364,17 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            csrfmiddlewaretoken: csrfToken
         };
 
-        console.log('폼데이터 : ', formData)
-
-        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, (data) => {
+        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
             console.log('등록데이터', formData);
         });
 
     })
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{ csrf_token }}' }
-    });
+
 
     $(document).on('click', '.btn-update-event', function (e) {
         e.preventDefault();
-
-        var csrfToken = '{{ csrf_token }}';
-
-        console.log('d아이디 : ', updateEventId)
 
         eventData = {
             updateEventId: updateEventId,
@@ -393,10 +387,7 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            csrfmiddlewaretoken: csrfToken
         };
-
-        console.log('이벤트데이터', eventData)
 
         $.ajax({
             url: "{% url 'get_eventDataAll' %}",
@@ -405,6 +396,27 @@
             data: JSON.stringify(eventData),
             success: function () {
                 console.log('수정데이터', eventData);
+            }
+        });
+
+    });
+
+
+    $(".btn-delete-event").click(function(e) {
+
+        console.log('아이디 : ', updateEventId)
+
+        var formData = {
+            eventId: updateEventId
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function () {
+                console.log('삭제 아이디', formData);
             }
         });
 

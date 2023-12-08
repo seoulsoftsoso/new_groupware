@@ -49,8 +49,8 @@ class get_eventDataAll(View):
             )
 
             event_add.save()
-            response_data = {'message': '성공'}
-            return JsonResponse(response_data)
+
+            return HttpResponse()
 
         return HttpResponse("Invalid Request")
 
@@ -85,4 +85,18 @@ class get_eventDataAll(View):
 
                 event.save()
 
-            return render(request, 'admins/board/board.html')
+            return HttpResponse()
+
+    def delete(self, request, *args, **kwargs):
+        if request.method == "DELETE":
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+            eventId = body_data.get('eventId')
+            print('아이디 : ', eventId)
+            event = EventMaster.objects.get(id=eventId)
+
+            event.delete_flag = "Y"
+
+            event.save()
+
+        return HttpResponse()
