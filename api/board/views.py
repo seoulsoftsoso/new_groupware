@@ -17,7 +17,7 @@ from django.db.models import Q
 def amdin_board_page(request):
 
     fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N").order_by("-updated_at")
-    boardmasters = BoardMaster.objects.filter(Q(boardcode=11) | Q(boardcode=12), delete_flag="N").order_by("-updated_at")
+    boardmasters = BoardMaster.objects.filter(Q(boardcode=11) | Q(boardcode=12), delete_flag="N").annotate(reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     context = {
@@ -172,3 +172,15 @@ def admin_boardGroup_edit(request):
         code_master_to_edit.save()
 
         return JsonResponse({"success": True})
+
+
+def admin_board_delete(request):
+    if request.method == "POST":
+        board_id = request.POST.get('board_id')
+        board = BoardMaster.objects.get(id=board_id)
+        board.delete_flag = "Y"
+        board.save()
+        print('성공')
+        return JsonResponse({'status': 'ok'})
+    else:
+        return JsonResponse({'status': 'fail'})

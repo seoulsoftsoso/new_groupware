@@ -136,13 +136,13 @@
             method: 'POST',
             data: {
                 'notice_id': notice_id,
-                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             success: function (response) {
                 if (response.status === 'ok') {
                     Swal.fire({
                         title: 'Success!',
-                        text: '작성글이 등록되었습니다.',
+                        text: '작성글이 삭제되었습니다.',
                         icon: 'success',
                         confirmButtonText: '확인'
                     }).then((result) => {

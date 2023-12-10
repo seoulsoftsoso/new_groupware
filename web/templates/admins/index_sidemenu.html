@@ -161,6 +161,8 @@
 <script>
     const checkInBtn = document.getElementById('checkInBtn');
     const checkOutBtn = document.getElementById('checkOutBtn');
+    const token = '53d407fad3208b';
+
 
     function getCookie(name) {
         let cookieArr = document.cookie.split(";");
@@ -169,6 +171,7 @@
             let cookiePair = cookieArr[i].split("=");
 
             if (name == cookiePair[0].trim()) {
+                console.log('쿠키',cookiePair[1])
                 return decodeURIComponent(cookiePair[1]);
             }
         }
@@ -185,6 +188,7 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
+                console.log('응답', response)
                 if (response.is_offwork) {
                     checkInBtn.disabled = false;
                     checkOutBtn.disabled = true;
@@ -203,7 +207,7 @@
     $('#checkInBtn').click(() => {
 
         const se = document.createElement('script');
-        se.src = 'https://ipinfo.io?callback=checkInFunction';
+        se.src = `https://ipinfo.io/?token=${token}&callback=checkInFunction`;
         document.body.appendChild(se);
         document.body.removeChild(se);
     });
@@ -211,7 +215,7 @@
      $('#checkOutBtn').click(() => {
 
         const se = document.createElement('script');
-        se.src = 'https://ipinfo.io?callback=checkOutFunction';
+        se.src = `https://ipinfo.io/?token=${token}&callback=checkOutFunction`;
         document.body.appendChild(se);
         document.body.removeChild(se);
     });
@@ -250,7 +254,7 @@
         console.log('퇴근아이피', attendance_ip)
 
         var formdata = {
-            ip: attendance_ip
+            offwork_ip: attendance_ip
         }
 
          $.ajax({

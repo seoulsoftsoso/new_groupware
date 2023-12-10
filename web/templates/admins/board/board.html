@@ -126,9 +126,9 @@
                                           <thead>
                                           <tr style="background-color: lightgray">
                                               <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 40%">제목</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 35%">제목</th>
                                               <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 20%;">작성일시</th>
+                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 25%;">작성일시</th>
                                               <th style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
                                               <th style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
                                           </tr>
@@ -137,12 +137,12 @@
                                           {% for bm in fixed_board %}
                                           <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
                                               {% if bm.boardcode_id == cm.id and bm.fixed_flag %}
-                                              <td style="color: red"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
+                                              <td style="color: red; text-align: center;"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
                                               <td style="color: red">{{ bm.title }}</td>
                                               <td style="color: red">{{ bm.created_by }}</td>
-                                              <td style="color: red">{{ bm.updated_at }}</td>
-                                              <td style="color: red"></td>
-                                              <td style="color: red"></td>
+                                              <td style="color: red; text-align: center;">{{ bm.updated_at|date:"Y년 n월 j일 A g:i" }}</td>
+                                              <td style="color: red; text-align: center;">{{ bm.click_cnt }}</td>
+                                              <td style="color: red; text-align: center;">{{ bm.reply_count }}</td>
                                               {% endif %}
                                           </tr>
                                               {% endfor %}
@@ -150,12 +150,12 @@
                                           {% for bm in boardmaster %}
                                           <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
                                               {% if bm.boardcode_id == cm.id %}
-                                              <td>{{ forloop.counter }}</td>
+                                              <td style="text-align: center;">{{ forloop.counter }}</td>
                                               <td>{{ bm.title }}</td>
-                                              <td>{{ bm.created_by }}</td>
-                                              <td>{{ bm.updated_at }}</td>
-                                              <td></td>
-                                              <td></td>
+                                              <td>{{ bm.created_by.username }}</td>
+                                              <td style="text-align: center;">{{ bm.updated_at|date:"Y년 n월 j일 A g:i" }}</td>
+                                              <td style="text-align: center;">{{ bm.click_cnt }}</td>
+                                              <td style="text-align: center;">{{ bm.reply_count }}</td>
                                               {% endif %}
                                           </tr>
                                               {% endfor %}

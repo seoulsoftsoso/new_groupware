@@ -21,8 +21,8 @@ def cal_workTime(last_attendance):
     return work_time
 
 
-def cal_workTime_check(last_attendance): #근무시간 8시간 이상인지 체크 후, 지각 None처리
-    if last_attendance.workTime.replace(second=0, microsecond=0) >= time(8,0,0):
+def cal_workTime_check(last_attendance):  # 근무시간 8시간 이상인지 체크 후, 지각 None처리
+    if last_attendance.workTime.replace(second=0, microsecond=0) >= time(8, 0, 0):
         last_attendance.latenessTime = None
 
 
@@ -43,6 +43,11 @@ def cal_earlyleaveTime(last_attendance):
 
 
 def cal_extendTime(last_attendance):
-    if last_attendance.workTime.replace(second=0, microsecond=0) > time(8,0,0): #근무시간이 8시간 초과인 경우 -> 연장근무 처리
-        return time_diff(time(8,0,0),last_attendance.workTime)
+    if last_attendance.workTime.replace(second=0, microsecond=0) > time(8, 0, 0):  # 근무시간이 8시간 초과인 경우 -> 연장근무 처리
+        return time_diff(time(8, 0, 0), last_attendance.workTime)
 
+
+def cal_latenessTime(attendance_time):
+    if attendance_time <= time(10, 0, 0):
+        return None
+    return time_diff(time(10, 0, 0), attendance_time)

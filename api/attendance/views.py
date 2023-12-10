@@ -15,14 +15,16 @@ def last_attendance(request):
 
     if user_id is None:
         return JsonResponse({'error': 'user_id is required'}, status=400)
-
     try:
-        attendance = Attendance.objects.filter(employee_id=user_id).latest('date')
+        attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
         print('attendance : ', attendance)
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
-    return JsonResponse({'is_offwork': attendance.is_offwork})
+    if attendance is not None:
+        return JsonResponse({'is_offwork': attendance.is_offwork})
+    else:
+        return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
 
 def CalculationDayAttendance(last_attendance):
@@ -50,7 +52,7 @@ def check_in(request):
         attendance_ip = data.get('ip')
 
         current_date = datetime.now().date()
-        current_time = datetime.now().time()
+        current_time = datetime.now().time().replace(second=0, microsecond=0)
 
         # 지각시간
         latenessTime = None
@@ -81,7 +83,10 @@ def check_out(request):
         if last_attendance.date == datetime.today().date():  # 오늘 날짜랑 마지막 출근일이랑 같은 경우
             last_attendance.offwork_ip = request.POST['offwork_ip']
             last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
+            last_attendance.is_offwork = True
             CalculationDayAttendance(last_attendance)
             cal_workTime_check(last_attendance)
             last_attendance.save()
             response = {'status': 1, 'message': '퇴근이 완료 되었습니다.'}
+
+        return HttpResponse()
