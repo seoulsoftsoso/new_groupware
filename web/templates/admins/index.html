@@ -105,7 +105,7 @@
                           data-bs-target="#addEventSidebar"
                           aria-controls="addEventSidebar">
                           <i class="bx bx-plus me-1"></i>
-                          <span class="align-middle">Add Event</span>
+                          <span class="align-middle">일정 추가</span>
                         </button>
                       </div>
                     </div>
@@ -200,7 +200,7 @@
                       id="addEventSidebar"
                       aria-labelledby="addEventSidebarLabel">
                       <div class="offcanvas-header border-bottom">
-                        <h5 class="offcanvas-title mb-2" id="addEventSidebarLabel">Add Event</h5>
+                        <h5 class="offcanvas-title mb-2" id="addEventSidebarLabel">일정 추가</h5>
                         <button
                           type="button"
                           class="btn-close text-reset"
@@ -211,13 +211,8 @@
                         <form class="event-form pt-0" id="eventForm" onsubmit="return false" method="post">
                             {% csrf_token %}
                           <div class="mb-3">
-                            <label class="form-label" for="eventTitle">Title</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="eventTitle"
-                              name="eventTitle"
-                              placeholder="Event Title" />
+                            <label class="form-label" for="eventTitle">제목</label>
+                            <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" />
                           </div>
                           <div class="mb-3">
                             <label class="form-label" for="eventLabel">구분</label>
@@ -230,16 +225,16 @@
                             </select>
                           </div>
                           <div class="mb-3">
-                            <label class="form-label" for="eventStartDate">Start Date</label>
+                            <label class="form-label" for="eventStartDate">시작날짜</label>
                             <input
                               type="text"
                               class="form-control"
                               id="eventStartDate"
                               name="eventStartDate"
-                              placeholder="Start Date" />
+                              placeholder="시작 날짜" />
                           </div>
                           <div class="mb-3">
-                            <label class="form-label" for="eventEndDate">End Date</label>
+                            <label class="form-label" for="eventEndDate">종료날짜</label>
                             <input
                               type="text"
                               class="form-control"
@@ -258,7 +253,7 @@
                             </label>
                           </div>
                           <div class="mb-3">
-                            <label class="form-label" for="eventURL">Event URL</label>
+                            <label class="form-label" for="eventURL">참조 URL</label>
                             <input
                               type="url"
                               class="form-control"
@@ -282,16 +277,16 @@
                             </select>
                           </div>
                           <div class="mb-3">
-                            <label class="form-label" for="eventLocation">Location</label>
+                            <label class="form-label" for="eventLocation">장소</label>
                             <input
                               type="text"
                               class="form-control"
                               id="eventLocation"
                               name="eventLocation"
-                              placeholder="Enter Location" />
+                              placeholder="장소" />
                           </div>
                           <div class="mb-3">
-                            <label class="form-label" for="eventDescription">Description</label>
+                            <label class="form-label" for="eventDescription">설명</label>
                             <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
                           </div>
                           <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
@@ -404,7 +399,6 @@
 
     $(".btn-delete-event").click(function(e) {
 
-        console.log('아이디 : ', updateEventId)
 
         var formData = {
             eventId: updateEventId

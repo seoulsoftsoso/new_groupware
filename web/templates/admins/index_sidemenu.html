@@ -182,7 +182,6 @@
             let cookiePair = cookieArr[i].split("=");
 
             if (name == cookiePair[0].trim()) {
-                console.log('쿠키',cookiePair[1])
                 return decodeURIComponent(cookiePair[1]);
             }
         }
@@ -201,7 +200,6 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
-                console.log('응답', response)
                 if (response.is_offwork) {
                     checkInBtn.disabled = false;
                     checkOutBtn.disabled = true;
@@ -237,7 +235,6 @@
     function checkInFunction(data) {
 
         var attendance_ip = data.ip
-        console.log('출근아이피', attendance_ip)
 
         var formdata = {
             ip: attendance_ip
@@ -264,7 +261,6 @@
     function checkOutFunction(data) {
 
         var attendance_ip = data.ip
-        console.log('퇴근아이피', attendance_ip)
 
         var formdata = {
             offwork_ip: attendance_ip
