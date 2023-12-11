@@ -1,12 +1,39 @@
 {% load static %}
-<body>
 <div class="layout-navbar container-fluid navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
      id="layout-navbar" style="">
     <div style="width: 100%; text-align: right">
-        <span>홍재성 /</span>
+        <span id="username"></span>
         <span>내 정보 /</span>
         <span>설정 /</span>
-        <span>로그아웃</span>
+        <a href="{% url 'logout' %}" id="logout"><span style="color: #697a8d">로그아웃</span></a>
     </div>
 </div>
-</body>
+
+<script>
+    $("#logout").click(function () {
+        flush_token();
+        window.location.href = "/logout/";
+    });
+
+    function flush_token() {
+        document.cookie = 'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'username=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_superuser=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_master=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_active=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'permissions=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'enterprise_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    const username = getCookie('username');
+    console.log('username : ', username)
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const username = getCookie('username');
+        if (username) {
+            document.getElementById('username').textContent = username + ' /';
+        }
+    });
+</script>

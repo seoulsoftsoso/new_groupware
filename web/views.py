@@ -17,10 +17,10 @@ def admin_index_page(request):
     return render(request, 'admins/index.html', context)
 
 
-def admin_work_schedule_page(request):
+def month_work_schedule_page(request):
     context = {}
     context['block'] = ''
-    return render(request, 'admins/work_schedule.html')
+    return render(request, 'admins/attendance/month_work_schedule.html')
 
 
 def admin_boardwrite_page(request):
@@ -42,9 +42,9 @@ def login_page(request):
     return render(request, 'login.html', {})
 
 
-def logout_view(request):
-    auth.logout(request)
-    return redirect('index')
+# def logout_view(request):
+#     auth.logout(request)
+#     return redirect('index')
 
 
 def signup_page(request):

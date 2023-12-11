@@ -1,5 +1,7 @@
 from datetime import datetime, time, date
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 def time_diff(time1, time2):  # time2 - time1
     fulldate_time1 = datetime(100, 1, 1, time1.hour, time1.minute, time1.second)
@@ -14,7 +16,8 @@ def time_diff(time1, time2):  # time2 - time1
 
 def cal_workTime(last_attendance):
     work_time = time_diff(last_attendance.attendanceTime, last_attendance.offworkTime)
-    if last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() < time(6, 0, 0):  # 0시 이후~오전 6시 이전 퇴근
+    if last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() < time(6, 0,
+                                                                                                       0):  # 0시 이후~오전 6시 이전 퇴근
         work_time = time_diff(time(1, 0, 0), work_time)
     elif last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() >= time(13, 30, 0):
         work_time = time_diff(time(1, 0, 0), work_time)
@@ -47,7 +50,53 @@ def cal_extendTime(last_attendance):
         return time_diff(time(8, 0, 0), last_attendance.workTime)
 
 
-def cal_latenessTime(attendance_time):
-    if attendance_time <= time(10, 0, 0):
-        return None
-    return time_diff(time(10, 0, 0), attendance_time)
+def PaginatorManager(request, queryset, num=15):
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, num)
+
+    max_index = len(paginator.page_range)
+    current_page = int(page) if page else 1
+    page_numbers_range = 5  # Display only 5 page numbers
+
+    start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+    end_index = start_index + page_numbers_range
+
+    if end_index >= max_index:
+        end_index = max_index
+
+    page_range = paginator.page_range[start_index:end_index]
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1)
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+
+    return page_range, queryset
+
+
+def PaginatorManager(request, queryset, num=15):
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, num)
+
+    max_index = len(paginator.page_range)
+    current_page = int(page) if page else 1
+    page_numbers_range = 5  # Display only 5 page numbers
+
+    start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+    end_index = start_index + page_numbers_range
+
+    if end_index >= max_index:
+        end_index = max_index
+
+    page_range = paginator.page_range[start_index:end_index]
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1)
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+
+    return page_range, queryset

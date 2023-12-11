@@ -51,6 +51,7 @@ from web.views import *
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 TITLE = "서울소프트 MES 프로젝트 API"
 VERSION = "v0.1"
@@ -132,7 +133,7 @@ custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 urlpatterns = [
                   path('', index, name='index'),
                   path('login/', login_page),
-                  path('logout/', logout_view, name='logout'),
+                  path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                   path('users/login/', custom_obtain_auth_token),
                   path('signup/', signup_page, name='signup'),
                   path('check-duplicate/', check_duplicate, name='check_duplicate'),
@@ -143,7 +144,8 @@ urlpatterns = [
                   path('admins/index/', admin_index_page, name="adminIndex"),
     
                   #근태관련
-                  path('admins/work_schedule/', admin_work_schedule_page, name="adminWorkSchedule"),
+                  path('admins/work_schedule/', admin_work_schedule_page.as_view(), name="adminWorkSchedule"),
+                  path('admins/month_work_schedule/', month_work_schedule_page, name="monthWorkSchedule"),
                   path('check-in/', check_in, name='check_in'),
                   path('check-out/', check_out, name='check_out'),
                   path('last_attendance/', last_attendance, name='last_attendance'),

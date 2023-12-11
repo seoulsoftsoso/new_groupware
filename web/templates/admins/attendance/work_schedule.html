@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+
+    {% include 'admins/admin_header.html' %}
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+       {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+
+            <!-- 근태관리(데이터 테이블) -->
+              <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px">
+                <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px;">근태관리</strong>
+                 <!--Search Form -->
+                <div class="card-body">
+                  <form class="dt_adv_search" method="get">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-12">
+                          <div class="row g-3" style="margin-left: 800px;">
+
+                              <div class="col-md-6 col-12 mb-4" style="margin-top: 30px; width: 100%; height: 40px; display: flex; flex-direction: row;">
+                                  <div class="input-group input-daterange" id="bs-datepicker-daterange" style="width: 500px">
+                                      <input id="datepicker_to" placeholder="시작 날짜" class="form-control" name="search-to" value="{{ search_to | default_if_none:''}}"/>
+                                      <span class="input-group-text">to</span>
+                                      <input id="datepicker_from" placeholder="끝 날짜" class="form-control" name="search-from" value="{{ search_from | default_if_none:''}}"/>
+                                  </div>
+                                  <div style="margin-left: 15px; width: 120px;">
+                                       <select id="selectpickerBasic" class="selectpicker w-100">
+                                           <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                           <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
+                                           <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
+                                       </select>
+                                  </div>
+                                  <div style="width: 200px; display: flex; flex-direction: row; margin-left: 10px">
+                                      <input type="text" placeholder="검색" class="form-control" id="form-search" name="search-content" value="{{ search_content | default_if_none:''}}"/>
+                                      <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;" >검색</button>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                  <!--Search form-->
+                <div class="card-datatable table-responsive">
+                    <table class="dt-multilingual table border-top">
+                        <thead>
+                        <tr style="text-align: center; width: auto; height: auto; background-color: lightgray;">
+                            <!-- 각 <th> 태그에 스타일을 추가하여 글자 크기를 조절 -->
+                            <th style="font-size: medium; font-weight: bold">근무일자</th>
+                            <th style="font-size: medium; font-weight: bold">성명</th>
+                            <th style="font-size: medium; font-weight: bold">직급</th>
+                            <th style="font-size: medium; font-weight: bold">부서</th>
+                            <th style="font-size: medium; font-weight: bold">출근시간</th>
+                            <th style="font-size: medium; font-weight: bold">퇴근시간</th>
+                            <th style="font-size: medium; font-weight: bold">근무시간</th>
+                            <th style="font-size: medium; font-weight: bold">연장근로</th>
+                            <th style="font-size: medium; font-weight: bold">지각시간</th>
+                            <th style="font-size: medium; font-weight: bold">조퇴시간</th>
+                            <th style="font-size: medium; font-weight: bold">출근IP</th>
+                            <th style="font-size: medium; font-weight: bold">퇴근IP</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in contacts %}
+                            <tr style="text-align: center" data-pk="{{ obj.id }}">
+                                <td>{{ obj.date }}</td>
+                                <td>{{ obj.employee.username }}</td>
+                                <td>{{ obj.jobTitle | default_if_none:'' }}</td>
+                                <td>{{ obj.department }}</td>
+                                <td>{{ obj.attendanceTime|date:"H:i" }}</td>
+                                <td>{{ obj.offworkTime|date:"H:i" }}</td>
+                                <td>{{ obj.workTime|date:"H:i" }}</td>
+                                <td>{{ obj.extendTime|date:"H:i" }}</td>
+                                <td>{{ obj.latenessTime|date:"H:i" }}</td>
+                                <td>{{ obj.earlyleaveTime|date:"H:i" }}</td>
+                                <td>{{ obj.attendance_ip }}</td>
+                                <td>{{ obj.offwork_ip | default_if_none:'' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+
+        </div>
+    </div>
+</div>
+</body>
+
+
+
+
+<script>
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
+
+    $( function() {
+        $( "#datepicker_to" ).datepicker({ format : 'yyyy-mm-dd'});
+        $( "#datepicker_from" ).datepicker({ format : 'yyyy-mm-dd'});
+    } );
+</script>
+    {% include 'admins/admin_footer.html' %}
+</html>
