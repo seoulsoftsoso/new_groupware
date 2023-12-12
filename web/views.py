@@ -17,12 +17,6 @@ def admin_index_page(request):
     return render(request, 'admins/index.html', context)
 
 
-def month_work_schedule_page(request):
-    context = {}
-    context['block'] = ''
-    return render(request, 'admins/attendance/month_work_schedule.html')
-
-
 def admin_boardwrite_page(request):
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 

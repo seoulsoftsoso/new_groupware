@@ -263,9 +263,31 @@ document.addEventListener('DOMContentLoaded', function () {
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
       let selectedEvents = currentEvents.filter(function (event) {
-        // console.log(event.extendedProps.calendar.toLowerCase());
+        //console.log('이벤트구분',event.extendedProps.calendar.toLowerCase());
         return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
+
+      selectedEvents = selectedEvents.map(function (event) {
+
+        let eventType = event.extendedProps.calendar.toLowerCase();
+
+        if (eventType==="business"){
+          eventType = "출장"
+        } else if(eventType==="personal"){
+          eventType = "자리비움"
+        } else if(eventType==="holiday"){
+          eventType = "연차"
+        } else if(eventType==="family"){
+          eventType = "반차"
+        } else if(eventType==="etc"){
+          eventType = "차량"
+        }
+
+        event.title = `${eventType} ${event.title}`;
+
+        return event;
+      });
+
       // if (selectedEvents.length > 0) {
       successCallback(selectedEvents);
       // }
@@ -289,6 +311,11 @@ document.addEventListener('DOMContentLoaded', function () {
       headerToolbar: {
         start: 'sidebarToggle, prev,next, title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      eventTimeFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false
       },
       direction: direction,
       initialDate: new Date(),

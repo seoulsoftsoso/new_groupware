@@ -145,7 +145,7 @@ urlpatterns = [
     
                   #근태관련
                   path('admins/work_schedule/', admin_work_schedule_page.as_view(), name="adminWorkSchedule"),
-                  path('admins/month_work_schedule/', month_work_schedule_page, name="monthWorkSchedule"),
+                  path('admins/month_work_schedule/', MonthAttendanceListView.as_view(), name="monthWorkSchedule"),
                   path('check-in/', check_in, name='check_in'),
                   path('check-out/', check_out, name='check_out'),
                   path('last_attendance/', last_attendance, name='last_attendance'),

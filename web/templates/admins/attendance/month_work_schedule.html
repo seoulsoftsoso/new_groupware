@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
      {% include 'admins/admin_header.html' %}
 
- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+  <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+  <!-- 나중에 오류발생하면 다시 바꿀 것. -->
+{#  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>#}
+<style>
+    #attendance_month_table tbody tr:hover {
+        background-color: #f5f5f9;
+    }
+</style>
 
 <body>
 
@@ -17,15 +25,413 @@
         <div class="layout-page" style="">
             {% include 'admins/index_header.html' %}
 
+            <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px; padding-bottom: 30px;">
+                <form style="width: 100%; margin-top: 30px; display: flex; justify-content: end; padding-right: 40px;" method="get">
+                    {% csrf_token %}
+                    <div style="display: flex;">
+                        <div style="margin-top: 8px; margin-right: 10px; margin-left: 5px;"><font color="red">*</font>근무년월</div>
+                        <div style="margin-right: 10px;">
+                            <select class="form-control" style="margin-right: 10px;" id="YEAR" name="YEAR"></select>
+                        </div>
+                        <div style="margin-right: 10px;">
+                            <select class="form-control" id="MONTH" name="MONTH">
+                                <option value='-1'>--</option>
+                                <option value='1' {% if "1" in standard_month and "-1" not in standard_month %}selected {% endif %}>1월</option>
+                                <option value='2' {% if "2" in standard_month %} selected {% endif %}>2월</option>
+                                <option value='3' {% if "3" in standard_month %} selected {% endif %}>3월</option>
+                                <option value='4' {% if "4" in standard_month %} selected {% endif %}>4월</option>
+                                <option value='5' {% if "5" in standard_month %} selected {% endif %}>5월</option>
+                                <option value='6' {% if "6" in standard_month %} selected {% endif %}>6월</option>
+                                <option value='7' {% if "7" in standard_month %} selected {% endif %}>7월</option>
+                                <option value='8' {% if "8" in standard_month %} selected {% endif %}>8월</option>
+                                <option value='9' {% if "9" in standard_month %} selected {% endif %}>9월</option>
+                                <option value='10' {% if "10" in standard_month %} selected {% endif %}>10월</option>
+                                <option value='11' {% if "11" in standard_month %} selected {% endif %}>11월</option>
+                                <option value='12' {% if "12" in standard_month %} selected {% endif %}>12월</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-right: 10px;">
+                            <select class="form-control" name="search-title">
+                                <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                <option value="number" {% if 'number' in search_title %} selected {% endif %}>사원번호</option>
+                                <option value="department" {% if 'department' in search_title %} selected {% endif %}>부서</option>
+                            </select>
+                        </div>
 
 
+                        <input type="text" class="form-control" style="width: 150px; margin-right: 10px;"
+                               id="form-search"
+                               placeholder="Search" name="search-content"
+                               value="{{ search_content | default_if_none:'' }}">
+                        <button type='submit' class="btn btn-primary w-15 h-90">검색</button>
+                    </div>
+
+                </form>
+
+                <div class="ml-auto mr-2 justify-content-end d-sm-flex" style="padding-right: 40px; margin-top: 20px;">
+                    <p>■ 를 클릭시 상세보기가 가능합니다. &nbsp;&nbsp;&nbsp; <font color="gray" style="margin-left: 30px;">■</font> : 출근 <font color="pink" style="margin-left: 20px;">■</font> : 퇴근미처리 <font color="orange" style="margin-left: 20px;">■</font> : 지각 <font color="red" style="margin-left: 20px;">■</font> : 조퇴 <font color="purple" style="margin-left: 20px;">■</font> : 지각&조퇴 <font color="blue" style="margin-left: 20px;">■</font> : 휴가 </p>
+                </div>
 
 
+                <div class="card table-responsive" style="margin-top: 20px; margin-left: 20px; padding-right: 20px;">
+                    <table class="table-striped table-bordered table-hover" id="attendance_month_table" style="width: 1900px !important; border-color: #d9dee3">
+                        <colgroup>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                            <col style="width: 40px;"/>
+                        </colgroup>
+
+                        <thead>
+                        <tr class="text-center" style="height: 80px;">
+                            <th style="width: 200px;">사원번호</th>
+                            <th style="width: 100px;">성명</th>
+                            <th style="width: 80px;">직급</th>
+                            <th id="cal_add" style="width: 200px;">부서</th>
+                        </tr>
+                        </thead>
+                        <tbody id="add-list" style="height: 50px;">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--상세보기 모달창-->
+                <div id="modal-view" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document"
+                         style="max-width: 30% !important;">
+                        <div class="modal-content">
+                            <div class="modal-body" style="width:100%; margin:0">
+                                <form class="modal-form text-center">
+                                    {% csrf_token %}
+                                    <div class="modal-footer w-100 justify-content-center" style="border-top:0; margin:0; padding-bottom:0">
+                                        <h5><b id="title"></b></h5>
+                                    </div>
+                                    <div style="border-top: #dee2e6 1px solid; margin-top: 30px;"></div>
+                                    <div class="modal-footer justify-content-center" style="margin-top: 30px; padding-top:0">
+                                        <font size="4" id="content"></font>
+                                    </div>
+                                </form>
+                                <div class="modal-footer w-100 justify-content-center">
+                                    <div class="float-left mx-auto">
+                                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
     </div>
 </div>
 
 </body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setDateBox();
+        cal();
+        get_attendance();
+        get_vacation();
+    });
+
+    // select box 연도 , 월 표시
+    function setDateBox() {
+        var dt = new Date();
+        var year = "";
+        var com_year = dt.getFullYear();
+        var display_year = '{{ standard_year }}';
+        var month = '{{ standard_month }}';
+
+
+        $('#MONTH').val(month);
+        // 올해 기준으로 -10년부터 +5년을 보여준다.
+        for (var y = (com_year - 10); y <= (com_year + 5); y++) {
+            if (y == display_year) {
+                $("#YEAR").append("<option value='" + y + "' selected>" + y + "년" + "</option>");
+                continue;
+            }
+            $("#YEAR").append("<option value='" + y + "'>" + y + "년" + "</option>");
+        }
+
+
+    }
+
+    //달력 형식 구현
+    function cal() {
+        var month = '{{ standard_month }}';
+        var display_year = '{{ standard_year }}';
+        var dt = new Date();
+
+        var week = new Array('일', '월', '화', '수', '목', '금', '토');
+
+        if (month == -1)
+            month = dt.getMonth() + 1;
+        //해당 달의 마지막 날
+        var last_day = new Date(display_year, month, 0);
+        //달력 출력
+        var cnt = 0;
+        var text = "";
+
+        for (i = 1; i <= last_day.getDate(); i++) {
+            text += "<th>";
+            if (week[new Date(display_year, month - 1, i).getDay()] == "일") //일요일
+                text += "<font color='red'>" + i + "</font>";
+            else if (week[new Date(display_year, month - 1, i).getDay()] == "토") //토요일
+                text += "<font color='blue'>" + i + "</font>";
+            else //다른 요일
+                text += i;
+            cnt = cnt + 1;
+            text += "</th>";
+        }
+        $(text).insertAfter($('#cal_add'));
+    }
+
+    //회원 정보&근태 정보 가져오는 방식
+    function get_attendance() {
+        let attendance = [
+            {% for obj in contacts %}
+                {
+                    employee_number: "{{obj.employee.code}}",
+                    name: "{{obj.employee.username}}",
+                    jobTitle: "{{obj.jobTitle}}",
+                    department: "{{obj.department}}",
+                    latenessTime: "{{obj.latenessTime}}",
+                    earlyleaveTime: "{{obj.earlyleaveTime}}",
+                    attendanceTime: "{{obj.attendanceTime}}",
+                    offworkTime: "{{obj.offworkTime}}",
+                    is_offwork: "{{obj.is_offwork}}",
+                    date: "{{obj.date}}"
+                },
+            {% endfor %}
+        ]
+
+        var len = $('#attendance_month_table th').length - 4;
+
+        //직원별 행 만들기
+        for (i = 0; i < attendance.length; i++) {
+            var cell = "";
+            if (document.getElementById(attendance[i].employee_number) ? false : true) {
+                if (attendance[i].jobTitle == "None")
+                    attendance[i].jobTitle = "";
+                cell += "<tr class='text-center' style='height: 80px;' id=" + attendance[i].employee_number + ">"
+                    + "<td>" + attendance[i].employee_number + "</td>"
+                    + "<td>" + attendance[i].name + "</td>"
+                    + "<td>" + attendance[i].jobTitle + "</td>"
+                    + "<td>" + attendance[i].department + "</td>";
+                for (j = 1; j < len + 1; j++)
+                    cell += "<td></td>";
+                cell += "</tr>";
+            }
+            $('#attendance_month_table > tbody:last').append(cell);
+        }
+
+
+        //날짜 비교해서 해당 행에 넣기 (데이터가 있을 경우에는 조퇴->지각->출근 순으로 값 넣기)
+        for (k = 0; k < attendance.length; k++) {
+            if (document.getElementById(attendance[k].employee_number) ? true : false) {
+                var attendance_day = attendance[k].date.split(' ');
+                var day = parseInt(attendance_day[2].replace('일', '')) + 3;
+                if (attendance[k].earlyleaveTime != "None" && attendance[k].earlyleaveTime != "") {
+                    if (attendance[k].latenessTime != "None" && attendance[k].latenessTime != "") {
+                        $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='purple' text-align='center' id='earlylateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                    } else {
+                        $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='red' text-align='center' id='early_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                    }
+                } else if (attendance[k].latenessTime != "None" && attendance[k].latenessTime != "") {
+                    if (attendance[k].earlyleaveTime != "None" && attendance[k].earlyleaveTime != "") {
+                        $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='purple' text-align='center' id='earlylateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                    } else {
+                        $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='orange' text-align='center' id='lateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                    }
+                } else if (attendance[k].is_offwork == 'True') {
+                    $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='pink' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                } else if (attendance[k].attendanceTime != "None" && attendance[k].attendanceTime != "") {
+                    $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='gray' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
+                }
+            }
+        }
+    }
+
+    //회원 휴가 정보 가져오는 방식
+    function get_vacation() {
+        let vacation = [
+            {% for obj in vacation_inquiry %}
+                {
+                    employee_number: "{{obj.employee.employee_number}}",
+                    name: "{{obj.employee.name}}",
+                    jobTitle: "{{obj.jobTitle}}",
+                    department: "{{obj.department}}",
+                    startDate: "{{obj.startDate}}",
+                    endDate: "{{obj.endDate}}"
+                },
+            {% endfor %}
+        ]
+
+        for (k = 0; k < vacation.length; k++) {
+            if (document.getElementById(vacation[k].employee_number) ? true : false) {
+                var start = vacation[k].startDate.split(' ');
+                var startDay = parseInt(start[2].replace('일', '')) + 3;
+                var end = vacation[k].endDate.split(' ');
+                var endDay = parseInt(end[2].replace('일', '')) + 3;
+
+                //startDate랑 endDate 사이의 값 입력 for문
+                for (l = startDay; l < endDay + 1; l++)
+                    $('#' + vacation[k].employee_number + '>td:eq(' + l + ')').html("<font size='5' color='blue' id='vacation_" + vacation[k].employee_number + "_" + l + "' onclick='popup(this)'>■</font>");
+            }
+        }
+    }
+
+    function popup(obj) {
+        var id = obj.id.split('_');
+        var category = id[0];
+        var employee_number = id[1];
+        var day = parseInt(id[2]) - 3;
+
+        //카테고리 휴가를 제외한 경우
+        if (category == "early" || category == 'lateness' || category == 'attendance' || category == 'earlylateness') {
+            let attendance = [
+                {% for obj in contacts %}
+                    {
+                        employee_number: "{{obj.employee.code}}",
+                        name: "{{obj.employee.username}}",
+                        jobTitle: "{{obj.jobTitle}}",
+                        department: "{{obj.department}}",
+                        latenessTime: "{{obj.latenessTime}}",
+                        earlyleaveTime: "{{obj.earlyleaveTime}}",
+                        attendanceTime: "{{obj.attendanceTime}}",
+                        offworkTime: "{{obj.offworkTime}}",
+                        date: "{{obj.date}}"
+                    },
+                {% endfor %}
+            ]
+
+            for (i = 0; i < attendance.length; i++) {
+                //직원비교
+                if (employee_number == attendance[i].employee_number) {
+                    var pop_attendance_day = attendance[i].date.split(' ');
+                    var pop_day = parseInt(pop_attendance_day[2].replace('일', ''));
+                    if (pop_day == day) {
+                        if (category == 'early') {
+                            $('#title').html('조퇴');
+                            if ((attendance[i].earlyleaveTime).indexOf('오전 12') != -1)
+                                var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전 12", "00");
+                            else
+                                var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전", "");
+                            $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + attendance[i].offworkTime + "<br>조퇴 : " + earlyleaveTime + "");
+                        } else if (category == 'lateness') {
+                            $('#title').html('지각');
+                            var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
+                            if ((attendance[i].latenessTime).indexOf('오전 12') != -1)
+                                var latenessTime = attendance[i].latenessTime.replace("오전 12", "00");
+                            else
+                                var latenessTime = attendance[i].latenessTime.replace("오전", "");
+                            $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + offworkTime + "<br>지각 : " + latenessTime + "");
+                        } else if (category == 'attendance') {
+                            $('#title').html('출근');
+                            var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
+                            $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + offworkTime + "");
+                        } else if (category == 'earlylateness') {
+                            $('#title').html('지각&조퇴');
+                            var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
+                            if ((attendance[i].earlyleaveTime).indexOf('오전 12') != -1)
+                                var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전 12", "00");
+                            else
+                                var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전", "");
+                            if ((attendance[i].latenessTime).indexOf('오전 12') != -1)
+                                var latenessTime = attendance[i].latenessTime.replace("오전 12", "00");
+                            else
+                                var latenessTime = attendance[i].latenessTime.replace("오전", "");
+                            $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + offworkTime + "<br>조퇴 : " + earlyleaveTime + "<br>지각 : " + latenessTime + "");
+                        }
+                    }
+                }
+            }
+
+        } else {
+            let vacation = [
+                {% for obj in vacation_inquiry %}
+                    {
+                        employee_number: "{{obj.employee.employee_number}}",
+                        name: "{{obj.employee.name}}",
+                        jobTitle: "{{obj.jobTitle}}",
+                        department: "{{obj.department}}",
+                        startDate: "{{obj.startDate}}",
+                        endDate: "{{obj.endDate}}"
+                    },
+                {% endfor %}
+            ]
+
+            for (i = 0; i < vacation.length; i++) {
+                //직원비교
+                if (employee_number == vacation[i].employee_number) {
+                    var start = vacation[i].startDate.split(' ');
+                    var startDate = parseInt(start[2].replace('일', ''));
+                    var end = vacation[i].endDate.split(' ');
+                    var endDate = parseInt(end[2].replace('일', ''));
+
+                    if (startDate <= day && endDate >= day) {
+                        $('#title').html('휴가');
+                        $('#content').html("시작일 : " + vacation[i].startDate + "<br>종료일 : " + vacation[i].endDate + "");
+                    }
+                }
+            }
+
+        }
+        $("#modal-view").modal('show');
+    }
+
+
+</script>
+<script>
+    $(document).ready(function () {
+        $("#attendance_month_table tbody tr").click(function () {
+            $("#attendance_month_table tbody tr").removeClass('selected');
+            $(this).addClass('selected');
+        });
+    });
+</script>
+
+<style>
+    .selected {
+        background-color: #f5f5f9;
+    }
+</style>
 
 {% include 'admins/admin_footer.html' %}
 

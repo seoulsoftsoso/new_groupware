@@ -163,3 +163,82 @@ class admin_work_schedule_page(ListView):
         context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
 
         return context
+
+
+class MonthAttendanceListView(ListView):
+    template_name = 'admins/attendance/month_work_schedule.html'
+
+    def get_queryset(self):
+        search_title = self.request.GET.get('search-title', None)
+        search_content = self.request.GET.get('search-content', None)
+        attendance_queryset = Attendance.objects.all()
+        standard_year = self.request.GET.get('YEAR', datetime.today().year)
+        standard_month = self.request.GET.get('MONTH', datetime.today().month)
+        print('search_title : ', search_title)
+
+        if search_title == 'name' or search_title == None:
+            if search_content is not None and search_content != "":
+                attendance_queryset = attendance_queryset.filter(employee__username__contains=str(search_content))
+        elif search_title == 'number':
+            if search_content is not None and search_content != "":
+                attendance_queryset = attendance_queryset.filter(
+                    employee__employee_number__contains=str(search_content))
+        elif search_title == 'department':
+            if search_content is not None and search_content != "":
+                try:
+                    department_id = CodeMaster.objects.get(department__contains=str(search_content)).id
+                    attendance_queryset = attendance_queryset.filter(department_id=department_id)
+                except ObjectDoesNotExist:
+                    print("존재하지 않는 부서를 검색!")
+                    return None
+
+        if standard_month == '-1':
+            attendance_queryset = attendance_queryset.filter(date__year=int(standard_year)).all().order_by('-date')
+        else:
+            attendance_queryset = attendance_queryset.filter(date__year=int(standard_year),
+                                                             date__month=int(standard_month)).all().order_by('-date')
+
+        return attendance_queryset
+
+    # def get_vacation(self):
+    #     search_title = self.request.GET.get('search-title', None)
+    #     search_content = self.request.GET.get('search-content', None)
+    #     standard_year = self.request.GET.get('YEAR', datetime.today().year)
+    #     standard_month = self.request.GET.get('MONTH', datetime.today().month)
+    #     vacation_queryset = Vacation.objects.all()
+
+        # if search_title == 'name' or search_title == None:
+        #     if search_content is not None and search_content != "":
+        #         vacation_queryset = vacation_queryset.filter(employee__name__contains=str(search_content))
+        # elif search_title == 'number':
+        #     if search_content is not None and search_content != "":
+        #         vacation_queryset = vacation_queryset.filter(employee__employee_number__contains=str(search_content))
+        # elif search_title == 'department':
+        #     if search_content is not None and search_content != "":
+        #         try:
+        #             department_id = CodeMaster.objects.get(department__contains=str(search_content)).id
+        #             # vacation_queryset = vacation_queryset.filter(department_id=department_id)
+        #         except ObjectDoesNotExist:
+        #             print("존재하지 않는 부서를 검색!")
+        #             return None
+
+        # if standard_month == '-1':
+        #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
+        #                                                  is_approval=True).all().order_by(
+        #         '-startDate')
+        # else:
+        #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
+        #                                                  startDate__month=int(standard_month),
+        #                                                  is_approval=True).all().order_by('-startDate')
+        # return vacation_queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MonthAttendanceListView, self).get_context_data(**kwargs)
+        context['contacts'] = self.get_queryset()
+        # context['vacation_inquiry'] = self.get_vacation()
+        context['standard_year'] = self.request.GET.get('YEAR', datetime.today().year)
+        context['standard_month'] = self.request.GET.get('MONTH', datetime.today().month)
+        context['search_title'] = self.request.GET.get('search-title', None)
+        context['search_content'] = self.request.GET.get('search-content', None)
+
+        return context
