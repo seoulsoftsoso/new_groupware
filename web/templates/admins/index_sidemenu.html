@@ -241,22 +241,26 @@
                             intervalId = null;
                         }
 
-                        // 퇴근 시간 저장
                         localStorage.setItem('startTime', new Date());
                     }
 
                     document.getElementById('checkInBtn').addEventListener('click', function () {
+                        let storedWorkTime = localStorage.getItem('workTime');
+                        if (!storedWorkTime || new Date().toDateString() !== new Date(localStorage.getItem('endTime')).toDateString()) {
+                            // 새로운 날이 시작되었거나 저장된 작업 시간이 없으면 초기화
+                            localStorage.setItem('workTime', 0);
+                            diffSec = 0;
+                        } else {
+                            // 그렇지 않으면 저장된 작업 시간을 가져옴
+                            diffSec = parseInt(storedWorkTime);
+                        }
                         localStorage.setItem('startTime', new Date());
                         startCounting();
                     });
 
                     document.getElementById('checkOutBtn').addEventListener('click', stopCounting);
-if (new Date().toDateString() === new Date(localStorage.getItem('endTime')).toDateString()) {
-    startCounting();
-} else {
-    localStorage.setItem('startTime', 0);
-    document.getElementById('todayWorkTime').innerHTML = formatTime(0);
-}
+
+                    startCounting();
 
 
 
