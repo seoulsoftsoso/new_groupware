@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
       plugins: [dayGridPlugin, interactionPlugin, listPlugin, timegridPlugin],
       editable: true,
       dragScroll: true,
-      dayMaxEvents: 2,
+      dayMaxEvents: 3,
       eventResizableFromStart: true,
       customButtons: {
         sidebarToggle: {

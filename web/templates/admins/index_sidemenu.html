@@ -17,18 +17,19 @@
             </div>
 
 
-                <div style="margin-left: 30px;">
+                <div style="margin-left: 50px;">
                     <div style="margin-bottom: 20px; text-align: left">
                         <span id="currentDate"></span>
                     </div>
                     <div style="margin-top: -20px; margin-bottom: 20px; width: 100%; text-align: left">
                         <strong style="font-size: large;">나의 근태 현황</strong>
                     </div>
+
                     <div>
                         <div style="margin-top: 10px">
                             <span>🕒 오늘 총 근무 시간</span>
                             <div style="text-align: left; margin-left: 25px">
-                                <h10>0h 0m 0s</h10>
+                                <h10 id="todayWorkTime">0h 0m 0s</h10>
                             </div>
                         </div>
                         <div style="margin-top: 10px; width: auto">
@@ -37,14 +38,14 @@
                                 <h10>0h 0m 0s</h10>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="work-check" style="display: flex; flex-direction: row; margin-top: 20px">
                         <button class="btn btn-primary me-2" id="checkInBtn">출근</button>
                         <button class="btn btn-primary me-2" id="checkOutBtn">퇴근</button>
                     </div>
                 </div>
-                     <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px; margin-left: 15px; width: 70%;"></div>
+                     <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px; margin-left: 25px; width: 80%;"></div>
                 <div class="menu-inner-shadow"></div>
                 <ul class="menu-inner py-1 ps" style="margin-left: 25px;">
                     <li class="menu-item" style="margin-top: 30px; width: 100%;">
@@ -206,6 +207,61 @@
                 } else {
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
+
+
+                    let intervalId = null;
+                    let diffSec = 0;
+
+                    function formatTime(seconds) {
+                        let h = Math.floor(seconds / 3600);
+                        let m = Math.floor((seconds % 3600) / 60);
+                        let s = Math.floor((seconds % 3600) % 60);
+                        return `${h}h ${m}m ${s}s`;
+                    }
+
+                    function startCounting() {
+                        let startTime = localStorage.getItem('startTime');
+                        if (startTime) {
+                            diffSec = Math.floor((new Date() - new Date(startTime)) / 1000);
+                        } else {
+                            // 시작 시간이 없다면 현재 시간을 시작 시간으로 설정
+                            localStorage.setItem('startTime', new Date());
+                            diffSec = 0;
+                        }
+
+                        intervalId = setInterval(function () {
+                            diffSec++;
+                            document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
+                        }, 1000);
+                    }
+
+                    function stopCounting() {
+                        if (intervalId !== null) {
+                            clearInterval(intervalId);
+                            intervalId = null;
+                        }
+
+                        // 퇴근 시간 저장
+                        localStorage.setItem('startTime', new Date());
+                    }
+
+                    document.getElementById('checkInBtn').addEventListener('click', function () {
+                        localStorage.setItem('startTime', new Date());
+                        startCounting();
+                    });
+
+                    document.getElementById('checkOutBtn').addEventListener('click', stopCounting);
+if (new Date().toDateString() === new Date(localStorage.getItem('endTime')).toDateString()) {
+    startCounting();
+} else {
+    localStorage.setItem('startTime', 0);
+    document.getElementById('todayWorkTime').innerHTML = formatTime(0);
+}
+
+
+
+
+
                 }
             }
         });
@@ -250,7 +306,12 @@
                      text: '출근이 등록되었습니다.',
                      icon: 'success',
                      confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
                  });
+
                  checkInBtn.disabled = true;
                  checkOutBtn.disabled = false;
              }

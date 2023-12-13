@@ -22,7 +22,10 @@ def last_attendance(request):
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
     if attendance is not None:
-        return JsonResponse({'is_offwork': attendance.is_offwork})
+        return JsonResponse({
+            'is_offwork': attendance.is_offwork,
+            'attendanceTime': attendance.attendanceTime.strftime("%H:%M:%S")
+        })
     else:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
