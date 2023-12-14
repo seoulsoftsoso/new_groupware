@@ -190,6 +190,12 @@
         return null;
     }
 
+    function formatTime(seconds) {
+        let h = Math.floor(seconds / 3600);
+        let m = Math.floor((seconds % 3600) / 60);
+        let s = Math.floor((seconds % 3600) % 60);
+        return `${h}h ${m}m ${s}s`;
+    }
 
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -208,29 +214,22 @@
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
-
                     let intervalId = null;
                     let diffSec = 0;
 
-                    function formatTime(seconds) {
-                        let h = Math.floor(seconds / 3600);
-                        let m = Math.floor((seconds % 3600) / 60);
-                        let s = Math.floor((seconds % 3600) % 60);
-                        return `${h}h ${m}m ${s}s`;
-                    }
-
                     function startCounting() {
-                        let startTime = localStorage.getItem('startTime');
-                        if (startTime) {
-                            diffSec = Math.floor((new Date() - new Date(startTime)) / 1000);
+                        let storedWorkTime = localStorage.getItem('workTime');
+                        if (storedWorkTime) {
+                            diffSec = parseInt(storedWorkTime);
                         } else {
-                            // 시작 시간이 없다면 현재 시간을 시작 시간으로 설정
-                            localStorage.setItem('startTime', new Date());
                             diffSec = 0;
                         }
 
+                        document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
+
                         intervalId = setInterval(function () {
                             diffSec++;
+                            localStorage.setItem('workTime', diffSec);
                             document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
                         }, 1000);
                     }
@@ -241,30 +240,28 @@
                             intervalId = null;
                         }
 
-                        localStorage.setItem('startTime', new Date());
+                        localStorage.setItem('endTime', new Date());
                     }
 
                     document.getElementById('checkInBtn').addEventListener('click', function () {
-                        let storedWorkTime = localStorage.getItem('workTime');
-                        if (!storedWorkTime || new Date().toDateString() !== new Date(localStorage.getItem('endTime')).toDateString()) {
+                        let storedEndTime = localStorage.getItem('endTime');
+                        if (!storedEndTime || new Date().toDateString() !== new Date(storedEndTime).toDateString()) {
                             // 새로운 날이 시작되었거나 저장된 작업 시간이 없으면 초기화
                             localStorage.setItem('workTime', 0);
                             diffSec = 0;
-                        } else {
-                            // 그렇지 않으면 저장된 작업 시간을 가져옴
-                            diffSec = parseInt(storedWorkTime);
                         }
-                        localStorage.setItem('startTime', new Date());
+
                         startCounting();
                     });
 
-                    document.getElementById('checkOutBtn').addEventListener('click', stopCounting);
+                    document.getElementById('checkOutBtn').addEventListener('click', function () {
+                        stopCounting();
+                        localStorage.setItem('workTime', diffSec);
+
+                        document.getElementById('todayWorkTime').innerHTML = formatTime(parseInt(localStorage.getItem('workTime')))
+                    });
 
                     startCounting();
-
-
-
-
 
                 }
             }
@@ -341,10 +338,22 @@
                      text: '퇴근이 등록되었습니다.',
                      icon: 'success',
                      confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
                  });
                  checkInBtn.disabled = false;
                  checkOutBtn.disabled = true;
              }
          });
     }
+
+
+    window.onload = function() {
+    var workTime = localStorage.getItem('workTime');
+    if (workTime) {
+        document.getElementById('todayWorkTime').innerHTML = formatTime(workTime);
+    }
+};
 </script>

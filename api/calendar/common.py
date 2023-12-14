@@ -14,10 +14,11 @@ class get_eventDataAll(View):
     def get(self, request, *args, **kwargs):
         qs = EventMaster.objects.filter(delete_flag='N').values(
             'id', 'url', 'title', 'start_date', 'end_date', 'allDay',
-            'event_type', 'create_by', 'description', 'location'
+            'event_type', 'create_by__username', 'description', 'location'
         )
         context = {}
         context['result'] = list(qs)
+        print('context : ', context)
         return JsonResponse(context, safe=False)
 
     def post(self, request, *args, **kwargs):

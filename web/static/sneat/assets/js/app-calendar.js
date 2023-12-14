@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // * This will be called by fullCalendar to fetch events. Also this can be used to refetch events.
     // --------------------------------------------------------------------------------------------------
     function fetchEvents(info, successCallback) {
+
       // Fetch Events from API endpoint reference
        /*$.ajax(
         {
@@ -263,13 +264,14 @@ document.addEventListener('DOMContentLoaded', function () {
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
       let selectedEvents = currentEvents.filter(function (event) {
-        //console.log('이벤트구분',event.extendedProps.calendar.toLowerCase());
+        console.log('이벤트구분',event.extendedProps.created_by);
         return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
 
       selectedEvents = selectedEvents.map(function (event) {
 
         let eventType = event.extendedProps.calendar.toLowerCase();
+        let eventuser = event.extendedProps.created_by
 
         if (eventType==="business"){
           eventType = "출장"
@@ -283,7 +285,8 @@ document.addEventListener('DOMContentLoaded', function () {
           eventType = "차량"
         }
 
-        event.title = `${eventType} ${event.title}`;
+
+        event.title = `${eventType} (${eventuser})`;
 
         return event;
       });

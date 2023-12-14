@@ -89,6 +89,9 @@ MIDDLEWARE = [
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 ROOT_URLCONF = 'seoulsoft_mes.urls'
 
+# 로그아웃 성공 시 자동으로 이동할 URL
+LOGOUT_REDIRECT_URL = '/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

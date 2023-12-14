@@ -362,7 +362,7 @@
         };
 
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
-            console.log('등록데이터', formData);
+                console.log('등록데이터', formData);
         });
 
     })
@@ -391,6 +391,16 @@
             data: JSON.stringify(eventData),
             success: function () {
                 console.log('수정데이터', eventData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 수정되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
             }
         });
 

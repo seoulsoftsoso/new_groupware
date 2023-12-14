@@ -1,101 +1,131 @@
 {% load static %}
-{% include 'header.html' %}
-
+{% include 'admins/admin_header.html' %}
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/pages/page-auth.css' %}" />
 {% if user.is_active %}
 <script>history.back(-1);</script>
 {% else %}
-<div id="sub_contents">
-  <div class="signup_box">
-    <p><a href="/"><img id="login_logo" src="{% static 'img/big_logo.png' %}"></a></p>
 
-    <div id="signup_div">
-    <p class="label" style="color: #777; margin-bottom: 30px;"><span class="critical">* </span> 표시된 항목은 필수 정보입니다.</p>
-    <form action="{% url 'UserCreate' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <!-- 이름 필드 -->
-        <div class="form-group row mb-4">
-            <label for="id_username" class="col-sm-2 col-form-label"><span class="critical">* </span>이름</label>
-            <div class="col-sm-10">
-                <input type="text" name="username" id="id_username" class="form-control" placeholder="이름을 입력해주세요." required>
+    <div class="authentication-wrapper authentication-cover">
+        <div class="authentication-inner row m-0 d-flex justify-content-center">
+            <!-- /Left Text -->
+            <div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+                <div class="d-none d-lg-flex col-lg-7 col-xl-8 justify-content-center p-5"
+                 style="width: 1400px;height: auto; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12); border-radius: 36px;">
+                    <img
+                            src="{% static 'img/signup_img.png' %}"
+                            class="img-fluid"
+                            alt="Login image"
+                            width="700"
+                            data-app-dark-img="illustrations/girl-with-laptop-dark.png"
+                            data-app-light-img="illustrations/girl-with-laptop-light.png"/>
+
+                    <div class="d-flex col-12 col-lg-7 col-xl-6 align-items-center authentication-bg p-sm-5 p-4"
+                         style="width: 700px; height: 877px;">
+                        <div class="w-px-500 mx-auto">
+                            <span class="mb-2"
+                                  style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 300;line-height: normal;">회원 가입을 위해</span>
+                            <p class="mb-4"
+                               style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 700;line-height: normal;">
+                                정보를 입력해주세요</p>
+
+                            <p>
+                                <span>이미 회원이신가요?</span>
+                                <a href="{% url 'loginPage' %}">
+                                    <span>로그인</span>
+                                </a>
+                            </p>
+
+                            <form action="{% url 'UserCreate' %}" method="post" style="margin-top: 30px;">
+                                {% csrf_token %}
+                                {{ form }}
+                                <!-- 이름 필드 -->
+                                <div class="form-group row mb-4">
+                                    <label for="id_username" class="col-sm-2 col-form-label"><span
+                                            class="critical">* </span>이름</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="username" id="id_username" class="form-control"
+                                               placeholder="이름을 입력해주세요." required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <label for="id_user_id" class="col-sm-2 col-form-label"><span
+                                            class="critical">* </span>
+                                        아이디</label>
+                                    <div class="col-sm-10" style="display: flex">
+                                        <input type="text" name="user_id" id="id_user_id" class="form-control"
+                                               style="width: 300px; " placeholder="아이디를 입력해주세요." required>
+                                        <button type="button" id="check-duplicate" class="btn btn-label-warning"
+                                                style="width: 110px;">중복확인
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row mb-4">
+                                    <label for="id_password1" class="col-sm-2 col-form-label"><span
+                                            class="critical">* </span>
+                                        비밀번호</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" name="password" id="id_password1" class="form-control"
+                                               placeholder="비밀번호는 최소 8자 이상이어야 합니다." minlength="8" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <label for="id_password2" class="col-sm-2 col-form-label"><span
+                                            class="critical">* </span> 비밀번호 확인</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" name="password2" id="id_password2" class="form-control" style="margin-top: 6px;"
+                                               placeholder="확인을 위해 이전과 동일한 비밀번호를 입력하세요." minlength="8" required
+                                               oninput="checkPasswordMatch()">
+                                        <p id="password-match-message" style="color: red;"></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-4" style="margin-top: -7px;">
+                                    <label for="id_email" class="col-sm-2 col-form-label"><span
+                                            class="critical">* </span> 이메일</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" name="email" id="id_email" class="form-control"
+                                               placeholder="foo@bar.com 형식으로 입력하세요." required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <label for="id_useremailreceive" class="col-sm-2 col-form-label">이메일 수신 여부</label>
+                                    <div class="col-sm-10" style="padding-top: 5px">
+                                        <label class="form-check-label chk_text" for="same-address"
+                                               style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.<input type="checkbox" style="width: 13px; height: 13px; margin-left: 10px;" name="useremailreceive" id="id_useremailreceive"></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="id_userintro" class="col-sm-2 col-form-label">소개</label>
+                                    <div class="col-sm-10">
+                                        <textarea name="userintro" id="id_userintro" class="form-control" rows="3"
+                                                  placeholder="만나서 반갑습니다."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row" style="margin-top: 30px;">
+                                    <div class="mb-3">
+                                        <button type="submit" id="signup_btn" class="btn btn-primary d-grid w-100"
+                                                style="width: 400px;">회원가입
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
-        <div class="form-group row mb-4">
-            <label for="id_user_id" class="col-sm-2 col-form-label"><span class="critical">* </span> 아이디</label>
-            <div class="col-sm-8">
-                <input type="text" name="user_id" id="id_user_id" class="form-control"
-                       placeholder="아이디를 입력해주세요." required>
-            </div>
-
-        </div>
-        <div class="col-sm-11 offset-sm-1" style="margin-top: -30px; margin-bottom: 30px; justify-content: center">
-            <button type="button" id="check-duplicate" class="btn btn-secondary w-30 h-100 mr-2" style="width: 90px">중복 확인</button>
-        </div>
-
-        <div class="form-group row mb-4">
-            <label for="id_password1" class="col-sm-2 col-form-label"><span class="critical">* </span> 비밀번호</label>
-            <div class="col-sm-10">
-                <input type="password" name="password" id="id_password1" class="form-control"
-                       placeholder="비밀번호는 최소 8자 이상이어야 합니다." minlength="8" required>
-            </div>
-        </div>
-
-        <div class="form-group row mb-4">
-            <label for="id_password2" class="col-sm-2 col-form-label"><span class="critical">* </span> 비밀번호 확인</label>
-            <div class="col-sm-10">
-                <input type="password" name="password2" id="id_password2" class="form-control"
-                       placeholder="확인을 위해 이전과 동일한 비밀번호를 입력하세요." minlength="8" required oninput="checkPasswordMatch()">
-                <p id="password-match-message" style="color: red;"></p>
-            </div>
-        </div>
-
-        <div class="form-group row mb-4">
-            <label for="id_email" class="col-sm-2 col-form-label"><span class="critical">* </span> 이메일</label>
-            <div class="col-sm-10">
-                <input type="email" name="email" id="id_email" class="form-control"
-                       placeholder="foo@bar.com 형식으로 입력하세요." required>
-            </div>
-        </div>
-
-        <div class="form-group row mb-4">
-            <label for="id_useremailreceive" class="col-sm-2 col-form-label">이메일 수신 여부</label>
-            <div class="col-sm-10" style="padding-top: 15px">
-                <input type="checkbox" style="width: 13px; height: 13px;" name="useremailreceive" id="id_useremailreceive">
-                <label class="form-check-label chk_text" for="same-address" style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.</label>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label for="id_userintro" class="col-sm-2 col-form-label">소개</label>
-            <div class="col-sm-10">
-                <textarea name="userintro" id="id_userintro" class="form-control" rows="3"
-                          placeholder="만나서 반갑습니다."></textarea>
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-sm-11 offset-sm-1">
-                <button type="submit" id="signup_btn" class="btn btn-primary">가입</button>
-            </div>
-        </div>
-    </form>
-</div>
-  </div>
-
-  <script>
-    $('body').addClass('signup');
-
-    $('#id_username').addClass('form-control');
-
-    $('#id_password').addClass('form-control');
-    $('#id_password').attr("placeholder", "비밀번호");
-
-    $('#signup').click(function(){
-        location.href = '{% url 'signup' %}'
-    });
-  </script>
-</div>
+    </div>
 
 
 <script>

@@ -132,7 +132,7 @@ custom_obtain_auth_token = CustomObtainAuthToken.as_view()
 
 urlpatterns = [
                   path('', index, name='index'),
-                  path('login/', login_page),
+                  path('login/', login_page, name="loginPage"),
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                   path('users/login/', custom_obtain_auth_token),
                   path('signup/', signup_page, name='signup'),

@@ -21,9 +21,11 @@ let events_data = []
                           extendedProps: {
                               calendar: item.event_type,
                               location: item.location,
-                              description: item.description
-                          }
+                              description: item.description,
+                              created_by: item.create_by__username
+                          },
                       };
+
                       events_data.push(obj);
                   }
 
