@@ -29,16 +29,34 @@
                     </div>
                     <br/>
                     <div style="width: 90%; margin-left: 25px;">
-                        <span>점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추! 점메추!  </span>
+                        <span>"가장 예쁜 꽃은 우여곡절 끝에 피어나는 꽃"</span>
                     </div>
                 </div>
                 <div style="height: auto; display: flex; flex-direction: column; width: 60%; margin-left: 50px">
                     <div style="width: 100%; text-align: left; margin-top: 15px; margin-bottom: 15px">
-                        <strong>⭕ 오늘 연차 : </strong>
+                        <div>
+                            <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
+                            {% for obj in event_holiday %}
+                                <strong id="preHoliday"> {{ obj.create_by.username }}{% if not forloop.last %}, {% endif %}</strong>
+                            {% endfor %}
+                        </div>
                         <hr>
-                        <strong>💼 오늘 출장 : </strong>
+                        <div>
+                            <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
+                            {% for obj in event_business %}
+                                <strong id="preHoliday"> {{ obj.create_by.username }}{% if not forloop.last %}, {% endif %}</strong>
+                            {% endfor %}
+                        </div>
                         <hr>
-                        <strong>🚗 법인차량 사용 : </strong>
+                        <div>
+                            <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
+                            {% for obj in event_qm3 %}
+                                <strong id="preHoliday"> {{ obj.create_by.username }}(QM3){% if not forloop.last %}, {% endif %}</strong>
+                            {% endfor %}
+                            {% for obj in event_spo %}
+                                <strong id="preHoliday"> {{ obj.create_by.username }}(스포티지){% if not forloop.last %}, {% endif %}</strong>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,13 +80,19 @@
                 <div  style="height: auto; display: flex; flex-direction: column; width: 37%; margin-left: 30px;">
                     <div style="width: 100%; margin-top: 15px">
                         <div style="font-size: large">
-                            <strong>📢 공지사항 최신글</strong><br/><br/>
+                            <a href="{% url 'adminNotice' %}">
+                                <strong style="color: #697a8d;">📢 공지사항 최신글</strong><br/><br/>
+                            </a>
                         </div>
                         <div style="margin-left: 30px; margin-top: -10px">
-                            <span>* [공지] 전 직원 도시락 DAY</span><br/>
-                            <span>* [공사안내] 네오메디클리닉센터 주차요원 안내박스 공사</span><br/>
-                            <span>* 다우오피스 설치 및 사용방법 공유</span><br/>
-                            <span>* [전사] 연차사용 현황 및 잔여 연차 공지 (23.10.31까지 사용 분)</span>
+                            {% if fixed_notice %}
+                                <a href="{% url 'noticeDetail' fixed_notice.id %}"><span style="color: red;">* {{ fixed_notice.title }}</span></a><br/>
+                            {% else %}
+                                <span>고정 공지사항이 없습니다.</span>
+                            {% endif %}
+                            {% for obj in notice %}
+                                <a href="{% url 'noticeDetail' obj.id %}"><span style="color: #697a8d">* {{ obj.title }}</span><br/></a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -132,54 +156,63 @@
                         <label class="form-check-label" for="selectAll">전체</label>
                       </div>
 
-                      <div class="app-calendar-events-filter">
-                        <div class="form-check form-check-danger mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-personal"
-                            data-value="personal"
-                            checked />
-                          <label class="form-check-label" for="select-personal">자리비움</label>
-                        </div>
+                        <div class="app-calendar-events-filter">
+                            <div class="form-check form-check-danger mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-personal"
+                                        data-value="personal"
+                                        checked/>
+                                <label class="form-check-label" for="select-personal">자리비움</label>
+                            </div>
 
-                        <div class="form-check form-check-warning mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-family"
-                            data-value="family"
-                            checked />
-                          <label class="form-check-label" for="select-family">반차</label>
+                            <div class="form-check form-check-warning mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-family"
+                                        data-value="family"
+                                        checked/>
+                                <label class="form-check-label" for="select-family">반차</label>
+                            </div>
+                            <div class="form-check form-check-success mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-holiday"
+                                        data-value="holiday"
+                                        checked/>
+                                <label class="form-check-label" for="select-holiday">연차</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-business"
+                                        data-value="business"
+                                        checked/>
+                                <label class="form-check-label" for="select-business">출장</label>
+                            </div>
+                            <div class="form-check form-check-info">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-etc"
+                                        data-value="etc"
+                                        checked/>
+                                <label class="form-check-label" for="select-etc">차량(QM3)</label>
+                            </div>
+                            <div class="form-check form-check-info" style="margin-top: 8px;">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-etc"
+                                        data-value="spotage"
+                                        checked/>
+                                <label class="form-check-label" for="select-etc">차량(스포티지)</label>
+                            </div>
                         </div>
-                        <div class="form-check form-check-success mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-holiday"
-                            data-value="holiday"
-                            checked />
-                          <label class="form-check-label" for="select-holiday">연차</label>
-                        </div>
-                          <div class="form-check mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-business"
-                            data-value="business"
-                            checked />
-                          <label class="form-check-label" for="select-business">출장</label>
-                        </div>
-                        <div class="form-check form-check-info">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-etc"
-                            data-value="etc"
-                            checked />
-                          <label class="form-check-label" for="select-etc">차량</label>
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <!-- /Calendar Sidebar -->
@@ -221,7 +254,8 @@
                               <option data-label="danger" value="Personal">자리비움</option>
                               <option data-label="warning" value="Family">반차</option>
                               <option data-label="success" value="Holiday">연차</option>
-                              <option data-label="info" value="ETC">차량</option>
+                              <option data-label="info" value="ETC">차량-QM3</option>
+                              <option data-label="info" value="Spotage">차량-스포티지</option>
                             </select>
                           </div>
                           <div class="mb-3">
@@ -335,7 +369,7 @@
 <script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
 
 <script>
-    $(function () {
+    $(function (event) {
 
         setTimeout(function() {
             calendar.refetchEvents();
@@ -349,11 +383,31 @@
     $(document).on('click', '.btn-add-event', function(e) {
          e.preventDefault();
 
+        var checkbox = document.querySelector('.allDay-switch');
+        var startdate = $("#eventStartDate").val();
+        var enddate = $("#eventEndDate").val();
+
+        if (checkbox.checked) {
+            startdate = startdate+" 09:00";
+            enddate = enddate+" 18:00";
+            console.log('start1', startdate)
+            console.log('end1', enddate)
+        }
+
+        if (startdate.length===10 || enddate.length===10){
+            Swal.fire({
+                title: 'Fail!',
+                text: '날짜를 클릭하여 시간을 선택해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+        }
+
         var formData = {
             eventTitle: $("#eventTitle").val(),
             eventLabel: $("#eventLabel").val(),
-            eventStartDate: $("#eventStartDate").val(),
-            eventEndDate: $("#eventEndDate").val(),
+            eventStartDate: startdate,
+            eventEndDate: enddate,
             allDay: $(".allDay-switch").prop("checked") === true,
             eventURL: $("#eventURL").val(),
             eventGuests: $("#eventGuests").val(),
@@ -363,6 +417,12 @@
 
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
                 console.log('등록데이터', formData);
+                Swal.fire({
+                title: 'Success',
+                text: '일정이 등록되었습니다!',
+                icon: 'success',
+                confirmButtonText: '확인'
+            })
         });
 
     })

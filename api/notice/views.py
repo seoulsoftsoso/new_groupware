@@ -13,21 +13,18 @@ from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, Co
 
 
 def admin_notice_page(request):
-    if request.method == "POST":
-        fixed_notice_qs = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
-        notice_qs = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
+    fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+    notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")
 
-        fixed_notice = [obj.as_dict() for obj in fixed_notice_qs]
-        notice = [obj.as_dict() for obj in notice_qs]
+    context = {
+        'fixed_notice': fixed_notice,
+        'notice': notice,
+    }
 
-        context = {
-            'fixed_notice': fixed_notice,
-            'notice': notice,
-        }
+    return render(request, 'admins/notice/notice.html', context)
 
-        return JsonResponse(context)
-    else:
-        return render(request, 'admins/notice/notice.html')
 
 
 def amdin_noticedetail_page(request, notice_id):

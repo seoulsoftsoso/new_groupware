@@ -47,38 +47,46 @@
                             <tr style="background-color: lightgray">
                                 <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center; width: 50%">제목</th>
-                                <th style="font-size: medium; font-weight: bold">작성자</th>
+                                <th style="font-size: medium; font-weight: bold; text-align: center;">작성자</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <!--서버에서 받아온 json 데이터 추가 -->
+                           <tbody>
+                            <!--상단공지-->
+                            {% for obj in fixed_notice %}
+                            <tr style="cursor: pointer;" onclick="window.location='{% url 'noticeDetail' obj.id %}'">
+                                <td style="color: red; text-align: center;"><img
+                                        src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
+                                        style="margin-right: 8px"></td>
+                                <td style="color: red">{{ obj.title }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.created_by.username }}</td>
+                                <td style="color: red; text-align: center;" class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.click_cnt }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.reply_count }}</td>
+                            </tr>
+                            {% endfor %}
+
+                            <!--일반공지-->
+                            {% for obj in notice %}
+                            <tr style="cursor: pointer;" onclick="window.location='{% url 'noticeDetail' obj.id %}'">
+                                <td style="text-align:center;">{{ forloop.counter }}</td>
+                                <td>{{ obj.title }}</td>
+                                <td style="text-align:center;">{{ obj.created_by.username }}</td>
+                                <td style="text-align:center;" class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td style="text-align:center;">{{ obj.click_cnt }}</td>
+                                <td style="text-align:center;">{{ obj.reply_count }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination" style="margin-top: 20px; width: 100%; text-align: center;">
-                        <span class="step-links" style="width: 100%; margin-bottom: 20px;">
-                            {% if normal_notices.has_previous %}
-                                <a href="?page=1"><<</a>
-                                <a href="?page={{ normal_notices.previous_page_number }}">이전</a>
-                            {% endif %}
-
-                            {% for i in normal_notices.paginator.page_range %}
-                                <span class="{% if normal_notices.number == i %}current{% endif %}" style="margin-right: 20px;">
-                                    <a href="?page={{ i }}">{{ i }}</a>
-                                </span>
-                            {% endfor %}
-
-                            {% if normal_notices.has_next %}
-                                <a href="?page={{ normal_notices.next_page_number }}">다음</a>
-                                <a href="?page={{ normal_notices.paginator.num_pages }}">>></a>
-                            {% endif %}
-                        </span>
+                    <div style="margin-bottom: 30px; margin-top: 50px;">
+                        {% include 'admins/paging.html' %}
                     </div>
-
-
                 </div>
             </div>
             <!-- /Invoice -->
@@ -86,92 +94,6 @@
     </div>
 </div>
 
-<script>
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                // csrf토큰 전송
-                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-            }
-        }
-    });
-    $.ajax({
-        url: "{% url 'adminNotice' %}",
-        type: 'POST',
-        dataType: 'json',
-        success: function (data) {
-            console.log('성공', data);
-
-            const tbody = document.querySelector('tbody');
-            tbody.innerHTML = '';  // 기존의 테이블 내용을 초기화
-
-            // 상단공지 테이블
-            data.fixed_notice.forEach((notice) => {
-                const date = new Date(notice.updated_at);
-                const options = {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                };
-                const formattedDate = date.toLocaleString('ko-KR', options);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-            <td style="text-align: center;"><img
-                    src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}">
-            </td>
-            <td style="color:red;">${notice.title}</td>
-            <td style="color:red;">${notice.created_by}</td>
-            <td style="color: red; text-align: center;">${formattedDate}</td>
-            <td style="color:red; text-align: center">${notice.click_cnt}</td>
-            <td style="color:red; text-align: center">${notice.reply_count}</td>
-        `;
-                tr.style.cursor = 'pointer';
-                tr.addEventListener('click', function () {
-                    window.location.href = `notice/detail/${notice.id}`;
-                });
-                tbody.appendChild(tr);
-            });
-
-            // 일반공지 테이블
-            data.notice.forEach((notice, index) => {
-                const date = new Date(notice.updated_at);
-                const options = {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                };
-                const formattedDate = date.toLocaleString('ko-KR', options);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-            <td style="text-align: center;">${index + 1}</td>
-            <td>${notice.title}</td>
-            <td>${notice.created_by}</td>
-            <td style="text-align: center;">${formattedDate}</td>
-            <td style="text-align: center;">${notice.click_cnt}</td>
-            <td style="text-align: center;">${notice.reply_count}</td>  <!-- 댓글 수 -->
-        `;
-                tr.style.cursor = 'pointer';
-                tr.addEventListener('click', function () {
-                    window.location.href = `notice/detail/${notice.id}`;
-                });
-                tbody.appendChild(tr);
-            });
-        },
-        error: function (error) {
-            console.log('실패', error);
-        }
-    });
-</script>
 </body>
     {% include 'admins/admin_footer.html' %}
 </html>

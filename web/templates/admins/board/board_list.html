@@ -22,18 +22,21 @@
 
             <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px">
 
-
                 <!-- Invoice -->
 
                 <div class="card invoice-preview-card">
-                    <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0"
-                         style="margin-bottom: -30px">
-                        <div class="mb-xl-0 mb-4">
-                            <div class="d-flex svg-illustration mb-3 gap-2">
-                                <strong style="font-size: x-large;">전사게시판</strong>
+                    {% for cm in codemaster %}
+                        {% if cm.id == boardmaster.first.boardcode_id %}
+                            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0"
+                                 style="margin-bottom: -30px">
+                                <div class="mb-xl-0 mb-4">
+                                    <div class="d-flex svg-illustration mb-3 gap-2">
+                                        <strong style="font-size: x-large;">{{ cm.name }}</strong>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        {% endif %}
+                    {% endfor %}
                     <div class="input-group input-group-merge"
                          style="width: 20%; margin: 30px 30px 30px auto;">
                         <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
@@ -44,60 +47,51 @@
                     <hr class="my-0">
 
                     <div class="table-responsive">
+
                         <table class="table border-top m-0">
                             <thead>
                             <tr style="background-color: lightgray">
                                 <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                <th style="font-size: medium; font-weight: bold; text-align: center;">제목</th>
-                                <th style="font-size: medium; font-weight: bold">작성자</th>
+                                <th style="font-size: medium; font-weight: bold; text-align: center; width: 50%">제목</th>
+                                <th style="font-size: medium; font-weight: bold; text-align: center;">작성자</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
-                                <th style="font-size: medium; font-weight: bold">조회</th>
-                                <th style="font-size: medium; font-weight: bold">댓글</th>
+                                <th style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
+                                <th style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' %}'">
-                                <td style="color: red"><img
+                            <!--상단공지-->
+                            {% for obj in fixed_boardmaster %}
+                            <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' obj.id %}'">
+                                <td style="color: red; text-align: center;"><img
                                         src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
                                         style="margin-right: 8px"></td>
-                                <td style="color: red">HTML Admin Template</td>
-                                <td style="color: red">$32</td>
-                                <td style="color: red">2023-11-20 15:53:20</td>
-                                <td style="color: red">$32.00</td>
-                                <td style="color: red">$32.00</td>
+                                <td style="color: red">{{ obj.title }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.created_by.username }}</td>
+                                <td style="color: red; text-align: center;" class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.click_cnt }}</td>
+                                <td style="color: red; text-align: center;">{{ obj.reply_count }}</td>
                             </tr>
-                            <tr>
-                                <td style="color: red"><img
-                                        src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"
-                                        style="margin-right: 8px"></td>
-                                <td style="color: red"><a href="" style="color: red">Angular Admin Template</a></td>
-                                <td style="color: red">$22</td>
-                                <td style="color: red">2023-11-20 17:00:20</td>
-                                <td style="color: red">$22.00</td>
-                                <td style="color: red">$22.00</td>
-                            </tr>
+                            {% endfor %}
 
-                            <tr>
-                                <td>1</td>
-                                <td>HTML Admin Template</td>
-                                <td>$17</td>
-                                <td>2023-11-20 09:53:20</td>
-                                <td>$34.00</td>
-                                <td>$34.00</td>
+                            <!--일반공지-->
+                            {% for obj in boardmaster %}
+                            <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' obj.id %}'">
+                                <td style="text-align:center;">{{ forloop.counter }}</td>
+                                <td>{{ obj.title }}</td>
+                                <td style="text-align:center;">{{ obj.created_by.username }}</td>
+                                <td style="text-align:center;" class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td style="text-align:center;">{{ obj.click_cnt }}</td>
+                                <td style="text-align:center;">{{ obj.reply_count }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>React Admin Template</td>
-                                <td>$66</td>
-                                <td>2023-11-20 14:53:20</td>
-                                <td>$66.00</td>
-                                <td>$66.00</td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
+
                     </div>
-
-
+                    <div style="margin-bottom: 30px; margin-top: 50px;">
+                        {% include 'admins/paging.html' %}
+                    </div>
                 </div>
             </div>
             <!-- /Invoice -->
@@ -108,4 +102,21 @@
 
 </body>
 {% include 'admins/admin_footer.html' %}
+<script>
+    const elements = document.querySelectorAll('.updated_at');
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    };
+
+    elements.forEach((element) => {
+        const date = new Date(element.textContent.trim());
+        element.textContent = date.toLocaleString('ko-KR', options);
+    });
+</script>
 </html>

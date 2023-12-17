@@ -1,10 +1,14 @@
+from datetime import date
+
 from django.contrib import auth
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
-from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster
+from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster
 
 
 def index(request):
@@ -12,8 +16,26 @@ def index(request):
 
 
 def admin_index_page(request):
-    context = {}
-    context['block'] = ''
+    today = date.today()
+
+    event_holiday = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="Holiday")
+    event_business = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="Business")
+    event_qm3 = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="ETC")
+    event_spo = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="Spotage")
+    fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at").first()
+    notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9, fixed_flag=False).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")[:3]
+
+    context = {
+        'event_holiday': event_holiday,
+        'event_business': event_business,
+        'event_qm3': event_qm3,
+        'event_spo': event_spo,
+        'fixed_notice': fixed_notice,
+        'notice': notice
+    }
+
     return render(request, 'admins/index.html', context)
 
 
@@ -26,19 +48,8 @@ def admin_boardwrite_page(request):
     return render(request, 'admins/board/board_write.html', context)
 
 
-def admin_boardList_page(request):
-    context = {}
-    context['block'] = ''
-    return render(request, 'admins/board/board_list.html')
-
-
 def login_page(request):
     return render(request, 'login.html', {})
-
-
-# def logout_view(request):
-#     auth.logout(request)
-#     return redirect('index')
 
 
 def signup_page(request):

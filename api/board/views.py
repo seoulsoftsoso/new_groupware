@@ -17,7 +17,7 @@ from django.db.models import Q
 def amdin_board_page(request):
 
     fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N").order_by("-updated_at")
-    boardmasters = BoardMaster.objects.filter(Q(boardcode=11) | Q(boardcode=12), delete_flag="N").annotate(reply_count=Count('reply_board')).order_by("-updated_at")
+    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     context = {
@@ -27,6 +27,24 @@ def amdin_board_page(request):
     }
 
     return render(request, 'admins/board/board.html', context)
+
+
+def admin_boardList_page(request, id):
+
+    fixed_boardmaster = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+    boardmaster = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
+    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
+
+    print('boardmaster : ', boardmaster)
+
+    context = {
+        'fixed_boardmaster': fixed_boardmaster,
+        'boardmaster': boardmaster,
+        'codemaster': codemaster
+    }
+
+    return render(request, 'admins/board/board_list.html', context)
+
 
 
 def amdin_boardDetail_page(request, board_id):

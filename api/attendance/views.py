@@ -17,7 +17,6 @@ def last_attendance(request):
         return JsonResponse({'error': 'user_id is required'}, status=400)
     try:
         attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
-        print('attendance : ', attendance)
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
@@ -81,7 +80,6 @@ def check_out(request):
     if request.method == "POST":
         user_id = request.COOKIES.get('user_id')
         last_attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
-        print('기록', last_attendance)
 
         if last_attendance.date == datetime.today().date():  # 오늘 날짜랑 마지막 출근일이랑 같은 경우
             last_attendance.offwork_ip = request.POST['offwork_ip']

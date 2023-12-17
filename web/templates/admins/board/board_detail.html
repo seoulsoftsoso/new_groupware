@@ -123,11 +123,8 @@
   });
 
     function editItem() {
-    // 현재 페이지 URL에서 기본 경로 가져오기 (예: 현재 페이지가 '/notices/detail/1'이면 '/notices'를 가져옴)
-    var basePath = window.location.pathname.split('/').slice(0, -1).join('/');
-
-    // Edit 페이지로 이동
-    window.location.href = basePath + '/edit';
+        var basePath = window.location.pathname.split('/').slice(0, -1).join('/');
+        window.location.href = basePath + '/edit';
     }
 
     function deleteItem(){

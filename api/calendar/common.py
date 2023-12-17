@@ -18,14 +18,11 @@ class get_eventDataAll(View):
         )
         context = {}
         context['result'] = list(qs)
-        print('context : ', context)
         return JsonResponse(context, safe=False)
 
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             created_by_id = request.COOKIES.get('user_id')
-
-            print(request.POST.get('eventStartDate'))
 
             # 날짜,시간 파싱
             startDate_str = request.POST.get('eventStartDate')
@@ -51,7 +48,7 @@ class get_eventDataAll(View):
 
             event_add.save()
 
-            return HttpResponse()
+            return JsonResponse({'message': 'success'})
 
         return HttpResponse("Invalid Request")
 
@@ -93,7 +90,7 @@ class get_eventDataAll(View):
             body_unicode = request.body.decode('utf-8')
             body_data = json.loads(body_unicode)
             eventId = body_data.get('eventId')
-            print('아이디 : ', eventId)
+
             event = EventMaster.objects.get(id=eventId)
 
             event.delete_flag = "Y"

@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
         Holiday: 'success',
         Personal: 'danger',
         Family: 'warning',
-        ETC: 'info'
+        ETC: 'info',
+        Spotage: 'info'
       },
       offcanvasTitle = document.querySelector('.offcanvas-title'),
       btnToggleSidebar = document.querySelector('.btn-toggle-sidebar'),
@@ -264,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
       let selectedEvents = currentEvents.filter(function (event) {
-        console.log('이벤트구분',event.extendedProps.created_by);
+        //console.log('이벤트구분',event.extendedProps.calendar.toLowerCase());
         return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
 
@@ -272,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let eventType = event.extendedProps.calendar.toLowerCase();
         let eventuser = event.extendedProps.created_by
+        let eventallday = event.allDay
 
         if (eventType==="business"){
           eventType = "출장"
@@ -282,11 +284,18 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if(eventType==="family"){
           eventType = "반차"
         } else if(eventType==="etc"){
-          eventType = "차량"
+          eventType = "차량-QM3"
+        } else if(eventType==="spotage"){
+          eventType = "차량-스포티지"
         }
 
+        if (eventallday===true) {
+          eventallday = "*종일"
+        } else {
+          eventallday = ''
+        }
 
-        event.title = `${eventType} (${eventuser})`;
+        event.title = `${eventallday} ${eventType} (${eventuser})`;
 
         return event;
       });

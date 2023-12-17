@@ -23,7 +23,7 @@
         <div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
             <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5"
                  style="width: 1300px;height: 810px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12); border-radius: 36px;">
-                <div class="w-100 d-flex justify-content-center" style="">
+                <div class="w-100 d-flex justify-content-center">
                     <img
                             src="{% static 'img/login_img.png' %}"
                             class="img-fluid"
@@ -68,7 +68,7 @@
                                 <div class="mb-3 form-password-toggle">
                                     <div class="d-flex justify-content-between">
                                         <label class="form-label" for="password">Password</label>
-                                        <a href="auth-forgot-password-cover.html">
+                                        <a href="#" id="forgot-password">
                                             <small>Forgot Password?</small>
                                         </a>
                                     </div>
@@ -89,7 +89,7 @@
                                         <label class="form-check-label" for="defaultInline1">아이디 기억</label>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary d-grid w-100">Log in</button>
+                                <button class="btn btn-primary d-grid w-100">로그인</button>
                             </form>
 
                             <p class="text-center" style="margin-top: 20px;">
@@ -262,7 +262,19 @@
 
         event.preventDefault();
     });
+
+    document.querySelector('#forgot-password').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Info!',
+            text: '관리자에게 문의 바랍니다.',
+            icon: 'info',
+            confirmButtonText: '확인'
+        });
+    });
 </script>
 </body>
-
+<script src="{% static 'sneat/assets/vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
+<script src="{% static 'sneat/assets/js/extended-ui-sweetalert2.js' %}"></script>
 </html>

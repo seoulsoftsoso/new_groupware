@@ -35,7 +35,7 @@
                         <div style="margin-top: 10px; width: auto">
                             <span>🕒 이번주 누적 시간</span>
                             <div style="text-align: left; margin-left: 25px">
-                                <h10>0h 0m 0s</h10>
+                                <h10 id="weekWorkTime">0h 0m 0s</h10>
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,12 @@
                 </ul>
      </aside>
 </body>
+
 <script>
+    const checkInBtn = document.getElementById('checkInBtn');
+    const checkOutBtn = document.getElementById('checkOutBtn');
+    const token = '53d407fad3208b';
+
     function getCurrentDate() {
             var today = new Date();
             var year = today.getFullYear();
@@ -169,12 +174,6 @@
         }
 
         document.getElementById('currentDate').innerHTML = getCurrentDate();
-</script>
-<script>
-    const checkInBtn = document.getElementById('checkInBtn');
-    const checkOutBtn = document.getElementById('checkOutBtn');
-    const token = '53d407fad3208b';
-
 
     function getCookie(name) {
         let cookieArr = document.cookie.split(";");
@@ -197,6 +196,14 @@
         return `${h}h ${m}m ${s}s`;
     }
 
+    function getWeek(date) {
+        // 1월 1일을 기준으로 해당 날짜가 몇 번째 주에 속하는지 계산
+        var start = new Date(date.getFullYear(), 0, 1);
+        var diff = date - start;
+        var oneDay = 1000 * 60 * 60 * 24;
+        var day = Math.floor(diff / oneDay);
+        return Math.ceil((day + start.getDay() + 1) / 7);
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
         // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
@@ -214,8 +221,10 @@
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
+                    // 오늘 근무 누적시간
                     let intervalId = null;
                     let diffSec = 0;
+                    let weekSec = 0;
 
                     function startCounting() {
                         let storedWorkTime = localStorage.getItem('workTime');
@@ -225,12 +234,30 @@
                             diffSec = 0;
                         }
 
-                        document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
+                        let storedWeekTime = localStorage.getItem('weekTime');
+                        if (storedWeekTime) {
+                            weekSec = parseInt(storedWeekTime);
+                        } else {
+                            weekSec = 0;
+                        }
 
+                         // 일일 누적 시간 표시
+                        document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
+                         // 주간 누적 시간 표시
+                        document.getElementById('weekWorkTime').innerHTML = formatTime(weekSec);
+
+                        // 일일 누적 시간 1초마다 업데이트
                         intervalId = setInterval(function () {
                             diffSec++;
                             localStorage.setItem('workTime', diffSec);
                             document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
+                        }, 1000);
+
+                        // 주간 누적 시간을 1초마다 업데이트
+                        weekIntervalId = setInterval(function () {
+                            weekSec++;
+                            localStorage.setItem('weekTime', weekSec);
+                            document.getElementById('weekWorkTime').innerHTML = formatTime(weekSec);
                         }, 1000);
                     }
 
@@ -241,27 +268,52 @@
                         }
 
                         localStorage.setItem('endTime', new Date());
+
+                         if (weekIntervalId !== null) {
+                            clearInterval(weekIntervalId);
+                            weekIntervalId = null;
+                        }
+
+                        localStorage.setItem('endWeekTime', new Date());
                     }
 
-                    document.getElementById('checkInBtn').addEventListener('click', function () {
-                        let storedEndTime = localStorage.getItem('endTime');
-                        if (!storedEndTime || new Date().toDateString() !== new Date(storedEndTime).toDateString()) {
-                            // 새로운 날이 시작되었거나 저장된 작업 시간이 없으면 초기화
-                            localStorage.setItem('workTime', 0);
+                    function resetTimes() {
+                        let today = new Date();
+                        let storedEndTime = new Date(localStorage.getItem('endTime'));
+
+                        if (storedEndTime.getDate() !== today.getDate() ||
+                            storedEndTime.getMonth() !== today.getMonth() ||
+                            storedEndTime.getFullYear() !== today.getFullYear()) {
+                            console.log("일일근무 초기화");
+                            localStorage.removeItem('workTime');
                             diffSec = 0;
                         }
 
+                        // 현재 시간을 일요일 0시 0분으로
+                        let nextSunday = new Date(today);
+                        nextSunday.setHours(0, 0, 0, 0);
+                        nextSunday.setDate(today.getDate() + (0 - today.getDay() + 7) % 7);
+
+                        if (storedEndTime < nextSunday) {
+                            console.log("주간근무시간 초기화");
+                            localStorage.removeItem('weekTime');
+                            weekSec = 0;
+                        }
+                    }
+
+                    document.getElementById('checkInBtn').addEventListener('click', function () {
+                        resetTimes();
                         startCounting();
                     });
 
                     document.getElementById('checkOutBtn').addEventListener('click', function () {
                         stopCounting();
-                        localStorage.setItem('workTime', diffSec);
-
-                        document.getElementById('todayWorkTime').innerHTML = formatTime(parseInt(localStorage.getItem('workTime')))
+                        resetTimes();
                     });
 
                     startCounting();
+
+
 
                 }
             }
@@ -352,8 +404,12 @@
 
     window.onload = function() {
     var workTime = localStorage.getItem('workTime');
+    var weekTime = localStorage.getItem('weekTime');
     if (workTime) {
         document.getElementById('todayWorkTime').innerHTML = formatTime(workTime);
+    }
+    if (weekTime){
+        document.getElementById('weekWorkTime').innerHTML = formatTime(weekTime);
     }
 };
 </script>
