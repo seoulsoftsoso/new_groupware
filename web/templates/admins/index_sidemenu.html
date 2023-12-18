@@ -302,7 +302,7 @@
                         nextSunday.setDate(today.getDate() + (0 - today.getDay() + 7) % 7);
                         console.log('nextSunday2', nextSunday)
 
-                        if (nextSunday.getDay())==0 {
+                        if (nextSunday.getDay()===0) {
                             console.log("주간근무시간 초기화");
                             localStorage.removeItem('weekTime');
                             localStorage.removeItem('endWeekTime');
@@ -327,10 +327,6 @@
                 }
             }
         });
-    });
-
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": '{{ csrf_token }}' }
     });
 
     $('#checkInBtn').click(() => {
@@ -362,6 +358,7 @@
              url: "{% url 'check_in' %}",
              type: "POST",
              data: formdata,
+             headers: { "X-CSRFToken": '{{ csrf_token }}' },
              success: function (response) {
                  Swal.fire({
                      title: 'Success!',
@@ -393,6 +390,7 @@
              url: "{% url 'check_out' %}",
              type: "POST",
              data: formdata,
+             headers: { "X-CSRFToken": '{{ csrf_token }}' },
              success: function (response) {
                  Swal.fire({
                      title: 'Success!',
