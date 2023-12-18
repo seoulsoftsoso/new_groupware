@@ -177,6 +177,7 @@ urlpatterns = [
                   path('admins/board/edit/<int:board_id>/', admin_boardwrite_edit, name="boardWriteEdit"),
                   path('admins/board/group_add', admin_boardGroup_add, name="boardGroupAdd"),
                   path('admins/board/group_edit', admin_boardGroup_edit, name="boardGroupEdit"),
+                  path('admins/board/group_delete', admin_boardGroup_delete, name="boardGroupDelete"),
 
 
                   #메인페이지

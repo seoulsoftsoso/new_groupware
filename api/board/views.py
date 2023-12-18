@@ -15,9 +15,9 @@ from django.db.models import Q
 
 
 def amdin_board_page(request):
-
     fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N").order_by("-updated_at")
-    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
+    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     context = {
@@ -30,9 +30,10 @@ def amdin_board_page(request):
 
 
 def admin_boardList_page(request, id):
-
-    fixed_boardmaster = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
-    boardmaster = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
+    fixed_boardmaster = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).exclude(
+        boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+    boardmaster = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     print('boardmaster : ', boardmaster)
@@ -44,7 +45,6 @@ def admin_boardList_page(request, id):
     }
 
     return render(request, 'admins/board/board_list.html', context)
-
 
 
 def amdin_boardDetail_page(request, board_id):
@@ -169,7 +169,7 @@ def admin_boardGroup_add(request):
 
         new_codemaster = CodeMaster(
             code=code, name=name, group=group, enterprise=enterprise, created_by_id=created_by_id
-            )
+        )
 
         new_codemaster.save()
 
@@ -190,6 +190,15 @@ def admin_boardGroup_edit(request):
         code_master_to_edit.save()
 
         return JsonResponse({"success": True})
+
+
+def admin_boardGroup_delete(request):
+    id = request.GET.get('id')
+    print('id : ', id)
+
+    CodeMaster.objects.filter(id=id).delete();
+
+    return HttpResponse()
 
 
 def admin_board_delete(request):

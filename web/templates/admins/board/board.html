@@ -83,8 +83,6 @@
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </a>
                                                     <script>console.log('id',{{ cm.id }})</script>
-
-                                                    <!--게시판 그룹 편집,삭제-->
                                                     <div class="dropdown">
                                                         <button type="button"
                                                                 class="btn p-0 dropdown-toggle hide-arrow"
@@ -92,11 +90,10 @@
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                            <a class="dropdown-item" onclick="deleteBoardBtn({{ cm.id }})" href="javascript:void(0);">
                                                                 <i class="bx bx-trash me-1"></i> 삭제</a>
                                                         </div>
                                                     </div>
-                                                    <!--/게시판 그룹 편집,삭제-->
                                                 </li>
                                             {% endfor %}
 
@@ -187,6 +184,7 @@
 </body>
 
 <script>
+
     $("#addBoardBtn").click(function (e) {
         e.preventDefault();
 
@@ -195,11 +193,11 @@
 
         if (!boardCodeInput.checkValidity() || !boardNameInput.checkValidity()) {
             Swal.fire({
-                        title: 'Error!',
-                        text: '입력값이 올바르지 않습니다.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    })
+                title: 'Error!',
+                text: '입력값이 올바르지 않습니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
         } else {
 
             var formdata = new FormData();
@@ -240,8 +238,7 @@
             })
         }
     });
-</script>
-<script>
+
     $("#editBoardBtn").click(function (e) {
         e.preventDefault();
         console.log('board_group_code:', $('#board_group_edit_code').val());
@@ -250,43 +247,76 @@
 
         var selectedBoardId = $('#selectpickerBasic').val();
 
-            var formdata = new FormData();
+        var formdata = new FormData();
 
-            formdata.append('id', selectedBoardId)
-            formdata.append('board_group_edit_code', $('#board_group_edit_code').val());
-            formdata.append('board_group_edit_name', $('#board_group_edit_name').val());
-            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+        formdata.append('id', selectedBoardId)
+        formdata.append('board_group_edit_code', $('#board_group_edit_code').val());
+        formdata.append('board_group_edit_name', $('#board_group_edit_name').val());
+        formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
 
-            $.ajax({
-                url: "{% url 'boardGroupEdit' %}",
-                type: "POST",
-                data: formdata,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: '수정이 완료되었습니다.',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "{% url 'adminBoard' %}";
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: '관리자에게 문의 바랍니다.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    })
-                }
-            })
+        $.ajax({
+            url: "{% url 'boardGroupEdit' %}",
+            type: "POST",
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '수정이 완료되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'adminBoard' %}";
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        })
 
     });
+
+
+    function deleteBoardBtn(id) {
+
+        $.ajax({
+            url: "{% url 'boardGroupDelete' %}",
+            type: "GET",
+            data: {id:id},
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '삭제가 완료되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        })
+    }
+
+
 </script>
 
 {% include 'admins/admin_footer.html' %}

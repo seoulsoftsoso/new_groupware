@@ -281,22 +281,31 @@
                         let today = new Date();
                         let storedEndTime = new Date(localStorage.getItem('endTime'));
 
-                        if (storedEndTime.getDate() !== today.getDate() ||
-                            storedEndTime.getMonth() !== today.getMonth() ||
-                            storedEndTime.getFullYear() !== today.getFullYear()) {
+                        console.log('오늘', today)
+                        console.log('엔드타임', storedEndTime)
+
+                        if (storedEndTime.getDate() === today.getDate() ||
+                            storedEndTime.getMonth() === today.getMonth() ||
+                            storedEndTime.getFullYear() === today.getFullYear()) {
                             console.log("일일근무 초기화");
                             localStorage.removeItem('workTime');
+                            localStorage.removeItem('endTime');
                             diffSec = 0;
                         }
 
                         // 현재 시간을 일요일 0시 0분으로
                         let nextSunday = new Date(today);
+                        console.log('nextSunday', nextSunday)
                         nextSunday.setHours(0, 0, 0, 0);
-                        nextSunday.setDate(today.getDate() + (0 - today.getDay() + 7) % 7);
 
-                        if (storedEndTime < nextSunday) {
+                        // 0=일, 1=월, 2=화 ...
+                        nextSunday.setDate(today.getDate() + (0 - today.getDay() + 7) % 7);
+                        console.log('nextSunday2', nextSunday)
+
+                        if (nextSunday.getDay())==0 {
                             console.log("주간근무시간 초기화");
                             localStorage.removeItem('weekTime');
+                            localStorage.removeItem('endWeekTime');
                             weekSec = 0;
                         }
                     }

@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isFormValid = false,
       inlineCalInstance;
 
-    console.log('이벤트 출력', currentEvents)
+    //console.log('이벤트 출력', currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
