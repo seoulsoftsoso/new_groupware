@@ -163,6 +163,7 @@
     const checkInBtn = document.getElementById('checkInBtn');
     const checkOutBtn = document.getElementById('checkOutBtn');
     const token = '53d407fad3208b';
+    const today = new Date();
 
     function getCurrentDate() {
             var today = new Date();
@@ -194,15 +195,6 @@
         let m = Math.floor((seconds % 3600) / 60);
         let s = Math.floor((seconds % 3600) % 60);
         return `${h}h ${m}m ${s}s`;
-    }
-
-    function getWeek(date) {
-        // 1월 1일을 기준으로 해당 날짜가 몇 번째 주에 속하는지 계산
-        var start = new Date(date.getFullYear(), 0, 1);
-        var diff = date - start;
-        var oneDay = 1000 * 60 * 60 * 24;
-        var day = Math.floor(diff / oneDay);
-        return Math.ceil((day + start.getDay() + 1) / 7);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -268,7 +260,6 @@
                         }
 
                         localStorage.setItem('endTime', new Date());
-
                          if (weekIntervalId !== null) {
                             clearInterval(weekIntervalId);
                             weekIntervalId = null;
@@ -278,35 +269,15 @@
                     }
 
                     function resetTimes() {
-                        let today = new Date();
-                        let storedEndTime = new Date(localStorage.getItem('endTime'));
 
-                        console.log('오늘', today)
-                        console.log('엔드타임', storedEndTime)
+                        let storedEndTime = new Date(localStorage.getItem('endTime'));
 
                         if (storedEndTime.getDate() === today.getDate() ||
                             storedEndTime.getMonth() === today.getMonth() ||
                             storedEndTime.getFullYear() === today.getFullYear()) {
-                            console.log("일일근무 초기화");
                             localStorage.removeItem('workTime');
                             localStorage.removeItem('endTime');
                             diffSec = 0;
-                        }
-
-                        // 현재 시간을 일요일 0시 0분으로
-                        let nextSunday = new Date(today);
-                        console.log('nextSunday', nextSunday)
-                        nextSunday.setHours(0, 0, 0, 0);
-
-                        // 0=일, 1=월, 2=화 ...
-                        nextSunday.setDate(today.getDate() + (0 - today.getDay() + 7) % 7);
-                        console.log('nextSunday2', nextSunday)
-
-                        if (nextSunday.getDay()===0) {
-                            console.log("주간근무시간 초기화");
-                            localStorage.removeItem('weekTime');
-                            localStorage.removeItem('endWeekTime');
-                            weekSec = 0;
                         }
                     }
 
@@ -321,8 +292,6 @@
                     });
 
                     startCounting();
-
-
 
                 }
             }
@@ -370,6 +339,12 @@
                          location.reload();
                      }
                  });
+
+                 if (today.getDay() === 1) {
+                     console.log("주간 근무 시간 초기화");
+                     localStorage.removeItem('weekTime');
+                     localStorage.removeItem('endWeekTime');
+                 }
 
                  checkInBtn.disabled = true;
                  checkOutBtn.disabled = false;
