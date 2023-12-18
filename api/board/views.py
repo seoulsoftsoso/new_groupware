@@ -177,19 +177,16 @@ def admin_boardGroup_add(request):
 
 
 def admin_boardGroup_edit(request):
-    if request.method == "POST":
-        id = request.POST.get('id')
-        code = request.POST.get('board_group_edit_code')
-        name = request.POST.get('board_group_edit_name')
+    id = request.GET.get('id')
+    name = request.GET.get('board_group_edit_name')
 
-        code_master_to_edit = CodeMaster.objects.get(id=id)
+    code_master_to_edit = CodeMaster.objects.get(id=id)
 
-        code_master_to_edit.code = code
-        code_master_to_edit.name = name
+    code_master_to_edit.name = name
 
-        code_master_to_edit.save()
+    code_master_to_edit.save()
 
-        return JsonResponse({"success": True})
+    return JsonResponse({"success": True})
 
 
 def admin_boardGroup_delete(request):

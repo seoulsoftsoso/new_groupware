@@ -26,6 +26,10 @@ def admin_index_page(request):
         reply_count=Count('reply_board')).order_by("-updated_at").first()
     notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9, fixed_flag=False).annotate(
         reply_count=Count('reply_board')).order_by("-updated_at")[:3]
+    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N", fixed_flag=True).annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at").first()
+    board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
+        reply_count=Count('reply_board')).order_by("-updated_at")[:3]
 
     context = {
         'event_holiday': event_holiday,
@@ -33,7 +37,9 @@ def admin_index_page(request):
         'event_qm3': event_qm3,
         'event_spo': event_spo,
         'fixed_notice': fixed_notice,
-        'notice': notice
+        'notice': notice,
+        'fixed_board': fixed_board,
+        'board': board
     }
 
     return render(request, 'admins/index.html', context)

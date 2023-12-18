@@ -37,7 +37,7 @@
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <a href="{% url 'boardWritePage' %}">
-                                <button type="button" class="btn btn-label-secondary">🖋 글쓰기</button>
+                                <button type="button" class="btn btn-outline-dark">🖋 작성하기</button>
                             </a>
                         </div>
                         <div class="card-body">
@@ -51,24 +51,15 @@
                                             <div class="mt-3">
                                                 <!-- Button trigger modal -->
                                                 <button
-                                                        style="width: 150px; margin-bottom: 20px; background-color: #fff2d6; color: #697a8d; border-color: #fff2d6;"
+                                                        style="width: 150px; margin-bottom: 20px;"
                                                         type="button"
-                                                        class="btn btn-primary"
+                                                        class="btn btn-label-primary"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#basicModalAdd"><img
                                                         src="{% static 'admin/img/indexImg/add-to-queue-regular-24.png' %}">게시판 추가
                                                 </button>
-                                                {% include 'admins/board/boardGroupAdd.html' %}
-                                                 <button
-                                                        style="width: 150px; background-color: #fff2d6; color: #697a8d; border-color: #fff2d6;"
-                                                        type="button"
-                                                        class="btn btn-primary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#basicModal">
-                                                     <i class="bx bx-edit-alt me-1"></i>
-                                                     게시판 수정
-                                                </button>
-                                                {% include 'admins/board/boardGroupEdit.html' %}
+                                                {% include 'admins/board/groupAddModal.html' %}
+
 
                                             </div>
 
@@ -83,17 +74,21 @@
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </a>
                                                     <script>console.log('id',{{ cm.id }})</script>
-                                                    <div class="dropdown">
+                                                    <div class="dropdown" style="margin-left: 150px;">
                                                         <button type="button"
                                                                 class="btn p-0 dropdown-toggle hide-arrow"
                                                                 data-bs-toggle="dropdown">
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" onclick="deleteBoardBtn({{ cm.id }})" href="javascript:void(0);">
+                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal" href="javascript:void(0);">
+                                                                <i class="bx bx-edit-alt me-1"></i> 수정</a>
+                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal2" href="javascript:void(0);">
                                                                 <i class="bx bx-trash me-1"></i> 삭제</a>
                                                         </div>
                                                     </div>
+                                                        {% include 'admins/board/groupEditModal.html' %}
+                                                        {% include 'admins/board/groupDeleteModal.html' %}
                                                 </li>
                                             {% endfor %}
 
@@ -239,27 +234,15 @@
         }
     });
 
-    $("#editBoardBtn").click(function (e) {
-        e.preventDefault();
-        console.log('board_group_code:', $('#board_group_edit_code').val());
-        console.log('board_group_name:', $('#board_group_edit_name').val());
-
-
-        var selectedBoardId = $('#selectpickerBasic').val();
-
-        var formdata = new FormData();
-
-        formdata.append('id', selectedBoardId)
-        formdata.append('board_group_edit_code', $('#board_group_edit_code').val());
-        formdata.append('board_group_edit_name', $('#board_group_edit_name').val());
-        formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+    function editBoardBtn(id) {
 
         $.ajax({
             url: "{% url 'boardGroupEdit' %}",
-            type: "POST",
-            data: formdata,
-            processData: false,
-            contentType: false,
+            type: "GET",
+            data: {
+                id:id,
+                board_group_edit_name:$('#board_group_edit_name').val()
+            },
             success: function (response) {
                 Swal.fire({
                     title: 'Success!',
@@ -283,7 +266,7 @@
             }
         })
 
-    });
+    }
 
 
     function deleteBoardBtn(id) {
