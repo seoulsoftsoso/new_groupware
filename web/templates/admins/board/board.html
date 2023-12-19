@@ -185,55 +185,53 @@
     $("#addBoardBtn").click(function (e) {
         e.preventDefault();
 
-        var boardCodeInput = document.getElementById('board_group_code');
-        var boardNameInput = document.getElementById('board_group_name');
+        updateCheckedNodes();
 
-        if (!boardCodeInput.checkValidity() || !boardNameInput.checkValidity()) {
+        if (treeData == null) {
             Swal.fire({
-                title: 'Error!',
-                text: '입력값이 올바르지 않습니다.',
+                title: 'Fail!',
+                text: '접근권한을 설정해주세요.',
                 icon: 'error',
                 confirmButtonText: '확인'
             })
-        } else {
-
-            var formdata = new FormData();
-
-            formdata.append('board_group_code', $('#board_group_code').val());
-            formdata.append('board_group_name', $('#board_group_name').val());
-            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
-
-            console.log('데이터들', formdata)
-
-            $.ajax({
-                url: "{% url 'boardGroupAdd' %}",
-                type: "POST",
-                data: formdata,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: '게시판이 등록되었습니다.',
-                        icon: 'success',
-                        confirmButtonText: '확인'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "{% url 'adminBoard' %}";
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                    Swal.fire({
-                        title: 'Error!',
-                        text: '관리자에게 문의 바랍니다.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    })
-                }
-            })
         }
+
+        var formdata = new FormData();
+
+        formdata.append('board_group_name', $('#board_group_name').val());
+        formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+        formdata.append('treedata', JSON.stringify(treeData))
+
+        console.log('formdata', formdata)
+
+        $.ajax({
+            url: "{% url 'boardGroupAdd' %}",
+            type: "POST",
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '게시판이 등록되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'adminBoard' %}";
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        })
     });
 
     function editBoardBtn(button) {
@@ -301,6 +299,20 @@
                 })
             }
         })
+    }
+
+    function updateCheckedNodes() {
+        var checkboxTree = $('#jstree-checkbox')
+        var checkedNodes = checkboxTree.jstree('get_checked', true);
+        var treeData = checkedNodes.map(function (node) {
+            return {
+                id: node.id,
+                parent: node.parent,
+                text: node.text,
+                type: node.type
+            };
+        });
+        window.treeData = treeData;
     }
 
 

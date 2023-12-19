@@ -313,15 +313,15 @@ $(function () {
     method: "GET",
     dataType: "json",
     success: function(data) {
-      console.log('member', data)
+      //console.log('member', data)
 
-      // CodeMaster 데이터를 ID를 키로, name을 값으로 하는 객체로 변환
+      // ID=키 name=값 객체변환
       var codeMasterMap = data.code_data.reduce(function (result, item) {
         result[item.pk] = item.fields.name;
         return result;
       }, {});
 
-      // 사용자 데이터를 부서별로 그룹화
+      // 부서별 그룹
       var groupedData = data.user_data.reduce(function (result, user) {
         var departmentId = user.fields.department_position;
         if (!result[departmentId]) {
@@ -333,17 +333,28 @@ $(function () {
 
       var treeData = [];
 
-      console.log('codemaster : ',codeMasterMap);
 
-// 각 그룹에 대해 폴더 노드를 만들고 사용자 노드를 추가
+
+      //  console.log('codemaster : ',codeMasterMap);
+      // 각 그룹에 대해 폴더 노드를 만들고 사용자 노드를 추가
       for (var departmentId in groupedData) {
         var departmentUsers = groupedData[departmentId];
-
         // 폴더 노드 추가
         treeData.push({
           id: 'd_' + departmentId,
           parent: '#',
-          text: codeMasterMap[departmentId] // 부서 이름으로 변환
+          text: codeMasterMap[departmentId], // 부서 이름으로 변환
+          type: 'department'
+        });
+
+        departmentUsers.sort(function (a, b) {
+          if (a.fields.job_position < b.fields.job_position) {
+            return -1;
+          }
+          if (a.fields.job_position > b.fields.job_position) {
+            return 1;
+          }
+          return 0;
         });
 
         // 사용자 노드 추가
@@ -351,8 +362,10 @@ $(function () {
           treeData.push({
             id: user.pk,
             parent: 'd_' + departmentId,
-            text: user.fields.username + ' (' + codeMasterMap[name] + ')' // 직급 이름으로 변환
+            text: user.fields.username + ' (' + codeMasterMap[user.fields.job_position] + ')', // 직급 이름으로 변환
+            type: 'user'
           });
+
         });
       }
 
@@ -368,6 +381,12 @@ $(function () {
           default: {
             icon: 'bx bx-folder'
           },
+          department: {
+            icon: 'bx bx-folder'
+          },
+          user: {
+            icon: 'bx bx-user'
+          },
           html: {
             icon: 'bx bxl-html5 text-danger'
           },
@@ -381,6 +400,22 @@ $(function () {
             icon: 'bx bxl-nodejs text-warning'
           }
         }
+      }).on('ready.jstree', function () {
+        // 체크된 노드 추출
+        var checkedNodes = $('#jstree-checkbox').jstree('get_checked', true);
+
+        // 체크된 노드를 treeData로 변환
+        var treeData = checkedNodes.map(function (node) {
+          return {
+            id: node.id,
+            parent: node.parent,
+            text: node.text,
+            type: node.type
+          };
+        });
+
+        // treeData를 전역 변수에 저장
+        window.treeData = treeData;
       });
     }
   })

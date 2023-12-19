@@ -39,7 +39,7 @@ class GetMemberInfo(View):
         user_data_json = serializers.serialize('json', user_data)
         user_result = json.loads(user_data_json)
 
-        code_data = CodeMaster.objects.filter(group_id=1)
+        code_data = CodeMaster.objects.all()
         code_data_json = serializers.serialize('json', code_data)
         code_result = json.loads(code_data_json)
 
