@@ -5,40 +5,35 @@
     src: url("{% static 'admin/fonts/Pretendard-Medium.woff' %}") format('woff');
 }
 </style>
-<div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">🚫Warning🚫 </h5>
-                <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
-                </button>
-            </div>
-
-
-            <div class="modal-body">
-
-
-                <div class="row">
-                    <div class="col mb-3">
-                        <h5 style="font-family: Pretendard;">게시판을 삭제하게 되면 해당 게시판의 게시글도 삭제됩니다.</h5>
-                        <h5 style="font-family: Pretendard;"> 그래도 삭제하시겠습니까?</h5>
-                    </div>
+<div class="modal fade" id="deleteModal{{cm.id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">🚫Warning🚫 </h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button"
-                            class="btn btn-label-secondary"
-                            data-bs-dismiss="modal">취소
-                    </button>
-                    <button type="button" class="btn btn-primary"
-                            onclick="deleteBoardBtn({{ cm.id }})">삭제
-                    </button>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <h5 style="font-family: Pretendard;">게시판을 삭제하게 되면 해당 게시판의 게시글도 삭제됩니다.</h5>
+                            <h5 style="font-family: Pretendard;"> 그래도 삭제하시겠습니까?</h5>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-label-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                data-id="{{ cm.id }}" onclick="deleteBoardBtn(this)">삭제
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

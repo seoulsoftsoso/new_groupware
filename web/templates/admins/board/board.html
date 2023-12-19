@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
      {% include 'admins/admin_header.html' %}
 
- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/jstree/jstree.css' %}" />
 <style>
     .list-container {
         line-height: 2.5;
@@ -73,24 +73,25 @@
                                                     <a href="{% url 'boardList' cm.id %}">
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </a>
-                                                    <script>console.log('id',{{ cm.id }})</script>
-                                                    <div class="dropdown" style="margin-left: 150px;">
+                                                    <script>console.log('id', {{ cm.id }})</script>
+                                                    <div class="dropdown">
                                                         <button type="button"
                                                                 class="btn p-0 dropdown-toggle hide-arrow"
                                                                 data-bs-toggle="dropdown">
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal" href="javascript:void(0);">
+                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal{{ cm.id }}" href="javascript:void(0);">
                                                                 <i class="bx bx-edit-alt me-1"></i> 수정</a>
-                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal2" href="javascript:void(0);">
+                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ cm.id }}" href="javascript:void(0);">
                                                                 <i class="bx bx-trash me-1"></i> 삭제</a>
                                                         </div>
                                                     </div>
-                                                        {% include 'admins/board/groupEditModal.html' %}
-                                                        {% include 'admins/board/groupDeleteModal.html' %}
                                                 </li>
+                                                    {% include 'admins/board/groupEditModal.html' %}
+                                                    {% include 'admins/board/groupDeleteModal.html' %}
                                             {% endfor %}
+
 
                                         </div>
 
@@ -178,6 +179,7 @@
 
 </body>
 
+
 <script>
 
     $("#addBoardBtn").click(function (e) {
@@ -234,14 +236,15 @@
         }
     });
 
-    function editBoardBtn(id) {
+    function editBoardBtn(button) {
+        var id = button.getAttribute('data-id');
 
         $.ajax({
             url: "{% url 'boardGroupEdit' %}",
             type: "GET",
             data: {
                 id:id,
-                board_group_edit_name:$('#board_group_edit_name').val()
+                board_group_edit_name:$('#board_group_edit_name' + id).val()
             },
             success: function (response) {
                 Swal.fire({
@@ -269,12 +272,13 @@
     }
 
 
-    function deleteBoardBtn(id) {
+    function deleteBoardBtn(button) {
+        var id = button.getAttribute('data-id');
 
         $.ajax({
             url: "{% url 'boardGroupDelete' %}",
             type: "GET",
-            data: {id:id},
+            data: {id: id},
             success: function (response) {
                 Swal.fire({
                     title: 'Success!',
@@ -304,5 +308,9 @@
 
 {% include 'admins/admin_footer.html' %}
 
+<!-- Vendors JS -->
+<script src="{% static 'sneat/assets/vendor/libs/jstree/jstree.js' %}"></script>
 
+<!-- Page JS -->
+<script src="{% static 'sneat/assets/js/extended-ui-treeview.js' %}"></script>
 </html>

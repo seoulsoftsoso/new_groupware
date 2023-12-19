@@ -1,4 +1,5 @@
 import time
+import json
 import traceback
 import requests
 import numpy as np
@@ -6,6 +7,9 @@ from django.shortcuts import render, redirect
 from rest_framework.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views import View
+from django.core import serializers
+from .models import UserMaster, CodeMaster
 from rest_framework import viewsets
 
 from .models import Question
@@ -27,6 +31,26 @@ def checkIn(request):
     context += '</xml>'
 
     return HttpResponse(context)
+
+
+class GetMemberInfo(View):
+    def get(self, request, *args, **kwargs):
+        user_data = UserMaster.objects.filter(is_staff=True, is_active=True).exclude(username="관리자")
+        user_data_json = serializers.serialize('json', user_data)
+        user_result = json.loads(user_data_json)
+
+        code_data = CodeMaster.objects.filter(group_id=1)
+        code_data_json = serializers.serialize('json', code_data)
+        code_result = json.loads(code_data_json)
+
+        result = {
+            'user_data': user_result,
+            'code_data': code_result
+        }
+
+        return JsonResponse(result, safe=False)
+
+
 
 
 '''

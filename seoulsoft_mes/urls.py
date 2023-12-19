@@ -134,7 +134,7 @@ urlpatterns = [
                   path('', index, name='index'),
                   path('login/', login_page, name="loginPage"),
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-                  path('users/login/', custom_obtain_auth_token),
+                  path('users/login/', custom_obtain_auth_token, name="auth_login"),
                   path('signup/', signup_page, name='signup'),
                   path('check-duplicate/', check_duplicate, name='check_duplicate'),
                   path('users/signup/', UserCreate, name='UserCreate'),
@@ -178,6 +178,7 @@ urlpatterns = [
                   path('admins/board/group_add', admin_boardGroup_add, name="boardGroupAdd"),
                   path('admins/board/group_edit', admin_boardGroup_edit, name="boardGroupEdit"),
                   path('admins/board/group_delete', admin_boardGroup_delete, name="boardGroupDelete"),
+                  path('admins/member_info/', GetMemberInfo.as_view(), name="memberInfo"),
 
 
                   #메인페이지

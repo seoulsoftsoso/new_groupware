@@ -82,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'api.middlewares.ProtectedErrorTo4xx',
+    'api.middlewares.LoginRequiredMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
 
 ]
