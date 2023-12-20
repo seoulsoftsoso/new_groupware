@@ -36,7 +36,6 @@
                     {% endif %}
                 {% endfor %}
 
-                <!--공지사항 제목-->
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: x-large; margin-left: 40px">{{ board.title }}</span>
                     <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
@@ -58,7 +57,6 @@
                     <span style="color: lightgrey; font-size: small">{{ board.created_by.username }} {{ board.created_at|date:"Y년 m월 d일 A g:i" }}</span>
                 </div>
 
-                <!--공지사항 내용-->
                 <div id="content-container" style="width: 85%; font-size: large; margin-left: 100px; border: 0px;">
 
                 </div>
@@ -69,9 +67,10 @@
                     {% endfor %}
                 </div>
 
-                <!--공지사항 댓글--->
                 <div style="width: 90%; margin-left: 60px; margin-top: 100px;">
-                    <label for="exampleFormControlTextarea1" class="form-label">댓글 0개 | 조회 0</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">댓글 {{ board.reply_count }}개 |</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">조회 {{ board.click_cnt }}</label>
+
                     <div class="form-group">
                         <form onsubmit="addComment(event)">
                             <div class="form-group" style="display: flex;">

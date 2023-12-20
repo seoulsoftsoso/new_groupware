@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0"
+                     style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">법인차량관리</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-right: 20px;">
+                  <form class="dt_adv_search" method="get">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-12">
+                          <div class="row g-3" style="margin-left: 800px;">
+
+                              <div class="col-md-6 col-12 mb-4" style="margin-top: 30px; width: 100%; height: 40px; display: flex; flex-direction: row;">
+                                  <div class="input-group input-daterange" id="bs-datepicker-daterange" style="width: 500px">
+                                      <input id="datepicker_to" placeholder="시작 날짜" class="form-control" name="search-to" value="{{ search_to | default_if_none:''}}"/>
+                                      <span class="input-group-text">to</span>
+                                      <input id="datepicker_from" placeholder="끝 날짜" class="form-control" name="search-from" value="{{ search_from | default_if_none:''}}"/>
+                                  </div>
+                                  <div style="margin-left: 15px; width: 120px;">
+                                       <select id="selectpickerBasic" class="selectpicker w-100">
+                                           <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                           <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
+                                           <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
+                                       </select>
+                                  </div>
+                                  <div style="width: 200px; display: flex; flex-direction: row; margin-left: 10px">
+                                      <input type="text" placeholder="검색" class="form-control" id="form-search" name="search-content" value="{{ search_content | default_if_none:''}}"/>
+                                      <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;" >검색</button>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+
+            <!--오늘 사용 예약현황-->
+                <div class="bs-stepper-content d-flex justify-content-center">
+                    <div class="mt-5 col-9" style="height: 350px; border: lightgrey 1px solid;">
+                        <div style="margin: 30px 20px;">
+                            <h5 id="todayDate" style="font-family: Pretendard; margin-right: 10px;"></h5>
+                            <h5 style="font-family: Pretendard;">사용 예약 현황</h5>
+                        </div>
+                        <div>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead>
+                                    <tr class="text-nowrap" style="text-align: center;">
+                                        <th>이름</th>
+                                        <th>차량</th>
+                                        <th>사용시간</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr style="text-align: center">
+                                        <td>김진란</td>
+                                        <td>QM3</td>
+                                        <td>종일</td>
+                                    </tr>
+                                    <tr style="text-align: center">
+                                        <td>홍재성</td>
+                                        <td>스포티지</td>
+                                        <td>반일 09:00 ~ 13:00</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <div class="mt-3 d-flex justify-content-end" style="margin-right: 65px;">
+                        <!-- Button trigger modal -->
+                        <button
+                                style="width: 150px; margin-bottom: 20px;"
+                                type="button"
+                                class="btn btn-outline-dark"
+                                data-bs-toggle="modal"
+                                data-bs-target="#basicModalAdd">
+                            사용등록<i class='bx bx-message-add'></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-datatable table-responsive" style="margin-top: 40px;">
+                <table class="table table-hover">
+                    <thead>
+                         <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                            <!-- 각 <th> 태그에 스타일을 추가하여 글자 크기를 조절 -->
+                            <th style="font-size: medium; font-weight: bold">사용일자</th>
+                            <th style="font-size: medium; font-weight: bold">사용자</th>
+                            <th style="font-size: medium; font-weight: bold">장소</th>
+                            <th style="font-size: medium; font-weight: bold">차량명</th>
+                            <th style="font-size: medium; font-weight: bold">사용시간</th>
+                            <th style="font-size: medium; font-weight: bold">관련사업명/사용목적</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% include 'admins/admin_footer.html' %}
+<script>
+    $(function () {
+        $("#datepicker_to").datepicker({format: 'yyyy-mm-dd'});
+        $("#datepicker_from").datepicker({format: 'yyyy-mm-dd'});
+    });
+
+    function getCurrentDate() {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0');
+        var day = today.getDate().toString().padStart(2, '0');
+
+        var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        var weekday = weekdays[today.getDay()];
+
+        return year + '-' + month + '-' + day + ' '+ '(' + weekday + ')';
+    }
+    document.getElementById('todayDate').innerHTML = getCurrentDate();
+</script>
+
+
+
+
+
+</html>

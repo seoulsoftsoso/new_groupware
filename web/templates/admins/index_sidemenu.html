@@ -105,7 +105,7 @@
                         </a>
                     </li>
                     <li class="menu-item" style="margin-top: 10px; width: 100%;">
-                        <a href="" class="menu-link"
+                        <a href="{% url 'vehicleMain' %}" class="menu-link"
                            style="display: block; text-align: left; margin-left: -10px" id="change_clr">
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/ri_car-line.png' %}" style="margin-right: 8px">
@@ -166,15 +166,14 @@
     const today = new Date();
 
     function getCurrentDate() {
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = (today.getMonth() + 1).toString().padStart(2, '0');
-            var day = today.getDate().toString().padStart(2, '0');
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0');
+        var day = today.getDate().toString().padStart(2, '0');
 
-            return year + '-' + month + '-' + day;
-        }
-
-        document.getElementById('currentDate').innerHTML = getCurrentDate();
+        return year + '-' + month + '-' + day;
+    }
+    document.getElementById('currentDate').innerHTML = getCurrentDate();
 
     function getCookie(name) {
         let cookieArr = document.cookie.split(";");

@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -26,9 +25,8 @@ def admin_notice_page(request):
     return render(request, 'admins/notice/notice.html', context)
 
 
-
 def amdin_noticedetail_page(request, notice_id):
-    notice = BoardMaster.objects.get(pk=notice_id, delete_flag='N')
+    notice = BoardMaster.objects.filter(pk=notice_id, delete_flag='N').annotate(reply_count=Count('reply_board')).first();
 
     # 조회수 증가
     notice.click_cnt += 1

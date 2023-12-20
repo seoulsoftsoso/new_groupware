@@ -127,6 +127,7 @@
                       <div class="d-grid">
                         <button
                           class="btn btn-primary btn-toggle-sidebar"
+                          style="width: 255px; margin-left: -5px;"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#addEventSidebar"
                           aria-controls="addEventSidebar">
@@ -247,7 +248,7 @@
                             {% csrf_token %}
                           <div class="mb-3">
                             <label class="form-label" for="eventTitle">제목</label>
-                            <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" />
+                            <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" required/>
                           </div>
                           <div class="mb-3">
                             <label class="form-label" for="eventLabel">구분</label>
@@ -384,6 +385,18 @@
 
     $(document).on('click', '.btn-add-event', function(e) {
          e.preventDefault();
+         var title = $("#eventTitle").val()
+        console.log('title', title)
+
+         if ($("#eventTitle").val()===''){
+              Swal.fire({
+                title: 'Fail!',
+                text: '일정제목을 입력해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+         }
 
         var checkbox = document.querySelector('.allDay-switch');
         var startdate = $("#eventStartDate").val();
@@ -403,6 +416,7 @@
                 icon: 'error',
                 confirmButtonText: '확인'
             })
+            return false;
         }
 
         var formData = {

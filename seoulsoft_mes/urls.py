@@ -46,6 +46,7 @@ from api.notice.views import *
 from api.board.views import *
 from api.reply.views import *
 from api.attendance.views import *
+from api.corporate_vehicle.views import *
 from web.views import *
 
 
@@ -171,7 +172,7 @@ urlpatterns = [
                   path('admins/board/write_form', admin_boardwrite_page, name="boardWritePage"),
                   path('admins/board/detail/<int:board_id>/edit/', admin_boardEdit_page, name="boardEdit"),
                   path('admins/board/detail/<int:board_id>/', amdin_boardDetail_page, name="boardDetail"),
-                  path('admins/boardlist/<int:id>/', admin_boardList_page, name="boardList"),
+                  path('admins/board/<int:id>/', admin_boardList_page, name="boardList"),
                   path('admins/board/write', admin_boardwrite_add, name="boardWriteAdd"),
                   path('admins/board/delete', admin_board_delete, name="boardDelete"),
                   path('admins/board/edit/<int:board_id>/', admin_boardwrite_edit, name="boardWriteEdit"),
@@ -179,6 +180,10 @@ urlpatterns = [
                   path('admins/board/group_edit', admin_boardGroup_edit, name="boardGroupEdit"),
                   path('admins/board/group_delete', admin_boardGroup_delete, name="boardGroupDelete"),
                   path('admins/member_info/', GetMemberInfo.as_view(), name="memberInfo"),
+
+
+                  #법인차량
+                  path('admins/vehicle/', vehicle_main_page, name="vehicleMain"),
 
 
                   #메인페이지

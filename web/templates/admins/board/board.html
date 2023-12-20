@@ -53,10 +53,10 @@
                                                 <button
                                                         style="width: 150px; margin-bottom: 20px;"
                                                         type="button"
-                                                        class="btn btn-label-primary"
+                                                        class="btn btn-outline-dark"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#basicModalAdd"><img
-                                                        src="{% static 'admin/img/indexImg/add-to-queue-regular-24.png' %}">게시판 추가
+                                                        data-bs-target="#basicModalAdd">
+                                                    게시판 추가<i class='bx bx-message-add'></i>
                                                 </button>
                                                 {% include 'admins/board/groupAddModal.html' %}
 
@@ -70,10 +70,9 @@
                                         <div class="list-container">
                                             {% for cm in codemaster %}
                                                 <li class="d-flex justify-content-between">
-                                                    <a href="{% url 'boardList' cm.id %}">
+                                                    <button class="btn rounded-pill btn-outline-info" style="margin-bottom: 10px;" onclick="renderlist({{ cm.id }})">
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
-                                                    </a>
-                                                    <script>console.log('id', {{ cm.id }})</script>
+                                                    </button>
                                                     <div class="dropdown">
                                                         <button type="button"
                                                                 class="btn p-0 dropdown-toggle hide-arrow"
@@ -91,8 +90,6 @@
                                                     {% include 'admins/board/groupEditModal.html' %}
                                                     {% include 'admins/board/groupDeleteModal.html' %}
                                             {% endfor %}
-
-
                                         </div>
 
                                     </div>
@@ -110,13 +107,12 @@
                     </div>
                       <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
                           <div>
-                              {% for cm in codemaster %}
                               <div class="card-body">
                                   <div style="margin-bottom: 20px;">
-                                      <strong style="font-size: large">{{ cm.name }}</strong>
+                                      <strong style="font-size: large" id="group_name">{{ boardcode_name }}</strong>
                                   </div>
                                   <div style="margin-top: 30px;">
-                                      <table class="table border-top m-0">
+                                      <table class="table table-hover">
                                           <thead>
                                           <tr style="background-color: lightgray">
                                               <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
@@ -128,37 +124,13 @@
                                           </tr>
                                           </thead>
                                           <tbody>
-                                          {% for bm in fixed_board %}
-                                          <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
-                                              {% if bm.boardcode_id == cm.id and bm.fixed_flag %}
-                                              <td style="color: red; text-align: center;"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"></td>
-                                              <td style="color: red">{{ bm.title }}</td>
-                                              <td style="color: red">{{ bm.created_by }}</td>
-                                              <td style="color: red; text-align: center;">{{ bm.updated_at|date:"Y년 n월 j일 A g:i" }}</td>
-                                              <td style="color: red; text-align: center;">{{ bm.click_cnt }}</td>
-                                              <td style="color: red; text-align: center;">{{ bm.reply_count }}</td>
-                                              {% endif %}
-                                          </tr>
-                                              {% endfor %}
 
-                                          {% for bm in boardmaster %}
-                                          <tr style="cursor: pointer;" onclick="window.location='{% url 'boardDetail' bm.id %}'">
-                                              {% if bm.boardcode_id == cm.id %}
-                                              <td style="text-align: center;">{{ forloop.counter }}</td>
-                                              <td>{{ bm.title }}</td>
-                                              <td>{{ bm.created_by.username }}</td>
-                                              <td style="text-align: center;">{{ bm.updated_at|date:"Y년 n월 j일 A g:i" }}</td>
-                                              <td style="text-align: center;">{{ bm.click_cnt }}</td>
-                                              <td style="text-align: center;">{{ bm.reply_count }}</td>
-                                              {% endif %}
-                                          </tr>
-                                              {% endfor %}
                                           </tbody>
                                       </table>
                                   </div>
                               </div>
 
-                              {% endfor %}
+
                           </div>
                       </div>
 
@@ -166,14 +138,10 @@
                 </div>
               </div>
 
-
-
-
                 </div>
 
             </div>
         </div>
-    </div>
 </div>
 
 
@@ -315,6 +283,83 @@
         window.treeData = treeData;
     }
 
+    function renderlist(id) {
+        $.ajax({
+            url: `/admins/board/${id}/`,
+            type: "GET",
+            data: {id: id},
+            success: function (data) {
+                console.log('data', data)
+
+                const groupName = document.getElementById('group_name');
+                groupName.innerHTML = data.boardcode_name;
+
+                const tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';  // 기존의 테이블 내용을 초기화
+
+                // 상단공지 테이블
+                data.fixed_boardmaster.forEach((fixed_boardmaster) => {
+                    const date = new Date(fixed_boardmaster.updated_at);
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    };
+                    const formattedDate = date.toLocaleString('ko-KR', options);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =  `
+                        <td style="text-align: center;"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"></td>
+                        <td style="color:red;">${fixed_boardmaster.title}</td>
+                        <td style="color:red;">${fixed_boardmaster.created_by}</td>
+                        <td style="color: red; text-align: center;">${formattedDate}</td>
+                        <td style="color:red; text-align: center">${fixed_boardmaster.click_cnt}</td>
+                        <td style="color:red; text-align: center">${fixed_boardmaster.reply_count}</td>
+                    `;
+                    tr.style.cursor = 'pointer';
+                    tr.addEventListener('click', function () {
+                        window.location.href = `board/detail/${fixed_boardmaster.id}`;
+                    });
+                    tbody.appendChild(tr);
+                });
+
+                // 일반공지 테이블
+                data.boardmaster.forEach((boardmaster, index) => {
+                    const date = new Date(boardmaster.updated_at);
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    };
+                    const formattedDate = date.toLocaleString('ko-KR', options);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td>${boardmaster.title}</td>
+                        <td>${boardmaster.created_by}</td>
+                        <td style="text-align: center;">${formattedDate}</td>
+                        <td style="text-align: center;">${boardmaster.click_cnt}</td>
+                        <td style="text-align: center;">${boardmaster.reply_count}</td>
+                    `;
+                    tr.style.cursor = 'pointer';
+                    tr.addEventListener('click', function () {
+                        window.location.href = `board/detail/${boardmaster.id}`;
+                    });
+                    tbody.appendChild(tr);
+                });
+            }
+
+        })
+    }
 
 </script>
 

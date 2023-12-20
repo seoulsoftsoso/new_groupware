@@ -35,7 +35,7 @@ def checkIn(request):
 
 class GetMemberInfo(View):
     def get(self, request, *args, **kwargs):
-        user_data = UserMaster.objects.filter(is_staff=True, is_active=True).exclude(username="관리자")
+        user_data = UserMaster.objects.filter(is_staff=True, is_active=True).exclude(username="관리자").exclude(username="서울소프트")
         user_data_json = serializers.serialize('json', user_data)
         user_result = json.loads(user_data_json)
 

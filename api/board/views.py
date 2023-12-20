@@ -1,23 +1,19 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.serializers import serialize
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 import os
-import mimetypes
-from wsgiref.util import FileWrapper
+from django.core import serializers
 from django.conf import settings
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
-from urllib.parse import quote
 from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, \
     EnterpriseMaster
-from django.db.models import Q
 
 
 def amdin_board_page(request):
-    fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N").order_by("-updated_at")
-    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")
+    fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     context = {
@@ -30,26 +26,26 @@ def amdin_board_page(request):
 
 
 def admin_boardList_page(request, id):
-    fixed_boardmaster = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).exclude(
-        boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
-    boardmaster = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")
+    fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).annotate(reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+    board = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-updated_at")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
-    print('boardmaster : ', boardmaster)
+    fixed_boardmaster_data = [obj.as_dict() for obj in fixed_board]
+    boardmaster_data = [obj.as_dict() for obj in board]
+    boardcode_name = CodeMaster.objects.get(id=id).name
 
     context = {
-        'fixed_boardmaster': fixed_boardmaster,
-        'boardmaster': boardmaster,
-        'codemaster': codemaster
+        'fixed_boardmaster': fixed_boardmaster_data,
+        'boardmaster': boardmaster_data,
+        'boardcode_name': boardcode_name
     }
 
-    return render(request, 'admins/board/board_list.html', context)
+    return JsonResponse(context)
 
 
 def amdin_boardDetail_page(request, board_id):
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
-    board = BoardMaster.objects.get(pk=board_id, delete_flag='N')
+    board = BoardMaster.objects.filter(pk=board_id, delete_flag='N').annotate(reply_count=Count('reply_board')).first()
 
     # 조회수 증가
     board.click_cnt += 1

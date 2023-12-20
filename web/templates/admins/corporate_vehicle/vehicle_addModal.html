@@ -1,0 +1,56 @@
+{% load static %}
+<!-- Modal -->
+<form action="#" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="basicModalAdd" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">사용등록</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <!-- Checkbox -->
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">게시판 접근권한</label>
+                            <div class="card mb-md-0 mb-4">
+                                <h5 class="card-header" style="font-family: Pretendard;">서울소프트 조직도</h5>
+                                <div class="card-body">
+                                    <div id="jstree-checkbox"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- /Checkbox -->
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">게시판 이름</label>
+                            <input type="text" id="board_group_name"
+                                   name="board_group_name"
+                                   class="form-control"
+                                   placeholder="게시판 이름을 입력해주세요."
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-label-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                id="addBoardBtn">등록완료
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
