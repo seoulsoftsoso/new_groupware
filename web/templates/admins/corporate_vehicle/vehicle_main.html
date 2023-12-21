@@ -101,9 +101,11 @@
                                 type="button"
                                 class="btn btn-outline-dark"
                                 data-bs-toggle="modal"
-                                data-bs-target="#basicModalAdd">
+                                data-bs-target="#exLargeModal">
                             사용등록<i class='bx bx-message-add'></i>
                         </button>
+
+                        {% include 'admins/corporate_vehicle/vehicle_addModal.html' %}
                     </div>
                 </div>
 
@@ -135,6 +137,9 @@
     </div>
 </div>
 </body>
+<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
 {% include 'admins/admin_footer.html' %}
 <script>
     $(function () {
@@ -155,6 +160,8 @@
     }
     document.getElementById('todayDate').innerHTML = getCurrentDate();
 </script>
+
+
 
 
 

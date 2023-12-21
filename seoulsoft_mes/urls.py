@@ -186,6 +186,7 @@ urlpatterns = [
                   path('admins/vehicle/', vehicle_main_page, name="vehicleMain"),
 
 
+
                   #메인페이지
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),

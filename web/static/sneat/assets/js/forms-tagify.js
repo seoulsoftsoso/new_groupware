@@ -105,66 +105,66 @@
   const TagifyUserListEl = document.querySelector('#TagifyUserList');
 
   const usersList = [
-    {
-      value: 1,
-      name: 'Justinian Hattersley',
-      avatar: 'https://i.pravatar.cc/80?img=1',
-      email: 'jhattersley0@ucsd.edu'
-    },
-    {
-      value: 2,
-      name: 'Antons Esson',
-      avatar: 'https://i.pravatar.cc/80?img=2',
-      email: 'aesson1@ning.com'
-    },
-    {
-      value: 3,
-      name: 'Ardeen Batisse',
-      avatar: 'https://i.pravatar.cc/80?img=3',
-      email: 'abatisse2@nih.gov'
-    },
-    {
-      value: 4,
-      name: 'Graeme Yellowley',
-      avatar: 'https://i.pravatar.cc/80?img=4',
-      email: 'gyellowley3@behance.net'
-    },
-    {
-      value: 5,
-      name: 'Dido Wilford',
-      avatar: 'https://i.pravatar.cc/80?img=5',
-      email: 'dwilford4@jugem.jp'
-    },
-    {
-      value: 6,
-      name: 'Celesta Orwin',
-      avatar: 'https://i.pravatar.cc/80?img=6',
-      email: 'corwin5@meetup.com'
-    },
-    {
-      value: 7,
-      name: 'Sally Main',
-      avatar: 'https://i.pravatar.cc/80?img=7',
-      email: 'smain6@techcrunch.com'
-    },
-    {
-      value: 8,
-      name: 'Grethel Haysman',
-      avatar: 'https://i.pravatar.cc/80?img=8',
-      email: 'ghaysman7@mashable.com'
-    },
-    {
-      value: 9,
-      name: 'Marvin Mandrake',
-      avatar: 'https://i.pravatar.cc/80?img=9',
-      email: 'mmandrake8@sourceforge.net'
-    },
-    {
-      value: 10,
-      name: 'Corrie Tidey',
-      avatar: 'https://i.pravatar.cc/80?img=10',
-      email: 'ctidey9@youtube.com'
-    }
+    // {
+    //   value: 1,
+    //   name: 'Justinian Hattersley',
+    //   avatar: 'https://i.pravatar.cc/80?img=1',
+    //   email: 'jhattersley0@ucsd.edu'
+    // },
+    // {
+    //   value: 2,
+    //   name: 'Antons Esson',
+    //   avatar: 'https://i.pravatar.cc/80?img=2',
+    //   email: 'aesson1@ning.com'
+    // },
+    // {
+    //   value: 3,
+    //   name: 'Ardeen Batisse',
+    //   avatar: 'https://i.pravatar.cc/80?img=3',
+    //   email: 'abatisse2@nih.gov'
+    // },
+    // {
+    //   value: 4,
+    //   name: 'Graeme Yellowley',
+    //   avatar: 'https://i.pravatar.cc/80?img=4',
+    //   email: 'gyellowley3@behance.net'
+    // },
+    // {
+    //   value: 5,
+    //   name: 'Dido Wilford',
+    //   avatar: 'https://i.pravatar.cc/80?img=5',
+    //   email: 'dwilford4@jugem.jp'
+    // },
+    // {
+    //   value: 6,
+    //   name: 'Celesta Orwin',
+    //   avatar: 'https://i.pravatar.cc/80?img=6',
+    //   email: 'corwin5@meetup.com'
+    // },
+    // {
+    //   value: 7,
+    //   name: 'Sally Main',
+    //   avatar: 'https://i.pravatar.cc/80?img=7',
+    //   email: 'smain6@techcrunch.com'
+    // },
+    // {
+    //   value: 8,
+    //   name: 'Grethel Haysman',
+    //   avatar: 'https://i.pravatar.cc/80?img=8',
+    //   email: 'ghaysman7@mashable.com'
+    // },
+    // {
+    //   value: 9,
+    //   name: 'Marvin Mandrake',
+    //   avatar: 'https://i.pravatar.cc/80?img=9',
+    //   email: 'mmandrake8@sourceforge.net'
+    // },
+    // {
+    //   value: 10,
+    //   name: 'Corrie Tidey',
+    //   avatar: 'https://i.pravatar.cc/80?img=10',
+    //   email: 'ctidey9@youtube.com'
+    // }
   ];
 
   function tagTemplate(tagData) {
@@ -215,7 +215,7 @@
     `;
   }
 
-  // initialize Tagify on the above input node reference
+  //initialize Tagify on the above input node reference
   let TagifyUserList = new Tagify(TagifyUserListEl, {
     tagTextProp: 'name', // very important since a custom template is used with this property as text. allows typing a "value" or a "name" to match input with whitelist
     enforceWhitelist: true,
@@ -224,7 +224,8 @@
       closeOnSelect: false,
       enabled: 0,
       classname: 'users-list',
-      searchKeys: ['name', 'email'] // very important to set by which keys to search for suggesttions when typing
+      searchKeys: ['name',  'jobPosition'], // very important to set by which keys to search for suggesttions when typing
+      template: suggestionItemTemplate
     },
     templates: {
       tag: tagTemplate,
@@ -233,6 +234,7 @@
     },
     whitelist: usersList
   });
+
 
   // attach events listeners
   TagifyUserList.on('dropdown:select', onSelectSuggestion) // allows selecting all the suggested (whitelist) items
@@ -260,28 +262,51 @@
         .join('') + '@gmail.com'
     );
   });
+// 직원리스트 가지고올거임
+  let TagifyEmailList; // 전역 변수로 선언
 
-  const TagifyEmailListEl = document.querySelector('#TagifyEmailList'),
+const TagifyEmailListEl = document.querySelector('#TagifyEmailList');
+const button = TagifyEmailListEl.nextElementSibling;
+
+button.addEventListener('click', onAddButtonClick);
+
+async function fetchData() {
+  try {
+    const response = await fetch('/admins/member_info/');
+    const userData = await response.json();
+
+    console.log('user', userData)
+
+    const usersList = userData.user_data.map(user => ({
+          id:user.pk,
+          name: user.fields.username,
+          department: userData.code_data.find(code => code.pk === user.fields.department_position).fields.name,
+          jobPosition: userData.code_data.find(code => code.pk === user.fields.job_position).fields.name
+      }));
+
+    console.log('usersList', usersList)
+
     TagifyEmailList = new Tagify(TagifyEmailListEl, {
-      // email address validation (https://stackoverflow.com/a/46181/104380)
-      pattern:
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      whitelist: randomStringsArr,
-      callbacks: {
-        invalid: onInvalidTag
-      },
-      dropdown: {
-        position: 'text',
-        enabled: 1 // show suggestions dropdown after 1 typed character
-      }
-    }),
-    button = TagifyEmailListEl.nextElementSibling; // "add new tag" action-button
 
-  button.addEventListener('click', onAddButtonClick);
+      whitelist: usersList.map(user => `${user.name}`),
+      delimiters: ',',
 
-  function onAddButtonClick() {
-    TagifyEmailList.addEmptyTag();
+    });
+  } catch (error) {
+    console.error('Error fetching users list:', error);
   }
+}
+
+// fetchData 함수 호출
+fetchData();
+
+function onAddButtonClick() {
+  if (TagifyEmailList) {
+    TagifyEmailList.addEmptyTag();
+  } else {
+    console.error('TagifyEmailList is not initialized yet.');
+  }
+}
 
   function onInvalidTag(e) {
     console.log('invalid', e.detail);

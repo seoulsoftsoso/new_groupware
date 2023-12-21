@@ -23,7 +23,8 @@ def last_attendance(request):
     if attendance is not None:
         return JsonResponse({
             'is_offwork': attendance.is_offwork,
-            'attendanceTime': attendance.attendanceTime.strftime("%H:%M:%S")
+            'attendanceTime': attendance.attendanceTime.strftime("%H:%M:%S"),
+            'date': attendance.date
         })
     else:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
@@ -54,7 +55,7 @@ def check_in(request):
         attendance_ip = data.get('ip')
 
         current_date = datetime.now().date()
-        current_time = datetime.now().time().replace(second=0, microsecond=0)
+        current_time = datetime.now().time().replace(microsecond=0)
 
         # 지각시간
         latenessTime = None

@@ -1,12 +1,22 @@
 {% load static %}
 <!-- Modal -->
+<style>
+    #TagifyEmailList {
+    width: 200px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+    .tagify__tag-text{
+        width: 200px;
+    }
+</style>
 <form action="#" method="post">
     {% csrf_token %}
-    <div class="modal fade" id="basicModalAdd" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="exLargeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1">사용등록</h5>
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">사용등록</h5>
                     <button
                             type="button"
                             class="btn-close"
@@ -15,30 +25,67 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="row">
-                        <!-- Checkbox -->
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">게시판 접근권한</label>
-                            <div class="card mb-md-0 mb-4">
-                                <h5 class="card-header" style="font-family: Pretendard;">서울소프트 조직도</h5>
-                                <div class="card-body">
-                                    <div id="jstree-checkbox"></div>
-                                </div>
-                            </div>
+                   <div class="row">
+                        <div class="col mb-4">
+                        <label for="nameBasic" class="form-label">*사용일자</label>
+                        <div class="input-group input-daterange" id="bs-datepicker-daterange1">
+                            <input id="datepicker_to1" placeholder="시작 날짜" class="form-control" name="search-to"
+                                   value="{{ search_to | default_if_none:'' }}"/>
+                            <span class="input-group-text">to</span>
+                            <input id="datepicker_from1" placeholder="끝 날짜" class="form-control" name="search-from"
+                                   value="{{ search_from | default_if_none:'' }}"/>
+                            <input type="text" id="timepicker-basic" placeholder="시:분" class="form-control" />
+                            <label class="switch" style="margin-left: 20px; margin-top: 7px;">
+                              <input type="checkbox" class="switch-input allDay-switch" />
+                              <span class="switch-toggle-slider">
+                                <span class="switch-on"></span>
+                                <span class="switch-off"></span>
+                              </span>
+                              <span class="switch-label">All Day</span>
+                            </label>
                         </div>
                     </div>
+                   </div>
                         <!-- /Checkbox -->
 
-                    <div class="row">
+                    <div class="row" >
+                        <div class="col mb-11">
+                            <label for="nameBasic" class="form-label">*사용자</label>
+                            <div class="col-md-11 mb-4">
+                                <input id="TagifyEmailList" class="tagify-email-list"/>
+                                <button type="button" class="btn btn-sm rounded-pill btn-icon btn-outline-primary mb-1">
+                                    <span class="tf-icons bx bx-plus"></span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">게시판 이름</label>
+                            <label for="nameBasic" class="form-label">*목적</label>
                             <input type="text" id="board_group_name"
                                    name="board_group_name"
                                    class="form-control"
-                                   placeholder="게시판 이름을 입력해주세요."
+                                   placeholder="목적"
                                    required/>
                         </div>
                     </div>
+
+                     <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*사용차량</label>
+                            <select
+                              class="select2 select-event-guests form-select"
+                              style="width: 250px;"
+                              id="vehicle_select"
+                              name="vehicle_select"
+                              multiple>
+                              <option value="Jane Foster">QM3</option>
+                              <option value="Donna Frank">스포티지</option>
+                            </select>
+                        </div>
+                     </div>
 
                     <div class="modal-footer">
                         <button type="button"
@@ -54,3 +101,19 @@
         </div>
     </div>
 </form>
+<script>
+    $(function () {
+        $("#datepicker_to1").datepicker({format: 'yyyy-mm-dd'});
+        $("#datepicker_from1").datepicker({format: 'yyyy-mm-dd'});
+    });
+
+    $(document).ready(function () {
+        $("#timepicker-basic").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+    });
+</script>
+
