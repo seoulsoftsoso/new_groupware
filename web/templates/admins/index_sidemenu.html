@@ -189,12 +189,14 @@
         return null;
     }
 
-    function formatTime(seconds) {
-        let h = Math.floor(seconds / 3600);
-        let m = Math.floor((seconds % 3600) / 60);
-        let s = Math.floor((seconds % 3600) % 60);
-        return `${h}h ${m}m ${s}s`;
+    function formatTime(sec) {
+        let hours = Math.floor(sec / 3600);
+        let minutes = Math.floor((sec % 3600) / 60);
+        let seconds = sec % 60;
+
+        return `${hours}h ${minutes}m ${seconds}s`;
     }
+
 
     document.addEventListener('DOMContentLoaded', function () {
         // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
@@ -221,51 +223,51 @@
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
-                    // 오늘 근무 누적시간
+                    // 근무 누적 시간을 분석합니다.
                     let [hours, minutes, seconds] = response.attendanceTime.split(':');
-
                     let resDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
-
                     let diff = today - resDate;
-
-                    let diffSec = diff / 1000;
+                    let diffSec = diff / 1000;  // 차이를 초로 변환합니다
 
                     console.log(`차이: ${diffSec}초`);
 
+                    // intervalId를 null로 초기화합니다. 이 변수는 나중에 타이머를 제어하는 데 사용됩니다.
                     let intervalId = null;
+                    let weekIntervalId = null;
                     //let diffSec = new Date(response.attendanceTime);
                     let weekSec = 0;
 
                     console.log('diff', diffSec)
 
                     function startCounting() {
-                        let storedWorkTime = localStorage.getItem('workTime');
-                        if (storedWorkTime) {
-                            diffSec = parseInt(storedWorkTime);
+                        let startTime = localStorage.getItem('startTime');
+                        if (!startTime) {
+                            startTime = new Date();
+                            localStorage.setItem('startTime', startTime);
                         } else {
-                            diffSec = 0;
+                            startTime = new Date(startTime);
                         }
 
-                        let storedWeekTime = localStorage.getItem('weekTime');
-                        if (storedWeekTime) {
-                            weekSec = parseInt(storedWeekTime);
+                        let weekStartTime = localStorage.getItem('weekStartTime');
+                        if (!weekStartTime) {
+                            weekStartTime = new Date();
+                            localStorage.setItem('weekStartTime', weekStartTime);
                         } else {
-                            weekSec = 0;
+                            weekStartTime = new Date(weekStartTime);
                         }
 
-                         // 일일 누적 시간 표시
+
+                        let diffSec = Math.floor((new Date() - startTime) / 1000);
+                        let weekSec = Math.floor((new Date() - weekStartTime) / 1000);
+
                         document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
-                         // 주간 누적 시간 표시
                         document.getElementById('weekWorkTime').innerHTML = formatTime(weekSec);
 
-                        // 일일 누적 시간 1초마다 업데이트
                         intervalId = setInterval(function () {
                             diffSec++;
-                            localStorage.setItem('workTime', diffSec);
                             document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
                         }, 1000);
 
-                        // 주간 누적 시간을 1초마다 업데이트
                         weekIntervalId = setInterval(function () {
                             weekSec++;
                             localStorage.setItem('weekTime', weekSec);
@@ -273,42 +275,36 @@
                         }, 1000);
                     }
 
+
                     function stopCounting() {
-                        if (intervalId !== null) {
-                            clearInterval(intervalId);
-                            intervalId = null;
-                        }
-
+                        clearInterval(intervalId);
+                        clearInterval(weekIntervalId);
+                        localStorage.removeItem('startTime');
+                        localStorage.removeItem('weekStartTime');
                         localStorage.setItem('endTime', new Date());
-                         if (weekIntervalId !== null) {
-                            clearInterval(weekIntervalId);
-                            weekIntervalId = null;
-                        }
-
-                        localStorage.setItem('endWeekTime', new Date());
                     }
 
-                    function resetTimes() {
 
+                    function resetTimes() {
                         let storedEndTime = new Date(localStorage.getItem('endTime'));
 
-                        if (storedEndTime.getDate() === today.getDate() ||
-                            storedEndTime.getMonth() === today.getMonth() ||
+                        if (storedEndTime.getDate() === today.getDate() &&
+                            storedEndTime.getMonth() === today.getMonth() &&
                             storedEndTime.getFullYear() === today.getFullYear()) {
                             localStorage.removeItem('workTime');
                             localStorage.removeItem('endTime');
                             diffSec = 0;
+                            weekSec = 0;
                         }
                     }
 
+
                     document.getElementById('checkInBtn').addEventListener('click', function () {
-                        resetTimes();
                         startCounting();
                     });
 
                     document.getElementById('checkOutBtn').addEventListener('click', function () {
                         stopCounting();
-                        resetTimes();
                     });
 
                     startCounting();
@@ -363,7 +359,7 @@
                  if (today.getDay() === 1) {
                      console.log("주간 근무 시간 초기화");
                      localStorage.removeItem('weekTime');
-                     localStorage.removeItem('endWeekTime');
+                     localStorage.removeItem('weekStartTime');
                  }
 
                  checkInBtn.disabled = true;

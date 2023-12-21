@@ -80,6 +80,23 @@ class CodeMaster(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.code:
+            latest_object = CodeMaster.objects.order_by('-id').first()
+
+            if latest_object:
+                latest_code = latest_object.code
+                if latest_code[1:].isdigit():
+                    new_code = 'G' + str(int(latest_code[1:]) + 1).zfill(2)
+                else:
+                    new_code = 'G01'
+            else:
+                new_code = 'G01'
+
+            self.code = new_code
+
+        super().save(*args, **kwargs)
+
 
 class UserMaster(AbstractBaseUser, PermissionsMixin):
     class UserMasterManager(BaseUserManager):
@@ -154,6 +171,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=1, verbose_name='활성여부')
     is_staff = models.BooleanField(default=0, verbose_name='사내직원여부')
+    is_board = models.BooleanField(default=0, verbose_name='게시판,공지 접근권한')
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
