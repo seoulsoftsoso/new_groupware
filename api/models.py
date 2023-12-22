@@ -171,7 +171,6 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=1, verbose_name='활성여부')
     is_staff = models.BooleanField(default=0, verbose_name='사내직원여부')
-    is_board = models.BooleanField(default=0, verbose_name='게시판,공지 접근권한')
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)

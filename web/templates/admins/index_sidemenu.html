@@ -223,15 +223,13 @@
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
-                    // 근무 누적 시간을 분석합니다.
                     let [hours, minutes, seconds] = response.attendanceTime.split(':');
                     let resDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
                     let diff = today - resDate;
-                    let diffSec = diff / 1000;  // 차이를 초로 변환합니다
+                    let diffSec = diff / 1000;
 
                     console.log(`차이: ${diffSec}초`);
 
-                    // intervalId를 null로 초기화합니다. 이 변수는 나중에 타이머를 제어하는 데 사용됩니다.
                     let intervalId = null;
                     let weekIntervalId = null;
                     //let diffSec = new Date(response.attendanceTime);
