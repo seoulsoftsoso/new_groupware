@@ -207,7 +207,7 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
-                console.log('res', response.attendanceTime)
+                //console.log('res', response.attendanceTime)
 
                 let date = new Date(response.date);
                 let day = date.getDate();
@@ -215,11 +215,11 @@
 
 
                 if (response.is_offwork) {
-                    console.log('여기')
+                    //console.log('여기')
                     checkInBtn.disabled = false;
                     checkOutBtn.disabled = true;
                 } else {
-                    console.log('여기11')
+                    //console.log('여기11')
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
@@ -228,14 +228,14 @@
                     let diff = today - resDate;
                     let diffSec = diff / 1000;
 
-                    console.log(`차이: ${diffSec}초`);
+                   // console.log(`차이: ${diffSec}초`);
 
                     let intervalId = null;
                     let weekIntervalId = null;
                     //let diffSec = new Date(response.attendanceTime);
                     let weekSec = 0;
 
-                    console.log('diff', diffSec)
+                    //console.log('diff', diffSec)
 
                     function startCounting() {
                         let startTime = localStorage.getItem('startTime');
@@ -278,23 +278,11 @@
                         clearInterval(intervalId);
                         clearInterval(weekIntervalId);
                         localStorage.removeItem('startTime');
-                        localStorage.removeItem('weekStartTime');
                         localStorage.setItem('endTime', new Date());
                     }
 
 
-                    function resetTimes() {
-                        let storedEndTime = new Date(localStorage.getItem('endTime'));
 
-                        if (storedEndTime.getDate() === today.getDate() &&
-                            storedEndTime.getMonth() === today.getMonth() &&
-                            storedEndTime.getFullYear() === today.getFullYear()) {
-                            localStorage.removeItem('workTime');
-                            localStorage.removeItem('endTime');
-                            diffSec = 0;
-                            weekSec = 0;
-                        }
-                    }
 
 
                     document.getElementById('checkInBtn').addEventListener('click', function () {
