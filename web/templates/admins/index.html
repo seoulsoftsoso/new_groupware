@@ -2,8 +2,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
 
     {% include 'admins/admin_header.html' %}
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
@@ -257,10 +255,45 @@
                               <option data-label="danger" value="Personal">자리비움</option>
                               <option data-label="warning" value="Family">반차</option>
                               <option data-label="success" value="Holiday">연차</option>
-                              <option data-label="info" value="ETC">차량-QM3</option>
-                              <option data-label="info" value="Spotage">차량-스포티지</option>
+                              <option data-label="info" value="vehicle">차량</option>
                             </select>
                           </div>
+                            <!--이벤트타입 차량 선택 시 활성화-->
+                            <div class="mb-3" id="radioGroup" style="display: none;">
+                                <!-- Basic Custom Radios -->
+                                <div class="row">
+                                    <div class="col-md">
+                                        <div class="form-check custom-option custom-option-basic">
+                                            <label class="form-check-label custom-option-content"
+                                                   for="customRadioTemp1">
+                                                <input
+                                                        name="customRadioTemp"
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        value="ETC"
+                                                        id="customRadioTemp1"
+                                                        checked/>
+                                                <span class="h6 mb-0">QM3</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <div class="form-check custom-option custom-option-basic">
+                                            <label class="form-check-label custom-option-content"
+                                                   for="customRadioTemp2">
+                                                <input
+                                                        name="customRadioTemp"
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        value="Spotage"
+                                                        id="customRadioTemp2"/>
+                                                <span class="h6 mb-0">스포티지</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /Basic Custom Radios -->
+                            </div>
                           <div class="mb-3">
                             <label class="form-label" for="eventStartDate">시작날짜</label>
                             <input
@@ -382,6 +415,24 @@
     $.ajaxSetup({
         headers: { "X-CSRFToken": '{{ csrf_token }}' }
     });
+
+    $(document).ready(function () {
+        // Check the initial state
+        toggleRadioGroup($('#eventLabel').val());
+
+        // Update the state when the selection changes
+        $('#eventLabel').change(function () {
+            toggleRadioGroup($(this).val());
+        });
+    });
+
+    function toggleRadioGroup(selectedValue) {
+        if (selectedValue === 'vehicle') {
+            $('#radioGroup').show();
+        } else {
+            $('#radioGroup').hide();
+        }
+    }
 
     $(document).on('click', '.btn-add-event', function(e) {
          e.preventDefault();

@@ -1,114 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>LOG IN PAGE</title>
     {% include 'admins/admin_header.html' %}
+    <title>LOG IN PAGE</title>
 
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/css/pages/page-auth.css' %}" />
-</head>
-<style>
-@font-face {
-    font-family: 'Pretendard';
-    src: url("{% static 'admin/fonts/Pretendard-Medium.woff' %}") format('woff');
-}
-</style>
 <body>
 <!-- Content -->
 
-<div class="authentication-wrapper authentication-cover">
+<div class="d-flex align-items-center justify-content-center authentication-wrapper authentication-cover">
+     <!-- /Left Text -->
+    <div style="border-bottom-left-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
+        <img
+                src="{% static 'img/login_img.png' %}"
+                class="img-fluid"
+                style="border-top-left-radius: 36px; border-bottom-left-radius: 36px;"
+                alt="Login image"
+                width="700"
+                data-app-dark-img="illustrations/boy-with-rocket-dark.png"
+                data-app-light-img="illustrations/boy-with-rocket-light.png"/>
+    </div>
 
-    <div class="authentication-inner row m-0 d-flex justify-content-center">
-        <!-- /Left Text -->
-        <div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
-            <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center p-5"
-                 style="width: 1300px;height: 810px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12); border-radius: 36px;">
-                <div class="w-100 d-flex justify-content-center">
-                    <img
-                            src="{% static 'img/login_img.png' %}"
-                            class="img-fluid"
-                            style="border-top-left-radius: 36px; border-bottom-left-radius: 36px;"
-                            alt="Login image"
-                            width="700"
-                            data-app-dark-img="illustrations/boy-with-rocket-dark.png"
-                            data-app-light-img="illustrations/boy-with-rocket-light.png"/>
+    <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-5 p-4" style="height: 811px; border-top-right-radius: 36px; border-bottom-right-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
+        <div class="w-px-400 mx-auto">
+            <!-- Logo -->
+            <div class="app-brand mb-5">
+                <a href="#" class="app-brand-link gap-2">
+                    <span class="app-brand-text demo text-body fw-bold">
+                        <img src="{% static 'img/logo.jpg' %}">
+                    </span>
+                </a>
+            </div>
+            <!-- /Logo -->
+            <h3 class="mb-2"
+                style="color: #000; font-family: Pretendard; font-size: 36px; font-style: normal; font-weight: 400; line-height: normal;">
+                서울소프트에 오신 것을</h3>
+            <h2 class="mb-4"
+                style="color: #000; font-family: Pretendard; font-size: 36px; font-style: normal; font-weight: 700; line-height: normal;">
+                환영합니다.</h2>
+            <h6 style="color: #696CFF;font-family: Pretendard; font-size: 16px; font-style: normal; font-weight: 400; line-height: normal;">
+                로그인이 필요합니다.</h6>
 
-                    <div class="d-flex col-12 col-lg-7 col-xl-6 align-items-center authentication-bg p-sm-5 p-4"
-                         style="border-top-right-radius: 36px; border-bottom-right-radius: 36px;">
-                        <div class="w-px-400 mx-auto" style="height: 650px;">
-                            <!-- Logo -->
-                            <div class="app-brand mb-5">
-                                <a href="index.html" class="app-brand-link gap-2">
-                                <span class="app-brand-text demo text-body fw-bold"><img
-                                        src="{% static 'img/logo.jpg' %}"></span>
-                                </a>
-                            </div>
-                            <!-- /Logo -->
-                            <h3 class="mb-2"
-                                style="color: #000; font-family: Pretendard; font-size: 36px; font-style: normal; font-weight: 400; line-height: normal;">
-                                서울소프트에 오신 것을</h3>
-                            <h2 class="mb-4"
-                                style="color: #000; font-family: Pretendard; font-size: 36px; font-style: normal; font-weight: 700; line-height: normal;">
-                                환영합니다.</h2>
-                            <h6 style="color: #696CFF;font-family: Pretendard; font-size: 16px; font-style: normal; font-weight: 400; line-height: normal;">
-                                로그인이 필요합니다.</h6>
-
-                            <form id="login" method="POST" onsubmit="return frm_check();" style="margin-top: 70px;">
-                                {% csrf_token %}
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">ID</label>
-                                    <input
-                                            type="text"
-                                            class="form-control"
-                                            id="email"
-                                            name="username"
-                                            placeholder="Enter your id"
-                                            autofocus required/>
-                                </div>
-                                <div class="mb-3 form-password-toggle">
-                                    <div class="d-flex justify-content-between">
-                                        <label class="form-label" for="password">Password</label>
-                                        <a href="#" id="forgot-password">
-                                            <small>Forgot Password?</small>
-                                        </a>
-                                    </div>
-                                    <div class="input-group input-group-merge">
-                                        <input
-                                                type="password"
-                                                id="password"
-                                                class="form-control"
-                                                name="password"
-                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                aria-describedby="password" required/>
-                                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember-me"/>
-                                        <label class="form-check-label" for="defaultInline1">아이디 기억</label>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary d-grid w-100">로그인</button>
-                            </form>
-
-                            <p class="text-center" style="margin-top: 20px;">
-                                <span>회원이 아니신가요?</span>
-                                <a href="{% url 'signup' %}">
-                                    <span>회원가입</span>
-                                </a>
-                            </p>
-
-                        </div>
+            <form id="login" method="POST" onsubmit="return frm_check();" style="margin-top: 70px;">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">ID</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="email"
+                            name="username"
+                            placeholder="Enter your id"
+                            autofocus required/>
+                </div>
+                <div class="mb-3 form-password-toggle">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" for="password">Password</label>
+                        <a href="#" id="forgot-password">
+                            <small>Forgot Password?</small>
+                        </a>
+                    </div>
+                    <div class="input-group input-group-merge">
+                        <input
+                                type="password"
+                                id="password"
+                                class="form-control"
+                                name="password"
+                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                aria-describedby="password" required/>
+                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                     </div>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember-me"/>
+                        <label class="form-check-label" for="defaultInline1">아이디 기억</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary d-grid w-100">로그인</button>
+            </form>
 
-            <!-- Login -->
+            <p class="text-center" style="margin-top: 20px;">
+                <span>회원이 아니신가요?</span>
+                <a href="{% url 'signup' %}">
+                    <span>회원가입</span>
+                </a>
+            </p>
 
         </div>
-        <!-- /Login -->
     </div>
+
 </div>
     <!-- / Content -->
 

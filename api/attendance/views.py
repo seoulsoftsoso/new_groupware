@@ -101,7 +101,7 @@ def check_out(request):
                     cal_workTime_check(last_attendance)
                     last_attendance.save()
                 else:
-                    last_attendance.is_offwork = 1
+                    last_attendance.is_offwork = True
                     t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
                     last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
                     CalculationDayAttendance(last_attendance)

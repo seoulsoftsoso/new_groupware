@@ -164,9 +164,12 @@
     const checkOutBtn = document.getElementById('checkOutBtn');
     const token = '53d407fad3208b';
     const today = new Date();
+    let response_date;
+    let server_response_date;
+    let thisWeek_response_date;
+    let this_week_day;
 
     function getCurrentDate() {
-        var today = new Date();
         var year = today.getFullYear();
         var month = (today.getMonth() + 1).toString().padStart(2, '0');
         var day = today.getDate().toString().padStart(2, '0');
@@ -207,35 +210,31 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
-                //console.log('res', response.attendanceTime)
+                response_date = new Date(response.date);
+                let yyyy = response_date.getFullYear();
+                let mm = response_date.getMonth() + 1;
+                server_response_date = yyyy * 100 + mm;
 
-                let date = new Date(response.date);
-                let day = date.getDate();
-
+                let yyyyToday = today.getFullYear();
+                let mmToday = today.getMonth() + 1;
+                thisWeek_response_date = yyyyToday * 100 + mmToday;
 
 
                 if (response.is_offwork) {
-                    //console.log('여기')
                     checkInBtn.disabled = false;
                     checkOutBtn.disabled = true;
                 } else {
-                    //console.log('여기11')
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
                     let [hours, minutes, seconds] = response.attendanceTime.split(':');
                     let resDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
                     let diff = today - resDate;
-                    let diffSec = diff / 1000;
-
-                   // console.log(`차이: ${diffSec}초`);
+                    //let diffSec = diff / 1000;
 
                     let intervalId = null;
                     let weekIntervalId = null;
-                    //let diffSec = new Date(response.attendanceTime);
-                    let weekSec = 0;
-
-                    //console.log('diff', diffSec)
+                    //let weekSec = 0;
 
                     function startCounting() {
                         let startTime = localStorage.getItem('startTime');
@@ -273,17 +272,12 @@
                         }, 1000);
                     }
 
-
                     function stopCounting() {
                         clearInterval(intervalId);
                         clearInterval(weekIntervalId);
                         localStorage.removeItem('startTime');
                         localStorage.setItem('endTime', new Date());
                     }
-
-
-
-
 
                     document.getElementById('checkInBtn').addEventListener('click', function () {
                         startCounting();
@@ -342,7 +336,7 @@
                      }
                  });
 
-                 if (today.getDay() === 1) {
+                 if (thisWeek_response_date>=server_response_date && today.getDate()>response_date.getDate() && today.getDay() >= 1) {
                      console.log("주간 근무 시간 초기화");
                      localStorage.removeItem('weekTime');
                      localStorage.removeItem('weekStartTime');
