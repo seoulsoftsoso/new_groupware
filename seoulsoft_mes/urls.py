@@ -47,8 +47,8 @@ from api.board.views import *
 from api.reply.views import *
 from api.attendance.views import *
 from api.corporate_vehicle.views import *
+from api.excel.views import *
 from web.views import *
-
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -166,6 +166,7 @@ urlpatterns = [
                   #파일첨부
                   path('download/<int:file_id>/', download_File, name='download_file'),
                   path('delete_file/', delete_file, name="delete_file"),
+                  path('work_xlsx_download/', excel_download, name="xlsxDownload"),
 
                   #게시판
                   path('admins/board', amdin_board_page, name="adminBoard"),

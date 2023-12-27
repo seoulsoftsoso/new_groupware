@@ -1,0 +1,99 @@
+{% load static %}
+<!-- Modal -->
+<style>
+@font-face {
+    font-family: 'Pretendard';
+    src: url("{% static 'admin/fonts/Pretendard-Medium.woff' %}") format('woff');
+}
+</style>
+<form action="#" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="workHistory-xlsx-download" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-family: Pretendard;" id="exampleModalLabel1">엑셀 다운로드</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="input-group input-daterange" id="bs-datepicker-daterange" style="width: 500px">
+                            <input id="datepicker_to1" placeholder="시작 날짜" class="form-control" name="search-to"
+                                   value="{{ search_to | default_if_none:'' }}"/>
+                            <span class="input-group-text">to</span>
+                            <input id="datepicker_from1" placeholder="끝 날짜" class="form-control" name="search-from"
+                                   value="{{ search_from | default_if_none:'' }}"/>
+                        </div>
+                        <div class="d-flex flex-row" style="margin: 20px 0px 20px 0px;">
+                            <div style="margin: 0px 20px 0px 0px;">
+                                <select id="selectpickerBasic" class="selectpicker w-100-m">
+                                    <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                    <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
+                                    <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
+                                </select>
+                            </div>
+                            <div style="width: 150px;">
+                                <input type="text" placeholder="검색" class="form-control" id="form-search_val" name="search-content"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-label-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="button" class="btn btn-outline-dark"
+                                id="xlsx_download_btn"><i class='bx bx-download'></i>다운로드
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#datepicker_to1").datepicker({format: 'yyyy-mm-dd'});
+        $("#datepicker_from1").datepicker({format: 'yyyy-mm-dd'});
+    });
+
+    $(document).ready(function () {
+        $("#timepicker-basic").flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+    });
+
+    $("#xlsx_download_btn").click(function(){
+    var search_to = $("#datepicker_to1").val();
+    var search_from = $("#datepicker_from1").val();
+    var search_title = $("#selectpickerBasic").val();
+    var search_content = $("#form-search_val").val();
+
+    $.ajax({
+        url: "/work_xlsx_download/",
+        type: "POST",
+        data: {
+            'search_to': search_to,
+            'search_from': search_from,
+            'search_title': search_title,
+            'search_content': search_content,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function (response) {
+            console.log('성공',response)
+        },
+        error: function (error) {
+           console.log('실패')
+        }
+    });
+});
+</script>

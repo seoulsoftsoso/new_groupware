@@ -69,10 +69,12 @@ def signup_page(request):
 
 def UserCreate(request):
     if request.method == 'POST':
+        print(request.POST)
         form = SignUpForm(request.POST)  # UserCreationForm 객체를 생성하도록 수정
         if form.is_valid():
             form.save()
         else:
+            print(form.errors)
             raise ValidationError('관리자에게 문의 바랍니다.')
 
     return render(request, 'index.html')

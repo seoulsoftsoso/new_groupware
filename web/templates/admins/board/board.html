@@ -9,6 +9,38 @@
     .list-container {
         line-height: 2.5;
     }
+
+    @media (max-width: 767px) {
+        /* 작은 화면에서는 테이블의 각 행을 블록 형태로 표시 */
+        .table tbody tr {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* 작은 화면에서는 테이블의 헤더 숨김 */
+        .table thead {
+            display: none;
+        }
+
+        /* 작은 화면에서는 테이블의 각 셀 스타일 조정 */
+        .table th,
+        .table td {
+            display: block;
+            text-align: left;
+            white-space: nowrap;
+            padding: 8px;
+        }
+
+        /* 작은 화면에서는 숨겨야 할 열을 숨김 */
+        .table .hide-on-small-screen {
+            display: none;
+        }
+
+        /* 작은 화면에서는 특정 셀에 작은 폰트 크기 적용 */
+        .table .date-column {
+            font-size: small;
+        }
+    }
 </style>
 <body>
 
@@ -18,7 +50,7 @@
         {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
-        <div class="layout-page" style="">
+        <div class="layout-page">
             {% include 'admins/index_header.html' %}
 
             <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
@@ -33,44 +65,32 @@
                 </div>
 
                 <div class="row" style="margin-top: 40px;">
-                <div class="col-3">
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <a href="{% url 'boardWritePage' %}">
-                                <button type="button" class="btn btn-outline-dark">🖋 작성하기</button>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <div class="card mb-4">
-                                <ul class="">
-                                    <div style="margin-top: 20px; margin-bottom: 20px; ">
+                    <div class="col-md-3">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <a href="{% url 'boardWritePage' %}">
+                                    <button type="button" class="btn btn-outline-dark">🖋 작성하기</button>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="card mb-4">
 
-
-                                        <!-- Default Modal -->
-                                        <div class="col-lg-4 col-md-6" style="margin-bottom: 20px;">
-                                            <div class="mt-3">
-                                                <!-- Button trigger modal -->
-                                                <button
-                                                        style="width: 150px; margin-bottom: 20px;"
-                                                        type="button"
-                                                        class="btn btn-outline-dark"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#basicModalAdd">
-                                                    게시판 추가<i class='bx bx-message-add'></i>
-                                                </button>
-                                                {% include 'admins/board/groupAddModal.html' %}
-
-
-                                            </div>
-
-                                        </div>
-
+                                        <button
+                                                style="width: 150px; margin: 20px 0 20px 20px;"
+                                                type="button"
+                                                class="btn btn-outline-dark"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#basicModalAdd">
+                                            게시판 추가<i class='bx bx-message-add'></i>
+                                        </button>
+                                        {% include 'admins/board/groupAddModal.html' %}
 
 
                                         <div class="list-container">
                                             {% for cm in codemaster %}
-                                                <li class="d-flex justify-content-between">
-                                                    <button class="btn rounded-pill btn-outline-info" style="margin-bottom: 10px;" onclick="renderlist({{ cm.id }})">
+                                                <li class="d-flex justify-content-between" style="margin-left: 20px;">
+                                                    <button class="btn rounded-pill btn-outline-info"
+                                                            style="margin-bottom: 10px;" onclick="renderlist({{ cm.id }})">
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </button>
                                                     <div class="dropdown">
@@ -80,62 +100,66 @@
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editModal{{ cm.id }}" href="javascript:void(0);">
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                               data-bs-target="#editModal{{ cm.id }}"
+                                                               href="javascript:void(0);">
                                                                 <i class="bx bx-edit-alt me-1"></i> 수정</a>
-                                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal{{ cm.id }}" href="javascript:void(0);">
+                                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                               data-bs-target="#deleteModal{{ cm.id }}"
+                                                               href="javascript:void(0);">
                                                                 <i class="bx bx-trash me-1"></i> 삭제</a>
                                                         </div>
                                                     </div>
                                                 </li>
-                                                    {% include 'admins/board/groupEditModal.html' %}
-                                                    {% include 'admins/board/groupDeleteModal.html' %}
+                                                {% include 'admins/board/groupEditModal.html' %}
+                                                {% include 'admins/board/groupDeleteModal.html' %}
                                             {% endfor %}
                                         </div>
 
-                                    </div>
-                                </ul>
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
 
 
-                </div>
-                <div class="col-xl">
-                  <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center" style="margin-bottom: 20px;">
-                      <h5 class="mb-0">게시물 미리보기</h5>
-                    </div>
-                      <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
-                          <div>
-                              <div class="card-body">
-                                  <div style="margin-bottom: 20px;">
-                                      <strong style="font-size: large" id="group_name">{{ boardcode_name }}</strong>
-                                  </div>
-                                  <div style="margin-top: 30px;">
-                                      <table class="table table-hover">
-                                          <thead>
-                                          <tr style="background-color: lightgray">
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 35%">제목</th>
-                                              <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center; width: 25%;">작성일시</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
-                                              <th style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
-                                          </tr>
-                                          </thead>
-                                          <tbody>
+                    <div class="col-md-9">
+                      <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="margin-bottom: 20px;">
+                          <h5 class="mb-0">게시물 미리보기</h5>
+                        </div>
+                          <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
+                              <div>
+                                  <div class="card-body">
+                                      <div style="margin-bottom: 20px;">
+                                          <strong style="font-size: large" id="group_name">{{ boardcode_name }}</strong>
+                                      </div>
+                                      <div class="table-container" style="margin-top: 30px; overflow-x: auto;">
+                                          <table class="table table-hover">
+                                              <thead>
+                                                  <tr style="background-color: lightgray">
+                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
+                                                      <th style="font-size: medium; font-weight: bold; text-align: center; width: 35%">제목</th>
+                                                      <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
+                                                      <th style="font-size: medium; font-weight: bold; text-align: center; width: 25%;">작성일시</th>
+                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
+                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
 
-                                          </tbody>
-                                      </table>
+                                              </tbody>
+                                          </table>
+                                      </div>
                                   </div>
+
+
                               </div>
-
-
                           </div>
-                      </div>
 
-                  </div>
-                </div>
+                      </div>
+                    </div>
               </div>
 
                 </div>
@@ -313,12 +337,12 @@
 
                     const tr = document.createElement('tr');
                     tr.innerHTML =  `
-                        <td style="text-align: center;"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"></td>
+                        <td class="hide-on-small-screen" style="text-align: center;"><img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}"></td>
                         <td style="color:red;">${fixed_boardmaster.title}</td>
                         <td style="color:red;">${fixed_boardmaster.created_by}</td>
-                        <td style="color: red; text-align: center;">${formattedDate}</td>
-                        <td style="color:red; text-align: center">${fixed_boardmaster.click_cnt}</td>
-                        <td style="color:red; text-align: center">${fixed_boardmaster.reply_count}</td>
+                        <td style="color: red;">${formattedDate}</td>
+                        <td class="hide-on-small-screen" style="color:red; text-align: center">${fixed_boardmaster.click_cnt}</td>
+                        <td class="hide-on-small-screen" style="color:red; text-align: center">${fixed_boardmaster.reply_count}</td>
                     `;
                     tr.style.cursor = 'pointer';
                     tr.addEventListener('click', function () {
@@ -343,12 +367,12 @@
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td style="text-align: center;">${index + 1}</td>
+                        <td class="hide-on-small-screen" style="text-align: center;">${index + 1}</td>
                         <td>${boardmaster.title}</td>
                         <td>${boardmaster.created_by}</td>
-                        <td style="text-align: center;">${formattedDate}</td>
-                        <td style="text-align: center;">${boardmaster.click_cnt}</td>
-                        <td style="text-align: center;">${boardmaster.reply_count}</td>
+                        <td>${formattedDate}</td>
+                        <td class="hide-on-small-screen" style="text-align: center;">${boardmaster.click_cnt}</td>
+                        <td class="hide-on-small-screen" style="text-align: center;">${boardmaster.reply_count}</td>
                     `;
                     tr.style.cursor = 'pointer';
                     tr.addEventListener('click', function () {

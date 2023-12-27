@@ -6,129 +6,125 @@
 {% if user.is_active %}
 <script>history.back(-1);</script>
 {% else %}
-    <body>
-    <div class="d-flex align-items-center justify-content-center authentication-wrapper authentication-cover">
+<body>
+<div class="d-flex align-items-center justify-content-center authentication-wrapper authentication-cover">
 
-        <div style="border-bottom-left-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
-            <img
-                    src="{% static 'img/signup_img.png' %}"
-                    class="img-fluid"
-                    style="height:1100px; border-top-left-radius: 36px; border-bottom-left-radius: 36px;"
-                    alt="Login image"
-                    width="800"
-                    data-app-dark-img="illustrations/boy-with-rocket-dark.png"
-                    data-app-light-img="illustrations/boy-with-rocket-light.png"/>
-        </div>
+    <div style="border-bottom-left-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
+        <img
+                src="{% static 'img/signup_img.png' %}"
+                class="img-fluid"
+                style="height:900px; border-top-left-radius: 36px; border-bottom-left-radius: 36px;"
+                alt="Login image"
+                width="800"
+                data-app-dark-img="illustrations/boy-with-rocket-dark.png"
+                data-app-light-img="illustrations/boy-with-rocket-light.png"/>
+    </div>
 
 
-        <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-5 p-4"
-             style="height: 1100px; width: 640px; border-top-right-radius: 36px; border-bottom-right-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
-            <div class="w-px-500 mx-auto">
+    <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-5 p-4" style="height: 900px; border-top-right-radius: 36px; border-bottom-right-radius: 36px; box-shadow: 12px 12px 25px 0px rgba(0, 0, 0, 0.12);">
+        <div class="w-px-400 mx-auto">
 
-                <h3 class="mb-2"
-                    style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 300;line-height: normal;">
-                    회원 가입을 위해</h3>
-                <h2 class="mb-4"
-                    style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 700;line-height: normal;">
-                    정보를 입력해주세요</h2>
+            <h3 class="mb-2" style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 300;line-height: normal;">
+                        회원 가입을 위해</h3>
+            <h2 class="mb-4" style="color: #000;font-family: Pretendard;font-size: 36px;font-style: normal;font-weight: 700;line-height: normal;">
+                        정보를 입력해주세요</h2>
 
-                <p>
-                    <span>이미 회원이신가요?</span>
-                    <a href="{% url 'loginPage' %}">
-                        <span>로그인</span>
-                    </a>
-                </p>
+            <p>
+                <span>이미 회원이신가요?</span>
+                <a href="{% url 'loginPage' %}">
+                    <span>로그인</span>
+                </a>
+            </p>
 
-                <form action="{% url 'UserCreate' %}" method="post" style="margin-top: 30px;">
-                    {% csrf_token %}
-                    {{ form }}
-                    <!-- 이름 필드 -->
-                    <div class="form-group row mb-4">
-                        <label for="id_username" class="col-sm-2 col-form-label"><span
-                                class="critical">* </span>이름</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="username" id="id_username" class="form-control"
-                                   placeholder="이름을 입력해주세요." required>
-                        </div>
+             <form action="{% url 'UserCreate' %}" method="post" style="margin-top: 30px;">
+                 {% csrf_token %}
+                 {{ form }}
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">이름</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="id_username"
+                            name="username"
+                            placeholder="이름을 입력해주세요."
+                            autofocus required/>
+                </div>
+
+                 <div class="mb-3" style="display: flex; flex-direction: column;">
+                    <label for="id_user_id" class="form-label">아이디</label>
+                    <div style="display: flex;">
+                        <input
+                            type="text"
+                            class="form-control"
+                            style="width: 295px;"
+                            id="id_user_id"
+                            name="user_id"
+                            placeholder="아이디를 입력해주세요."
+                            autofocus required/>
+                         <button type="button" id="check-duplicate" class="btn btn-label-warning"
+                                 >중복확인
+                         </button>
                     </div>
 
-                    <div class="form-group row mb-4">
-                        <label for="id_user_id" class="col-sm-2 col-form-label"><span
-                                class="critical">* </span>
-                            아이디</label>
-                        <div class="col-sm-10" style="display: flex">
-                            <input type="text" name="user_id" id="id_user_id" class="form-control"
-                                   style="width: 300px; " placeholder="아이디를 입력해주세요." required>
-                            <button type="button" id="check-duplicate" class="btn btn-label-warning"
-                                    style="width: 110px;">중복확인
-                            </button>
-                        </div>
-                    </div>
+                </div>
 
+                 <div class="mb-3">
+                    <label for="id_password1" class="form-label">비밀번호</label>
+                    <input
+                            type="password"
+                            class="form-control"
+                            id="id_password1"
+                            name="password"
+                            placeholder="비밀번호는 최소 8자 이상이어야 합니다."
+                            minlength="8"
+                            autofocus required/>
+                </div>
 
-                    <div class="form-group row mb-4">
-                        <label for="id_password1" class="col-sm-2 col-form-label"><span
-                                class="critical">* </span>
-                            비밀번호</label>
-                        <div class="col-sm-10">
-                            <input type="password" name="password" id="id_password1" class="form-control"
-                                   placeholder="비밀번호는 최소 8자 이상이어야 합니다." minlength="8" required>
-                        </div>
-                    </div>
+                 <div class="mb-3">
+                    <label for="id_password2" class="form-label">비밀번호 확인</label>
+                    <input
+                            type="password"
+                            class="form-control"
+                            id="id_password2"
+                            name="password2"
+                            placeholder="확인을 위해 이전과 동일한 비밀번호를 입력하세요."
+                            minlength="8"
+                            oninput="checkPasswordMatch()"
+                            autofocus required/>
+                     <p id="password-match-message" style="color: red;"></p>
+                </div>
 
-                    <div class="form-group row mb-4">
-                        <label for="id_password2" class="col-sm-2 col-form-label"><span
-                                class="critical">* </span> 비밀번호 확인</label>
-                        <div class="col-sm-10">
-                            <input type="password" name="password2" id="id_password2" class="form-control"
-                                   style="margin-top: 6px;"
-                                   placeholder="확인을 위해 이전과 동일한 비밀번호를 입력하세요." minlength="8" required
-                                   oninput="checkPasswordMatch()">
-                            <p id="password-match-message" style="color: red;"></p>
-                        </div>
-                    </div>
+                 <div class="mb-3">
+                    <label for="id_email" class="form-label">이메일</label>
+                    <input
+                            type="text"
+                            name="email"
+                            id="id_email"
+                            class="form-control"
+                            placeholder="foo@bar.com 형식으로 입력하세요."
+                            required>
+                </div>
 
-                    <div class="form-group row mb-4" style="margin-top: -7px;">
-                        <label for="id_email" class="col-sm-2 col-form-label"><span
-                                class="critical">* </span> 이메일</label>
-                        <div class="col-sm-10">
-                            <input type="email" name="email" id="id_email" class="form-control"
-                                   placeholder="foo@bar.com 형식으로 입력하세요." required>
-                        </div>
-                    </div>
-
-                    <div class="form-group row mb-4">
-                        <label for="id_useremailreceive" class="col-sm-2 col-form-label">이메일 수신 여부</label>
-                        <div class="col-sm-10" style="padding-top: 5px">
-                            <label class="form-check-label chk_text" for="same-address"
+                 <div class="mb-3">
+                    <label for="id_useremailreceive" class="form-label">이메일 수신 여부</label>
+                    <label class="form-check-label chk_text" for="same-address"
                                    style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.<input
                                     type="checkbox" style="width: 13px; height: 13px; margin-left: 10px;"
                                     name="useremailreceive" id="id_useremailreceive"></label>
-                        </div>
-                    </div>
+                </div>
 
-                    <div class="form-group row">
-                        <label for="id_userintro" class="col-sm-2 col-form-label">소개</label>
-                        <div class="col-sm-10">
-                                        <textarea name="userintro" id="id_userintro" class="form-control" rows="3"
-                                                  placeholder="만나서 반갑습니다."></textarea>
-                        </div>
-                    </div>
+                 <div class="mb-3">
+                    <label for="id_userintro" class="form-label">소개</label>
+                     <textarea class="form-control" id="id_userintro" name="userintro" placeholder="만나서 반갑습니다."></textarea>
+                </div>
 
-                    <div class="form-group row" style="margin-top: 30px;">
-                        <div class="mb-3">
-                            <button type="submit" id="signup_btn" class="btn btn-primary d-grid w-100"
-                                    style="width: 400px;">회원가입
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                 <button class="btn btn-primary d-grid w-100" type="submit" id="signup_btn">회원가입</button>
+            </form>
 
         </div>
     </div>
-
-    </body>
+</div>
+</body>
 <script>
     function checkPasswordMatch() {
         var password1 = document.getElementById("id_password1").value;

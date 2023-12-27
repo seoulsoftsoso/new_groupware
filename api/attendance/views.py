@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, date
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, cal_workTime_check, PaginatorManager
@@ -43,9 +44,10 @@ def CalculationDayAttendance(last_attendance):
         last_attendance.workTime_holiday = None
     return last_attendance
 
-
+@csrf_exempt
 def check_in(request):
     if request.method == "POST":
+        print(request.POST)
         user_id = request.COOKIES.get('user_id')
         user = UserMaster.objects.get(id=user_id)
         department_id = user.department_position.id
