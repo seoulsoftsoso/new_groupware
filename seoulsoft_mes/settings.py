@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'mathfilters',
-    'django_summernote',
+
 ]
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'import.path.to.urls.api_info',
