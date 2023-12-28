@@ -33,13 +33,15 @@
                             <div style="margin: 0px 20px 0px 0px;">
                                 <select id="selectpickerBasic" class="selectpicker w-100-m">
                                     <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
-                                    <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
                                     <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
                                 </select>
                             </div>
                             <div style="width: 150px;">
                                 <input type="text" placeholder="검색" class="form-control" id="form-search_val" name="search-content"/>
                             </div>
+                        </div>
+                        <div id="download-link-container">
+
                         </div>
                     </div>
 
@@ -72,28 +74,64 @@
         });
     });
 
-    $("#xlsx_download_btn").click(function(){
-    var search_to = $("#datepicker_to1").val();
-    var search_from = $("#datepicker_from1").val();
-    var search_title = $("#selectpickerBasic").val();
-    var search_content = $("#form-search_val").val();
+    $("#xlsx_download_btn").click(function (e) {
+        e.preventDefault()
 
-    $.ajax({
-        url: "/work_xlsx_download/",
-        type: "POST",
-        data: {
-            'search_to': search_to,
-            'search_from': search_from,
-            'search_title': search_title,
-            'search_content': search_content,
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
-        },
-        success: function (response) {
-            console.log('성공',response)
-        },
-        error: function (error) {
-           console.log('실패')
+        var search_to = $("#datepicker_to1").val();
+        var search_from = $("#datepicker_from1").val();
+        var search_title = $("#selectpickerBasic").val();
+        var search_content = $("#form-search_val").val();
+
+        console.log('search_to', search_to)
+
+        if (search_to==='' || search_from==='') {
+            Swal.fire({
+                title: 'Fail!',
+                text: '날짜를 선택해주세요!',
+                icon: 'info',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+            return;
         }
+
+        $.ajax({
+            url: "/work_xlsx_download/",
+            type: "POST",
+            data: {
+                'search_to': search_to,
+                'search_from': search_from,
+                'search_title': search_title,
+                'search_content': search_content,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'text',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (response) {
+                var blob = new Blob([response], {type: 'text/csv'});
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = '출퇴근기록.csv';
+                link.click();
+
+            },
+            error: function (error) {
+                console.log('실패', error)
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            }
+        });
     });
-});
 </script>

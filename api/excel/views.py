@@ -1,4 +1,4 @@
-import json
+import io
 import csv
 from django.http import HttpResponse, JsonResponse
 from api.models import Attendance, CodeMaster, UserMaster
@@ -10,28 +10,30 @@ def excel_download(request):
         search_from = request.POST.get('search_from')
         search_title = request.POST.get('search_title')
         search_content = request.POST.get('search_content')
-        print('search_content', search_from)
+        print('search_content', search_content)
 
-        # search_title 필터링
         if search_title == 'name':
             attendance_records = Attendance.objects.filter(employee__username=search_content, date__range=[search_to, search_from])
-        elif search_title == 'number':
-            attendance_records = Attendance.objects.filter(number=search_content, date__range=[search_to, search_from])
+            if search_content == '':
+                attendance_records = Attendance.objects.filter(date__range=[search_to, search_from])
+
         elif search_title == 'department':
             attendance_records = Attendance.objects.filter(department=search_content, date__range=[search_to, search_from])
 
-        print('attendancec_record : ', attendance_records)
+        print('attendance_records: ', attendance_records)
 
-        # CSV 파일 생성
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="attendance.csv"'
-        writer = csv.writer(response)
-        writer.writerow(['근무일자', '성명', '직급', '부서', '출근시간', '퇴근시간', '근무시간', '연장근로', '지각시간', '조퇴시간', '출근IP', '퇴근IP'])  # 컬럼명을 입력합니다.
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+
+        buffer.write('\ufeff')
+
+        writer.writerow(['근무일자', '성명', '직급', '부서', '출근시간', '퇴근시간', '근무시간', '연장근로', '지각시간', '조퇴시간', '출근IP', '퇴근IP'])
 
         for record in attendance_records:
+            # 각 레코드를 입력
             writer.writerow([
                 record.date,
-                record.employee,
+                record.employee.username,
                 record.jobTitle,
                 record.department,
                 record.attendanceTime,
@@ -42,6 +44,9 @@ def excel_download(request):
                 record.earlyleaveTime,
                 record.attendance_ip,
                 record.offwork_ip
-            ])  # 각 레코드를 입력합니다.
+            ])
+
+        response = HttpResponse(buffer.getvalue().encode('utf-8-sig'), content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="출퇴근기록.csv"'
 
         return response
