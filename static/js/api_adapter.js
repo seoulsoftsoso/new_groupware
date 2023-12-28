@@ -126,7 +126,7 @@ function handle_error(xhr, status, errorThrown) {
         top.location.replace('/');
         return;
     } else if (xhr.status === 500) {
-        alert("서버 에러가 발생하였습니다. 관리자에게 문의 바랍니다.");
+        //alert("서버 에러가 발생하였습니다. 관리자에게 문의 바랍니다.");
         return;
     }
 

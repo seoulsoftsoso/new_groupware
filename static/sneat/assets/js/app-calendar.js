@@ -17,6 +17,25 @@ if (isRtl) {
   direction = 'rtl';
 }
 
+let calendar;
+
+let updateEventId;
+
+  function handleEventsData(data) {
+    // 여기서 data를 사용하여 필요한 작업 수행
+
+    events_data = data;
+    // 예: 달력에 이벤트 추가 등
+  }
+  getDatas().then(events_data => {
+
+      handleEventsData(events_data);
+      // currentEvents로 무언가를 수행
+  }).catch(error => {
+      console.error(error);
+      // 에러 처리
+  });
+
 document.addEventListener('DOMContentLoaded', function () {
   (function () {
     const calendarEl = document.getElementById('calendar'),
@@ -24,11 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
       addEventSidebar = document.getElementById('addEventSidebar'),
       appOverlay = document.querySelector('.app-overlay'),
       calendarsColor = {
-        Business: 'primary',
+        Business : 'primary',
         Holiday: 'success',
         Personal: 'danger',
         Family: 'warning',
-        ETC: 'info'
+        ETC: 'info',
+        Spotage: 'info'
       },
       offcanvasTitle = document.querySelector('.offcanvas-title'),
       btnToggleSidebar = document.querySelector('.btn-toggle-sidebar'),
@@ -48,11 +68,13 @@ document.addEventListener('DOMContentLoaded', function () {
       filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
       inlineCalendar = document.querySelector('.inline-calendar');
 
+
     let eventToUpdate,
-      currentEvents = events, // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
+      currentEvents = events_data,// Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
       isFormValid = false,
       inlineCalInstance;
 
+    //console.log('이벤트 출력', currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
@@ -149,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
+      updateEventId= eventToUpdate._def.publicId
       if (eventToUpdate.url) {
         info.jsEvent.preventDefault();
         window.open(eventToUpdate.url, '_blank');
@@ -219,14 +242,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // * This will be called by fullCalendar to fetch events. Also this can be used to refetch events.
     // --------------------------------------------------------------------------------------------------
     function fetchEvents(info, successCallback) {
+
       // Fetch Events from API endpoint reference
-      /* $.ajax(
+       /*$.ajax(
         {
-          url: '../../../app-assets/data/app-calendar-events.js',
+          /!*url: '../../../app-assets/data/app-calendar-events.js',*!/
+          /!*url: '{% static "sneat/assets/js/app-calendar-events.js" %}',*!/
           type: 'GET',
           success: function (result) {
             // Get requested calendars as Array
-            var calendars = selectedCalendars();
+            let calendars = selectedCalendars();
 
             return [result.events.filter(event => calendars.includes(event.extendedProps.calendar))];
           },
@@ -234,15 +259,47 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(error);
           }
         }
-      ); */
+      );*/
 
       let calendars = selectedCalendars();
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
       let selectedEvents = currentEvents.filter(function (event) {
-        // console.log(event.extendedProps.calendar.toLowerCase());
+        //console.log('이벤트구분',event.extendedProps.calendar.toLowerCase());
         return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
+
+      selectedEvents = selectedEvents.map(function (event) {
+
+        let eventType = event.extendedProps.calendar.toLowerCase();
+        let eventuser = event.extendedProps.created_by
+        let eventallday = event.allDay
+
+        if (eventType==="business"){
+          eventType = "출장"
+        } else if(eventType==="personal"){
+          eventType = "자리비움"
+        } else if(eventType==="holiday"){
+          eventType = "연차"
+        } else if(eventType==="family"){
+          eventType = "반차"
+        } else if(eventType==="etc"){
+          eventType = "차량-QM3"
+        } else if(eventType==="spotage"){
+          eventType = "차량-스포티지"
+        }
+
+        if (eventallday===true) {
+          eventallday = "*종일"
+        } else {
+          eventallday = ''
+        }
+
+        event.title = `${eventallday} ${eventType} (${eventuser})`;
+
+        return event;
+      });
+
       // if (selectedEvents.length > 0) {
       successCallback(selectedEvents);
       // }
@@ -250,13 +307,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Init FullCalendar
     // ------------------------------------------------
-    let calendar = new Calendar(calendarEl, {
+    calendar = new Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       events: fetchEvents,
       plugins: [dayGridPlugin, interactionPlugin, listPlugin, timegridPlugin],
       editable: true,
       dragScroll: true,
-      dayMaxEvents: 2,
+      dayMaxEvents: 3,
       eventResizableFromStart: true,
       customButtons: {
         sidebarToggle: {
@@ -266,6 +323,11 @@ document.addEventListener('DOMContentLoaded', function () {
       headerToolbar: {
         start: 'sidebarToggle, prev,next, title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      eventTimeFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false
       },
       direction: direction,
       initialDate: new Date(),
@@ -371,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // ? You can write below code to AJAX call success response
 
       currentEvents.push(eventData);
-      calendar.refetchEvents();
+      // calendar.refetchEvents();
 
       // ? To add event directly to calender (won't update currentEvents object)
       // calendar.addEvent(eventData);
@@ -387,10 +449,10 @@ document.addEventListener('DOMContentLoaded', function () {
       calendar.refetchEvents();
 
       // ? To update event directly to calender (won't update currentEvents object)
-      // let propsToUpdate = ['id', 'title', 'url'];
-      // let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
+      let propsToUpdate = ['id', 'title', 'url'];
+      let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
 
-      // updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
+      updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
     }
 
     // Remove Event
@@ -435,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var propName = extendedPropsToUpdate[index];
         existingEvent.setExtendedProp(propName, updatedEventData.extendedProps[propName]);
       }
+
     };
 
     // Remove Event In Calendar (UI Only)
