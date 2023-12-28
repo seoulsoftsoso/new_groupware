@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'mathfilters',
-    'django_summernote',
+    # 'django_summernote',
 ]
 SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'import.path.to.urls.api_info',
@@ -130,8 +130,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'groupware',
-        'USER': 'root',
-        'PASSWORD': 'hong11',
+        'USER': 'cluster',
+        'PASSWORD': 'Cluster1105!@',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
