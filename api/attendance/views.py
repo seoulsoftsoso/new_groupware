@@ -1,23 +1,42 @@
 import json
 from datetime import datetime, timedelta, date
-
+from dateutil.relativedelta import relativedelta, SU
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
-
+from django.db.models import F, Sum, ExpressionWrapper, fields
+from django.db.models.expressions import RawSQL
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, cal_workTime_check, PaginatorManager
 from api.models import Attendance, CodeMaster, UserMaster
 
 
 def last_attendance(request):
     user_id = request.GET.get('user_id')
+    end_date = datetime.now().replace(microsecond=0)
+    start_date = (end_date + relativedelta(weekday=SU(-1))).replace(hour=0, minute=0, second=0, microsecond=0)
+    print('endDate : ', end_date)
+    print('startDate : ', start_date)
 
     if user_id is None:
         return JsonResponse({'error': 'user_id is required'}, status=400)
+
     try:
-        attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
+        weekly_work_time = Attendance.objects.filter(
+            employee_id=user_id,
+            date__range=[start_date, end_date]
+        ).annotate(
+            workTime_in_seconds=RawSQL("TIME_TO_SEC(workTime)", [])
+        ).aggregate(
+            weekly_work_time=Sum('workTime_in_seconds')
+        )['weekly_work_time']
+
+        attendance = Attendance.objects.filter(employee_id=user_id).latest('date')
+        attendance.weekly_work_time = weekly_work_time
+
+        print('attendance: ', attendance)
+        print('weekly_work_time: ', attendance.weekly_work_time)
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
@@ -25,7 +44,10 @@ def last_attendance(request):
         return JsonResponse({
             'is_offwork': attendance.is_offwork,
             'attendanceTime': attendance.attendanceTime.strftime("%H:%M:%S"),
-            'date': attendance.date
+            'date': attendance.date,
+            'weeklyWorkTime': attendance.weekly_work_time if attendance.weekly_work_time is not None else 0,
+            'endDate': end_date,
+            'startDate': start_date
         })
     else:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)

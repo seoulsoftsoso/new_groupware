@@ -16,8 +16,7 @@ def time_diff(time1, time2):  # time2 - time1
 
 def cal_workTime(last_attendance):
     work_time = time_diff(last_attendance.attendanceTime, last_attendance.offworkTime)
-    if last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() < time(6, 0,
-                                                                                                       0):  # 0시 이후~오전 6시 이전 퇴근
+    if last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() < time(6, 0, 0):  # 0시 이후~오전 6시 이전 퇴근
         work_time = time_diff(time(1, 0, 0), work_time)
     elif last_attendance.attendanceTime <= time(12, 30, 0) and last_attendance.offworkTime.time() >= time(13, 30, 0):
         work_time = time_diff(time(1, 0, 0), work_time)

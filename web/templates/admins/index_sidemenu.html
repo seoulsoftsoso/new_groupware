@@ -164,10 +164,13 @@
     const checkOutBtn = document.getElementById('checkOutBtn');
     const token = '53d407fad3208b';
     const today = new Date();
-    let response_date;
-    let server_response_date;
-    let thisWeek_response_date;
-    let this_week_day;
+    let attendanceTime;
+    let is_offwork;
+    let endDate;
+    let startDate;
+    let weeklyWorkTime;
+    let dayInterval;
+    let weekInterval;
 
     function getCurrentDate() {
         var year = today.getFullYear();
@@ -179,18 +182,20 @@
     document.getElementById('currentDate').innerHTML = getCurrentDate();
 
     function getCookie(name) {
-        let cookieArr = document.cookie.split(";");
-
-        for (let i = 0; i < cookieArr.length; i++) {
-            let cookiePair = cookieArr[i].split("=");
-
-            if (name == cookiePair[0].trim()) {
-                return decodeURIComponent(cookiePair[1]);
-            }
-        }
-
-        return null;
+        const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return cookieValue ? decodeURIComponent(cookieValue[2]) : null;
     }
+
+    function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function deleteCookie(name) {
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+    }
+
 
     function formatTime(sec) {
         let hours = Math.floor(sec / 3600);
@@ -210,15 +215,17 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
-                response_date = new Date(response.date);
-                let yyyy = response_date.getFullYear();
-                let mm = response_date.getMonth() + 1;
-                server_response_date = yyyy * 100 + mm;
+                console.log('res', response)
+                attendanceTime = new Date(response.date + "T" + response.attendanceTime);
+                is_offwork = response.is_offwork;
+                endDate = new Date(response.endDate);
+                startDate = new Date(response.startDate);
+                weeklyWorkTime = parseFloat(response.weeklyWorkTime);
 
-                let yyyyToday = today.getFullYear();
-                let mmToday = today.getMonth() + 1;
-                thisWeek_response_date = yyyyToday * 100 + mmToday;
-
+                console.log('attendanceTime',attendanceTime)
+                console.log('endDate',endDate)
+                console.log('startDate',startDate)
+                console.log('weeklyWorkTime',weeklyWorkTime)
 
                 if (response.is_offwork) {
                     checkInBtn.disabled = false;
@@ -227,67 +234,24 @@
                     checkInBtn.disabled = true;
                     checkOutBtn.disabled = false;
 
-                    let [hours, minutes, seconds] = response.attendanceTime.split(':');
-                    let resDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
-                    let diff = today - resDate;
-                    //let diffSec = diff / 1000;
+                    var dailyWorkTime = (endDate - attendanceTime) / 1000;
 
-                    let intervalId = null;
-                    let weekIntervalId = null;
-                    //let weekSec = 0;
+                    weeklyWorkTime += dailyWorkTime;
 
-                    function startCounting() {
-                        let startTime = localStorage.getItem('startTime');
-                        if (!startTime) {
-                            startTime = new Date();
-                            localStorage.setItem('startTime', startTime);
-                        } else {
-                            startTime = new Date(startTime);
-                        }
+                    formatTime(dailyWorkTime);
+                    formatTime(weeklyWorkTime);
+                    console.log("일일 ", dailyWorkTime);
+                    console.log("누적 ", weeklyWorkTime);
 
-                        let weekStartTime = localStorage.getItem('weekStartTime');
-                        if (!weekStartTime) {
-                            weekStartTime = new Date();
-                            localStorage.setItem('weekStartTime', weekStartTime);
-                        } else {
-                            weekStartTime = new Date(weekStartTime);
-                        }
+                    dayInterval = setInterval(function () {
+                        dailyWorkTime++;
+                        document.getElementById('todayWorkTime').innerHTML = formatTime(dailyWorkTime);
+                    }, 1000);
 
-
-                        let diffSec = Math.floor((new Date() - startTime) / 1000);
-                        let weekSec = Math.floor((new Date() - weekStartTime) / 1000);
-
-                        document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
-                        document.getElementById('weekWorkTime').innerHTML = formatTime(weekSec);
-
-                        intervalId = setInterval(function () {
-                            diffSec++;
-                            document.getElementById('todayWorkTime').innerHTML = formatTime(diffSec);
-                        }, 1000);
-
-                        weekIntervalId = setInterval(function () {
-                            weekSec++;
-                            localStorage.setItem('weekTime', weekSec);
-                            document.getElementById('weekWorkTime').innerHTML = formatTime(weekSec);
-                        }, 1000);
-                    }
-
-                    function stopCounting() {
-                        clearInterval(intervalId);
-                        clearInterval(weekIntervalId);
-                        localStorage.removeItem('startTime');
-                        localStorage.setItem('endTime', new Date());
-                    }
-
-                    document.getElementById('checkInBtn').addEventListener('click', function () {
-                        startCounting();
-                    });
-
-                    document.getElementById('checkOutBtn').addEventListener('click', function () {
-                        stopCounting();
-                    });
-
-                    startCounting();
+                    weekInterval = setInterval(function () {
+                        weeklyWorkTime++;
+                        document.getElementById('weekWorkTime').innerHTML = formatTime(weeklyWorkTime);
+                    }, 1000);
 
                 }
             }
@@ -335,15 +299,9 @@
                          location.reload();
                      }
                  });
-
-                 if (thisWeek_response_date>=server_response_date && today.getDate()>response_date.getDate() && today.getDay() >= 1) {
-                     console.log("주간 근무 시간 초기화");
-                     localStorage.removeItem('weekTime');
-                     localStorage.removeItem('weekStartTime');
-                 }
-
                  checkInBtn.disabled = true;
                  checkOutBtn.disabled = false;
+
              }
          });
     }
@@ -378,16 +336,4 @@
              }
          });
     }
-
-
-    window.onload = function() {
-    var workTime = localStorage.getItem('workTime');
-    var weekTime = localStorage.getItem('weekTime');
-    if (workTime) {
-        document.getElementById('todayWorkTime').innerHTML = formatTime(workTime);
-    }
-    if (weekTime){
-        document.getElementById('weekWorkTime').innerHTML = formatTime(weekTime);
-    }
-};
 </script>
