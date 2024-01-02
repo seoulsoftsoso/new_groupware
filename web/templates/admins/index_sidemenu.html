@@ -168,6 +168,7 @@
     let is_offwork;
     let endDate;
     let startDate;
+    let nextSunday;
     let weeklyWorkTime;
     let dayInterval;
     let weekInterval;
@@ -205,60 +206,7 @@
         return `${hours}h ${minutes}m ${seconds}s`;
     }
 
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
-        $.ajax({
-            url: "{% url 'last_attendance' %}",
-            type: "GET",
-            data: {
-                user_id: getCookie('user_id')
-            },
-            success: function (response) {
-                console.log('res', response)
-                attendanceTime = new Date(response.date + "T" + response.attendanceTime);
-                is_offwork = response.is_offwork;
-                endDate = new Date(response.endDate);
-                startDate = new Date(response.startDate);
-                weeklyWorkTime = parseFloat(response.weeklyWorkTime);
-
-                console.log('attendanceTime',attendanceTime)
-                console.log('endDate',endDate)
-                console.log('startDate',startDate)
-                console.log('weeklyWorkTime',weeklyWorkTime)
-
-                if (response.is_offwork) {
-                    checkInBtn.disabled = false;
-                    checkOutBtn.disabled = true;
-                } else {
-                    checkInBtn.disabled = true;
-                    checkOutBtn.disabled = false;
-
-                    var dailyWorkTime = (endDate - attendanceTime) / 1000;
-
-                    weeklyWorkTime += dailyWorkTime;
-
-                    formatTime(dailyWorkTime);
-                    formatTime(weeklyWorkTime);
-                    console.log("일일 ", dailyWorkTime);
-                    console.log("누적 ", weeklyWorkTime);
-
-                    dayInterval = setInterval(function () {
-                        dailyWorkTime++;
-                        document.getElementById('todayWorkTime').innerHTML = formatTime(dailyWorkTime);
-                    }, 1000);
-
-                    weekInterval = setInterval(function () {
-                        weeklyWorkTime++;
-                        document.getElementById('weekWorkTime').innerHTML = formatTime(weeklyWorkTime);
-                    }, 1000);
-
-                }
-            }
-        });
-    });
-
-    $('#checkInBtn').click(() => {
+     $('#checkInBtn').click(() => {
 
         const se = document.createElement('script');
         se.src = `https://ipinfo.io/?token=${token}&callback=checkInFunction`;
@@ -336,4 +284,60 @@
              }
          });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
+        $.ajax({
+            url: "{% url 'last_attendance' %}",
+            type: "GET",
+            data: {
+                user_id: getCookie('user_id')
+            },
+            success: function (response) {
+                console.log('res', response)
+                attendanceTime = new Date(response.date + "T" + response.attendanceTime);
+                is_offwork = response.is_offwork;
+                endDate = new Date(response.endDate);
+                startDate = new Date(response.startDate);
+                nextSunday = new Date(response.nextSunday);
+                weeklyWorkTime = parseFloat(response.weeklyWorkTime);
+
+                console.log('attendanceTime', attendanceTime)
+                console.log('endDate', endDate)
+                console.log('startDate', startDate)
+                console.log('weeklyWorkTime', weeklyWorkTime)
+
+                if (response.is_offwork) {
+                    checkInBtn.disabled = false;
+                    checkOutBtn.disabled = true;
+                } else {
+                    checkInBtn.disabled = true;
+                    checkOutBtn.disabled = false;
+
+                    var dailyWorkTime = (endDate - attendanceTime) / 1000;
+
+                    weeklyWorkTime += dailyWorkTime;
+
+                    console.log("일일 ", dailyWorkTime);
+                    console.log("누적 ", weeklyWorkTime);
+
+                    console.log('다음주', startDate.getDate()+7)
+
+                    dayInterval = setInterval(function () {
+                        dailyWorkTime++;
+                        document.getElementById('todayWorkTime').innerHTML = formatTime(dailyWorkTime);
+                    }, 1000);
+
+                    if (today === nextSunday){
+
+                    }
+
+                    weekInterval = setInterval(function () {
+                        weeklyWorkTime++;
+                        document.getElementById('weekWorkTime').innerHTML = formatTime(weeklyWorkTime);
+                    }, 1000);
+                }
+            }
+        });
+    });
 </script>

@@ -16,41 +16,73 @@ def last_attendance(request):
     user_id = request.GET.get('user_id')
     end_date = datetime.now().replace(microsecond=0)
     start_date = (end_date + relativedelta(weekday=SU(-1))).replace(hour=0, minute=0, second=0, microsecond=0)
+    next_sunday = (end_date + relativedelta(weekday=SU(+1))).replace(hour=0, minute=0, second=0, microsecond=0)
     print('endDate : ', end_date)
     print('startDate : ', start_date)
+    print('nextSunday : ', next_sunday)
 
     if user_id is None:
         return JsonResponse({'error': 'user_id is required'}, status=400)
 
     try:
-        weekly_work_time = Attendance.objects.filter(
-            employee_id=user_id,
+        attendance = Attendance.objects.filter(employee_id=user_id)
+        # 일일 초기화 로직
+        last_attendance = attendance.latest('date')
+        if last_attendance.is_offwork==False and (last_attendance.date < date.today()):  # 이전 출근날 퇴근을 하지 않은 경우
+            last_attendance.offwork_ip = last_attendance.attendance_ip
+            if last_attendance.date + timedelta(days=1) == date.today():  # 출근이 전날인 경우
+                init_time = datetime.now().time().replace(hour=6, minute=0, second=0, microsecond=0)
+                if datetime.now().time() < init_time:  # 오전 6시 이전
+                    last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
+                    CalculationDayAttendance(last_attendance)
+                    cal_workTime_check(last_attendance)
+                    last_attendance.save()
+                else:
+                    last_attendance.is_offwork = True
+                    t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
+                    last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
+                    CalculationDayAttendance(last_attendance)
+                    cal_workTime_check(last_attendance)
+                    last_attendance.save()
+            else:
+                t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
+                last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
+                CalculationDayAttendance(last_attendance)
+                cal_workTime_check(last_attendance)
+                last_attendance.save()
+
+        # 주간 근무 시간 계산 로직
+        weekly_work_time = attendance.filter(
             date__range=[start_date, end_date]
         ).annotate(
             workTime_in_seconds=RawSQL("TIME_TO_SEC(workTime)", [])
         ).aggregate(
             weekly_work_time=Sum('workTime_in_seconds')
         )['weekly_work_time']
+        last_attendance.weekly_work_time = weekly_work_time
 
-        attendance = Attendance.objects.filter(employee_id=user_id).latest('date')
-        attendance.weekly_work_time = weekly_work_time
+        print('attendance: ', last_attendance)
+        print('weekly_work_time: ', last_attendance.weekly_work_time)
 
-        print('attendance: ', attendance)
-        print('weekly_work_time: ', attendance.weekly_work_time)
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
-    if attendance is not None:
+    if last_attendance is not None:
+        # 일요일 누적 시간 초기화
+        if next_sunday.date() == end_date.date():
+            last_attendance.weekly_work_time = 0
+
         return JsonResponse({
-            'is_offwork': attendance.is_offwork,
-            'attendanceTime': attendance.attendanceTime.strftime("%H:%M:%S"),
-            'date': attendance.date,
-            'weeklyWorkTime': attendance.weekly_work_time if attendance.weekly_work_time is not None else 0,
+            'is_offwork': last_attendance.is_offwork,
+            'attendanceTime': last_attendance.attendanceTime.strftime("%H:%M:%S"),
+            'date': last_attendance.date,
+            'weeklyWorkTime': last_attendance.weekly_work_time if last_attendance.weekly_work_time is not None else 0,
             'endDate': end_date,
-            'startDate': start_date
+            'startDate': start_date,
         })
     else:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
+
 
 
 def CalculationDayAttendance(last_attendance):
@@ -113,34 +145,6 @@ def check_out(request):
             CalculationDayAttendance(last_attendance)
             cal_workTime_check(last_attendance)
             last_attendance.save()
-            response = {'status': 1, 'message': '퇴근이 완료 되었습니다.'}
-
-        elif last_attendance.offwork_ip == None and (last_attendance.date < date.today()):  # 이전 출근날 퇴근을 하지 않은 경우
-            last_attendance.offwork_ip = last_attendance.attendance_ip
-            if last_attendance.date + timedelta(days=1) == date.today():  # 출근이 전날인 경우
-                init_time = datetime.now().time().replace(hour=6, minute=0, second=0, microsecond=0)
-                if datetime.now().time() < init_time:  # 오전 6시 이전
-                    last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
-                    CalculationDayAttendance(last_attendance)
-                    cal_workTime_check(last_attendance)
-                    last_attendance.save()
-                else:
-                    last_attendance.is_offwork = True
-                    t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
-                    last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
-                    CalculationDayAttendance(last_attendance)
-                    cal_workTime_check(last_attendance)
-                    last_attendance.save()
-            else:
-                t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
-                last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
-                CalculationDayAttendance(last_attendance)
-                cal_workTime_check(last_attendance)
-                last_attendance.save()
-
-            response = {'status': 1, 'message': '퇴근이 완료 되었습니다.'}
-
-        response = {'status': 1, 'message': '퇴근이 완료 되었습니다.'}
 
     return HttpResponse()
 
