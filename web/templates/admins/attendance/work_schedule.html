@@ -16,7 +16,6 @@
     }
 </style>
 <body>
-
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
 
@@ -61,7 +60,7 @@
                                               type="button"
                                               style="width: 180px;"
                                               id="workHistory-xlsx-down"
-                                              class="btn btn-success"
+                                              class="btn btn-outline-dark"
                                               data-bs-toggle="modal"
                                               data-bs-target="#workHistory-xlsx-download">
                                           <i class='bx bxs-download'></i>엑셀 다운로드</button>
@@ -96,6 +95,7 @@
                         </thead>
                         <tbody>
                         {% for obj in contacts %}
+                            <li>{{ obj }}</li>
                             <tr style="text-align: center" data-pk="{{ obj.id }}">
                                 <td>{{ obj.date }}</td>
                                 <td>{{ obj.employee.username }}</td>
@@ -124,6 +124,7 @@
     </div>
 </div>
 </body>
+
 <script>
     $.ajaxSetup({
         headers: { "X-CSRFToken": '{{ csrf_token }}' }

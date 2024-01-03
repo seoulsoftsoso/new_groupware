@@ -15,27 +15,27 @@
                 </div>
                 <div class="modal-body">
 
-                   <div class="row">
+                    <div class="row">
                         <div class="col mb-4">
-                        <label for="nameBasic" class="form-label">*사용일자</label>
-                        <div class="input-group input-daterange" id="bs-datepicker-daterange1">
-                            <input id="datepicker_to1" placeholder="시작 날짜" class="form-control" name="search-to"
-                                   value="{{ search_to | default_if_none:'' }}"/>
-                            <span class="input-group-text">to</span>
-                            <input id="datepicker_from1" placeholder="끝 날짜" class="form-control" name="search-from"
-                                   value="{{ search_from | default_if_none:'' }}"/>
-                            <input type="text" id="timepicker-basic" placeholder="시:분" class="form-control" />
-                            <label class="switch" style="margin-left: 20px; margin-top: 7px;">
-                              <input type="checkbox" class="switch-input allDay-switch" />
-                              <span class="switch-toggle-slider">
+                            <label for="nameBasic" class="form-label">*사용일자</label>
+                            <div class="input-group input-daterange" id="bs-datepicker-daterange1">
+                                <input id="datepicker_to1" placeholder="시작 날짜" class="form-control" name="modal_search-to"
+                                   value="{{ modal_search_to | default_if_none:'' }}"/>
+                                <span class="input-group-text">to</span>
+                                <input id="datepicker_from1" placeholder="끝 날짜" class="form-control" name="modal_search-from"
+                                   value="{{ modal_search_from | default_if_none:'' }}"/>
+                                <input type="text" id="timepicker-basic" placeholder="시:분" class="form-control"/>
+                                <label class="switch" style="margin-left: 20px; margin-top: 7px;">
+                                    <input type="checkbox" class="switch-input allDay-switch"/>
+                                    <span class="switch-toggle-slider">
                                 <span class="switch-on"></span>
                                 <span class="switch-off"></span>
                               </span>
-                              <span class="switch-label">All Day</span>
-                            </label>
+                                    <span class="switch-label">All Day</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                   </div>
                         <!-- /Checkbox -->
 
                     <div class="row" >

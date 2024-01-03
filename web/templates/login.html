@@ -152,7 +152,7 @@
 
     function saveid() {
         var expdate = new Date();
-        if ($("#defaultInline1").is(":checked")){
+        if ($("#remember-me").is(":checked")){
             expdate.setTime(expdate.getTime() + 1000 * 3600 * 24 * 30);
             setCookie("saveid", $("#login [name='username']").val(), expdate);
             }else{

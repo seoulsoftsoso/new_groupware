@@ -67,7 +67,7 @@
                     <div class="table-responsive" style="overflow-x: auto;">
                         <table class="table border-top m-0">
                             <thead>
-                            <tr style="background-color: lightgray">
+                            <tr style="background-color: #fffbfb">
                                 <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center; width: 50%">제목</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">작성자</th>
@@ -86,7 +86,7 @@
                                         style="margin-right: 8px"></td>
                                 <td style="color: red">{{ obj.title }}</td>
                                 <td class="text-start" style="color: red; text-align: center;">{{ obj.created_by.username }}</td>
-                                <td style="color: red;" class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td class="updated_at" style="color: red;">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
                                 <td class="hide-on-small-screen" style="color: red; text-align: center;">{{ obj.click_cnt }}</td>
                                 <td class="hide-on-small-screen" style="color: red; text-align: center;">{{ obj.reply_count }}</td>
                             </tr>

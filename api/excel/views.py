@@ -10,7 +10,8 @@ def excel_download(request):
         search_from = request.POST.get('search_from')
         search_title = request.POST.get('search_title')
         search_content = request.POST.get('search_content')
-        print('search_content', search_content)
+        print('search_to', search_to)
+        print('search_from', search_from)
 
         if search_title == 'name':
             attendance_records = Attendance.objects.filter(employee__username=search_content, date__range=[search_to, search_from])

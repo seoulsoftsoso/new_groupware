@@ -4,11 +4,14 @@ from dateutil.relativedelta import relativedelta, SU
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
-from django.db.models import F, Sum, ExpressionWrapper, fields
-from django.db.models.expressions import RawSQL
-from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, cal_workTime_check, PaginatorManager
+from django.db.models import Sum, Value, OuterRef, Subquery
+from django.db.models.expressions import RawSQL, Exists
+from django.db.models.functions import Coalesce
+from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
+    cal_workTime_check, PaginatorManager
 from api.models import Attendance, CodeMaster, UserMaster
 
 
@@ -28,9 +31,9 @@ def last_attendance(request):
         attendance = Attendance.objects.filter(employee_id=user_id)
         # 일일 초기화 로직
         last_attendance = attendance.latest('date')
-        if last_attendance.is_offwork==False and (last_attendance.date < date.today()):  # 이전 출근날 퇴근을 하지 않은 경우
+        if last_attendance.is_offwork == False and (last_attendance.date < date.today()):  # 이전 출근날 퇴근을 하지 않은 경우
             last_attendance.offwork_ip = last_attendance.attendance_ip
-            if last_attendance.date + timedelta(days=1) == date.today():  # 출근이 전날인 경우
+            if last_attendance.date + timedelta(days=1) == date.today():  # 출근이 전날인 경우 days=1 : 시간간격
                 init_time = datetime.now().time().replace(hour=6, minute=0, second=0, microsecond=0)
                 if datetime.now().time() < init_time:  # 오전 6시 이전
                     last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
@@ -45,6 +48,7 @@ def last_attendance(request):
                     cal_workTime_check(last_attendance)
                     last_attendance.save()
             else:
+                last_attendance.is_offwork = True
                 t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
                 last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
                 CalculationDayAttendance(last_attendance)
@@ -84,7 +88,6 @@ def last_attendance(request):
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
 
 
-
 def CalculationDayAttendance(last_attendance):
     if DayOfTheWeek(last_attendance.date.year, last_attendance.date.month, last_attendance.date.day) >= 5:
         last_attendance.earlyleaveTime = None
@@ -97,6 +100,7 @@ def CalculationDayAttendance(last_attendance):
         last_attendance.extendTime = cal_extendTime(last_attendance)
         last_attendance.workTime_holiday = None
     return last_attendance
+
 
 @csrf_exempt
 def check_in(request):
@@ -157,7 +161,14 @@ class admin_work_schedule_page(ListView):
         search_content = self.request.GET.get('search-content', None)
         search_to = self.request.GET.get('search-to', None)
         search_from = self.request.GET.get('search-from', None)
-        attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username')
+
+        attendance_queryset = UserMaster.objects.annotate(
+            has_attendance=Exists(Attendance.objects.filter(employee_id=OuterRef('id'))),
+            att_date=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('date')[:1])
+        ).order_by('job_position_id', 'id')
+
+        for obj in attendance_queryset:
+            print(obj.username, obj.att_date)
 
         if search_to != "" and search_to != None:
             attendance_queryset = attendance_queryset.filter(date__gte=search_to)
@@ -185,12 +196,10 @@ class admin_work_schedule_page(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(admin_work_schedule_page, self).get_context_data(**kwargs)
         context['USER'] = self.request.user.id
-        context['search_title'] = self.request.GET.get('search-title', "")
-        context['search_content'] = search_content = self.request.GET.get('search-content', "")
-        context['search_to'] = self.request.GET.get('search-to', "")
-        context['search_from'] = self.request.GET.get('search-from', "")
         # paging
         context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
+
+        print('context : ', context)
 
         return context
 
@@ -204,7 +213,6 @@ class MonthAttendanceListView(ListView):
         attendance_queryset = Attendance.objects.all()
         standard_year = self.request.GET.get('YEAR', datetime.today().year)
         standard_month = self.request.GET.get('MONTH', datetime.today().month)
-        print('search_title : ', search_title)
 
         if search_title == 'name' or search_title == None:
             if search_content is not None and search_content != "":
@@ -227,6 +235,7 @@ class MonthAttendanceListView(ListView):
         else:
             attendance_queryset = attendance_queryset.filter(date__year=int(standard_year),
                                                              date__month=int(standard_month)).all().order_by('-date')
+            print('attendance_queryset', attendance_queryset)
 
         return attendance_queryset
 
@@ -237,30 +246,30 @@ class MonthAttendanceListView(ListView):
     #     standard_month = self.request.GET.get('MONTH', datetime.today().month)
     #     vacation_queryset = Vacation.objects.all()
 
-        # if search_title == 'name' or search_title == None:
-        #     if search_content is not None and search_content != "":
-        #         vacation_queryset = vacation_queryset.filter(employee__name__contains=str(search_content))
-        # elif search_title == 'number':
-        #     if search_content is not None and search_content != "":
-        #         vacation_queryset = vacation_queryset.filter(employee__employee_number__contains=str(search_content))
-        # elif search_title == 'department':
-        #     if search_content is not None and search_content != "":
-        #         try:
-        #             department_id = CodeMaster.objects.get(department__contains=str(search_content)).id
-        #             # vacation_queryset = vacation_queryset.filter(department_id=department_id)
-        #         except ObjectDoesNotExist:
-        #             print("존재하지 않는 부서를 검색!")
-        #             return None
+    # if search_title == 'name' or search_title == None:
+    #     if search_content is not None and search_content != "":
+    #         vacation_queryset = vacation_queryset.filter(employee__name__contains=str(search_content))
+    # elif search_title == 'number':
+    #     if search_content is not None and search_content != "":
+    #         vacation_queryset = vacation_queryset.filter(employee__employee_number__contains=str(search_content))
+    # elif search_title == 'department':
+    #     if search_content is not None and search_content != "":
+    #         try:
+    #             department_id = CodeMaster.objects.get(department__contains=str(search_content)).id
+    #             # vacation_queryset = vacation_queryset.filter(department_id=department_id)
+    #         except ObjectDoesNotExist:
+    #             print("존재하지 않는 부서를 검색!")
+    #             return None
 
-        # if standard_month == '-1':
-        #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
-        #                                                  is_approval=True).all().order_by(
-        #         '-startDate')
-        # else:
-        #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
-        #                                                  startDate__month=int(standard_month),
-        #                                                  is_approval=True).all().order_by('-startDate')
-        # return vacation_queryset
+    # if standard_month == '-1':
+    #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
+    #                                                  is_approval=True).all().order_by(
+    #         '-startDate')
+    # else:
+    #     vacation_queryset = vacation_queryset.filter(startDate__year=int(standard_year),
+    #                                                  startDate__month=int(standard_month),
+    #                                                  is_approval=True).all().order_by('-startDate')
+    # return vacation_queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MonthAttendanceListView, self).get_context_data(**kwargs)
