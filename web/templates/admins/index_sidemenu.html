@@ -316,8 +316,6 @@
                     {#console.log("일일 ", dailyWorkTime);#}
                     {#console.log("누적 ", weeklyWorkTime);#}
 
-                    console.log('다음주', startDate.getDate()+7)
-
                     dayInterval = setInterval(function () {
                         dailyWorkTime++;
                         document.getElementById('todayWorkTime').innerHTML = formatTime(dailyWorkTime);
