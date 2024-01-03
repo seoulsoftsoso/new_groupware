@@ -294,18 +294,13 @@
                 user_id: getCookie('user_id')
             },
             success: function (response) {
-                console.log('res', response)
+                {#console.log('res', response)#}
                 attendanceTime = new Date(response.date + "T" + response.attendanceTime);
                 is_offwork = response.is_offwork;
                 endDate = new Date(response.endDate);
                 startDate = new Date(response.startDate);
                 nextSunday = new Date(response.nextSunday);
                 weeklyWorkTime = parseFloat(response.weeklyWorkTime);
-
-                console.log('attendanceTime', attendanceTime)
-                console.log('endDate', endDate)
-                console.log('startDate', startDate)
-                console.log('weeklyWorkTime', weeklyWorkTime)
 
                 if (response.is_offwork) {
                     checkInBtn.disabled = false;
@@ -318,8 +313,8 @@
 
                     weeklyWorkTime += dailyWorkTime;
 
-                    console.log("일일 ", dailyWorkTime);
-                    console.log("누적 ", weeklyWorkTime);
+                    {#console.log("일일 ", dailyWorkTime);#}
+                    {#console.log("누적 ", weeklyWorkTime);#}
 
                     console.log('다음주', startDate.getDate()+7)
 

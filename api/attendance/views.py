@@ -17,9 +17,9 @@ def last_attendance(request):
     end_date = datetime.now().replace(microsecond=0)
     start_date = (end_date + relativedelta(weekday=SU(-1))).replace(hour=0, minute=0, second=0, microsecond=0)
     next_sunday = (end_date + relativedelta(weekday=SU(+1))).replace(hour=0, minute=0, second=0, microsecond=0)
-    print('endDate : ', end_date)
-    print('startDate : ', start_date)
-    print('nextSunday : ', next_sunday)
+    # print('endDate : ', end_date)
+    # print('startDate : ', start_date)
+    # print('nextSunday : ', next_sunday)
 
     if user_id is None:
         return JsonResponse({'error': 'user_id is required'}, status=400)
@@ -61,8 +61,8 @@ def last_attendance(request):
         )['weekly_work_time']
         last_attendance.weekly_work_time = weekly_work_time
 
-        print('attendance: ', last_attendance)
-        print('weekly_work_time: ', last_attendance.weekly_work_time)
+        # print('attendance: ', last_attendance)
+        # print('weekly_work_time: ', last_attendance.weekly_work_time)
 
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'No attendance record for the user'}, status=404)
