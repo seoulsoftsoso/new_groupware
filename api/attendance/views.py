@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
-from django.db.models import Sum, Value, OuterRef, Subquery
+from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch
 from django.db.models.expressions import RawSQL, Exists
 from django.db.models.functions import Coalesce
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
@@ -161,14 +161,49 @@ class admin_work_schedule_page(ListView):
         search_content = self.request.GET.get('search-content', None)
         search_to = self.request.GET.get('search-to', None)
         search_from = self.request.GET.get('search-from', None)
+        attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username')
 
-        attendance_queryset = UserMaster.objects.annotate(
-            has_attendance=Exists(Attendance.objects.filter(employee_id=OuterRef('id'))),
-            att_date=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('date')[:1])
-        ).order_by('job_position_id', 'id')
+        # attendance_queryset = UserMaster.objects.annotate(
+        #     has_attendance=Exists(Attendance.objects.filter(employee_id=OuterRef('id'))),
+        #     att_date=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('date')[:1]),
+        #     att_jobtitle=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('jobTitle__name')[:1]),
+        #     att_department=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('department__name')[:1]),
+        #     att_attTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('attendanceTime')[:1]),
+        #     att_offworkTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('offworkTime')[:1]),
+        #     att_workTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('workTime')[:1]),
+        #     att_extendTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('extendTime')[:1]),
+        # ).order_by('job_position_id', 'id')
+        # print(attendance_queryset)
+        #
+        # for obj in attendance_queryset:
+        #     print(obj.username, obj.att_date, obj.att_jobtitle, obj.att_department, obj.att_attTime, obj.att_offworkTime, obj.att_workTime, obj.att_extendTime)
 
-        for obj in attendance_queryset:
-            print(obj.username, obj.att_date)
+        # today = timezone.now().date()
+        # attendance_prefetch = Prefetch(
+        #     'attend_user',
+        #     queryset=Attendance.objects.filter(date=today).order_by('-date'),
+        #     to_attr='attendance_rec'
+        # )
+        #
+        # attendance_queryset = UserMaster.objects.prefetch_related(attendance_prefetch).order_by('job_position_id', 'id')
+
+        # for user in attendance_queryset:
+        #     if user.attendance_rec:
+        #         attendance_rec = user.attendance_rec[0]
+        #     else:
+        #         attendance_rec = None
+        #
+        #     print(
+        #         attendance_rec.date if attendance_rec else 'N/A',
+        #         user.username,
+        #         attendance_rec.jobTitle.name if attendance_rec else 'N/A',
+        #         attendance_rec.department.name if attendance_rec else 'N/A',
+        #         attendance_rec.attendanceTime if attendance_rec else 'N/A',
+        #         attendance_rec.offworkTime if attendance_rec else 'N/A',
+        #         attendance_rec.workTime if attendance_rec else 'N/A',
+        #         attendance_rec.extendTime if attendance_rec else 'N/A',
+        #         attendance_rec.latenessTime if attendance_rec else 'N/A',
+        #     )
 
         if search_to != "" and search_to != None:
             attendance_queryset = attendance_queryset.filter(date__gte=search_to)
@@ -281,3 +316,47 @@ class MonthAttendanceListView(ListView):
         context['search_content'] = self.request.GET.get('search-content', None)
 
         return context
+
+
+class work_history_search(ListView):
+    template_name = 'admins/attendance/workHistory_search.html'
+
+    def get(self, request, *args, **kwargs):
+        self.today = timezone.now().date()
+        print('오늘 ', self.today)
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        search_to = self.request.GET.get('search-to', None)
+        date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
+
+        attendance_prefetch = Prefetch(
+            'attend_user',
+            queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'),
+            to_attr='attendance_rec'
+        )
+
+        attendance_queryset = UserMaster.objects.prefetch_related(attendance_prefetch).filter(is_active=True,
+                                                                                              is_staff=True).order_by(
+            'job_position_id', 'id')
+
+        for user in attendance_queryset:
+            if user.attendance_rec:
+                attendance_rec = user.attendance_rec[0]
+            else:
+                attendance_rec = None
+
+            print(
+                attendance_rec.date if attendance_rec else 'N/A',
+                user.username,
+                attendance_rec.attendanceTime if attendance_rec else 'N/A',
+                attendance_rec.is_offwork if attendance_rec else 'N/A',
+            )
+
+        return attendance_queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['today'] = self.today
+        return context
+

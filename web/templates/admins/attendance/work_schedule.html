@@ -95,7 +95,6 @@
                         </thead>
                         <tbody>
                         {% for obj in contacts %}
-                            <li>{{ obj }}</li>
                             <tr style="text-align: center" data-pk="{{ obj.id }}">
                                 <td>{{ obj.date }}</td>
                                 <td>{{ obj.employee.username }}</td>
