@@ -7,23 +7,23 @@
         color: red;
     }
 
-    .late-color {
+    .late-color td {
         color: orange;
     }
 
-    .not-offwork-color {
+    .not-offwork-color td {
         color: yellow;
     }
 
-    .event-type-1 {
+    .event-type-1 td {
         color: blue;
     }
 
-    .event-type-2 {
+    .event-type-2 td {
         color: green;
     }
 
-    .event-type-3 {
+    .event-type-3 td {
         color: purple;
     }
 </style>
@@ -54,10 +54,10 @@
                     <p>
                         <font color="gray" style="margin-left: 30px;">■</font> : 출근
                         <font color="red" style="margin-left: 20px;">■</font> : 결근
-                        <font color="purple" style="margin-left: 20px;">■</font> : 지각
+                        <font color="orange" style="margin-left: 20px;">■</font> : 지각
                         <font color="pink" style="margin-left: 20px;">■</font> : 퇴근미처리
-                        <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
                         <font color="blue" style="margin-left: 20px;">■</font> : 출장
+                        <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
                     </p>
                 </div>
             </div>
@@ -83,7 +83,11 @@
                                         {% if obj_cm.id == obj_aq.department_position_id  %}
                                             {% if obj_aq.attendance_rec %}
                                                 {% with obj_aq.attendance_rec.0 as attendance_rec %}
-                                                    <!-- attendance_rec: {{ attendance_rec.attendanceTime }}, {{ attendance_rec.is_offwork }} -->
+{#                                                    <!-- attendanceTime: {{ attendance_rec.attendanceTime }}, {{ attendance_rec.is_offwork }} -->#}
+{#                                                    <!-- attendance_status: {{ attendance_rec|attendance_status }} -->#}
+{#                                                    <!-- attendance_css_class: {{ attendance_rec|attendance_status|attendance_css_class }} -->#}
+                                                      <!-- attendance_status_e: {{ event_type }} -->
+                                                      <!-- attendance_css_class_e: {{ event_type|attendance_css_class }} -->
                                                     <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
                                                         <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                         <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
@@ -106,7 +110,9 @@
                         {% endfor %}
                     </div>
                     <!--/ Team Members -->
-
+{% for event in events %}
+    <p>{{ event.event_type|event_type }}</p>
+{% endfor %}
 
 
 

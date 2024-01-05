@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta, SU
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.functions import TruncDate
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -160,48 +161,6 @@ class admin_work_schedule_page(ListView):
         search_from = self.request.GET.get('search-from', None)
         attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username')
 
-        # attendance_queryset = UserMaster.objects.annotate(
-        #     has_attendance=Exists(Attendance.objects.filter(employee_id=OuterRef('id'))),
-        #     att_date=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('date')[:1]),
-        #     att_jobtitle=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('jobTitle__name')[:1]),
-        #     att_department=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('department__name')[:1]),
-        #     att_attTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('attendanceTime')[:1]),
-        #     att_offworkTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('offworkTime')[:1]),
-        #     att_workTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('workTime')[:1]),
-        #     att_extendTime=Subquery(Attendance.objects.filter(employee_id=OuterRef('id')).values('extendTime')[:1]),
-        # ).order_by('job_position_id', 'id')
-        # print(attendance_queryset)
-        #
-        # for obj in attendance_queryset:
-        #     print(obj.username, obj.att_date, obj.att_jobtitle, obj.att_department, obj.att_attTime, obj.att_offworkTime, obj.att_workTime, obj.att_extendTime)
-
-        # today = timezone.now().date()
-        # attendance_prefetch = Prefetch(
-        #     'attend_user',
-        #     queryset=Attendance.objects.filter(date=today).order_by('-date'),
-        #     to_attr='attendance_rec'
-        # )
-        #
-        # attendance_queryset = UserMaster.objects.prefetch_related(attendance_prefetch).order_by('job_position_id', 'id')
-
-        # for user in attendance_queryset:
-        #     if user.attendance_rec:
-        #         attendance_rec = user.attendance_rec[0]
-        #     else:
-        #         attendance_rec = None
-        #
-        #     print(
-        #         attendance_rec.date if attendance_rec else 'N/A',
-        #         user.username,
-        #         attendance_rec.jobTitle.name if attendance_rec else 'N/A',
-        #         attendance_rec.department.name if attendance_rec else 'N/A',
-        #         attendance_rec.attendanceTime if attendance_rec else 'N/A',
-        #         attendance_rec.offworkTime if attendance_rec else 'N/A',
-        #         attendance_rec.workTime if attendance_rec else 'N/A',
-        #         attendance_rec.extendTime if attendance_rec else 'N/A',
-        #         attendance_rec.latenessTime if attendance_rec else 'N/A',
-        #     )
-
         if search_to != "" and search_to != None:
             attendance_queryset = attendance_queryset.filter(date__gte=search_to)
         if search_from != "" and search_from != None:
@@ -330,7 +289,7 @@ class work_history_search(ListView):
         print('date_to_search : ', date_to_search)
 
         attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'), to_attr='attendance_rec')
-        event_prefetch = Prefetch('event_creat', queryset=EventMaster.objects.all(), to_attr='events')
+        event_prefetch = Prefetch('event_creat', queryset=EventMaster.objects.annotate(truncated_date=TruncDate('create_at')).filter(truncated_date=date_to_search).order_by('-create_at'), to_attr='events')
         attendance_queryset = UserMaster.objects.select_related('department_position').prefetch_related(event_prefetch, attendance_prefetch).filter(is_active=True, is_staff=True, is_superuser=False).order_by('job_position_id', 'id')
 
         # for user in attendance_queryset:
@@ -344,6 +303,17 @@ class work_history_search(ListView):
         #         user.username,
         #         attendance_rec.attendanceTime if attendance_rec else 'N/A',
         #         attendance_rec.is_offwork if attendance_rec else 'N/A',
+        #     )
+        #
+        # for user in attendance_queryset:
+        #     if user.event_creat and user.events:
+        #         events = user.events[0]
+        #     else:
+        #         events = None
+        #
+        #     print(
+        #         user.username,
+        #         events.event_type if events else 'N/A',
         #     )
 
         return attendance_queryset
