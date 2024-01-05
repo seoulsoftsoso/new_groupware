@@ -1,8 +1,32 @@
 <!DOCTYPE html>
-
     <meta charset="UTF-8">
      {% include 'admins/admin_header.html' %}
+{% load custom_filters %}
+<style>
+    .absence-color td {
+        color: red;
+    }
 
+    .late-color {
+        color: orange;
+    }
+
+    .not-offwork-color {
+        color: yellow;
+    }
+
+    .event-type-1 {
+        color: blue;
+    }
+
+    .event-type-2 {
+        color: green;
+    }
+
+    .event-type-3 {
+        color: purple;
+    }
+</style>
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -18,54 +42,70 @@
                     {% csrf_token %}
                     <div class="d-flex justify-content-end" style="margin: 30px 30px 0 0;">
                         <div class="col-md-6 col-12 mb-4 d-flex justify-content-end">
-                            <input class="form-control" placeholder="{{ today }}" id="datepicker_to" style="max-width: 200px;" name="search-to" value="{{ search_to | default:today }}"/>
+                            <input class="form-control" placeholder="조회날짜" id="datepicker_to" style="max-width: 200px;" name="search-to" value="{{ search_to | default_if_none:''}}"/>
                             <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">검색</button>
                         </div>
                     </div>
                 </form>
 
-                <!--Team Members -->
-                <div class="d-flex flex-md-row flex-sm-column flex-column">
-                    <div class="card h-100 w-50">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2" style="font-family: Pretendard; font-size: x-large;">전략기획본부</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                <tr style="font-family: Pretendard;">
-                                    <th>이름</th>
-                                    <th>출근시간</th>
-                                    <th>퇴근처리</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><h6 class="mb-0 text-truncate" style="color: yellowgreen">Nathan Wagner</h6></td>
-                                    <td><medium class="fw-medium" style="color: yellowgreen">09:00</medium></td>
-                                    <td><medium class="fw-medium" style="color: yellowgreen">O</medium></td>
-                                </tr>
-                                <tr>
-                                    <td><h6 class="mb-0 text-truncate" style="color: purple">Emma Bowen</h6></td>
-                                    <td><medium class="fw-medium" style="color: purple">09:00</medium></td>
-                                    <td><medium class="fw-medium" style="color: purple">O</medium></td>
-                                </tr>
-                                <tr>
-                                    <td><h6 class="mb-0 text-truncate" style="color: red">Adrian McGuire</h6></td>
-                                    <td><medium class="fw-medium" style="color: red">09:00</medium></td>
-                                    <td><medium class="fw-medium" style="color: red">O</medium></td>
-                                </tr>
-                                <tr>
-                                    <td><h6 class="mb-0 text-truncate">Alma Gonzalez</h6></td>
-                                    <td><medium class="fw-medium">09:00</medium></td>
-                                    <td><medium class="fw-medium">O</medium></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+            <div class="d-md-flex d-sm-block justify-content-between align-items-center" style="margin: 40px;">
+                <h5 style="font-family: Pretendard;">검색 날짜 : {{ search_to | default_if_none:'-' }}</h5>
+                <div class="ml-auto mr-2 justify-content-end d-md-flex d-sm-block" style="padding-right: 40px;">
+                    <p>
+                        <font color="gray" style="margin-left: 30px;">■</font> : 출근
+                        <font color="red" style="margin-left: 20px;">■</font> : 결근
+                        <font color="purple" style="margin-left: 20px;">■</font> : 지각
+                        <font color="pink" style="margin-left: 20px;">■</font> : 퇴근미처리
+                        <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
+                        <font color="blue" style="margin-left: 20px;">■</font> : 출장
+                    </p>
                 </div>
-                <!--/ Team Members -->
+            </div>
+
+                    <!--Team Members -->
+                    <div class="d-flex flex-md-row flex-sm-column flex-column">
+                        {% for obj_cm in codemaster %}
+                        <div class="card h-100 w-100">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <h5 class="card-title m-0 me-2" style="font-family: Pretendard; font-size: x-large;">{{ obj_cm.name }}</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <thead>
+                                    <tr style="font-family: Pretendard;">
+                                        <th>이름</th>
+                                        <th>출근시간</th>
+                                        <th style="text-align: center">퇴근등록</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for obj_aq in attendance_queryset %}
+                                        {% if obj_cm.id == obj_aq.department_position_id  %}
+                                            {% if obj_aq.attendance_rec %}
+                                                {% with obj_aq.attendance_rec.0 as attendance_rec %}
+                                                    <!-- attendance_rec: {{ attendance_rec.attendanceTime }}, {{ attendance_rec.is_offwork }} -->
+                                                    <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
+                                                        <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                        <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                        <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
+                                                    </tr>
+                                                {% endwith %}
+                                            {% else %}
+                                                <tr class="absence-color">
+                                                    <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                    <td><medium class="fw-medium">N/A</medium></td>
+                                                    <td style="text-align: center;"><medium class="fw-medium">X</medium></td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!--/ Team Members -->
 
 
 

@@ -1,18 +1,15 @@
-import json
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta, SU
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch
 from django.db.models.expressions import RawSQL, Exists
-from django.db.models.functions import Coalesce
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
     cal_workTime_check, PaginatorManager
-from api.models import Attendance, CodeMaster, UserMaster
+from api.models import Attendance, CodeMaster, UserMaster, EventMaster
 
 
 def last_attendance(request):
@@ -323,40 +320,40 @@ class work_history_search(ListView):
 
     def get(self, request, *args, **kwargs):
         self.today = timezone.now().date()
+        self.search_to = self.request.GET.get('search-to', self.today)
         print('오늘 ', self.today)
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         search_to = self.request.GET.get('search-to', None)
         date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
+        print('date_to_search : ', date_to_search)
 
-        attendance_prefetch = Prefetch(
-            'attend_user',
-            queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'),
-            to_attr='attendance_rec'
-        )
+        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'), to_attr='attendance_rec')
+        event_prefetch = Prefetch('event_creat', queryset=EventMaster.objects.all(), to_attr='events')
+        attendance_queryset = UserMaster.objects.select_related('department_position').prefetch_related(event_prefetch, attendance_prefetch).filter(is_active=True, is_staff=True, is_superuser=False).order_by('job_position_id', 'id')
 
-        attendance_queryset = UserMaster.objects.prefetch_related(attendance_prefetch).filter(is_active=True,
-                                                                                              is_staff=True).order_by(
-            'job_position_id', 'id')
-
-        for user in attendance_queryset:
-            if user.attendance_rec:
-                attendance_rec = user.attendance_rec[0]
-            else:
-                attendance_rec = None
-
-            print(
-                attendance_rec.date if attendance_rec else 'N/A',
-                user.username,
-                attendance_rec.attendanceTime if attendance_rec else 'N/A',
-                attendance_rec.is_offwork if attendance_rec else 'N/A',
-            )
+        # for user in attendance_queryset:
+        #     if user.attendance_rec:
+        #         attendance_rec = user.attendance_rec[0]
+        #     else:
+        #         attendance_rec = None
+        #
+        #     print(
+        #         attendance_rec.date if attendance_rec else 'N/A',
+        #         user.username,
+        #         attendance_rec.attendanceTime if attendance_rec else 'N/A',
+        #         attendance_rec.is_offwork if attendance_rec else 'N/A',
+        #     )
 
         return attendance_queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['today'] = self.today
+        context['search_to'] = self.search_to
+        context['attendance_queryset'] = context['object_list']
+        context['codemaster'] = CodeMaster.objects.filter(group_id=1)
+        context['eventmaster'] = EventMaster.objects.all()
         return context
 
