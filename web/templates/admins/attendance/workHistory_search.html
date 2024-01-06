@@ -15,15 +15,15 @@
         color: yellow;
     }
 
-    .event-type-1 td {
+    .event-type-business td {
         color: blue;
     }
 
-    .event-type-2 td {
+    .event-type-holiday td {
         color: green;
     }
 
-    .event-type-3 td {
+    .event-type-half-refresh td {
         color: purple;
     }
 </style>
@@ -48,19 +48,19 @@
                     </div>
                 </form>
 
-            <div class="d-md-flex d-sm-block justify-content-between align-items-center" style="margin: 40px;">
-                <h5 style="font-family: Pretendard;">검색 날짜 : {{ search_to | default_if_none:'-' }}</h5>
-                <div class="ml-auto mr-2 justify-content-end d-md-flex d-sm-block" style="padding-right: 40px;">
-                    <p>
-                        <font color="gray" style="margin-left: 30px;">■</font> : 출근
-                        <font color="red" style="margin-left: 20px;">■</font> : 결근
-                        <font color="orange" style="margin-left: 20px;">■</font> : 지각
-                        <font color="pink" style="margin-left: 20px;">■</font> : 퇴근미처리
-                        <font color="blue" style="margin-left: 20px;">■</font> : 출장
-                        <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
-                    </p>
+                <div class="d-md-flex d-sm-block justify-content-between align-items-center" style="margin: 40px;">
+                    <h5 style="font-family: Pretendard;">검색 날짜 : {{ search_to | default_if_none:'-' }}</h5>
+                    <div class="ml-auto mr-2 justify-content-end d-md-flex d-sm-block" style="padding-right: 40px;">
+                        <p>
+                            <font color="gray" style="margin-left: 30px;">■</font> : 출근
+                            <font color="red" style="margin-left: 20px;">■</font> : 결근
+                            <font color="orange" style="margin-left: 20px;">■</font> : 지각
+                            <font color="blue" style="margin-left: 20px;">■</font> : 출장
+                            <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
+                            <font color="purple" style="margin-left: 20px;">■</font> : 반차
+                        </p>
+                    </div>
                 </div>
-            </div>
 
                     <!--Team Members -->
                     <div class="d-flex flex-md-row flex-sm-column flex-column">
@@ -78,31 +78,44 @@
                                         <th style="text-align: center">퇴근등록</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    {% for obj_aq in attendance_queryset %}
-                                        {% if obj_cm.id == obj_aq.department_position_id  %}
-                                            {% if obj_aq.attendance_rec %}
-                                                {% with obj_aq.attendance_rec.0 as attendance_rec %}
-{#                                                    <!-- attendanceTime: {{ attendance_rec.attendanceTime }}, {{ attendance_rec.is_offwork }} -->#}
-{#                                                    <!-- attendance_status: {{ attendance_rec|attendance_status }} -->#}
-{#                                                    <!-- attendance_css_class: {{ attendance_rec|attendance_status|attendance_css_class }} -->#}
-                                                      <!-- attendance_status_e: {{ event_type }} -->
-                                                      <!-- attendance_css_class_e: {{ event_type|attendance_css_class }} -->
-                                                    <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
-                                                        <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
-                                                        <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
-                                                        <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
-                                                    </tr>
+                                   <tbody>
+                                        {% for obj_aq in attendance_queryset %}
+                                            {% if obj_cm.id == obj_aq.department_position_id %}
+                                                {% with obj_aq.events as events %}
+                                                    {% if events %}
+                                                        {% with events|event_type:search_to as event_type %}
+                                                            {% with obj_aq.attendance_rec.0 as attendance_rec %}
+                                                                <tr class="{{ event_type|attendance_css_class }}">
+                                                                    <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                                    {% if event_type == '연차' %}
+                                                                        <td><medium class="fw-medium">연차</medium></td>
+                                                                    {% elif event_type == '반차' %}
+                                                                        <td><medium class="fw-medium">반차</medium></td>
+                                                                    {% else %}
+                                                                        <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                    {% endif %}
+                                                                    <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
+                                                                </tr>
+                                                            {% endwith %}
+                                                        {% endwith %}
+                                                    {% elif obj_aq.attendance_rec %}
+                                                        {% with obj_aq.attendance_rec.0 as attendance_rec %}
+                                                            <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
+                                                                <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                                <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
+                                                            </tr>
+                                                        {% endwith %}
+                                                    {% else %}
+                                                        <tr class="absence-color">
+                                                            <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                            <td><medium class="fw-medium">N/A</medium></td>
+                                                            <td style="text-align: center;"><medium class="fw-medium">X</medium></td>
+                                                        </tr>
+                                                    {% endif %}
                                                 {% endwith %}
-                                            {% else %}
-                                                <tr class="absence-color">
-                                                    <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
-                                                    <td><medium class="fw-medium">N/A</medium></td>
-                                                    <td style="text-align: center;"><medium class="fw-medium">X</medium></td>
-                                                </tr>
                                             {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -110,9 +123,10 @@
                         {% endfor %}
                     </div>
                     <!--/ Team Members -->
-{% for event in events %}
-    <p>{{ event.event_type|event_type }}</p>
-{% endfor %}
+                    <div style="padding-left: 30px; margin-top: 40px;">
+                        <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 전날 퇴근 미등록자 🚫</h3>
+                        <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;홍재성</h4>
+                    </div>
 
 
 

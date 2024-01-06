@@ -72,6 +72,7 @@ def last_attendance(request):
     if last_attendance is not None:
         # 일요일 누적 시간 초기화
         if next_sunday.date() == end_date.date():
+            print('일요일 누적시간 초기화')
             last_attendance.weekly_work_time = 0
 
         return JsonResponse({
@@ -280,16 +281,26 @@ class work_history_search(ListView):
     def get(self, request, *args, **kwargs):
         self.today = timezone.now().date()
         self.search_to = self.request.GET.get('search-to', self.today)
-        print('오늘 ', self.today)
+        # print('오늘 ', self.today)
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         search_to = self.request.GET.get('search-to', None)
         date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
-        print('date_to_search : ', date_to_search)
+        # print('date_to_search : ', date_to_search)
 
         attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'), to_attr='attendance_rec')
-        event_prefetch = Prefetch('event_creat', queryset=EventMaster.objects.annotate(truncated_date=TruncDate('create_at')).filter(truncated_date=date_to_search).order_by('-create_at'), to_attr='events')
+        event_prefetch = Prefetch(
+            'event_creat',
+            queryset=EventMaster.objects.annotate(
+                truncated_start_date=TruncDate('start_date'),
+                truncated_end_date=TruncDate('end_date')
+            ).filter(
+                truncated_start_date__lte=date_to_search,
+                truncated_end_date__gte=date_to_search
+            ).order_by('-start_date'),
+            to_attr='events'
+        )
         attendance_queryset = UserMaster.objects.select_related('department_position').prefetch_related(event_prefetch, attendance_prefetch).filter(is_active=True, is_staff=True, is_superuser=False).order_by('job_position_id', 'id')
 
         # for user in attendance_queryset:
