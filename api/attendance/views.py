@@ -341,7 +341,6 @@ class work_history_search(ListView):
         context['today'] = self.today
         context['yesterday'] = self.yesterday.date()
         context['search_to'] = self.search_to
-        context['korea_national_holiday'] = self.korea_national_holiday
         context['attendance_queryset'] = context['object_list']
         context['codemaster'] = CodeMaster.objects.filter(group_id=1)
         context['eventmaster'] = EventMaster.objects.all()
