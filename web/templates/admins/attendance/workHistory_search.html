@@ -74,7 +74,7 @@
                                     <thead>
                                     <tr style="font-family: Pretendard;">
                                         <th>이름</th>
-                                        <th>출근시간</th>
+                                        <th style="padding-left: 0px; padding-right: 0px; width: 80px;">출근시간</th>
                                         <th style="text-align: center">퇴근등록</th>
                                     </tr>
                                     </thead>
@@ -92,7 +92,7 @@
                                                                     {% elif event_type == '반차' %}
                                                                         <td><medium class="fw-medium">반차</medium></td>
                                                                     {% else %}
-                                                                        <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                        <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
                                                                     {% endif %}
                                                                     <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
                                                                 </tr>
@@ -102,14 +102,14 @@
                                                         {% with obj_aq.attendance_rec.0 as attendance_rec %}
                                                             <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
                                                                 <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
-                                                                <td><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
                                                                 <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
                                                             </tr>
                                                         {% endwith %}
                                                     {% else %}
                                                         <tr class="absence-color">
                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
-                                                            <td><medium class="fw-medium">N/A</medium></td>
+                                                            <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">N/A</medium></td>
                                                             <td style="text-align: center;"><medium class="fw-medium">X</medium></td>
                                                         </tr>
                                                     {% endif %}
