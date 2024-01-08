@@ -49,6 +49,12 @@ def cal_extendTime(last_attendance):
         return time_diff(time(8, 0, 0), last_attendance.workTime)
 
 
+def cal_latenessTime(attendance_time):
+    if attendance_time <= time(10, 0, 0):
+        return None
+    return time_diff(time(10, 0, 0), attendance_time)
+
+
 def PaginatorManager(request, queryset, num=15):
     page = request.GET.get('page', 1)
 

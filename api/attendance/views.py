@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch
 from django.db.models.expressions import RawSQL, Exists
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
-    cal_workTime_check, PaginatorManager
+    cal_workTime_check, PaginatorManager, cal_latenessTime
 from api.models import Attendance, CodeMaster, UserMaster, EventMaster
 
 
@@ -72,7 +72,7 @@ def last_attendance(request):
     if last_attendance is not None:
         # 일요일 누적 시간 초기화
         if next_sunday.date() == end_date.date():
-            print('일요일 누적시간 초기화')
+            # print('일요일 누적시간 초기화')
             last_attendance.weekly_work_time = 0
 
         return JsonResponse({
@@ -116,10 +116,16 @@ def check_in(request):
         current_date = datetime.now().date()
         current_time = datetime.now().time().replace(microsecond=0)
 
+        attendance = Attendance(date=datetime.today(), employee_id=user_id, department_id=department_id,
+                                jobTitle_id=jobposition_id,
+                                attendance_ip=attendance_ip, is_offwork=0,
+                                attendanceTime=datetime.now().time().replace(second=0, microsecond=0))
+
         # 지각시간
         latenessTime = None
-        if current_time.hour >= 10 and current_time.minute >= 1:
-            latenessTime = current_time
+        if current_time.hour >= 10:
+            latenessTime = cal_latenessTime(attendance.attendanceTime)
+            # print('지각 : ', latenessTime)
 
         Attendance.objects.create(
             date=current_date,
@@ -191,7 +197,7 @@ class admin_work_schedule_page(ListView):
         # paging
         context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
 
-        print('context : ', context)
+        # print('context : ', context)
 
         return context
 
@@ -227,7 +233,7 @@ class MonthAttendanceListView(ListView):
         else:
             attendance_queryset = attendance_queryset.filter(date__year=int(standard_year),
                                                              date__month=int(standard_month)).all().order_by('-date')
-            print('attendance_queryset', attendance_queryset)
+            # print('attendance_queryset', attendance_queryset)
 
         return attendance_queryset
 
