@@ -277,6 +277,7 @@ class Attendance(models.Model):
     attendance_ip = models.CharField(null=True, max_length=16)  # 출근IP
     offwork_ip = models.CharField(null=True, max_length=16)  # 퇴근IP
     is_offwork = models.BooleanField(default=False)  # 퇴근처리 여부 (0: 정상, 1: 퇴근처리x)
+    offWorkCheck = models.BooleanField(default=False) # 실제 퇴근동록 했는지 안했는지 체크
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
                                   related_name='attend_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)

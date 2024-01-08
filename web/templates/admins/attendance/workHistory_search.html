@@ -75,7 +75,7 @@
                                     <tr style="font-family: Pretendard;">
                                         <th>이름</th>
                                         <th style="padding-left: 0px; padding-right: 0px; width: 80px;">출근시간</th>
-                                        <th style="text-align: center">퇴근등록</th>
+                                        <th style="text-align: center; padding: 10px 0px 10px 0px;">퇴근등록</th>
                                     </tr>
                                     </thead>
                                    <tbody>
@@ -123,10 +123,32 @@
                         {% endfor %}
                     </div>
                     <!--/ Team Members -->
-                    <div style="padding-left: 30px; margin-top: 40px;">
-                        <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 전날 퇴근 미등록자 🚫</h3>
-                        <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;홍재성</h4>
-                    </div>
+                <div style="padding-left: 30px; margin-top: 40px;">
+                    <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday|date:"Y-m-d" }} 퇴근 미등록자 🚫</h3>
+                    {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
+                        {% if yesterday.weekday == 5 %}
+                            <h4 style="font-family: Pretendard; color: red">&nbsp;&nbsp;&nbsp;토요일 휴무</h4>
+                        {% elif yesterday.weekday == 6 %}
+                            <h4 style="font-family: Pretendard; color: red">&nbsp;&nbsp;&nbsp;일요일 휴무</h4>
+                            <p>{{ korea_national_holiday }}</p>
+                        {% endif %}
+                    {% else %}
+                        {% for obj_aq in attendance_queryset %}
+                            {% if obj_aq.offWorkCheck == false %}
+                                <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.username }}</h4>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+{#            <div style="padding-left: 30px; margin-top: 40px;">#}
+{#                        <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday|date:"Y-m-d" }} 퇴근 미등록자 🚫</h3>#}
+{#                        {% for obj_aq in attendance_queryset %}#}
+{#                            {% if obj_aq.offWorkCheck == false %}#}
+{#                                <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}</h4>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    </div>#}
 
 
 

@@ -380,8 +380,8 @@
               </div>
             </div>
             <!-- / Content -->
-
         </div>
+
 
 
     </div>
@@ -424,6 +424,34 @@
         $('#eventLabel').change(function () {
             toggleRadioGroup($(this).val());
         });
+
+        var startDate = document.querySelector("#eventStartDate");
+        var endDate = document.querySelector("#eventEndDate");
+        var allDaySwitch = document.querySelector(".allDay-switch");
+
+        // Tooltip instance
+    var tooltip = new bootstrap.Tooltip(allDaySwitch, {
+        placement: 'left',
+        title: "시간을 직접 입력해주세요.",
+        trigger: 'manual'
+    });
+
+        startDate.addEventListener("change", checkDates);
+        endDate.addEventListener("change", checkDates);
+
+        function checkDates() {
+            if (startDate.value !== endDate.value) {
+                allDaySwitch.checked = false;
+                allDaySwitch.disabled = true;
+                tooltip.show();
+                setTimeout(function () {
+                    tooltip.hide();
+                }, 3500);
+            } else {
+                allDaySwitch.disabled = false;
+                tooltip.hide();
+            }
+        }
     });
 
     function toggleRadioGroup(selectedValue) {

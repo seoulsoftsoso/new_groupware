@@ -151,6 +151,7 @@ def check_out(request):
             last_attendance.offwork_ip = request.POST['offwork_ip']
             last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
             last_attendance.is_offwork = True
+            last_attendance.offWorkCheck = True
             CalculationDayAttendance(last_attendance)
             cal_workTime_check(last_attendance)
             last_attendance.save()
@@ -287,7 +288,7 @@ class work_history_search(ListView):
     def get(self, request, *args, **kwargs):
         self.today = timezone.now().date()
         self.search_to = self.request.GET.get('search-to', self.today)
-        # print('오늘 ', self.today)
+        self.yesterday = timezone.now() - timezone.timedelta(days=1)
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -295,7 +296,7 @@ class work_history_search(ListView):
         date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
         # print('date_to_search : ', date_to_search)
 
-        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=date_to_search).order_by('-date'), to_attr='attendance_rec')
+        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date__in=[self.yesterday, date_to_search]).order_by('date', '-date'), to_attr='attendance_rec')
         event_prefetch = Prefetch(
             'event_creat',
             queryset=EventMaster.objects.annotate(
@@ -338,7 +339,9 @@ class work_history_search(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['today'] = self.today
+        context['yesterday'] = self.yesterday.date()
         context['search_to'] = self.search_to
+        context['korea_national_holiday'] = self.korea_national_holiday
         context['attendance_queryset'] = context['object_list']
         context['codemaster'] = CodeMaster.objects.filter(group_id=1)
         context['eventmaster'] = EventMaster.objects.all()
