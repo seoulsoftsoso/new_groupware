@@ -103,7 +103,7 @@
                                                             <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
                                                                 <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                 <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
-                                                                <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
+                                                                <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
                                                             </tr>
                                                         {% endwith %}
                                                     {% else %}
