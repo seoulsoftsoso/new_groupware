@@ -96,7 +96,7 @@
                                                                             {% else %}
                                                                                 <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">N/A</medium></td>
                                                                             {% endif %}
-                                                                            <td style="text-align: center"><medium class="fw-medium"></medium></td>
+                                                                            <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
                                                                         </tr>
                                                                     {% elif event_type == '연차' %}
                                                                        <tr class="{{ event_type|attendance_css_class }}">
