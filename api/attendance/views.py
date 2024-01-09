@@ -285,26 +285,20 @@ class MonthAttendanceListView(ListView):
 class work_history_search(ListView):
     template_name = 'admins/attendance/workHistory_search.html'
 
-    def get(self, request, *args, **kwargs):
-        self.today = timezone.now().date()
-        self.search_to = self.request.GET.get('search-to', self.today)
-        self.yesterday = timezone.now() - timezone.timedelta(days=1)
-        return super().get(request, *args, **kwargs)
-
     def get_queryset(self):
-        search_to = self.request.GET.get('search-to', None)
-        date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
-        # print('date_to_search : ', date_to_search)
+        self.today = timezone.now().date()
+        self.search_to = self.request.GET.get('search-to', str(self.today))
+        self.yesterday = timezone.now() - timezone.timedelta(days=1)
 
-        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date__in=[self.yesterday, date_to_search]).order_by('-date', 'date'), to_attr='attendance_rec')
+        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=self.search_to).order_by('-date'), to_attr='attendance_rec')
         event_prefetch = Prefetch(
             'event_creat',
             queryset=EventMaster.objects.annotate(
                 truncated_start_date=TruncDate('start_date'),
                 truncated_end_date=TruncDate('end_date')
             ).filter(
-                truncated_start_date__lte=date_to_search,
-                truncated_end_date__gte=date_to_search,
+                truncated_start_date__lte=self.search_to,
+                truncated_end_date__gte=self.search_to,
                 delete_flag="N"
             ).order_by('-start_date'),
             to_attr='events'

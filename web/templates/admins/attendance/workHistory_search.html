@@ -42,7 +42,7 @@
                     {% csrf_token %}
                     <div class="d-flex justify-content-end" style="margin: 30px 30px 0 0;">
                         <div class="col-md-6 col-12 mb-4 d-flex justify-content-end">
-                            <input class="form-control" placeholder="조회날짜" id="datepicker_to" style="max-width: 200px;" name="search-to" value="{{ search_to | default_if_none:''}}"/>
+                            <input class="form-control" placeholder="조회날짜" id="datepicker_to" style="max-width: 200px;" name="search-to" value="{{ search_to | default_if_none:'' }}"/>
                             <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">검색</button>
                         </div>
                     </div>
@@ -82,9 +82,10 @@
                                         {% for obj_aq in attendance_queryset %}
                                             {% if obj_cm.id == obj_aq.department_position_id %}
                                                 {% with obj_aq.events as events %}
-                                                    {% if events %}
+                                                    {% if events %} <!--이벤트 등록이 되어있는 경우-->
                                                         {% with events|event_type:search_to as event_type %}
                                                             {% with obj_aq.attendance_rec.0 as attendance_rec %}
+                                                                {% if attendance_rec.date|date:"Y-m-d" == search_to %}
                                                                 <tr class="{{ event_type|attendance_css_class }}">
                                                                     <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                     {% if event_type == '연차' %}
@@ -96,17 +97,34 @@
                                                                     {% endif %}
                                                                     <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
                                                                 </tr>
+{#                                                                    {% else %}#}
+{#                                                                <p>이벤트쪽 {{ attendance_rec.date|date:"Y-m-d" }}</p>#}
+{#                                                                <p>{{ search_to }}</p>#}
+                                                                {% endif %}
                                                             {% endwith %}
                                                         {% endwith %}
-                                                    {% elif obj_aq.attendance_rec %}
+
+
+
+                                                    {% elif obj_aq.attendance_rec %} <!--이벤트 등록 되어있지 않은 경우, 정상출근-->
+
                                                         {% with obj_aq.attendance_rec.0 as attendance_rec %}
-                                                            <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
-                                                                <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
-                                                                <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
-                                                                <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
-                                                            </tr>
+                                                            {% if attendance_rec.date|date:"Y-m-d" == search_to %}
+                                                                <tr class="{{ attendance_rec|attendance_status|attendance_css_class }}">
+                                                                    <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                                    <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                    <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
+                                                                </tr>
+{#                                                            {% else %}#}
+{#                                                                <p>정출 {{ attendance_rec.date }}</p>#}
+{#                                                                <p>{{ search_to }}</p>#}
+                                                            {% endif %}
                                                         {% endwith %}
-                                                    {% else %}
+
+
+
+                                                    {% else %} <!-- 결근 -->
+
                                                         <tr class="absence-color">
                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px;"><medium class="fw-medium">N/A</medium></td>
