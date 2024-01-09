@@ -94,7 +94,7 @@
                                                                     {% else %}
                                                                         <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
                                                                     {% endif %}
-                                                                    <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.is_offwork|yesno:"O,X" }}</medium></td>
+                                                                    <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
                                                                 </tr>
                                                             {% endwith %}
                                                         {% endwith %}
@@ -124,7 +124,7 @@
                     </div>
                     <!--/ Team Members -->
                 <div style="padding-left: 30px; margin-top: 40px;">
-                    <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday|date:"Y-m-d" }} 퇴근 미등록자 🚫</h3>
+                    <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday }} 퇴근 미등록자 🚫</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}
                             <h4 style="font-family: Pretendard; color: red">&nbsp;&nbsp;&nbsp;토요일 휴무</h4>
@@ -134,23 +134,14 @@
                         {% endif %}
                     {% else %}
                         {% for obj_aq in attendance_queryset %}
-                            {% if obj_aq.offWorkCheck == false %}
-                                <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.username }}</h4>
-                            {% endif %}
+                            {% with obj_aq.attendance_rec.1 as attendance_rec %}
+                                {% if not attendance_rec.offWorkCheck and attendance_rec.date == yesterday %}
+                                    <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.username }}</h4>
+                                {% endif %}
+                            {% endwith %}
                         {% endfor %}
                     {% endif %}
                 </div>
-
-{#            <div style="padding-left: 30px; margin-top: 40px;">#}
-{#                        <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday|date:"Y-m-d" }} 퇴근 미등록자 🚫</h3>#}
-{#                        {% for obj_aq in attendance_queryset %}#}
-{#                            {% if obj_aq.offWorkCheck == false %}#}
-{#                                <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}</h4>#}
-{#                            {% endif %}#}
-{#                        {% endfor %}#}
-{#                    </div>#}
-
-
 
 
             </div>

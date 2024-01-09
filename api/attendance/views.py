@@ -296,7 +296,7 @@ class work_history_search(ListView):
         date_to_search = search_to if (search_to != "" and search_to is not None) else self.today
         # print('date_to_search : ', date_to_search)
 
-        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date__in=[self.yesterday, date_to_search]).order_by('date', '-date'), to_attr='attendance_rec')
+        attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date__in=[self.yesterday, date_to_search]).order_by('-date', 'date'), to_attr='attendance_rec')
         event_prefetch = Prefetch(
             'event_creat',
             queryset=EventMaster.objects.annotate(
@@ -304,7 +304,8 @@ class work_history_search(ListView):
                 truncated_end_date=TruncDate('end_date')
             ).filter(
                 truncated_start_date__lte=date_to_search,
-                truncated_end_date__gte=date_to_search
+                truncated_end_date__gte=date_to_search,
+                delete_flag="N"
             ).order_by('-start_date'),
             to_attr='events'
         )
