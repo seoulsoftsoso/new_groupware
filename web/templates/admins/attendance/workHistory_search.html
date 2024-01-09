@@ -106,7 +106,7 @@
                                                                         </tr>
                                                                     {% endif %}
 
-                                                                {% else %} <!--검색날짜에 출근기록이 없다면 (연차)-->
+                                                                {% else %} <!--검색날짜에 출근기록이 없다면 (연차,유급 휴가,무급 휴가 등)-->
                                                                     {% if event_type == '연차' %}
                                                                         <tr class="{{ event_type|attendance_css_class }}">
                                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
@@ -162,7 +162,7 @@
                         {% endfor %}
                     </div>
                     <!--/ Team Members -->
-                <div style="padding-left: 30px; margin-top: 40px;">
+                <div class="card" style="margin-top: 40px; padding: 30px; ">
                     <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday }} 퇴근 미등록자 🚫</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}
@@ -172,13 +172,40 @@
                             <p>{{ korea_national_holiday }}</p>
                         {% endif %}
                     {% else %}
-                        {% for obj_aq in attendance_queryset %}
-                            {% with obj_aq.attendance_rec.1 as attendance_rec %}
-                                {% if not attendance_rec.offWorkCheck and attendance_rec.date == yesterday %}
-                                    <h4 style="font-family: Pretendard;">&nbsp;&nbsp;&nbsp;{{ obj_aq.username }}</h4>
-                                {% endif %}
-                            {% endwith %}
-                        {% endfor %}
+                        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                            {% for obj_aq in attendance_queryset %}
+                                {% with obj_aq.ago_attendance_rec.0 as ago_attendance_rec %}
+                                    {% if not ago_attendance_rec.offWorkCheck and ago_attendance_rec.date == yesterday %}
+                                            <h5 style="font-family: Pretendard;">
+                                                &nbsp;&nbsp;&nbsp;* {{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}
+                                            </h5>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card" style="margin-top: 40px; padding: 30px; ">
+                    <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🟠 {{ yesterday }} 지각 🟠</h3>
+                    {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
+                        {% if yesterday.weekday == 5 %}
+                            <h4 style="font-family: Pretendard; color: red">&nbsp;&nbsp;&nbsp;토요일 휴무</h4>
+                        {% elif yesterday.weekday == 6 %}
+                            <h4 style="font-family: Pretendard; color: red">&nbsp;&nbsp;&nbsp;일요일 휴무</h4>
+                            <p>{{ korea_national_holiday }}</p>
+                        {% endif %}
+                    {% else %}
+                        <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                            {% for obj_aq in attendance_queryset %}
+                                {% with obj_aq.ago_attendance_rec.0 as ago_attendance_rec %}
+                                    {% if ago_attendance_rec.latenessTime and ago_attendance_rec.date == yesterday %}
+                                            <h5 style="font-family: Pretendard;">
+                                                &nbsp;&nbsp;&nbsp;* {{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}
+                                            </h5>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
