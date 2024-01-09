@@ -88,19 +88,23 @@
                                                             {% with obj_aq.attendance_rec.0 as attendance_rec %}
 
                                                                 {% if attendance_rec.date|date:"Y-m-d" == search_to %} <!--검색날짜에 출근기록이 있다면(출장,반차)-->
-                                                                <tr class="{{ event_type|attendance_css_class }}">
-                                                                    <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                     {% if event_type == '반차' or event_type == '출장' %}
-                                                                        {% if attendance_rec.attendanceTime %}
-                                                                            <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
-                                                                        {% else %}
-                                                                            <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">N/A</medium></td>
-                                                                        {% endif %}
+                                                                        <tr class="{{ event_type|attendance_css_class }}">
+                                                                            <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                                            {% if attendance_rec.attendanceTime %}
+                                                                                <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">{{ attendance_rec.attendanceTime }}</medium></td>
+                                                                            {% else %}
+                                                                                <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">N/A</medium></td>
+                                                                            {% endif %}
+                                                                            <td style="text-align: center"><medium class="fw-medium"></medium></td>
+                                                                        </tr>
                                                                     {% elif event_type == '연차' %}
-                                                                        <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">연차</medium></td>
+                                                                       <tr class="{{ event_type|attendance_css_class }}">
+                                                                            <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
+                                                                            <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">연차</medium></td>
+                                                                            <td style="text-align: center"><medium class="fw-medium"></medium></td>
+                                                                        </tr>
                                                                     {% endif %}
-                                                                    <td style="text-align: center"><medium class="fw-medium">{{ attendance_rec.offWorkCheck|yesno:"O,X" }}</medium></td>
-                                                                </tr>
 
                                                                 {% else %} <!--검색날짜에 출근기록이 없다면 (연차)-->
                                                                     {% if event_type == '연차' %}
@@ -108,6 +112,7 @@
                                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">연차</medium></td>
                                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium"></medium></td>
+                                                                        </tr>
                                                                     {% elif event_type == '반차' or event_type == '출장' %}
                                                                         <tr class="{{ event_type|attendance_css_class }}">
                                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
