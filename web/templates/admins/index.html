@@ -34,26 +34,25 @@
                     <div style="width: 100%; text-align: left; margin-top: 15px; margin-bottom: 15px">
                         <div>
                             <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
-                            {% for obj in event_holiday %}
-                                <strong id="preHoliday"> {{ obj.create_by.username }}{% if not forloop.last %}, {% endif %}</strong>
+                            {% for event in events %}
+                                {% if event.event_type == "Holiday" %}
+                                    <strong>{{ event.create_by }}</strong>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         <hr>
                         <div>
                             <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
-                            {% for obj in event_business %}
-                                <strong id="preHoliday"> {{ obj.create_by.username }}{% if not forloop.last %}, {% endif %}</strong>
+                            {% for event in events %}
+                                {% if event.event_type == "Business" %}
+                                    <strong>{{ event.create_by }}</strong>
+                                {% endif %}
                             {% endfor %}
                         </div>
                         <hr>
                         <div>
                             <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
-                            {% for obj in event_qm3 %}
-                                <strong id="preHoliday"> {{ obj.create_by.username }}(QM3){% if not forloop.last %}, {% endif %}</strong>
-                            {% endfor %}
-                            {% for obj in event_spo %}
-                                <strong id="preHoliday"> {{ obj.create_by.username }}(스포티지){% if not forloop.last %}, {% endif %}</strong>
-                            {% endfor %}
+                            <strong></strong>
                         </div>
                     </div>
                 </div>
@@ -424,38 +423,10 @@
         $('#eventLabel').change(function () {
             toggleRadioGroup($(this).val());
         });
-
-        var startDate = document.querySelector("#eventStartDate");
-        var endDate = document.querySelector("#eventEndDate");
-        var allDaySwitch = document.querySelector(".allDay-switch");
-
-        // Tooltip instance
-    var tooltip = new bootstrap.Tooltip(allDaySwitch, {
-        placement: 'left',
-        title: "시간을 직접 입력해주세요.",
-        trigger: 'manual'
-    });
-
-        startDate.addEventListener("change", checkDates);
-        endDate.addEventListener("change", checkDates);
-
-        function checkDates() {
-            if (startDate.value !== endDate.value) {
-                allDaySwitch.checked = false;
-                allDaySwitch.disabled = true;
-                tooltip.show();
-                setTimeout(function () {
-                    tooltip.hide();
-                }, 3500);
-            } else {
-                allDaySwitch.disabled = false;
-                tooltip.hide();
-            }
-        }
     });
 
     function toggleRadioGroup(selectedValue) {
-        if (selectedValue === 'vehicle') {
+        if (selectedValue === 'Business') {
             $('#radioGroup').show();
         } else {
             $('#radioGroup').hide();
@@ -463,8 +434,8 @@
     }
 
     $(document).on('click', '.btn-add-event', function(e) {
-         e.preventDefault();
-         var title = $("#eventTitle").val()
+        e.preventDefault();
+        var title = $("#eventTitle").val()
         console.log('title', title)
 
          if ($("#eventTitle").val()===''){
@@ -481,14 +452,18 @@
         var startdate = $("#eventStartDate").val();
         var enddate = $("#eventEndDate").val();
 
-        if (checkbox.checked) {
-            startdate = startdate+" 09:00";
-            enddate = enddate+" 18:00";
-            console.log('start1', startdate)
-            console.log('end1', enddate)
+        if (startdate > enddate){
+             Swal.fire({
+                title: 'Fail!',
+                text: '종료날짜를 확인해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
         }
 
-        if (startdate.length===10 || enddate.length===10){
+        if (!checkbox.checked) {
+            if (startdate.length===10  || enddate.length===10){
             Swal.fire({
                 title: 'Fail!',
                 text: '날짜를 클릭하여 시간을 선택해주세요!',
@@ -496,6 +471,7 @@
                 confirmButtonText: '확인'
             })
             return false;
+            }
         }
 
         var formData = {

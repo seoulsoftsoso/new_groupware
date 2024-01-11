@@ -176,6 +176,9 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     userintro = models.TextField(blank=True, null=True)
     # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
+    def __str__(self):
+        return self.username
+
 
 class Question(models.Model):
     Question_type = models.CharField(max_length=1, null=False, verbose_name='문의종류')

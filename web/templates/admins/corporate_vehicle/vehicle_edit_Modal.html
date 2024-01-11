@@ -2,11 +2,11 @@
 <!-- Modal -->
 <form action="#" method="post">
     {% csrf_token %}
-    <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">법인차량사용 등록</h5>
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">법인차량사용등록 수정</h5>
                     <button
                             type="button"
                             class="btn-close"
@@ -21,8 +21,8 @@
                                 <label for="nameBasic" class="form-label">*사용일자</label>
                                 <div class="mb-3 d-flex flex-row">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="flatpickr-start" placeholder="시작 날짜"/>
-                                        <input type="text" class="form-control" id="flatpickr-end" placeholder="끝 날짜"/>
+                                        <input type="text" class="form-control" id="flatpickr-edit-start" placeholder="시작 날짜"/>
+                                        <input type="text" class="form-control" id="flatpickr-edit-end" placeholder="끝 날짜"/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -65,8 +65,8 @@
                             <select
                               class="select2 select-event-guests form-select"
                               style="width: 250px;"
-                              id="vehicle_select"
-                              name="vehicle_select"
+                              id="edit_vehicle_select"
+                              name="edit_vehicle_select"
                               multiple>
                               <option value="Jane Foster">QM3</option>
                               <option value="Donna Frank">스포티지</option>
@@ -75,13 +75,9 @@
                      </div>
 
                     <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-label-secondary"
-                                data-bs-dismiss="modal">취소
-                        </button>
-                        <button type="button" class="btn btn-primary"
-                                id="addBoardBtn">등록완료
-                        </button>
+                        <button type="button" class="btn btn-primary" id="editBtn">수정</button>
+                        <button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                     </div>
                 </div>
             </div>
@@ -90,11 +86,11 @@
 </form>
 <script>
     $(function () {
-        $("#flatpickr-start").flatpickr({
+        $("#flatpickr-edit-start").flatpickr({
             dateFormat: 'Y-m-d H:i',
             enableTime: true
         });
-        $("#flatpickr-end").flatpickr({
+        $("#flatpickr-edit-end").flatpickr({
             dateFormat: 'Y-m-d H:i',
             enableTime: true
         });

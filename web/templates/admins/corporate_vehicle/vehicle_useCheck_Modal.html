@@ -1,0 +1,125 @@
+{% load static %}
+<!-- Modal -->
+<form action="#" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">사용확인등록</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <label for="nameBasic" class="form-label">* 사용확인</label>
+                        <div class="col mb-10 d-flex flex-row">
+                            <div class="col-md-4 col-12">
+                                <div class="form-check custom-option custom-option-basic">
+                                    <label class="form-check-label custom-option-content"
+                                           for="customRadioTemp1">
+                                        <input
+                                                name="customRadioTemp"
+                                                class="form-check-input"
+                                                type="radio"
+                                                value="ETC"
+                                                id="customRadioTemp1"
+                                                checked/>
+                                        <span class="h6 mb-0">사용</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <div class="form-check custom-option custom-option-basic">
+                                    <label class="form-check-label custom-option-content"
+                                           for="customRadioTemp2">
+                                        <input
+                                                name="customRadioTemp"
+                                                class="form-check-input"
+                                                type="radio"
+                                                value="Spotage"
+                                                id="customRadioTemp2"/>
+                                        <span class="h6 mb-0">미사용</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                     <div class="row">
+                       <div class="col-md-6 mb-4">
+                          <label for="nameBasic" class="form-label">*주유여부 체크</label>
+                          <div class="form-check custom-option custom-option-basic">
+                            <label class="form-check-label custom-option-content d-flex flex-row" for="customCheckTemp3">
+                              <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3">
+                              <span class="custom-option-header" style="margin-left: 10px;">
+                                <span class="h6 mb-0">주유여부</span>
+                              </span>
+                            </label>
+                          </div>
+                          <div>
+                            <input class="form-control" id="amount-input" placeholder="금액(숫자만 입력해주세요.)" style="display:none;">
+                          </div>
+                       </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="col mb-11">
+                            <label for="nameBasic" class="form-label">*누적주행거리</label>
+                            <div class="col-md-11 mb-4">
+                                <input class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="col mb-11">
+                            <label for="nameBasic" class="form-label">*자동차정비내역</label>
+                            <div class="col-md-11 mb-4">
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" >
+                        <div class="col mb-11">
+                            <label for="nameBasic" class="form-label">*기타</label>
+                            <div class="col-md-11 mb-4">
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-label-secondary"
+                                data-bs-dismiss="modal">취소
+                        </button>
+                        <button type="button" class="btn btn-primary"
+                                id="addBoardBtn">등록완료
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+
+        $('#customCheckTemp3').change(function () {
+            if ($(this).is(':checked')) {
+                $('#amount-input').show();
+            } else {
+                $('#amount-input').hide();
+            }
+        });
+
+    });
+</script>
+

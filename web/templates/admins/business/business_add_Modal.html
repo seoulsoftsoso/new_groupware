@@ -6,7 +6,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">법인차량사용 등록</h5>
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">출장등록</h5>
                     <button
                             type="button"
                             class="btn-close"
@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col mb-3">
                             <div class="col-md-12 col-12">
-                                <label for="nameBasic" class="form-label">*사용일자</label>
+                                <label for="nameBasic" class="form-label">*일정</label>
                                 <div class="mb-3 d-flex flex-row">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="flatpickr-start" placeholder="시작 날짜"/>
@@ -41,14 +41,36 @@
 
                     <div class="row">
                         <div class="col mb-11">
-                            <label for="nameBasic" class="form-label">*사용자</label>
-                            <div class="col-md-6 mb-4">
+                            <label for="nameBasic" class="form-label">*참석자</label>
+                            <div class="col-md-8 mb-4">
                                 <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
                             </div>
                         </div>
                     </div>
 
                      <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*외부참석자</label>
+                            <input type="text" id="board_group_name"
+                                   name="board_group_name"
+                                   class="form-control"
+                                   placeholder="외부참석자"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*장소</label>
+                            <input type="text" id="board_group_name"
+                                   name="board_group_name"
+                                   class="form-control"
+                                   placeholder="장소"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*목적</label>
                             <input type="text" id="board_group_name"
@@ -59,7 +81,43 @@
                         </div>
                     </div>
 
-                     <div class="row">
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*관련사업명</label>
+                            <input type="text" id="board_group_name"
+                                   name="board_group_name"
+                                   class="form-control"
+                                   placeholder="목적"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*비고</label>
+                            <input type="text" id="board_group_name"
+                                   name="board_group_name"
+                                   class="form-control"
+                                   placeholder="비고"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
+                            <div class="form-check custom-option custom-option-basic checked">
+                            <label class="form-check-label custom-option-content" for="customCheckTemp3">
+                              <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
+                              <span class="custom-option-header">
+                                <span class="h6 mb-0">사용</span>
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                    </div>
+
+                     <div class="row" id="carCheck">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*사용차량</label>
                             <select
@@ -70,6 +128,7 @@
                               multiple>
                               <option value="Jane Foster">QM3</option>
                               <option value="Donna Frank">스포티지</option>
+                              <option value="Donna Frank">기타</option>
                             </select>
                         </div>
                      </div>
@@ -101,11 +160,13 @@
     });
 
     $(document).ready(function () {
-        $("#timepicker-basic").flatpickr({
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true
+
+         $('#customCheckTemp3').change(function () {
+            if ($(this).is(':checked')) {
+                $('#carCheck').show();
+            } else {
+                $('#carCheck').hide();
+            }
         });
     });
 </script>

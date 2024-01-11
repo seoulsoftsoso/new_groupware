@@ -27,11 +27,16 @@ class get_eventDataAll(View):
             # 날짜,시간 파싱
             startDate_str = request.POST.get('eventStartDate')
             endDate_str = request.POST.get('eventEndDate')
-            start_date = parse_datetime(startDate_str)
-            end_date = parse_datetime(endDate_str)
 
             allDay_str = request.POST.get('allDay')
             allDay = True if allDay_str.lower() == 'true' else False
+
+            start_date = parse_datetime(startDate_str) or datetime.strptime(startDate_str, '%Y-%m-%d')
+            end_date = parse_datetime(endDate_str) or datetime.strptime(endDate_str, '%Y-%m-%d')
+
+            if allDay:
+                start_date = start_date.replace(hour=9, minute=0)
+                end_date = end_date.replace(hour=18, minute=0)
 
             event_add = EventMaster(
                 url=request.POST.get('eventURL'),
@@ -67,8 +72,12 @@ class get_eventDataAll(View):
                 # 날짜,시간 파싱
                 startDate_str = eventData.get('eventStartDate')
                 endDate_str = eventData.get('eventEndDate')
-                start_date = parse_datetime(startDate_str)
-                end_date = parse_datetime(endDate_str)
+                start_date = parse_datetime(startDate_str) or datetime.strptime(startDate_str, '%Y-%m-%d')
+                end_date = parse_datetime(endDate_str) or datetime.strptime(endDate_str, '%Y-%m-%d')
+
+                if allDay:
+                    start_date = start_date.replace(hour=9, minute=0)
+                    end_date = end_date.replace(hour=18, minute=0)
 
                 event.start_date = start_date
                 event.end_date = end_date

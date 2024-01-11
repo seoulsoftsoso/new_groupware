@@ -1,13 +1,10 @@
 from datetime import date
 
-from django.contrib import auth
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count
+from django.db.models import Count, Q, Case, When, IntegerField
 from django.db.models.functions import TruncDate
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
@@ -19,13 +16,10 @@ def index(request):
 
 
 def admin_index_page(request):
+    today = timezone.now()
 
-    today = date.today()
+    events = EventMaster.objects.filter(start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
-    event_holiday = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="Holiday")
-    event_business = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="Business")
-    event_qm3 = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today, event_type="ETC")
-    event_spo = EventMaster.objects.annotate(start_date_date=TruncDate('start_date')).filter(delete_flag="N", start_date_date=today,event_type="Spotage")
     fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
         reply_count=Count('reply_board')).order_by("-updated_at").first()
     notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9, fixed_flag=False).annotate(
@@ -36,10 +30,7 @@ def admin_index_page(request):
         reply_count=Count('reply_board')).order_by("-updated_at")[:3]
 
     context = {
-        'event_holiday': event_holiday,
-        'event_business': event_business,
-        'event_qm3': event_qm3,
-        'event_spo': event_spo,
+        'events': events,
         'fixed_notice': fixed_notice,
         'notice': notice,
         'fixed_board': fixed_board,
@@ -59,7 +50,6 @@ def admin_boardwrite_page(request):
 
 
 def login_page(request):
-
     return render(request, 'login.html', {})
 
 

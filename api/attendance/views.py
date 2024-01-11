@@ -114,17 +114,12 @@ def check_in(request):
         attendance_ip = data.get('ip')
 
         current_date = datetime.now().date()
-        current_time = datetime.now().time().replace(microsecond=0)
-
-        attendance = Attendance(date=datetime.today(), employee_id=user_id, department_id=department_id,
-                                jobTitle_id=jobposition_id,
-                                attendance_ip=attendance_ip, is_offwork=0,
-                                attendanceTime=datetime.now().time().replace(second=0, microsecond=0))
+        current_time = datetime.now().time().replace(second=0, microsecond=0)
 
         # 지각시간
         latenessTime = None
         if current_time.hour >= 10:
-            latenessTime = cal_latenessTime(attendance.attendanceTime)
+            latenessTime = cal_latenessTime(Attendance.attendanceTime)
             # print('지각 : ', latenessTime)
 
         Attendance.objects.create(

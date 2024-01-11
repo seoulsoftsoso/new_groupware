@@ -48,6 +48,7 @@ from api.reply.views import *
 from api.attendance.views import *
 from api.corporate_vehicle.views import *
 from api.excel.views import *
+from api.business.views import *
 from web.views import *
 
 from django.conf import settings
@@ -186,6 +187,10 @@ urlpatterns = [
 
                   #법인차량
                   path('admins/vehicle/', vehicle_main_page, name="vehicleMain"),
+
+
+                  #출장관리
+                  path('admins/business', business_main_page.as_view(), name="BusinessMain"),
 
 
 
