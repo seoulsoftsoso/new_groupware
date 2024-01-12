@@ -250,7 +250,7 @@
                           <div class="mb-3">
                             <label class="form-label" for="eventLabel">구분</label>
                             <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                              <option data-label="primary" value="Business" selected>출장</option>
+                              <option data-label="primary" value="Business" id="Business" selected>출장</option>
                               <option data-label="danger" value="Personal">자리비움</option>
                               <option data-label="warning" value="Family">반차</option>
                               <option data-label="success" value="Holiday">연차</option>
@@ -258,38 +258,32 @@
                             </select>
                           </div>
                             <!--이벤트타입 차량 선택 시 활성화-->
-                            <div class="mb-3" id="radioGroup" style="display: none;">
+                            <div class="col mb-3" id="radioCheck">
+                                <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
+                                <div class="form-check custom-option custom-option-basic checked">
+                                    <label class="form-check-label custom-option-content" for="customCheckTemp3">
+                                        <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
+                                        <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3" id="carCheck">
                                 <!-- Basic Custom Radios -->
-                                <div class="row">
-                                    <div class="col-md">
-                                        <div class="form-check custom-option custom-option-basic">
-                                            <label class="form-check-label custom-option-content"
-                                                   for="customRadioTemp1">
-                                                <input
-                                                        name="customRadioTemp"
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        value="ETC"
-                                                        id="customRadioTemp1"
-                                                        checked/>
-                                                <span class="h6 mb-0">QM3</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md">
-                                        <div class="form-check custom-option custom-option-basic">
-                                            <label class="form-check-label custom-option-content"
-                                                   for="customRadioTemp2">
-                                                <input
-                                                        name="customRadioTemp"
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        value="Spotage"
-                                                        id="customRadioTemp2"/>
-                                                <span class="h6 mb-0">스포티지</span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">*사용차량</label>
+                                    <select
+                                            class="select2 select-event-guests form-select"
+                                            style="width: 250px;"
+                                            id="vehicle_select"
+                                            name="vehicle_select"
+                                            multiple
+                                            data-placeholder="차량을 선택하세요.">
+                                        <option>QM3</option>
+                                        <option>스포티지</option>
+                                        <option>기타</option>
+                                    </select>
                                 </div>
                                 <!-- /Basic Custom Radios -->
                             </div>
@@ -321,15 +315,15 @@
                               <span class="switch-label">All Day</span>
                             </label>
                           </div>
-                          <div class="mb-3">
-                            <label class="form-label" for="eventURL">참조 URL</label>
-                            <input
-                              type="url"
-                              class="form-control"
-                              id="eventURL"
-                              name="eventURL"
-                              placeholder="https://www.google.com" />
-                          </div>
+{#                          <div class="mb-3">#}
+{#                            <label class="form-label" for="eventURL">참조 URL</label>#}
+{#                            <input#}
+{#                              type="url"#}
+{#                              class="form-control"#}
+{#                              id="eventURL"#}
+{#                              name="eventURL"#}
+{#                              placeholder="https://www.google.com" />#}
+{#                          </div>#}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">Add Guests</label>
                             <select
@@ -416,21 +410,16 @@
     });
 
     $(document).ready(function () {
-        // Check the initial state
         toggleRadioGroup($('#eventLabel').val());
 
-        // Update the state when the selection changes
-        $('#eventLabel').change(function () {
-            toggleRadioGroup($(this).val());
+        $('#eventLabel, #customCheckTemp3').change(function () {
+            toggleRadioGroup($('#eventLabel').val());
         });
     });
 
     function toggleRadioGroup(selectedValue) {
-        if (selectedValue === 'Business') {
-            $('#radioGroup').show();
-        } else {
-            $('#radioGroup').hide();
-        }
+        $('#radioCheck').toggle(selectedValue === 'Business');
+        $('#carCheck').toggle(selectedValue === 'Business' && $('#customCheckTemp3').is(":checked"));
     }
 
     $(document).on('click', '.btn-add-event', function(e) {

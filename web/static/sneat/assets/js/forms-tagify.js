@@ -115,7 +115,7 @@ let get_usersList_tag = [];
         try {
             const response = await fetch('/admins/member_info/');
             const userData = await response.json();
-            console.log('user', userData);
+            // console.log('user', userData);
             userData.user_data.sort((a, b) => {
                 if (a.fields.department_position === b.fields.department_position) {
                     // department_position이 같은 경우 job_position으로 정렬
@@ -130,11 +130,11 @@ let get_usersList_tag = [];
                 avatar: userData.code_data.find(code => code.pk === user.fields.department_position).fields.name,
                 email: userData.code_data.find(code => code.pk === user.fields.job_position).fields.name
             }));
-            console.log('usersList', get_usersList_tag);
+            // console.log('usersList', get_usersList_tag);
             TagifyUserList.settings.whitelist = get_usersList_tag;
             TagifyUserList.update();
         } catch (error) {
-            console.error('Error fetching users list:', error);
+            // console.error('Error fetching users list:', error);
         }
     }
 

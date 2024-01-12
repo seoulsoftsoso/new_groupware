@@ -162,7 +162,9 @@
                         {% endfor %}
                     </div>
                     <!--/ Team Members -->
-                <div class="card" style="margin-top: 40px; padding: 30px; ">
+
+            <div class="col-md-8 col-12 d-flex flex-md-row flex-sm-column flex-column" style="margin: auto">
+                <div class="card col-md-6 col-12" style="margin-top: 40px; padding: 30px; ">
                     <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday }} 퇴근 미등록자 🚫</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}
@@ -174,18 +176,30 @@
                     {% else %}
                         <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
                             {% for obj_aq in attendance_queryset %}
-                                {% with obj_aq.ago_attendance_rec.0 as ago_attendance_rec %}
-                                    {% if not ago_attendance_rec.offWorkCheck and ago_attendance_rec.date == yesterday %}
-                                            <h5 style="font-family: Pretendard;">
-                                                &nbsp;&nbsp;&nbsp;* {{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}
-                                            </h5>
-                                    {% endif %}
+                                {% with obj_aq.events as events %}
+                                    {% with obj_aq.ago_attendance_rec.0 as ago_attendance_rec %}
+                                        {% with events|event_type:search_to as event_type %}
+                                            {% if event_type != '연차' %} <!--연차가 아니라면-->
+                                                {% if ago_attendance_rec %} <!--출근 기록이 있고 -->
+                                                    {% if not ago_attendance_rec.offWorkCheck %} <!--offWorkCheck 가 false 인 경우 -->
+                                                        <h5 style="font-family: Pretendard;">
+                                                            &nbsp;&nbsp;&nbsp;* {{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}
+                                                        </h5>
+                                                    {% endif %}
+                                                {% else %} <!--출근 기록이 없는 경우-->
+                                                     <h5 style="font-family: Pretendard;">
+                                                         &nbsp;&nbsp;&nbsp;* {{ obj_aq.department_position }} {{ obj_aq.username }} {{ obj_aq.job_position }}
+                                                     </h5>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endwith %}
                                 {% endwith %}
                             {% endfor %}
                         </div>
                     {% endif %}
                 </div>
-                <div class="card" style="margin-top: 40px; padding: 30px; ">
+                <div class="card col-md-6 col-12" style="margin-top: 40px; padding: 30px; ">
                     <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🟠 {{ yesterday }} 지각 🟠</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}
@@ -208,6 +222,8 @@
                         </div>
                     {% endif %}
                 </div>
+            </div>
+
 
 
             </div>

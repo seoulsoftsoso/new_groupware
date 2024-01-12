@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------
     function resetValues() {
       eventEndDate.value = '';
-      eventUrl.value = '';
+      // eventUrl.value = '';
       eventStartDate.value = '';
       eventTitle.value = '';
       eventLocation.value = '';

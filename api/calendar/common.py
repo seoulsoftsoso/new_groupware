@@ -39,7 +39,7 @@ class get_eventDataAll(View):
                 end_date = end_date.replace(hour=18, minute=0)
 
             event_add = EventMaster(
-                url=request.POST.get('eventURL'),
+                url='',
                 title=request.POST.get('eventTitle'),
                 start_date=start_date,
                 end_date=end_date,

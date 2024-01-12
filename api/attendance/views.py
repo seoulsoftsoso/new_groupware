@@ -286,7 +286,7 @@ class work_history_search(ListView):
         self.yesterday = timezone.now() - timezone.timedelta(days=1)
 
         attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=self.search_to).order_by('-date'), to_attr='attendance_rec')
-        ago_attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=self.yesterday).order_by('-date'), to_attr='ago_attendance_rec')
+        ago_attendance_prefetch = Prefetch('attend_user', queryset=Attendance.objects.filter(date=self.yesterday).order_by('department_id'), to_attr='ago_attendance_rec')
         event_prefetch = Prefetch(
             'event_creat',
             queryset=EventMaster.objects.annotate(

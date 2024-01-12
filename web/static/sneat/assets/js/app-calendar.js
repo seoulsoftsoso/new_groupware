@@ -186,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
       btnSubmit.classList.remove('btn-add-event');
       btnDeleteEvent.classList.remove('d-none');
 
+      console.log('시작일', eventToUpdate.start)
+      console.log('종료일', eventToUpdate.end)
+
       eventTitle.value = eventToUpdate.title;
       start.setDate(eventToUpdate.start, true, 'Y-m-d');
       eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
@@ -572,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------
     function resetValues() {
       eventEndDate.value = '';
-      eventUrl.value = '';
+      // eventUrl.value = '';
       eventStartDate.value = '';
       eventTitle.value = '';
       eventLocation.value = '';
