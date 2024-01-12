@@ -225,7 +225,7 @@ let get_usersList_tag = [];
     }
 
     function suggestionItemTemplate(tagData) {
-        console.log('tagData', tagData)
+        // console.log('tagData', tagData)
         return `
         <div ${this.getAttributes(tagData)}
           class='tagify__dropdown__item align-items-center ${tagData.class ? tagData.class : ''}'

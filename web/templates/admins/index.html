@@ -326,18 +326,19 @@
 {#                          </div>#}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">Add Guests</label>
-                            <select
-                              class="select2 select-event-guests form-select"
-                              id="eventGuests"
-                              name="eventGuests"
-                              multiple>
-                              <option value="Jane Foster">Jane Foster</option>
-                              <option value="Donna Frank">Donna Frank</option>
-                              <option value="Gabrielle Robertson">Gabrielle Robertson</option>
-                              <option value="Lori Spears">Lori Spears</option>
-                              <option value="Sandy Vega">Sandy Vega</option>
-                              <option value="Cheryl May">Cheryl May</option>
-                            </select>
+{#                            <select#}
+{#                              class="select2 select-event-guests form-select"#}
+{#                              id="eventGuests"#}
+{#                              name="eventGuests"#}
+{#                              multiple>#}
+{#                              <option value="Jane Foster">Jane Foster</option>#}
+{#                              <option value="Donna Frank">Donna Frank</option>#}
+{#                              <option value="Gabrielle Robertson">Gabrielle Robertson</option>#}
+{#                              <option value="Lori Spears">Lori Spears</option>#}
+{#                              <option value="Sandy Vega">Sandy Vega</option>#}
+{#                              <option value="Cheryl May">Cheryl May</option>#}
+{#                            </select>#}
+                              <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
                           </div>
                           <div class="mb-3">
                             <label class="form-label" for="eventLocation">장소</label>
@@ -392,6 +393,9 @@
 
 <!-- Main JS -->
 <script src="{% static 'sneat/assets/js/main.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
 
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
