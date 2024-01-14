@@ -3,6 +3,7 @@ import json
 import traceback
 import requests
 import numpy as np
+from django.core.serializers import serialize
 from django.shortcuts import render, redirect
 from rest_framework.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
@@ -35,20 +36,14 @@ def checkIn(request):
 
 class GetMemberInfo(View):
     def get(self, request, *args, **kwargs):
-        user_data = UserMaster.objects.filter(is_staff=True, is_active=True, is_master=False)
-        user_data_json = serializers.serialize('json', user_data)
-        user_result = json.loads(user_data_json)
 
-        code_data = CodeMaster.objects.all()
-        code_data_json = serializers.serialize('json', code_data)
-        code_result = json.loads(code_data_json)
-
-        result = {
-            'user_data': user_result,
-            'code_data': code_result
-        }
-
-        return JsonResponse(result, safe=False)
+        qs = UserMaster.objects.filter(is_master=False, is_active=True, is_staff=True).values(
+            'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
+            'created_at', 'department_position__name', 'job_position__name'
+        ).order_by('department_position', 'job_position')
+        context = {}
+        context['result'] = list(qs)
+        return JsonResponse(context, safe=False)
 
 
 
