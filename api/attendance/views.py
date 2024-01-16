@@ -118,8 +118,8 @@ def check_in(request):
 
         # 지각시간
         latenessTime = None
-        if current_time.hour >= 10:
-            latenessTime = cal_latenessTime(Attendance.attendanceTime)
+        if current_time.hour > 10:
+            latenessTime = cal_latenessTime(current_time)
             # print('지각 : ', latenessTime)
 
         Attendance.objects.create(
@@ -214,7 +214,7 @@ class MonthAttendanceListView(ListView):
         elif search_title == 'number':
             if search_content is not None and search_content != "":
                 attendance_queryset = attendance_queryset.filter(
-                    employee__employee_number__contains=str(search_content))
+                    employee__code__contains=str(search_content))
         elif search_title == 'department':
             if search_content is not None and search_content != "":
                 try:
