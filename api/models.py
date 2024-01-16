@@ -131,7 +131,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'user_id'
 
     user_id = models.CharField(max_length=32, unique=True, verbose_name='유저 ID')
-    code = models.CharField(max_length=8, null=True, verbose_name='사번')  # 사번
+    code = models.CharField(max_length=15, null=True, verbose_name='사번')  # 사번
     username = models.CharField(max_length=26, null=True, verbose_name='유저 이름')
     factory_classification = models.ForeignKey('CodeMaster', models.PROTECT,
                                                null=True,
