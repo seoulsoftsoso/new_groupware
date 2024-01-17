@@ -301,7 +301,7 @@ class EventMaster(Model):
     description = models.TextField(null=True, verbose_name='내용')
     location = models.CharField(max_length=128, null=True, verbose_name='장소')
     vehicle = models.ForeignKey('CodeMaster', models.CASCADE, null=True, verbose_name='법인차량')  # 출장, 법인차량등록에서 사용
-    busynsee_pair = models.IntegerField(null=True, verbose_name='출장정보')
+    business_pair = models.IntegerField(null=True, verbose_name='출장정보')
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
                                   related_name='event_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)
