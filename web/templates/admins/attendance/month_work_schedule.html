@@ -248,7 +248,7 @@
         for (i = 0; i < attendance.length; i++) {
             var cell = "";
             if (document.getElementById(attendance[i].employee_number) ? false : true) {
-                if (attendance[i].jobTitle == "None")
+                if (attendance[i].jobTitle === "None")
                     attendance[i].jobTitle = "";
                 cell += "<tr class='text-center' style='height: 80px;' id=" + attendance[i].employee_number + ">"
                     + "<td>" + attendance[i].employee_number + "</td>"
@@ -268,21 +268,21 @@
             if (document.getElementById(attendance[k].employee_number) ? true : false) {
                 var attendance_day = attendance[k].date.split(' ');
                 var day = parseInt(attendance_day[2].replace('일', '')) + 3;
-                if (attendance[k].earlyleaveTime != "None" && attendance[k].earlyleaveTime != "") {
-                    if (attendance[k].latenessTime != "None" && attendance[k].latenessTime != "") {
+                if (attendance[k].earlyleaveTime !== "None" && attendance[k].earlyleaveTime !== "") { // 조퇴
+                    if (attendance[k].latenessTime !== "None" && attendance[k].latenessTime !== "") {
                         $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='purple' text-align='center' id='earlylateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                     } else {
                         $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='red' text-align='center' id='early_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                     }
-                } else if (attendance[k].latenessTime != "None" && attendance[k].latenessTime != "") {
-                    if (attendance[k].earlyleaveTime != "None" && attendance[k].earlyleaveTime != "") {
+                } else if (attendance[k].latenessTime !== "None" && attendance[k].latenessTime !== "") { // 지각
+                    if (attendance[k].earlyleaveTime !== "None" && attendance[k].earlyleaveTime !== "") {
                         $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='purple' text-align='center' id='earlylateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                     } else {
                         $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='orange' text-align='center' id='lateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                     }
-                } else if (attendance[k].is_offwork == 'True') {
+                } else if (attendance[k].is_offwork === 'True') { // 퇴근처리
                     $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='pink' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
-                } else if (attendance[k].attendanceTime != "None" && attendance[k].attendanceTime != "") {
+                } else if (attendance[k].attendanceTime !== "None" && attendance[k].attendanceTime !== "") { // 결근
                     $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='gray' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                 }
             }
@@ -325,7 +325,7 @@
         var day = parseInt(id[2]) - 3;
 
         //카테고리 휴가를 제외한 경우
-        if (category == "early" || category == 'lateness' || category == 'attendance' || category == 'earlylateness') {
+        if (category === "early" || category === 'lateness' || category === 'attendance' || category === 'earlylateness') {
             let attendance = [
                 {% for obj in contacts %}
                     {
@@ -344,18 +344,18 @@
 
             for (i = 0; i < attendance.length; i++) {
                 //직원비교
-                if (employee_number == attendance[i].employee_number) {
+                if (employee_number === attendance[i].employee_number) {
                     var pop_attendance_day = attendance[i].date.split(' ');
                     var pop_day = parseInt(pop_attendance_day[2].replace('일', ''));
-                    if (pop_day == day) {
-                        if (category == 'early') {
+                    if (pop_day === day) {
+                        if (category === 'early') {
                             $('#title').html('조퇴');
                             if ((attendance[i].earlyleaveTime).indexOf('오전 12') != -1)
                                 var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전 12", "00");
                             else
                                 var earlyleaveTime = attendance[i].earlyleaveTime.replace("오전", "");
                             $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + attendance[i].offworkTime + "<br>조퇴 : " + earlyleaveTime + "");
-                        } else if (category == 'lateness') {
+                        } else if (category === 'lateness') {
                             $('#title').html('지각');
                             var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
                             if ((attendance[i].latenessTime).indexOf('오전 12') != -1)
@@ -363,11 +363,11 @@
                             else
                                 var latenessTime = attendance[i].latenessTime.replace("오전", "");
                             $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + offworkTime + "<br>지각 : " + latenessTime + "");
-                        } else if (category == 'attendance') {
+                        } else if (category === 'attendance') {
                             $('#title').html('출근');
                             var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
                             $('#content').html("출근 : " + attendance[i].attendanceTime + "<br>퇴근 : " + offworkTime + "");
-                        } else if (category == 'earlylateness') {
+                        } else if (category === 'earlylateness') {
                             $('#title').html('지각&조퇴');
                             var offworkTime = attendance[i].offworkTime.replace("None", " 미처리");
                             if ((attendance[i].earlyleaveTime).indexOf('오전 12') != -1)
@@ -400,7 +400,7 @@
 
             for (i = 0; i < vacation.length; i++) {
                 //직원비교
-                if (employee_number == vacation[i].employee_number) {
+                if (employee_number === vacation[i].employee_number) {
                     var start = vacation[i].startDate.split(' ');
                     var startDate = parseInt(start[2].replace('일', ''));
                     var end = vacation[i].endDate.split(' ');

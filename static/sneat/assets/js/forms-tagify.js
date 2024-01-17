@@ -110,35 +110,35 @@ let get_usersList_tag = [];
 
     const TagifyUserListEl = document.querySelector('#TagifyUserList');
 
-// 사용자 정보를 가져오는 비동기 함수
-    async function fetchData() {
-        try {
-            const response = await fetch('/admins/member_info/');
-            const userData = await response.json();
-            // console.log('user', userData);
-            userData.user_data.sort((a, b) => {
-                if (a.fields.department_position === b.fields.department_position) {
-                    // department_position이 같은 경우 job_position으로 정렬
-                    return a.fields.job_position - b.fields.job_position;
-                }
-                // department_position으로 정렬
-                return a.fields.department_position - b.fields.department_position;
-            });
-            const get_usersList_tag = userData.user_data.map(user => ({
-                value: user.pk,
-                name: user.fields.username,
-                avatar: userData.code_data.find(code => code.pk === user.fields.department_position).fields.name,
-                email: userData.code_data.find(code => code.pk === user.fields.job_position).fields.name
-            }));
-            // console.log('usersList', get_usersList_tag);
+    // 사용자 정보를 가져오는 비동기 함수
+    function fetchData() {
+    $.ajax({
+        url: '/admins/member_info/',
+        type: 'GET',
+        success: function(response) {
+            // console.log('res', response.result)
+            var userData = response.result;
+
+            for (var i = 0; i < userData.length; i++) {
+                var user = userData[i];
+                get_usersList_tag.push({
+                    value: user.id,
+                    name: user.username,
+                    avatar: user.department_position__name,
+                    email: user.job_position__name
+                });
+            }
+
             TagifyUserList.settings.whitelist = get_usersList_tag;
             TagifyUserList.update();
-        } catch (error) {
-            // console.error('Error fetching users list:', error);
+        },
+        error: function(error) {
+            console.error('Error fetching users list:', error);
         }
-    }
+    });
+}
 
-// fetchData 함수 호출
+    // fetchData 함수 호출
     fetchData();
 
     // const usersList = [

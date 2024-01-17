@@ -186,9 +186,6 @@ document.addEventListener('DOMContentLoaded', function () {
       btnSubmit.classList.remove('btn-add-event');
       btnDeleteEvent.classList.remove('d-none');
 
-      console.log('시작일', eventToUpdate.start)
-      console.log('종료일', eventToUpdate.end)
-
       eventTitle.value = eventToUpdate.title;
       start.setDate(eventToUpdate.start, true, 'Y-m-d');
       eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
@@ -272,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       selectedEvents = selectedEvents.map(function (event) {
-        console.log('event', event.end)
         let eventType = event.extendedProps.calendar.toLowerCase();
         let eventuser = event.extendedProps.created_by
         let eventallday = event.allDay
@@ -343,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function () {
       dateClick: function (info) {
         let date = moment(info.date).format('YYYY-MM-DD');
         resetValues();
-        console.log('date', date)
         bsAddEventSidebar.show();
 
         // For new event set offcanvas title text: Add Event

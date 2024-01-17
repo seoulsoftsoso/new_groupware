@@ -20,91 +20,181 @@
             {% include 'admins/index_header.html' %}
 
             <!-- body1 -->
-            <div class="card col-md-4" style="display: flex; flex-direction: row; width: 97%; margin-left: 25px; margin-top: 30px; padding-top: 10px; padding-bottom: 10px;">
-                <div style="height: auto; display: flex; flex-direction: column; width: 35%; margin-left: 15px;">
-                    <div style="width: 100%; height: auto; text-align: left; margin-top: 15px;">
-                        <strong>💬 오늘의 이야기</strong>
-                    </div>
-                    <br/>
-                    <div style="width: 90%; margin-left: 25px;">
-                        <span>"가장 예쁜 꽃은 우여곡절 끝에 피어나는 꽃"</span>
+{#            <div class="card col-md-4 col-sm-12" style="display: flex; flex-direction: row; flex-direction-sm: column; width: 97%; margin-left: 25px; margin-top: 30px; padding-top: 10px; padding-bottom: 10px;">#}
+{#                 <div class="col-md-6 col-sm-12" >#}
+{#                    <div style="width: 100%; height: auto; text-align: left; margin-top: 15px;">#}
+{#                        <strong>💬 오늘의 이야기</strong>#}
+{#                    </div>#}
+{#                    <br/>#}
+{#                    <div style="width: 90%; margin-left: 25px;">#}
+{#                        <span>"가장 예쁜 꽃은 우여곡절 끝에 피어나는 꽃"</span>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-md-6 col-sm-12">#}
+{#                    <div style="width: 100%; text-align: left; margin-top: 15px; margin-bottom: 15px">#}
+{#                        <div>#}
+{#                            <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>#}
+{#                            {% for event in events %}#}
+{#                                {% if event.event_type == "Holiday" %}#}
+{#                                    <strong>{{ event.create_by }}</strong>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                        <hr>#}
+{#                        <div>#}
+{#                            <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>#}
+{#                            {% for event in events %}#}
+{#                                {% if event.event_type == "Business" %}#}
+{#                                    <strong>{{ event.create_by }}</strong>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                        <hr>#}
+{#                        <div>#}
+{#                            <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>#}
+{#                            <strong></strong>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="col-12 row mb-5" style="padding-top: 40px; padding-left: 25px;">
+                <div class="col-md-6 col-lg-6 mb-3">
+                    <div class="card" style="height: 100%">
+                        <strong class="card-header">💬 오늘의 이야기</strong>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>
+                                    이미끝나버린 일을 후회하기 보다는 하고 싶었던 일들을 하지못한 것을 후회하라.
+                                </p>
+                                <footer class="blockquote-footer">
+                                    <cite title="Source Title">탈무드</cite>
+                                </footer>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
-                <div style="height: auto; display: flex; flex-direction: column; width: 60%; margin-left: 50px">
-                    <div style="width: 100%; text-align: left; margin-top: 15px; margin-bottom: 15px">
-                        <div>
-                            <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
-                            {% for event in events %}
-                                {% if event.event_type == "Holiday" %}
-                                    <strong>{{ event.create_by }}</strong>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <hr>
-                        <div>
-                            <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
-                            {% for event in events %}
-                                {% if event.event_type == "Business" %}
-                                    <strong>{{ event.create_by }}</strong>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <hr>
-                        <div>
-                            <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
-                            <strong></strong>
-                        </div>
+                <div class="col-md-6 col-lg-6 mb-3">
+                    <div class="card" style="height: 100%;">
+                            <div class="card-body" style="padding: 20px; border-bottom: lightgrey 1px solid;">
+                                <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
+                                {% for event in events %}
+                                    {% if event.event_type == "Holiday" %}
+                                        <strong>{{ event.create_by }}</strong>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body" style="padding: 20px; border-bottom: lightgrey 1px solid;">
+                                <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
+                                {% for event in events %}
+                                    {% if event.event_type == "Business" %}
+                                        <strong>{{ event.create_by }}</strong>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body" style="padding: 20px;">
+                                <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
+                                <strong></strong>
+                            </div>
                     </div>
                 </div>
             </div>
 
             <!-- body2 -->
-            <div class="card" style="display: flex; flex-direction: row; width: 97%; margin-left: 25px; margin-top: 30px; padding-top: 10px; padding-bottom: 10px;"
-                    style="display: flex; flex-direction: row; margin-right: 10px; margin-left: 10px">
-                <div style="height: auto; display: flex; flex-direction: column; width: 20%; padding-top: 20px; padding-bottom: 20px;">
-                    <div style="width: 100%; margin-top: -4px; margin-left: 15px;">
-                        <div style="font-size: large">
-                            <strong>📝 나의 결재</strong><br/><br/>
-                        </div>
-                        <div style="margin-left: 30px; margin-top: -10px">
-                            <h6>미결재 문서 : 10건</h6>
-                            <hr>
-                            <h6>결재완료 문서 바로가기</h6>
-                        </div>
+{#            <div class="card" style="display: flex; flex-direction: row; width: 97%; margin-left: 25px; margin-top: 30px; padding-top: 10px; padding-bottom: 10px;"#}
+{#                    style="display: flex; flex-direction: row; margin-right: 10px; margin-left: 10px">#}
+{#                <div style="height: auto; display: flex; flex-direction: column; width: 20%; padding-top: 20px; padding-bottom: 20px;">#}
+{#                    <div style="width: 100%; margin-top: -4px; margin-left: 15px;">#}
+{#                        <div style="font-size: large">#}
+{#                            <strong>📝 나의 결재</strong><br/><br/>#}
+{#                        </div>#}
+{#                        <div style="margin-left: 30px; margin-top: -10px">#}
+{#                            <h6>미결재 문서 : 10건</h6>#}
+{#                            <hr>#}
+{#                            <h6>결재완료 문서 바로가기</h6>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div  style="height: auto; display: flex; flex-direction: column; width: 37%; margin-left: 30px;">#}
+{#                    <div style="width: 100%; margin-top: 15px">#}
+{#                        <div style="font-size: large">#}
+{#                            <a href="{% url 'adminNotice' %}">#}
+{#                                <strong style="color: #697a8d;">📢 공지사항 최신글</strong><br/><br/>#}
+{#                            </a>#}
+{#                        </div>#}
+{#                        <div style="margin-left: 30px; margin-top: -10px">#}
+{#                            {% if fixed_notice %}#}
+{#                                <a href="{% url 'noticeDetail' fixed_notice.id %}"><span style="color: red;">* {{ fixed_notice.title }}</span></a><br/>#}
+{#                            {% else %}#}
+{#                                <span>고정 공지사항이 없습니다.</span>#}
+{#                            {% endif %}#}
+{#                            {% for obj in notice %}#}
+{#                                <a href="{% url 'noticeDetail' obj.id %}"><span style="color: #697a8d">* {{ obj.title }}</span><br/></a>#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div  style="height: auto; display: flex; flex-direction: column; width: 37%; margin-left: 30px;">#}
+{#                    <div style="width: 100%; margin-top: 15px">#}
+{#                        <div style="font-size: large">#}
+{#                            <strong>📢 전사게시판 최신글</strong><br/><br/>#}
+{#                        </div>#}
+{#                        <div style="margin-left: 30px; margin-top: -10px">#}
+{#                            {% if fixed_board %}#}
+{#                                <span style="color: red">* {{ fixed_board.title }}</span><br/>#}
+{#                            {% endif %}#}
+{#                            {% for obj in board %}#}
+{#                                <span>* {{ obj.title }}</span><br/>#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
 
-                    </div>
-                </div>
-                <div  style="height: auto; display: flex; flex-direction: column; width: 37%; margin-left: 30px;">
-                    <div style="width: 100%; margin-top: 15px">
-                        <div style="font-size: large">
-                            <a href="{% url 'adminNotice' %}">
-                                <strong style="color: #697a8d;">📢 공지사항 최신글</strong><br/><br/>
-                            </a>
-                        </div>
-                        <div style="margin-left: 30px; margin-top: -10px">
-                            {% if fixed_notice %}
-                                <a href="{% url 'noticeDetail' fixed_notice.id %}"><span style="color: red;">* {{ fixed_notice.title }}</span></a><br/>
-                            {% else %}
-                                <span>고정 공지사항이 없습니다.</span>
-                            {% endif %}
-                            {% for obj in notice %}
-                                <a href="{% url 'noticeDetail' obj.id %}"><span style="color: #697a8d">* {{ obj.title }}</span><br/></a>
-                            {% endfor %}
+            <div class="col-12 row mb-5" style="padding-left: 25px;">
+                <div class="col-md-6 col-lg-2 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <strong class="card-header">📝 나의 결재</strong>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <h6>미결재 문서 : 10건</h6>
+                                <hr>
+                                <h6>결재완료 문서 : 바로가기</h6>
+                            </blockquote>
                         </div>
                     </div>
                 </div>
-                <div  style="height: auto; display: flex; flex-direction: column; width: 37%; margin-left: 30px;">
-                    <div style="width: 100%; margin-top: 15px">
-                        <div style="font-size: large">
-                            <strong>📢 전사게시판 최신글</strong><br/><br/>
+                <div class="col-md-6 col-lg-5 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <strong class="card-header">📢 공지사항 최신글</strong>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if fixed_notice %}
+                                    <a href="{% url 'noticeDetail' fixed_notice.id %}">
+                                        <span style="color: red;">* {{ fixed_notice.title }}</span>
+                                    </a><br/>
+                                {% endif %}
+                                {% for obj in notice %}
+                                    <a href="{% url 'noticeDetail' obj.id %}">
+                                        <span style="color: #697a8d">* {{ obj.title }}</span>
+                                    </a><br/>
+                                {% endfor %}
+                            </blockquote>
                         </div>
-                        <div style="margin-left: 30px; margin-top: -10px">
-                            {% if fixed_board %}
-                                <span style="color: red">* {{ fixed_board.title }}</span><br/>
-                            {% endif %}
-                            {% for obj in board %}
-                                <span>* {{ obj.title }}</span><br/>
-                            {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-5 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <strong class="card-header">📢 전사게시판 최신글</strong>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if fixed_board %}
+                                    <span style="color: red">* {{ fixed_board.title }}</span><br/>
+                                {% endif %}
+                                {% for obj in board %}
+                                    <span>* {{ obj.title }}</span><br/>
+                                {% endfor %}
+                            </blockquote>
                         </div>
                     </div>
                 </div>
@@ -119,7 +209,7 @@
               <div class="card app-calendar-wrapper">
                 <div class="row g-0">
                   <!-- Calendar Sidebar -->
-                  <div class="col-3 app-calendar-sidebar" id="app-calendar-sidebar" >
+                  <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" >
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                       <div class="d-grid">
                         <button

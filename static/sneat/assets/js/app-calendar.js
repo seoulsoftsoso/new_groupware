@@ -242,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // * This will be called by fullCalendar to fetch events. Also this can be used to refetch events.
     // --------------------------------------------------------------------------------------------------
     function fetchEvents(info, successCallback) {
-
       // Fetch Events from API endpoint reference
        /*$.ajax(
         {
@@ -270,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       selectedEvents = selectedEvents.map(function (event) {
-
         let eventType = event.extendedProps.calendar.toLowerCase();
         let eventuser = event.extendedProps.created_by
         let eventallday = event.allDay
@@ -291,6 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (eventallday===true) {
           eventallday = "*종일"
+          event.allDay = false;
         } else {
           eventallday = ''
         }
@@ -363,7 +362,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modifyToggler();
       }
     });
-
     // Render calendar
     calendar.render();
     // Modify sidebar toggler
