@@ -174,6 +174,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
+
     # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
     def __str__(self):
@@ -280,7 +281,7 @@ class Attendance(models.Model):
     attendance_ip = models.CharField(null=True, max_length=16)  # 출근IP
     offwork_ip = models.CharField(null=True, max_length=16)  # 퇴근IP
     is_offwork = models.BooleanField(default=False)  # 퇴근처리 여부 (0: 정상, 1: 퇴근처리x)
-    offWorkCheck = models.BooleanField(default=False) # 실제 퇴근동록 했는지 안했는지 체크
+    offWorkCheck = models.BooleanField(default=False)  # 실제 퇴근동록 했는지 안했는지 체크
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
                                   related_name='attend_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)
@@ -315,10 +316,9 @@ class Participant(Model):
     cuser = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='참석자')
 
 
-
 class CorporateMgmt(Model):
     event_mgm = models.ForeignKey('EventMaster', models.CASCADE, null=False, verbose_name='차량정보 매핑')
-    oiling = models.BooleanField(default=False, null=False, verbose_name='주유여부') #True:주유, Fasle: 주유안함
-    distance = models.IntegerField(default=1, null=False, verbose_name='주행거리') # 단위 Km
+    oiling = models.BooleanField(default=False, null=False, verbose_name='주유여부')  # True:주유, Fasle: 주유안함
+    distance = models.IntegerField(default=1, null=False, verbose_name='주행거리')  # 단위 Km
     maintenance = models.TextField(null=True, verbose_name='정비내역')
-    etc = models.CharField(null=True, verbose_name='기타')
+    etc = models.CharField(max_length=256, null=True, verbose_name='기타')
