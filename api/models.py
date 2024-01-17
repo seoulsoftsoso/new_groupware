@@ -299,6 +299,8 @@ class EventMaster(Model):
                                   verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, ETC:차량, Personal:자리비움
     description = models.TextField(null=True, verbose_name='내용')
     location = models.CharField(max_length=128, null=True, verbose_name='장소')
+    vehicle = models.ForeignKey('CodeMaster', models.CASCADE, null=True, verbose_name='법인차량')  # 출장, 법인차량등록에서 사용
+    busynsee_pair = models.IntegerField(null=True, verbose_name='출장정보')
     create_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='최초작성자',
                                   related_name='event_creat')  # 최초작성자
     create_at = models.DateTimeField(auto_now_add=True)
@@ -306,3 +308,17 @@ class EventMaster(Model):
                                    verbose_name='수정자')
     update_at = models.DateTimeField(null=True, auto_now_add=True)
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+
+
+class Participant(Model):
+    event = models.ForeignKey('EventMaster', models.CASCADE, null=False, verbose_name='일정정보 매핑')
+    cuser = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='참석자')
+
+
+
+class CorporateMgmt(Model):
+    event_mgm = models.ForeignKey('EventMaster', models.CASCADE, null=False, verbose_name='차량정보 매핑')
+    oiling = models.BooleanField(default=False, null=False, verbose_name='주유여부') #True:주유, Fasle: 주유안함
+    distance = models.IntegerField(default=1, null=False, verbose_name='주행거리') # 단위 Km
+    maintenance = models.TextField(null=True, verbose_name='정비내역')
+    etc = models.CharField(null=True, verbose_name='기타')
