@@ -72,7 +72,7 @@
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember-me"/>
+                        <input class="form-check-input" type="checkbox" id="remember-me" checked/>
                         <label class="form-check-label" for="defaultInline1">아이디 기억</label>
                     </div>
                 </div>
@@ -109,56 +109,61 @@
          saveid();
      }
 
-    function fnInit(){
-        var cookieid = getCookie("saveid");
-        if(cookieid !=""){
+    function fnInit() {
+        var storedUsername = getStorage("saveid");
+        if (storedUsername !== "") {
             $("input:checkbox[id='defaultInline1']").prop("checked", true);
-            $("#login [name='username']").val(cookieid);
+            $("#login [name='username']").val(storedUsername);
         }
-
     }
 
-    function setCookie(name, value, expiredays) {
-        var todayDate = new Date();
-        todayDate.setTime(todayDate.getTime() + 0);
-        if(todayDate > expiredays){
-            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiredays + ";";
-        }else if(todayDate < expiredays){
-            todayDate.setDate(todayDate.getDate() + expiredays);
-            document.cookie = name + "=" + escape(value) + "; path=/; expires=" + todayDate.toGMTString() + ";";
-        }
+    {#function setCookie(name, value, expiredays) {#}
+    {#    var todayDate = new Date();#}
+    {#    todayDate.setTime(todayDate.getTime() + 0);#}
+    {#    if(todayDate > expiredays){#}
+    {#        document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiredays + ";";#}
+    {#    }else if(todayDate < expiredays){#}
+    {#        todayDate.setDate(todayDate.getDate() + expiredays);#}
+    {#        document.cookie = name + "=" + escape(value) + "; path=/; expires=" + todayDate.toGMTString() + ";";#}
+    {#    }#}
+    {##}
+    {##}
+    {#}#}
+    {##}
+    {#function getCookie(Name) {#}
+    {#    var search = Name + "=";#}
+    {##}
+    {#    if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면#}
+    {#        offset = document.cookie.indexOf(search);#}
+    {#        if (offset != -1) { // 쿠키가 존재하면#}
+    {#            offset += search.length;#}
+    {#            // set index of beginning of value#}
+    {#            end = document.cookie.indexOf(";", offset);#}
+    {#            // 쿠키 값의 마지막 위치 인덱스 번호 설정#}
+    {#            if (end == -1)#}
+    {#                end = document.cookie.length;#}
+    {##}
+    {#            return unescape(document.cookie.substring(offset, end));#}
+    {#        }#}
+    {#    }#}
+    {#    return "";#}
+    {#}#}
 
-
+    function setStorage(name, value) {
+        localStorage.setItem(name, value);
     }
 
-    function getCookie(Name) {
-        var search = Name + "=";
-
-        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
-            offset = document.cookie.indexOf(search);
-            if (offset != -1) { // 쿠키가 존재하면
-                offset += search.length;
-                // set index of beginning of value
-                end = document.cookie.indexOf(";", offset);
-                // 쿠키 값의 마지막 위치 인덱스 번호 설정
-                if (end == -1)
-                    end = document.cookie.length;
-
-                return unescape(document.cookie.substring(offset, end));
-            }
-        }
-        return "";
+    function getStorage(name) {
+        return localStorage.getItem(name) || "";
     }
 
     function saveid() {
-        var expdate = new Date();
-        if ($("#remember-me").is(":checked")){
-            expdate.setTime(expdate.getTime() + 1000 * 3600 * 24 * 30);
-            setCookie("saveid", $("#login [name='username']").val(), expdate);
-            }else{
-           expdate.setTime(expdate.getTime() - 1000 * 3600 * 24 * 30);
-            setCookie("saveid", $("#login [name='username']").val(), expdate);
+        var username = $("#login [name='username']").val();
 
+        if ($("#remember-me").is(":checked")) {
+            setStorage("saveid", username);
+        } else {
+            localStorage.removeItem("saveid");
         }
     }
 
