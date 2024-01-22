@@ -391,23 +391,26 @@ document.addEventListener('DOMContentLoaded', function () {
         eventStartDate.value = date;
         eventEndDate.value = date;
 
-        $.get("/check-vehicle-availability/", {start_date: date+' 00:00', end_date: date+' 00:00'}, function(data) {
-        var $select = $('#vehicle_select');
-        $select.empty();
-        $.each(data.vehicle_list, function(index, vehicle) {
+        $.get("/check-vehicle-availability/", {
+          start_date: date + ' 00:00',
+          end_date: date + ' 23:59'
+        }, function (data) {
+          var $select = $('#vehicle_select');
+          $select.empty();
+          $.each(data.vehicle_list, function (index, vehicle) {
             var optionText = vehicle.name;
             var optionValue = vehicle.code;
             if (!vehicle.is_available) {
-                optionText += ' (예약 마감)';
+              optionText += ' (예약 마감)';
             }
             var $option = $('<option>', {
-                value: optionValue,
-                text: optionText,
-                disabled: !vehicle.is_available
+              value: optionValue,
+              text: optionText,
+              disabled: !vehicle.is_available
             });
             $select.append($option);
+          });
         });
-    });
       },
       eventClick: function (info) {
         eventClick(info);
