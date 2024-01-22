@@ -77,7 +77,7 @@
                         </div>
                         <div>
                             <div class="table-responsive text-nowrap">
-                                <table class="table">
+                                <table class="table" id="today_use">
                                     <thead>
                                     <tr class="text-nowrap" style="text-align: center;">
                                         <th>이름</th>
@@ -85,18 +85,7 @@
                                         <th>사용시간</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr style="text-align: center">
-                                        <td>김진란</td>
-                                        <td>QM3</td>
-                                        <td>종일</td>
-                                    </tr>
-                                    <tr style="text-align: center">
-                                        <td>홍재성</td>
-                                        <td>스포티지</td>
-                                        <td>반일 09:00 ~ 13:00</td>
-                                    </tr>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -132,10 +121,11 @@
                                 <th style="text-align: center; font-size: medium; font-weight: bold">목적</th>
                                 <th style="text-align: center; font-size: medium; font-weight: bold">장소</th>
                                 <th style="text-align: center; font-size: medium; font-weight: bold">사용확인</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-toggle="modal" data-target="#editModal">
+                            <tr>
                                 <td>QM3</td>
                                 <td>2024-01-09 09:00</td>
                                 <td>2024-01-09 18:00</td>
@@ -143,8 +133,23 @@
                                 <td>참가자(1), 참가자(2)</td>
                                 <td style="text-align: center;">사업체 방문</td>
                                 <td style="text-align: center;">충북 충주시 중앙로 80</td>
-                                <td style="text-align: center;">
-                                    <button type="button" class="btn btn-outline-danger" id="checkBtn" data-bs-toggle="modal" data-bs-target="#basicModal2">사용확인등록</button>
+                                <td style="text-align: center;"><button type="button" class="btn btn-outline-danger" id="checkBtn" data-bs-toggle="modal" data-bs-target="#basicModal2">사용확인등록</button></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                               data-bs-target="#editModal"
+                                               href="javascript:void(0);">
+                                                <i class="bx bx-edit-alt me-1"></i> 수정</a>
+                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                <i class="bx bx-trash me-1"></i> 삭제</a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -156,6 +161,23 @@
                                 <td style="text-align: center;">사업체 방문</td>
                                 <td style="text-align: center;">충북 충주시 중앙로 80</td>
                                 <td style="text-align: center;"><button class="btn btn-label-success" id="completeBtn" style="pointer-events: none;">사용확인등록 완료</button></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                               data-bs-target="#editModal"
+                                               href="javascript:void(0);">
+                                                <i class="bx bx-edit-alt me-1"></i> 수정</a>
+                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                <i class="bx bx-trash me-1"></i> 삭제</a>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -177,16 +199,21 @@
 <script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
+<script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
 </body>
 {% include 'admins/admin_footer.html' %}
 <script>
+    var input = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(input);
+
+    getDatas();
+
     $(function () {
         $("#datepicker_to").datepicker({format: 'yyyy-mm-dd'});
         $("#datepicker_from").datepicker({format: 'yyyy-mm-dd'});
     });
 
     function getCurrentDate() {
-        var today = new Date();
         var year = today.getFullYear();
         var month = (today.getMonth() + 1).toString().padStart(2, '0');
         var day = today.getDate().toString().padStart(2, '0');
@@ -200,16 +227,43 @@
 
     $(document).ready(function () {
 
-        $('table tbody tr').click(function (event) {
-            $('#editModal').modal('show');
-        });
-
-        // vehicle_useCheck_Modal 출력
-        $('table tbody tr #checkBtn').click(function (event) {
-            event.stopPropagation(); // 행 클릭 이벤트를 중단
-            $('#useCheckModal').modal('show');
-        });
     });
+
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
+
+    function displayData(data) {
+        var table = document.getElementById('today_use');
+        today.setHours(0, 0, 0, 0);
+
+        data.forEach(function (obj) {
+            var startDate = new Date(obj.start);
+            var endDate = new Date(obj.end);
+            var todayEnd = new Date();
+            todayEnd.setHours(23,59,59,999);
+
+            if (obj.businessPair) {
+                if (startDate <= today || endDate <= todayEnd) {
+                    console.log('today', today)
+                    console.log('start', startDate);
+                    console.log('end', endDate);
+                    var row = table.insertRow();
+
+                    var time = obj.allDay ? '종일 09:00 ~ 18:00' :
+                        startDate.getHours() + ' ~ ' + endDate.getHours();
+
+                    row.innerHTML =
+                        '<td style="text-align: center">' + obj.extendedProps.created_by + '</td>' +
+                        '<td style="text-align: center">' + obj.extendedProps.vehicleName + '</td>' +
+                        '<td style="text-align: center">' + startDate +time + '</td>' +
+                        '<td style="text-align: center">' + endDate +time + '</td>';
+                }
+            }
+
+        });
+    }
+
 </script>
 
 </html>

@@ -54,20 +54,20 @@
                 </div>
 
                 <div style="margin-left: 30px; margin-bottom: 100px;">
-                    <span style="color: lightgrey; font-size: small">{{ board.created_by.username }} {{ board.created_at|date:"Y년 m월 d일 A g:i" }}</span>
+                    <span style="color: lightgrey; font-size: small">{{ board.created_by.username }} {{ board.updated_at|date:"Y년 m월 d일 A g:i" }}</span>
                 </div>
 
-                <div id="content-container" style="width: 85%; font-size: large; margin-left: 100px; border: 0px;">
+                <div class="card-body" id="content-container" style="font-size: large; padding-left: 40px; border: 0px;">
 
                 </div>
-                <div class="card-body" style="width: 90%; margin-left: 60px; display: grid; border: rgb(242, 247, 255) 2px dashed;">
+                <div class="card-body col-11" style="display: grid; border: rgb(242, 247, 255) 2px dashed; margin: auto">
                     {% load custom_filters %}
                     {% for file in files %}
                         <a href="{% url 'download_file' file.id %}" download>{{ file.file_path|basename }}</a>
                     {% endfor %}
                 </div>
 
-                <div style="width: 90%; margin-left: 60px; margin-top: 100px;">
+                <div class="card-body col-11" style="margin: auto;">
                     <label for="exampleFormControlTextarea1" class="form-label">댓글 {{ board.reply_count }}개 |</label>
                     <label for="exampleFormControlTextarea1" class="form-label">조회 {{ board.click_cnt }}</label>
 

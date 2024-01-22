@@ -58,15 +58,16 @@ document.addEventListener('DOMContentLoaded', function () {
       eventTitle = document.querySelector('#eventTitle'),
       eventStartDate = document.querySelector('#eventStartDate'),
       eventEndDate = document.querySelector('#eventEndDate'),
-      eventUrl = document.querySelector('#eventURL'),
+      // eventUrl = document.querySelector('#eventURL'),
       eventLabel = $('#eventLabel'), // ! Using jquery vars due to select2 jQuery dependency
-      eventGuests = $('#eventGuests'), // ! Using jquery vars due to select2 jQuery dependency
+      eventGuests = document.querySelector('#TagifyUserList'), // ! Using jquery vars due to select2 jQuery dependency
       eventLocation = document.querySelector('#eventLocation'),
       eventDescription = document.querySelector('#eventDescription'),
       allDaySwitch = document.querySelector('.allDay-switch'),
       selectAll = document.querySelector('.select-all'),
       filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
       inlineCalendar = document.querySelector('.inline-calendar');
+      tagify = new Tagify(eventGuests);
 
 
     let eventToUpdate,
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isFormValid = false,
       inlineCalInstance;
 
-    //console.log('이벤트 출력', currentEvents)
+    // console.log('이벤트 출력', currentEvents)
     // Init event Offcanvas
     const bsAddEventSidebar = new bootstrap.Offcanvas(addEventSidebar);
 
@@ -103,36 +104,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event Guests (select2)
-    if (eventGuests.length) {
-      function renderGuestAvatar(option) {
-        if (!option.id) {
-          return option.text;
-        }
-        var $avatar =
-          "<div class='d-flex flex-wrap align-items-center'>" +
-          "<div class='avatar avatar-xs me-2'>" +
-          "<img src='" +
-          assetsPath +
-          'img/avatars/' +
-          $(option.element).data('avatar') +
-          "' alt='avatar' class='rounded-circle' />" +
-          '</div>' +
-          option.text +
-          '</div>';
-
-        return $avatar;
-      }
-      eventGuests.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Select value',
-        dropdownParent: eventGuests.parent(),
-        closeOnSelect: false,
-        templateResult: renderGuestAvatar,
-        templateSelection: renderGuestAvatar,
-        escapeMarkup: function (es) {
-          return es;
-        }
-      });
-    }
+    // if (eventGuests.length) {
+    //   function renderGuestAvatar(option) {
+    //     if (!option.id) {
+    //       return option.text;
+    //     }
+    //     var $avatar =
+    //       "<div class='d-flex flex-wrap align-items-center'>" +
+    //       "<div class='avatar avatar-xs me-2'>" +
+    //       "<img src='" +
+    //       assetsPath +
+    //       'img/avatars/' +
+    //       $(option.element).data('avatar') +
+    //       "' alt='avatar' class='rounded-circle' />" +
+    //       '</div>' +
+    //       option.text +
+    //       '</div>';
+    //
+    //     return $avatar;
+    //   }
+    //   eventGuests.wrap('<div class="position-relative"></div>').select2({
+    //     placeholder: 'Select value',
+    //     dropdownParent: eventGuests.parent(),
+    //     closeOnSelect: false,
+    //     templateResult: renderGuestAvatar,
+    //     templateSelection: renderGuestAvatar,
+    //     escapeMarkup: function (es) {
+    //       return es;
+    //     }
+    //   });
+    // }
 
     // Event start (flatpicker)
     if (eventStartDate) {
@@ -171,11 +172,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
+      // console.log('eve_update2', eventToUpdate)
       updateEventId= eventToUpdate._def.publicId
-      if (eventToUpdate.url) {
-        info.jsEvent.preventDefault();
-        window.open(eventToUpdate.url, '_blank');
-      }
+      // if (eventToUpdate.url) {
+      //   info.jsEvent.preventDefault();
+      //   window.open(eventToUpdate.url, '_blank');
+      // }
       bsAddEventSidebar.show();
       // For update event set offcanvas title text: Update Event
       if (offcanvasTitle) {
@@ -196,9 +198,14 @@ document.addEventListener('DOMContentLoaded', function () {
       eventToUpdate.extendedProps.location !== undefined
         ? (eventLocation.value = eventToUpdate.extendedProps.location)
         : null;
-      eventToUpdate.extendedProps.guests !== undefined
-        ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change')
-        : null;
+      if (eventToUpdate.extendedProps.guests !== undefined) {
+        var guests = eventToUpdate.extendedProps.guests.map(function (guest) {
+          return {value: guest.cuser_id, avatar: guest.cuser_department, name: guest.cuser_username, email: guest.cuser_position};
+        });
+        tagify.addTags(guests);
+      } else {
+        tagify.removeAllTags();
+      }
       eventToUpdate.extendedProps.description !== undefined
         ? (eventDescription.value = eventToUpdate.extendedProps.description)
         : null;
@@ -524,9 +531,9 @@ document.addEventListener('DOMContentLoaded', function () {
               description: eventDescription.value
             }
           };
-          if (eventUrl.value) {
-            newEvent.url = eventUrl.value;
-          }
+          // if (eventUrl.value) {
+          //   newEvent.url = eventUrl.value;
+          // }
           if (allDaySwitch.checked) {
             newEvent.allDay = true;
           }
@@ -542,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function () {
             title: eventTitle.value,
             start: eventStartDate.value,
             end: eventEndDate.value,
-            url: eventUrl.value,
+            // url: eventUrl.value,
             extendedProps: {
               location: eventLocation.value,
               guests: eventGuests.val(),
@@ -575,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
       eventTitle.value = '';
       eventLocation.value = '';
       allDaySwitch.checked = false;
-      eventGuests.val('').trigger('change');
+      tagify.removeAllTags();
       eventDescription.value = '';
     }
 

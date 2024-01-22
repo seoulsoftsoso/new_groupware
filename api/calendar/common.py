@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
+from django.core import serializers
 from django.db import transaction
-from django.shortcuts import render
+from django.db.models import Prefetch
+from django.shortcuts import render, get_object_or_404
 from django.utils.dateparse import parse_datetime
-
-from api.models import EventMaster
+from api.models import EventMaster, Participant, UserMaster, CodeMaster
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 import json
@@ -12,12 +13,41 @@ import json
 
 class get_eventDataAll(View):
     def get(self, request, *args, **kwargs):
-        qs = EventMaster.objects.filter(delete_flag='N').values(
-            'id', 'url', 'title', 'start_date', 'end_date', 'allDay',
-            'event_type', 'create_by__username', 'description', 'location'
-        )
-        context = {}
-        context['result'] = list(qs)
+        qs = EventMaster.objects.filter(delete_flag='N').select_related('create_by').prefetch_related(Prefetch('participant_set', queryset=Participant.objects.select_related('cuser'))).order_by('-id')
+        data = []
+
+        for event in qs:
+            participants = event.participant_set.all()
+            participants_data = [
+                {
+                    'id': p.id,
+                    'cuser_id': p.cuser.id,
+                    'cuser_username': p.cuser.username,
+                    'cuser_department': p.cuser.department_position.name,
+                    'cuser_position': p.cuser.job_position.name
+                }
+                for p in participants
+            ]
+
+            event_data = {
+                'id': event.id,
+                'url': event.url,
+                'title': event.title,
+                'start_date': event.start_date.isoformat(),
+                'end_date': event.end_date.isoformat(),
+                'allDay': event.allDay,
+                'event_type': event.event_type,
+                'create_by__username': event.create_by.username,
+                'description': event.description,
+                'location': event.location,
+                'participants': participants_data,
+                'vehicleSelect': event.vehicle.code if event.vehicle else None,
+                'vehicleName': event.vehicle.name if event.vehicle else None,
+                'businessPair': event.business_pair,
+            }
+            data.append(event_data)
+
+        context = {'result': data}
         return JsonResponse(context, safe=False)
 
     def post(self, request, *args, **kwargs):
@@ -27,16 +57,24 @@ class get_eventDataAll(View):
             # 날짜,시간 파싱
             startDate_str = request.POST.get('eventStartDate')
             endDate_str = request.POST.get('eventEndDate')
-
-            allDay_str = request.POST.get('allDay')
-            allDay = True if allDay_str.lower() == 'true' else False
-
             start_date = parse_datetime(startDate_str) or datetime.strptime(startDate_str, '%Y-%m-%d')
             end_date = parse_datetime(endDate_str) or datetime.strptime(endDate_str, '%Y-%m-%d')
 
+            allDay_str = request.POST.get('allDay')
+            allDay = True if allDay_str.lower() == 'true' else False
             if allDay:
                 start_date = start_date.replace(hour=9, minute=0)
                 end_date = end_date.replace(hour=18, minute=0)
+
+            # 참가자
+            tagList = request.POST.get('tagList')
+            tagList = json.loads(tagList)
+
+            # 법인차량
+            vehicleCode = request.POST.get('vehicleSelect')
+            selected_vehicle = None
+            if vehicleCode:
+                selected_vehicle = CodeMaster.objects.get(code=vehicleCode)
 
             event_add = EventMaster(
                 url='',
@@ -48,10 +86,22 @@ class get_eventDataAll(View):
                 create_by_id=created_by_id,
                 updated_by_id=created_by_id,
                 description=request.POST.get('eventDescription'),
-                location=request.POST.get('eventLocation')
+                location=request.POST.get('eventLocation'),
+                vehicle=selected_vehicle
             )
 
             event_add.save()
+
+            # 참가자
+            for tag in tagList:
+                user_id = tag['value']
+                user = get_object_or_404(UserMaster, id=user_id)
+                participant = Participant(event=event_add, cuser=user)
+                participant.save()
+
+            if vehicleCode:
+                event_add.business_pair = event_add.id
+                event_add.save()
 
             return JsonResponse({'message': 'success'})
 
@@ -65,6 +115,13 @@ class get_eventDataAll(View):
             eventData = body_data
             updateEventId = eventData.get('updateEventId')
             event = EventMaster.objects.get(id=updateEventId)
+
+            tagList = json.loads(eventData.get('tagList', '[]'))
+
+            Participant.objects.filter(event=event).delete()
+
+            for tag in tagList:
+                Participant.objects.create(event=event, cuser_id=tag['value'])
 
             if event:
                 allDay = eventData.get('allDay', False)
@@ -81,7 +138,6 @@ class get_eventDataAll(View):
 
                 event.start_date = start_date
                 event.end_date = end_date
-                event.url = eventData.get('eventURL')
                 event.title = eventData.get('eventTitle')
                 event.allDay = allDay
                 event.event_type = eventData.get('eventLabel')

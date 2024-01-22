@@ -186,7 +186,9 @@ urlpatterns = [
 
 
                   #법인차량
-                  path('admins/vehicle/', vehicle_main_page, name="vehicleMain"),
+                  path('admins/vehicle/', CorporateMgmtListView.as_view(), name="vehicleMain"),
+                  path('check-vehicle-availability/', check_vehicle_availability, name="vehicle_availability"),
+                  # path('admins/vehicle/add'),
 
 
                   #출장관리

@@ -27,9 +27,9 @@
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
                                 <p>
-                                    이미끝나버린 일을 후회하기 보다는 하고 싶었던 일들을 하지못한 것을 후회하라.
+                                    이미 끝나버린 일을 후회하기보다는 하고 싶었던 일들을 하지 못한 것을 후회하라.
                                 </p>
-                                <footer class="blockquote-footer">
+                                <footer class="blockquote-footer" style="display:flex; justify-content: end">
                                     <cite title="Source Title">탈무드</cite>
                                 </footer>
                             </blockquote>
@@ -249,47 +249,8 @@
                             <label class="form-label" for="eventTitle">제목</label>
                             <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" required/>
                           </div>
-                          <div class="mb-3">
-                            <label class="form-label" for="eventLabel">구분</label>
-                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                              <option data-label="success" value="Holiday" selected>연차</option>
-                              <option data-label="warning" value="Family">반차</option>
-                              <option data-label="primary" value="Business" id="Business">출장</option>
-                              <option data-label="danger" value="Personal">자리비움</option>
-                              <option data-label="info" value="vehicle">차량</option>
-                            </select>
-                          </div>
-                            <!--이벤트타입 차량 선택 시 활성화-->
-                            <div class="col mb-3" id="radioCheck">
-                                <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
-                                <div class="form-check custom-option custom-option-basic checked">
-                                    <label class="form-check-label custom-option-content" for="customCheckTemp3">
-                                        <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
-                                        <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
-                                    </label>
-                                </div>
-                            </div>
 
-
-                            <div class="mb-3" id="carCheck">
-                                <!-- Basic Custom Radios -->
-                                <div class="col mb-3">
-                                    <label for="nameBasic" class="form-label">*사용차량</label>
-                                    <select
-                                            class="select2 select-event-guests form-select"
-                                            style="width: 250px;"
-                                            id="vehicle_select"
-                                            name="vehicle_select"
-                                            multiple
-                                            data-placeholder="차량을 선택하세요.">
-                                        <option>QM3</option>
-                                        <option>스포티지</option>
-                                        <option>기타</option>
-                                    </select>
-                                </div>
-                                <!-- /Basic Custom Radios -->
-                            </div>
-                          <div class="mb-3">
+                            <div class="mb-3">
                             <label class="form-label" for="eventStartDate">시작날짜</label>
                             <input
                               type="text"
@@ -317,6 +278,45 @@
                               <span class="switch-label">All Day</span>
                             </label>
                           </div>
+
+                          <div class="mb-3">
+                            <label class="form-label" for="eventLabel">구분</label>
+                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+                              <option data-label="success" value="Holiday" selected>연차</option>
+                              <option data-label="warning" value="Family">반차</option>
+                              <option data-label="primary" value="Business" id="Business">출장</option>
+                              <option data-label="danger" value="Personal">자리비움</option>
+                            </select>
+                          </div>
+                            <!--이벤트타입 차량 선택 시 활성화-->
+                            <div class="col mb-3" id="radioCheck">
+                                <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
+                                <div class="form-check custom-option custom-option-basic checked">
+                                    <label class="form-check-label custom-option-content" for="customCheckTemp3">
+                                        <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
+                                        <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3" id="carCheck">
+                                <!-- Basic Custom Radios -->
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">*사용차량</label>
+                                    <select
+                                            class="select2 select-event-guests form-select"
+                                            style="width: 250px;"
+                                            id="vehicle_select"
+                                            name="vehicle_select"
+                                            data-placeholder="차량을 선택하세요.">
+{#                                        <option value="CQM3">QM3</option>#}
+{#                                        <option value="CSPO">스포티지</option>#}
+{#                                        <option value="CETC">기타</option>#}
+                                    </select>
+                                </div>
+                                <!-- /Basic Custom Radios -->
+                            </div>
 {#                          <div class="mb-3">#}
 {#                            <label class="form-label" for="eventURL">참조 URL</label>#}
 {#                            <input#}
@@ -328,18 +328,6 @@
 {#                          </div>#}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">Add Guests</label>
-{#                            <select#}
-{#                              class="select2 select-event-guests form-select"#}
-{#                              id="eventGuests"#}
-{#                              name="eventGuests"#}
-{#                              multiple>#}
-{#                              <option value="Jane Foster">Jane Foster</option>#}
-{#                              <option value="Donna Frank">Donna Frank</option>#}
-{#                              <option value="Gabrielle Robertson">Gabrielle Robertson</option>#}
-{#                              <option value="Lori Spears">Lori Spears</option>#}
-{#                              <option value="Sandy Vega">Sandy Vega</option>#}
-{#                              <option value="Cheryl May">Cheryl May</option>#}
-{#                            </select>#}
                               <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
                           </div>
                           <div class="mb-3">
@@ -421,6 +409,7 @@
         $('#eventLabel, #customCheckTemp3').change(function () {
             toggleRadioGroup($('#eventLabel').val());
         });
+
     });
 
     function toggleRadioGroup(selectedValue) {
@@ -428,10 +417,12 @@
         $('#carCheck').toggle(selectedValue === 'Business' && $('#customCheckTemp3').is(":checked"));
     }
 
+    var input = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(input);
+
     $(document).on('click', '.btn-add-event', function(e) {
         e.preventDefault();
-        var title = $("#eventTitle").val()
-        console.log('title', title)
+        console.log('guest', tagify.value)
 
          if ($("#eventTitle").val()===''){
               Swal.fire({
@@ -475,14 +466,19 @@
             eventStartDate: startdate,
             eventEndDate: enddate,
             allDay: $(".allDay-switch").prop("checked") === true,
-            eventURL: $("#eventURL").val(),
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value)
         };
 
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+            formData.vehicleSelect = $("#vehicle_select").val();
+        }
+
+        console.log('f', formData)
+
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
-                console.log('등록데이터', formData);
                 Swal.fire({
                 title: 'Success',
                 text: '일정이 등록되었습니다!',
@@ -512,6 +508,7 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value)
         };
 
         $.ajax({
@@ -539,7 +536,6 @@
 
     $(".btn-delete-event").click(function(e) {
 
-
         var formData = {
             eventId: updateEventId
         }
@@ -555,6 +551,7 @@
         });
 
     });
+
 
 </script>
 

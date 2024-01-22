@@ -297,7 +297,7 @@ class EventMaster(Model):
     end_date = models.DateTimeField(auto_now_add=False, null=False, verbose_name='종료일')
     allDay = models.BooleanField(verbose_name='종일여부')  # True : 종일
     event_type = models.CharField(max_length=64, null=False,
-                                  verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, ETC:차량, Personal:자리비움
+                                  verbose_name='구분')  # Holiday:연차, Family:반차, Business:출장, Personal:자리비움
     description = models.TextField(null=True, verbose_name='내용')
     location = models.CharField(max_length=128, null=True, verbose_name='장소')
     vehicle = models.ForeignKey('CodeMaster', models.CASCADE, null=True, verbose_name='법인차량')  # 출장, 법인차량등록에서 사용

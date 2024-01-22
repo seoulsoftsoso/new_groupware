@@ -11,6 +11,8 @@ let events_data = []
 
                   for (let i = 0; i < data.length; i++) {
                       let item = data[i];
+                      let participants = item.participants;
+
                       let obj = {
                           id: item.id,
                           url: item.url,
@@ -22,12 +24,14 @@ let events_data = []
                               calendar: item.event_type,
                               location: item.location,
                               description: item.description,
-                              created_by: item.create_by__username
-                          },
+                              created_by: item.create_by__username,
+                              guests: participants
+                          }
                       };
 
                       events_data.push(obj);
                   }
+                  // console.log('obj', events_data)
 
                   resolve(events_data);
               }

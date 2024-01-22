@@ -236,6 +236,7 @@
                     attendanceTime: "{{obj.attendanceTime}}",
                     offworkTime: "{{obj.offworkTime}}",
                     is_offwork: "{{obj.is_offwork}}",
+                    offWorkCheck: "{{ obj.offWorkCheck }}",
                     date: "{{obj.date}}"
                 },
             {% endfor %}
@@ -280,7 +281,7 @@
                     } else {
                         $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='orange' text-align='center' id='lateness_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                     }
-                } else if (attendance[k].is_offwork === 'True') { // 퇴근처리
+                } else if (attendance[k].offWorkCheck === 'True') { // 퇴근처리
                     $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='pink' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
                 } else if (attendance[k].attendanceTime !== "None" && attendance[k].attendanceTime !== "") { // 결근
                     $('#' + attendance[k].employee_number + '>td:eq(' + day + ')').html("<font size='5' color='gray' id='attendance_" + attendance[k].employee_number + "_" + day + "' onclick='popup(this)'>■</font>");
