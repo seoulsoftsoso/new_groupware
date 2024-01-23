@@ -146,6 +146,12 @@ document.addEventListener('DOMContentLoaded', function () {
           if (instance.isMobile) {
             instance.mobileInput.setAttribute('step', null);
           }
+        },
+        onChange: function (selectedDates, dateStr, instance) {
+          var startDate = $('#eventStartDate').val();
+          var endDate = $('#eventEndDate').val() || $('#eventStartDate').val();
+
+          checkVehicleAvailability(startDate, endDate);
         }
       });
     }
@@ -174,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
-      console.log('eve_update2', eventToUpdate)
+      // console.log('eve_update2', eventToUpdate)
       updateEventId= eventToUpdate._def.publicId
       // if (eventToUpdate.url) {
       //   info.jsEvent.preventDefault();
@@ -206,29 +212,10 @@ document.addEventListener('DOMContentLoaded', function () {
       var eventVehicleCode = eventToUpdate.extendedProps.vehicle;
       var startDate = $('#eventStartDate').val();
       var endDate = $('#eventEndDate').val();
+      console.log('startDate', startDate)
+      console.log('endDate', endDate)
 
-      $.get("/check-vehicle-availability/", {
-        start_date: startDate,
-        end_date: endDate
-      }, function (data) {
-        var $select = $('#vehicle_select');
-        $select.empty();
-        $.each(data.vehicle_list, function (index, vehicle) {
-          var optionText = vehicle.name;
-          var optionValue = vehicle.code;
-          if (!vehicle.is_available && vehicle.code !== eventVehicleCode) {
-            optionText += ' (예약 마감)';
-          }
-          var $option = $('<option>', {
-            value: optionValue,
-            text: optionText,
-            disabled: !vehicle.is_available && vehicle.code !== eventVehicleCode
-          });
-          $select.append($option);
-        });
-
-        $select.val(eventVehicleCode);
-      });
+      checkVehicleAvailability(startDate, endDate, eventVehicleCode);
 
       if (eventToUpdate.extendedProps.guests !== undefined) {
         var guests = eventToUpdate.extendedProps.guests.map(function (guest) {
@@ -375,7 +362,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // Background Color
         return ['fc-event-' + colorName];
       },
+
+
       dateClick: function (info) {
+        console.log('info', info)
         let date = moment(info.date).format('YYYY-MM-DD');
         resetValues();
         bsAddEventSidebar.show();
@@ -391,27 +381,13 @@ document.addEventListener('DOMContentLoaded', function () {
         eventStartDate.value = date;
         eventEndDate.value = date;
 
-        $.get("/check-vehicle-availability/", {
-          start_date: date + ' 00:00',
-          end_date: date + ' 23:59'
-        }, function (data) {
-          var $select = $('#vehicle_select');
-          $select.empty();
-          $.each(data.vehicle_list, function (index, vehicle) {
-            var optionText = vehicle.name;
-            var optionValue = vehicle.code;
-            if (!vehicle.is_available) {
-              optionText += ' (예약 마감)';
-            }
-            var $option = $('<option>', {
-              value: optionValue,
-              text: optionText,
-              disabled: !vehicle.is_available
-            });
-            $select.append($option);
-          });
-        });
+        var startDate = date + ' 00:00';
+        var endDate = date + ' 23:59';
+        checkVehicleAvailability(startDate, endDate);
+
       },
+
+
       eventClick: function (info) {
         eventClick(info);
       },
@@ -691,5 +667,32 @@ document.addEventListener('DOMContentLoaded', function () {
       appCalendarSidebar.classList.remove('show');
       appOverlay.classList.remove('show');
     });
+
+    function checkVehicleAvailability(startDate, endDate, eventVehicleCode) {
+      $.get("/check-vehicle-availability/", {
+        start_date: startDate,
+        end_date: endDate
+      }, function (data) {
+        var $select = $('#vehicle_select');
+        $select.empty();
+        $.each(data.vehicle_list, function (index, vehicle) {
+          var optionText = vehicle.name;
+          var optionValue = vehicle.code;
+          if (!vehicle.is_available && (!eventVehicleCode || vehicle.code !== eventVehicleCode)) {
+            optionText += ' (예약 마감)';
+          }
+          var $option = $('<option>', {
+            value: optionValue,
+            text: optionText,
+            disabled: !vehicle.is_available && (!eventVehicleCode || vehicle.code !== eventVehicleCode)
+          });
+          $select.append($option);
+        });
+        if (eventVehicleCode) {
+          $select.val(eventVehicleCode);
+        }
+      });
+    }
+
   })();
 });

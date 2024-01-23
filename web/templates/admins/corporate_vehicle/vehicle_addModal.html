@@ -86,9 +86,9 @@
                               style="width: 250px;"
                               id="vehicle_select"
                               name="vehicle_select">
-                              <option value="CQM3">QM3</option>
-                              <option value="CSPO">스포티지</option>
-                              <option value="CETC">기타</option>
+{#                              <option value="CQM3">QM3</option>#}
+{#                              <option value="CSPO">스포티지</option>#}
+{#                              <option value="CETC">기타</option>#}
                             </select>
                         </div>
                      </div>
@@ -115,6 +115,15 @@
             dateFormat: 'Y-m-d H:i',
             enableTime: true
         });
+    });
+
+    $('#eventStartDate, #eventEndDate').on('change', function () {
+        var E_startDate = $("#eventStartDate").val();
+        var E_endDate = $("#eventEndDate").val();
+
+        if (E_startDate && E_endDate) {
+            checkVehicleAvailability(E_startDate, E_endDate);
+        }
     });
 
     $(document).on('click', '#vehicle_add', function(e) {

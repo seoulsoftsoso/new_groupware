@@ -136,6 +136,13 @@ class get_eventDataAll(View):
                     start_date = start_date.replace(hour=9, minute=0)
                     end_date = end_date.replace(hour=18, minute=0)
 
+                # 법인차량
+                vehicleCode = json.loads(request.body).get('vehicleSelect')
+                print('vehicleCode', vehicleCode)
+                selected_vehicle = None
+                if vehicleCode:
+                    selected_vehicle = CodeMaster.objects.get(code=vehicleCode)
+
                 event.start_date = start_date
                 event.end_date = end_date
                 event.title = eventData.get('eventTitle')
@@ -145,6 +152,7 @@ class get_eventDataAll(View):
                 event.updated_by_id = request.COOKIES.get('user_id')
                 event.description = eventData.get('eventDescription')
                 event.location = eventData.get('eventLocation')
+                event.vehicle = selected_vehicle
 
                 event.save()
 

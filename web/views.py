@@ -44,14 +44,14 @@ def admin_index_page(request):
 def check_vehicle_availability(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    print(start_date)
-    print(end_date)
+    print('sta', start_date)
+    print('end', end_date)
     vehicle_list = []
     for vehicle in CodeMaster.objects.filter(code__in=["CQM3", "CSPO", "CETC"]):
         if vehicle.code == "CETC":
             is_available = True
         else:
-            is_available = not EventMaster.objects.filter(
+            is_available = not EventMaster.objects.filter( # 참이면 is_available을 true로 변경 후 리스트에 들어감
                 vehicle=vehicle,
                 start_date__lt=end_date,
                 end_date__gt=start_date,

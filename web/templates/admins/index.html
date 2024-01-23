@@ -511,6 +511,12 @@
             tagList : JSON.stringify(tagify.value)
         };
 
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+            eventData.vehicleSelect = $("#vehicle_select").val();
+        }
+
+        console.log('edata', eventData)
+
         $.ajax({
             url: "{% url 'get_eventDataAll' %}",
             type: 'PATCH',
