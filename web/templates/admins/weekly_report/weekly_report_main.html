@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+</head>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+         <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+             <p>주간업무보고 메인</p>
+
+
+         </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+</html>

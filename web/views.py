@@ -165,3 +165,23 @@ def admin_boardEdit_page(request, board_id):
     }
 
     return render(request, 'admins/board/edit.html', context)
+
+
+def project_main_page(request):
+    context = {}
+    return render(request, 'admins/project_mgmt/project_main.html', context)
+
+
+def project_mgmt_page(request):
+    context = {}
+    return render(request, 'admins/project_mgmt/project_mgmt.html', context)
+
+
+def weekly_report_main_page(request):
+    context = {}
+    return render(request, 'admins/weekly_report/weekly_report_main.html', context)
+
+
+def weekly_report_mgmt_page(request):
+    context = {}
+    return render(request, 'admins/weekly_report/weekly_report_mgmt.html', context)

@@ -121,6 +121,46 @@
                         </a>
                     </li>
                     <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle" style=" text-align: left; margin-left: -10px" id="change_clr">
+                            <img src="{% static 'admin/img/indexImg/ic_outline-work-history.png'%}" style="margin-right: 8px">
+                            <div class="text-truncate">프로젝트관리</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" style="margin-left: -15px;">
+                                <a href="{% url 'ProjectMain' %}" class="menu-link">
+                                    <div class="text-truncate" data-i18n="프로젝트">프로젝트</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item" style="margin-left: -15px;">
+                                <a href="{% url 'ProjectMgmt' %}" class="menu-link">
+                                    <div class="text-truncate" data-i18n="프로젝트(관리자)">프로젝트(관리자)</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle" style=" text-align: left; margin-left: -10px" id="change_clr">
+                            <img src="{% static 'admin/img/indexImg/ic_outline-work-history.png'%}" style="margin-right: 8px">
+                            <div class="text-truncate">주간업무보고</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item" style="margin-left: -15px;">
+                                <a href="{% url 'weeklyReportMain' %}" class="menu-link">
+                                    <div class="text-truncate" data-i18n="업무보고">업무보고</div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="menu-sub">
+                            <li class="menu-item" style="margin-left: -15px;">
+                                <a href="{% url 'weeklyReportMgmt' %}" class="menu-link">
+                                    <div class="text-truncate" data-i18n="업무보고(관리자)">업무보고(관리자)</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
                         <a href="" class="menu-link"
                            style="display: block; text-align: left; margin-left: -10px" id="change_clr">
                             <div class="text-truncate">

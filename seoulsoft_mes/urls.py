@@ -195,6 +195,16 @@ urlpatterns = [
                   path('admins/business', business_main_page.as_view(), name="BusinessMain"),
 
 
+                  # 프로젝트관리
+                  path('admins/project_main', project_main_page, name="ProjectMain"),
+                  path('admins/project_mgmt', project_mgmt_page, name="ProjectMgmt"),
+
+
+                  # 주간업무보고
+                  path('admins/weekly_report_main', weekly_report_main_page, name="weeklyReportMain"),
+                  path('admins/weekly_report_mgmt', weekly_report_mgmt_page, name="weeklyReportMgmt"),
+
+
 
                   #메인페이지
                   path('menu/<str:menu_num>/', SubView, name='sub'),
