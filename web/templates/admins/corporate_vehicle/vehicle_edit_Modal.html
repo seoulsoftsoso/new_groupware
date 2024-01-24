@@ -6,7 +6,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">법인차량사용등록 수정</h5>
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">법인차량 사용등록 수정</h5>
                     <button
                             type="button"
                             class="btn-close"
@@ -26,11 +26,14 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <div class="switch" style="margin-left: 20px; margin-top: 7px;">
-                                        <input type="checkbox" class="switch-input allDay-switch"/>
-                                        <span class="switch-toggle-slider"><span class="switch-on"></span><span class="switch-off"></span></span>
+                                    <label class="switch" style="margin-left: 20px; margin-top: 7px;">
+                                        <input type="checkbox" class="switch-input allDay-switch" id="edit_allDay"/>
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on"></span>
+                                            <span class="switch-off"></span>
+                                        </span>
                                         <span class="switch-label">All Day</span>
-                                    </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -41,9 +44,9 @@
 
                     <div class="row">
                         <div class="col mb-11">
-                            <label for="nameBasic" class="form-label">*사용자</label>
-                            <div class="col-md-6 mb-4">
-                                <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+                            <label for="nameBasic" class="form-label">*참석자</label>
+                            <div class="col-md-8 mb-4">
+                                <input id="TagifyUserListEdit" name="TagifyUserListEdit" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -51,10 +54,21 @@
                      <div class="row">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*목적</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
+                            <input type="text" id="eventDescription_edit"
+                                   name="eventDescription_edit"
                                    class="form-control"
                                    placeholder="목적"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*장소</label>
+                            <input type="text" id="eventLocation_edit"
+                                   name="eventLocation_edit"
+                                   class="form-control"
+                                   placeholder="장소"
                                    required/>
                         </div>
                     </div>
@@ -66,17 +80,14 @@
                               class="select2 select-event-guests form-select"
                               style="width: 250px;"
                               id="edit_vehicle_select"
-                              name="edit_vehicle_select"
-                              multiple>
-                              <option value="Jane Foster">QM3</option>
-                              <option value="Donna Frank">스포티지</option>
+                              name="edit_vehicle_select">
                             </select>
                         </div>
                      </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="editBtn">수정</button>
-                        <button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>
+                        <button type="submit" class="btn btn-primary" id="editCorporBtn">수정</button>
+                        <button type="button" class="btn btn-danger" id="corpor_delete">삭제</button>
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                     </div>
                 </div>
@@ -103,6 +114,73 @@
             dateFormat: "H:i",
             time_24hr: true
         });
+    });
+
+    $(document).on('click', '#editCorporBtn', function (e) {
+        e.preventDefault();
+
+        eventData = {
+            updateEventId: eventId,
+            eventTitle: '',
+            eventLabel: "Business",
+            eventStartDate: $("#flatpickr-edit-start").val(),
+            eventEndDate: $("#flatpickr-edit-end").val(),
+            allDay: $("#edit_allDay").prop("checked") === true,
+            eventLocation: $("#eventLocation_edit").val(),
+            eventDescription: $("#eventDescription_edit").val(),
+            tagList : JSON.stringify(tagify.value),
+            vehicleSelect : $("#edit_vehicle_select").val()
+        };
+
+        console.log('edata', eventData)
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(eventData),
+            success: function () {
+                console.log('수정데이터', eventData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 수정되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        });
+
+    });
+
+    $("#corpor_delete").click(function(e) {
+
+        var formData = {
+            eventId: eventId
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function () {
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 삭제되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        });
+
     });
 </script>
 
