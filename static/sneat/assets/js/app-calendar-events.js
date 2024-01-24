@@ -25,14 +25,19 @@ let events_data = []
                               location: item.location,
                               description: item.description,
                               created_by: item.create_by__username,
-                              guests: participants
-                          }
+                              guests: participants,
+                              vehicle: item.vehicleSelect,
+                              vehicleName: item.vehicleName
+                          },
+                          businessPair: item.businessPair,
                       };
 
                       events_data.push(obj);
                   }
-                  // console.log('obj', events_data)
-
+                  console.log('obj', events_data)
+                  if (typeof displayData === "function") {
+                      displayData(events_data);
+                  }
                   resolve(events_data);
               }
           });

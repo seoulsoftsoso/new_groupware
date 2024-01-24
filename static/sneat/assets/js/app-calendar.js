@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
       eventEndDate = document.querySelector('#eventEndDate'),
       // eventUrl = document.querySelector('#eventURL'),
       eventLabel = $('#eventLabel'), // ! Using jquery vars due to select2 jQuery dependency
+      vehicle_select = document.querySelector('#vehicle_select'),
       eventGuests = document.querySelector('#TagifyUserList'), // ! Using jquery vars due to select2 jQuery dependency
       eventLocation = document.querySelector('#eventLocation'),
       eventDescription = document.querySelector('#eventDescription'),
@@ -83,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event Label (select2)
     if (eventLabel.length) {
       function renderBadges(option) {
+        // console.log('option', option)
         if (!option.id) {
           return option.text;
         }
@@ -144,6 +146,12 @@ document.addEventListener('DOMContentLoaded', function () {
           if (instance.isMobile) {
             instance.mobileInput.setAttribute('step', null);
           }
+        },
+        onChange: function (selectedDates, dateStr, instance) {
+          var startDate = $('#eventStartDate').val();
+          var endDate = $('#eventEndDate').val() || $('#eventStartDate').val();
+
+          checkVehicleAvailability(startDate, endDate);
         }
       });
     }
@@ -195,9 +203,20 @@ document.addEventListener('DOMContentLoaded', function () {
         ? end.setDate(eventToUpdate.end, true, 'Y-m-d')
         : end.setDate(eventToUpdate.start, true, 'Y-m-d');
       eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
-      eventToUpdate.extendedProps.location !== undefined
-        ? (eventLocation.value = eventToUpdate.extendedProps.location)
-        : null;
+      // vehicle_select.value = eventToUpdate.extendedProps.vehicle;
+      // $(vehicle_select).change();
+      // eventToUpdate.extendedProps.location !== undefined
+      //   ? (eventLocation.value = eventToUpdate.extendedProps.location)
+      //   : null;
+
+      var eventVehicleCode = eventToUpdate.extendedProps.vehicle;
+      var startDate = $('#eventStartDate').val();
+      var endDate = $('#eventEndDate').val();
+      console.log('startDate', startDate)
+      console.log('endDate', endDate)
+
+      checkVehicleAvailability(startDate, endDate, eventVehicleCode);
+
       if (eventToUpdate.extendedProps.guests !== undefined) {
         var guests = eventToUpdate.extendedProps.guests.map(function (guest) {
           return {value: guest.cuser_id, avatar: guest.cuser_department, name: guest.cuser_username, email: guest.cuser_position};
@@ -343,7 +362,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // Background Color
         return ['fc-event-' + colorName];
       },
+
+
       dateClick: function (info) {
+        console.log('info', info)
         let date = moment(info.date).format('YYYY-MM-DD');
         resetValues();
         bsAddEventSidebar.show();
@@ -358,7 +380,14 @@ document.addEventListener('DOMContentLoaded', function () {
         btnDeleteEvent.classList.add('d-none');
         eventStartDate.value = date;
         eventEndDate.value = date;
+
+        var startDate = date + ' 00:00';
+        var endDate = date + ' 23:59';
+        checkVehicleAvailability(startDate, endDate);
+
       },
+
+
       eventClick: function (info) {
         eventClick(info);
       },
@@ -528,7 +557,8 @@ document.addEventListener('DOMContentLoaded', function () {
               location: eventLocation.value,
               guests: eventGuests.val(),
               calendar: eventLabel.val(),
-              description: eventDescription.value
+              description: eventDescription.value,
+              vehicle: vehicle_select.value
             }
           };
           // if (eventUrl.value) {
@@ -554,7 +584,8 @@ document.addEventListener('DOMContentLoaded', function () {
               location: eventLocation.value,
               guests: eventGuests.val(),
               calendar: eventLabel.val(),
-              description: eventDescription.value
+              description: eventDescription.value,
+              vehicle: vehicle_select.value
             },
             display: 'block',
             allDay: allDaySwitch.checked ? true : false
@@ -584,6 +615,7 @@ document.addEventListener('DOMContentLoaded', function () {
       allDaySwitch.checked = false;
       tagify.removeAllTags();
       eventDescription.value = '';
+      eventLabel.val(null).trigger('change');
     }
 
     // When modal hides reset input values
@@ -635,5 +667,32 @@ document.addEventListener('DOMContentLoaded', function () {
       appCalendarSidebar.classList.remove('show');
       appOverlay.classList.remove('show');
     });
+
+    function checkVehicleAvailability(startDate, endDate, eventVehicleCode) {
+      $.get("/check-vehicle-availability/", {
+        start_date: startDate,
+        end_date: endDate
+      }, function (data) {
+        var $select = $('#vehicle_select');
+        $select.empty();
+        $.each(data.vehicle_list, function (index, vehicle) {
+          var optionText = vehicle.name;
+          var optionValue = vehicle.code;
+          if (!vehicle.is_available && (!eventVehicleCode || vehicle.code !== eventVehicleCode)) {
+            optionText += ' (예약 마감)';
+          }
+          var $option = $('<option>', {
+            value: optionValue,
+            text: optionText,
+            disabled: !vehicle.is_available && (!eventVehicleCode || vehicle.code !== eventVehicleCode)
+          });
+          $select.append($option);
+        });
+        if (eventVehicleCode) {
+          $select.val(eventVehicleCode);
+        }
+      });
+    }
+
   })();
 });
