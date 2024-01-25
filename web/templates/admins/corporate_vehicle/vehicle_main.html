@@ -145,11 +145,21 @@
                                 </td>
                                 <td style="text-align: center;">{{ obj.description }}</td>
                                 <td style="text-align: center;">{{ obj.location }}</td>
-                                <td style="text-align: center;">
-                                    <button type="button" class="btn btn-outline-danger" id="checkBtn"
-                                            data-bs-toggle="modal" data-bs-target="#basicModal2">사용확인등록
-                                    </button>
-                                </td>
+                                {% if obj.corporatemgmt_set.exists %}
+                                    <td style="text-align: center">
+                                        <button type="button" class="btn btn-label-success useCheck_complete"
+                                                data-bs-toggle="modal" data-bs-target="#basicModal2"
+                                                data-id="{{ obj.id }}">사용확인등록 완료
+                                        </button>
+                                    </td>
+                                {% else %}
+                                    <td style="text-align: center">
+                                        <button type="button" class="btn btn-outline-danger useCheckBtn"
+                                                data-bs-toggle="modal" data-bs-target="#basicModal2"
+                                                data-id="{{ obj.id }}">사용확인등록
+                                        </button>
+                                    </td>
+                                {% endif %}
                                 <td>
                                     <div class="dropdown">
                                         <button type="button"
@@ -224,7 +234,7 @@
 
 
     function corporateEditForm(data) {
-        console.log('edit', data);
+        // console.log('edit', data);
         $('#flatpickr-edit-start').val(data.start_date);
         $('#flatpickr-edit-end').val(data.end_date);
 
@@ -248,14 +258,23 @@
         $('#eventDescription_edit').val(data.description);
         $('#eventLocation_edit').val(data.location);
 
-        checkVehicleAvailability(data.start_date, data.end_date, data.vehicleSelect);
+        checkVehicleAvailability_edit(data.start_date, data.end_date, data.vehicleSelect);
+
+        $('#flatpickr-edit-start, #flatpickr-edit-end').change(function () {
+            var startDate = $('#flatpickr-edit-start').val();
+            var endDate = $('#flatpickr-edit-end').val();
+            var vehicleSelect = data.vehicleSelect;
+
+            checkVehicleAvailability_edit(startDate, endDate, vehicleSelect);
+        });
     }
 
-    function checkVehicleAvailability(startDate, endDate, eventVehicleCode) {
+    function checkVehicleAvailability_edit(startDate, endDate, eventVehicleCode) {
       $.get("/check-vehicle-availability/", {
         start_date: startDate,
         end_date: endDate
       }, function (data) {
+          console.log('car', data)
         var $select = $('#edit_vehicle_select');
         $select.empty();
         $.each(data.vehicle_list, function (index, vehicle) {
@@ -292,6 +311,19 @@
                 success: corporateEditForm
             });
         });
+
+         $('.useCheckBtn, .useCheck_complete').click(function () {
+             eventId =  $(this).data('id');
+         })
+
+        var modal = $('#basicModal2');
+        modal.on('hidden.bs.modal', function () {
+            $('#oiling_check').prop('checked', false);
+            $('#distance_input').val('');
+            $('#repair_input').val('');
+            $('#etc_textarea').val('');
+        });
+
     });
 
 </script>

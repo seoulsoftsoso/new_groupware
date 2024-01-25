@@ -1,7 +1,7 @@
-function checkVehicleAvailability(E_startDate, E_endDate, eventVehicleCode) {
+function checkVehicleAvailability(startDate, endDate, eventVehicleCode) {
     $.get("/check-vehicle-availability/", {
-        start_date: E_startDate,
-        end_date: E_endDate
+        start_date: startDate,
+        end_date: endDate
     }, function (data) {
         var $select = $('#vehicle_select');
         $select.empty();

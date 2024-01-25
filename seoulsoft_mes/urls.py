@@ -189,6 +189,7 @@ urlpatterns = [
                   path('admins/vehicle/', CorporateMgmtListView.as_view(), name="vehicleMain"),
                   path('check-vehicle-availability/', check_vehicle_availability, name="vehicle_availability"), # 법인차량 예약가능 여부체크
                   path('admins/vehicle/edit_data', corporate_edit_data, name="corporateEditFormData"), # Edit Modal 데이터 랜더링
+                  path('admins/vehicle/useCheck_add', CorporateMgmtCreateView.as_view(), name="CorporateMgmtCreateView"),
 
 
                   #출장관리

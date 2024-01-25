@@ -6,7 +6,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">사용확인등록</h5>
+                    <h5 class="modal-title" id="modal_title" style="font-family: Pretendard;">사용확인등록</h5>
                     <button
                             type="button"
                             class="btn-close"
@@ -18,31 +18,29 @@
                     <div class="row">
                         <label for="nameBasic" class="form-label">* 사용확인</label>
                         <div class="col mb-10 d-flex flex-row">
-                            <div class="col-md-4 col-12">
+                            <div class="col-md-5 col-6">
                                 <div class="form-check custom-option custom-option-basic">
                                     <label class="form-check-label custom-option-content"
-                                           for="customRadioTemp1">
+                                           for="usecheck_true">
                                         <input
                                                 name="customRadioTemp"
                                                 class="form-check-input"
                                                 type="radio"
-                                                value="ETC"
-                                                id="customRadioTemp1"
+                                                id="usecheck_true"
                                                 checked/>
                                         <span class="h6 mb-0">사용</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-12">
+                            <div class="col-md-5 col-6">
                                 <div class="form-check custom-option custom-option-basic">
                                     <label class="form-check-label custom-option-content"
-                                           for="customRadioTemp2">
+                                           for="usecheck_false">
                                         <input
                                                 name="customRadioTemp"
                                                 class="form-check-input"
                                                 type="radio"
-                                                value="Spotage"
-                                                id="customRadioTemp2"/>
+                                                id="usecheck_false"/>
                                         <span class="h6 mb-0">미사용</span>
                                     </label>
                                 </div>
@@ -55,15 +53,15 @@
                        <div class="col-md-6 mb-4">
                           <label for="nameBasic" class="form-label">*주유여부 체크</label>
                           <div class="form-check custom-option custom-option-basic">
-                            <label class="form-check-label custom-option-content d-flex flex-row" for="customCheckTemp3">
-                              <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3">
+                            <label class="form-check-label custom-option-content d-flex flex-row" for="oiling_check">
+                              <input class="form-check-input" type="checkbox" value="" id="oiling_check">
                               <span class="custom-option-header" style="margin-left: 10px;">
                                 <span class="h6 mb-0">주유여부</span>
                               </span>
                             </label>
                           </div>
                           <div>
-                            <input class="form-control" id="amount-input" placeholder="금액(숫자만 입력해주세요.)" style="display:none;">
+                            <input class="form-control" id="amount_input" placeholder="금액(숫자만 입력해주세요.)" style="display:none;">
                           </div>
                        </div>
                     </div>
@@ -72,7 +70,7 @@
                         <div class="col mb-11">
                             <label for="nameBasic" class="form-label">*누적주행거리</label>
                             <div class="col-md-11 mb-4">
-                                <input class="form-control"/>
+                                <input class="form-control" id="distance_input"/>
                             </div>
                         </div>
                     </div>
@@ -81,7 +79,7 @@
                         <div class="col mb-11">
                             <label for="nameBasic" class="form-label">*자동차정비내역</label>
                             <div class="col-md-11 mb-4">
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="repair_input" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
@@ -90,7 +88,7 @@
                         <div class="col mb-11">
                             <label for="nameBasic" class="form-label">*기타</label>
                             <div class="col-md-11 mb-4">
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="etc_textarea" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
@@ -100,9 +98,7 @@
                                 class="btn btn-label-secondary"
                                 data-bs-dismiss="modal">취소
                         </button>
-                        <button type="button" class="btn btn-primary"
-                                id="addBoardBtn">등록완료
-                        </button>
+                        <button type="button" class="btn btn-primary" id="useCheckAdd_btn">등록</button>
                     </div>
                 </div>
             </div>
@@ -112,14 +108,101 @@
 <script>
     $(document).ready(function () {
 
-        $('#customCheckTemp3').change(function () {
+        $('#oiling_check').change(function () {
             if ($(this).is(':checked')) {
-                $('#amount-input').show();
+                $('#amount_input').show();
             } else {
-                $('#amount-input').hide();
+                $('#amount_input').hide();
             }
         });
 
     });
+
+    $('#usecheck_false').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#oiling_check, #amount_input, #distance_input, #repair_input, #etc_textarea').prop('disabled', true);
+        }
+    });
+
+    $('#usecheck_true').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#oiling_check, #amount_input, #distance_input, #repair_input, #etc_textarea').prop('disabled', false);
+        }
+    });
+
+    $('#useCheckAdd_btn').click(function (e) {
+        e.preventDefault();
+        console.log('eve_id', eventId)
+
+        var useCheck = $('#usecheck_true').is(':checked');
+
+        var formdata = useCheck ? {
+            oiling: $('#oiling_check').is(':checked'),
+            distance: $('#distance_input').val(),
+            maintenance: $('#repair_input').val(),
+            etc: $('#etc_textarea').val(),
+            eventId: eventId
+        } : {
+            // 미사용 체크했을 때
+            oiling: false,
+            distance: 0,
+            maintenance: '',
+            etc: '',
+            eventId: eventId
+        };
+
+        $.ajax({
+            url: "{% url 'CorporateMgmtCreateView' %}",
+            type: "POST",
+            data: formdata,
+            success: function (data) {
+                if (data.success === true) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '등록이 완료되었습니다.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                }
+            },
+            error: function (err) {
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
+    });
+
+    $('.useCheck_complete').click(function (e) {
+        var eventId = $(this).data('id');
+
+        $.ajax({
+            url: "{% url 'CorporateMgmtCreateView' %}",
+            type: "GET",
+            data: {eventId: eventId},
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log('성공?', data)
+                var fields = data[0].fields;
+                $('#oiling_check').prop('checked', fields.oiling);
+                $('#distance_input').val(fields.distance);
+                $('#repair_input').val(fields.maintenance);
+                $('#etc_textarea').val(fields.etc);
+                $('#useCheckAdd_btn').text('수정');
+                $('#modal_title').text('사용확인등록 수정')
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        });
+    });
+
 </script>
 

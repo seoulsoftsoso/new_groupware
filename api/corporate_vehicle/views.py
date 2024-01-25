@@ -1,12 +1,15 @@
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 import os
 from django.utils import timezone
-from django.views.generic import ListView
+from django.views import View
+from django.views.generic import ListView, CreateView
 from rest_framework.exceptions import ValidationError
 
 from Pagenation import PaginatorManager
+from api.corporate_vehicle.froms import CorporateMgmtForm
 from api.models import UserMaster, CodeMaster, CorporateMgmt, EventMaster
 
 
@@ -43,7 +46,7 @@ class CorporateMgmtListView(ListView):
         #     for participant in event.participant_set.all():
         #         print(participant.cuser)
         #     for corporate_mgm in event.corporatemgmt_set.all():
-        #         print(corporate_mgm.distance)
+        #         print('사용확인', corporate_mgm.event_mgm)
 
         self.original_qs = qs
         return event_qs
@@ -55,6 +58,43 @@ class CorporateMgmtListView(ListView):
         context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
 
         return context
+
+
+class CorporateMgmtCreateView(View):
+
+    def get(self, request, *args, **kwargs):
+        eventId = request.GET.get('eventId')
+        corporate_mgmt = CorporateMgmt.objects.get(event_mgm_id=eventId)
+
+        mgmt_qs = serializers.serialize('json', [corporate_mgmt])
+
+        return JsonResponse(mgmt_qs, safe=False)
+
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            data = request.POST
+            print('data', data)
+
+            event_mgm = get_object_or_404(EventMaster, id=data['eventId'])
+
+            mgmt_add, created = CorporateMgmt.objects.update_or_create(
+                event_mgm=event_mgm,
+                defaults={
+                    'oiling': data['oiling'] == 'true',
+                    'distance': int(data['distance']),
+                    'maintenance': data['maintenance'],
+                    'etc': data['etc'],
+                }
+            )
+
+            if created:
+                print("New CorporateMgmt created.")
+            else:
+                print("Existing CorporateMgmt updated.")
+
+            return JsonResponse({"success": True}, status=200)
+        else:
+            return JsonResponse({"success": False}, status=400)
 
 
 def corporate_edit_data(request):
