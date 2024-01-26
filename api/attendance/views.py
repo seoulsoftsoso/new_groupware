@@ -301,7 +301,7 @@ class work_history_search(ListView):
         )
         attendance_queryset = UserMaster.objects.select_related('department_position').prefetch_related(
             event_prefetch, attendance_prefetch, ago_attendance_prefetch
-        ).filter(is_active=True, is_staff=True, is_superuser=False).order_by('job_position_id', 'id')
+        ).filter(is_active=True, is_staff=True, is_master=False).order_by('job_position_id', 'id')
 
         # for user in attendance_queryset:
         #     if user.attendance_rec:

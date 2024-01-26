@@ -50,13 +50,18 @@
                                 <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
                                 {% for event in events %}
                                     {% if event.event_type == "Business" %}
-                                        <strong>{{ event.create_by }}</strong>
+                                        <strong>{{ event.create_by }}</strong>,
+                                        {% for participant in event.participant_set.all %}
+                                            <strong>{{ participant.cuser }}</strong>{% if not forloop.last %},{% endif %}
+                                        {% endfor %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
                             <div class="card-body" style="padding: 20px;">
                                 <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
-                                <strong></strong>
+                                {% for obj in events %}
+                                    <strong>{{ obj.vehicle }}({{ obj.create_by }})</strong>{% if not forloop.last %},{% endif %}
+                                {% endfor %}
                             </div>
                     </div>
                 </div>

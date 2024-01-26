@@ -309,11 +309,11 @@ $(function () {
   // Checkbox
   // --------------------------------------------------------------------
   $.ajax({
-    url: "/admins/member_info/", // 사용자 정보를 제공하는 API의 URL
+    url: "/admins/node_info/", // 사용자 정보를 제공하는 API의 URL
     method: "GET",
     dataType: "json",
     success: function(data) {
-      //console.log('member', data)
+      // console.log('member', data)
 
       // ID=키 name=값 객체변환
       var codeMasterMap = data.code_data.reduce(function (result, item) {

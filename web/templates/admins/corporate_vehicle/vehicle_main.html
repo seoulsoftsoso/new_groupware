@@ -318,6 +318,10 @@
 
         var modal = $('#basicModal2');
         modal.on('hidden.bs.modal', function () {
+            $('#usecheck_true').prop('checked', true).change();
+            if ($('#usecheck_true').is(':checked')) {
+                $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', false);
+            }
             $('#oiling_check').prop('checked', false);
             $('#distance_input').val('');
             $('#repair_input').val('');

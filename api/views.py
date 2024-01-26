@@ -46,6 +46,24 @@ class GetMemberInfo(View):
         return JsonResponse(context, safe=False)
 
 
+class GetNodeInfo(View):
+    def get(self, request, *args, **kwargs):
+        user_data = UserMaster.objects.filter(is_staff=True, is_active=True, is_master=False)
+        user_data_json = serializers.serialize('json', user_data)
+        user_result = json.loads(user_data_json)
+
+        code_data = CodeMaster.objects.all()
+        code_data_json = serializers.serialize('json', code_data)
+        code_result = json.loads(code_data_json)
+
+        result = {
+            'user_data': user_result,
+            'code_data': code_result
+        }
+
+        return JsonResponse(result, safe=False)
+
+
 
 
 '''

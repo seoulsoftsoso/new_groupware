@@ -184,6 +184,7 @@ urlpatterns = [
                   path('admins/board/group_edit', admin_boardGroup_edit, name="boardGroupEdit"),
                   path('admins/board/group_delete', admin_boardGroup_delete, name="boardGroupDelete"),
                   path('admins/member_info/', GetMemberInfo.as_view(), name="memberInfo"),
+                  path('admins/node_info/', GetNodeInfo.as_view(), name="nodeInfo"),
 
 
                   #법인차량

@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Modal -->
-<form action="#" method="post">
+<form action="#" id="useCheckForm" method="post">
     {% csrf_token %}
     <div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -19,7 +19,7 @@
                         <label for="nameBasic" class="form-label">* 사용확인</label>
                         <div class="col mb-10 d-flex flex-row">
                             <div class="col-md-5 col-6">
-                                <div class="form-check custom-option custom-option-basic">
+                                <div class="form-check custom-option custom-option-basic usecheck_true">
                                     <label class="form-check-label custom-option-content"
                                            for="usecheck_true">
                                         <input
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="col-md-5 col-6">
-                                <div class="form-check custom-option custom-option-basic">
+                                <div class="form-check custom-option custom-option-basic usecheck_false">
                                     <label class="form-check-label custom-option-content"
                                            for="usecheck_false">
                                         <input
@@ -60,17 +60,36 @@
                               </span>
                             </label>
                           </div>
-                          <div>
-                            <input class="form-control" id="amount_input" placeholder="금액(숫자만 입력해주세요.)" style="display:none;">
-                          </div>
                        </div>
+                    </div>
+
+                    <div class="row" id="distance_div">
+                        <div class="col mb-11 d-flex flex-row">
+                            <div class="col-3">
+                                <input class="form-control" type="number" id="distance_input" placeholder="주행거리" style="display:none;">
+                            </div>
+                            <div class="col-2 m-2">
+                                <small style="display: none">(단위: km)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="amount_div">
+                        <div class="col mb-11 d-flex flex-row">
+                            <div class="col-5">
+                                <input class="form-control" pattern="[0-9]+" id="oiling_cost" placeholder="금액(숫자만 입력해주세요.)" style="display:none;">
+                            </div>
+                            <div class="col-2 m-2 mb-4">
+                                <small style="display: none">(단위: 원)</small>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row" >
                         <div class="col mb-11">
                             <label for="nameBasic" class="form-label">*누적주행거리</label>
                             <div class="col-md-11 mb-4">
-                                <input class="form-control" id="distance_input"/>
+                                <input class="form-control" id="total_distance_input"/>
                             </div>
                         </div>
                     </div>
@@ -110,9 +129,9 @@
 
         $('#oiling_check').change(function () {
             if ($(this).is(':checked')) {
-                $('#amount_input').show();
+                $('#amount_div, #distance_div').find(':input, small').show();
             } else {
-                $('#amount_input').hide();
+                $('#amount_div, #distance_div').find(':input, small').hide();
             }
         });
 
@@ -120,13 +139,13 @@
 
     $('#usecheck_false').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#oiling_check, #amount_input, #distance_input, #repair_input, #etc_textarea').prop('disabled', true);
+            $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', true);
         }
     });
 
     $('#usecheck_true').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#oiling_check, #amount_input, #distance_input, #repair_input, #etc_textarea').prop('disabled', false);
+            $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', false);
         }
     });
 
@@ -138,18 +157,35 @@
 
         var formdata = useCheck ? {
             oiling: $('#oiling_check').is(':checked'),
+            oiling_cost: $('#oiling_cost').val(),
             distance: $('#distance_input').val(),
+            total_distance: $('#total_distance_input').val(),
             maintenance: $('#repair_input').val(),
             etc: $('#etc_textarea').val(),
             eventId: eventId
         } : {
             // 미사용 체크했을 때
             oiling: false,
+            oiling_cost: 0,
             distance: 0,
+            total_distance: 0,
             maintenance: '',
             etc: '',
             eventId: eventId
         };
+
+        console.log('f',formdata)
+
+        if (formdata.distance==="" || formdata.total_distance===""){
+            Swal.fire({
+                    title: 'Fail!',
+                    text: '입력한 값을 확인해주세요.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+
+            return false
+        }
 
         $.ajax({
             url: "{% url 'CorporateMgmtCreateView' %}",
@@ -189,10 +225,20 @@
             data: {eventId: eventId},
             success: function (data) {
                 data = JSON.parse(data);
-                // console.log('성공?', data)
+                console.log('성공?', data)
                 var fields = data[0].fields;
-                $('#oiling_check').prop('checked', fields.oiling);
+                $('#oiling_check').prop('checked', fields.oiling).change();
                 $('#distance_input').val(fields.distance);
+                if(fields.total_distance===0){
+                    console.log('here')
+                    $('#total_distance_input').val('');
+                    $('#usecheck_false').prop('checked', true).change();
+                    if ($('#usecheck_false').is(':checked')) {
+                        $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', true);
+                    }
+                } else {
+                    $('#total_distance_input').val(fields.total_distance);
+                }
                 $('#repair_input').val(fields.maintenance);
                 $('#etc_textarea').val(fields.etc);
                 $('#useCheckAdd_btn').text('수정');

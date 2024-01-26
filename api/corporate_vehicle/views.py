@@ -81,7 +81,9 @@ class CorporateMgmtCreateView(View):
                 event_mgm=event_mgm,
                 defaults={
                     'oiling': data['oiling'] == 'true',
+                    'oiling_cost': int(data['oiling_cost']),
                     'distance': int(data['distance']),
+                    'total_distance': int(data['distance']),
                     'maintenance': data['maintenance'],
                     'etc': data['etc'],
                 }

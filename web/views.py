@@ -18,8 +18,8 @@ def index(request):
 def admin_index_page(request):
     today = timezone.now()
 
-    events = EventMaster.objects.filter(start_date__lte=today, end_date__gte=today,
-                                        event_type__in=["Business", "Holiday"], delete_flag="N")
+    events = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', ).filter(
+        start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
     fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
         reply_count=Count('reply_board')).order_by("-updated_at").first()

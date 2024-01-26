@@ -297,12 +297,13 @@ document.addEventListener('DOMContentLoaded', function () {
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
       let selectedEvents = currentEvents.filter(function (event) {
-        //console.log('이벤트구분',event.extendedProps.calendar.toLowerCase());
+        // console.log('이벤트구분',event);
         return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
 
       selectedEvents = selectedEvents.map(function (event) {
         let eventType = event.extendedProps.calendar.toLowerCase();
+        let guests = event.extendedProps.guests
         let eventuser = event.extendedProps.created_by
         let eventallday = event.allDay
 
@@ -314,10 +315,6 @@ document.addEventListener('DOMContentLoaded', function () {
           eventType = "연차"
         } else if(eventType==="family"){
           eventType = "반차"
-        } else if(eventType==="etc"){
-          eventType = "차량-QM3"
-        } else if(eventType==="spotage"){
-          eventType = "차량-스포티지"
         }
 
         if (eventallday===true) {
@@ -327,7 +324,11 @@ document.addEventListener('DOMContentLoaded', function () {
           eventallday = ''
         }
 
-        event.title = `${eventallday} ${eventType} (${eventuser})`;
+        if (guests.length > 0) {
+          guests = "외 " + guests.length + "명"
+        }
+
+        event.title = `${eventallday} ${eventType} (${eventuser} ${guests})`;
 
         return event;
       });
