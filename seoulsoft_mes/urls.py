@@ -49,6 +49,7 @@ from api.attendance.views import *
 from api.corporate_vehicle.views import *
 from api.excel.views import *
 from api.business.views import *
+
 from web.views import *
 
 from django.conf import settings
@@ -195,6 +196,8 @@ urlpatterns = [
                   #출장관리
                   path('admins/business', business_main_page.as_view(), name="BusinessMain"),
 
+                  #조직도
+                  path('admins/organization', organization_page, name='Organization'),
 
                   # 프로젝트관리
                   path('admins/project_main', project_main_page, name="ProjectMain"),

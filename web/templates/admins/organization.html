@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    {% include 'admins/admin_header.html' %}
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+</head>
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px; padding-bottom: 30px;">
+                <div class="card-body d-flex flex-column flex-md-row justify-content-between p-0 pt-4">
+                    <div class="app-academy-md-25 card-body py-0">
+
+                      <img src="{% static 'sneat/assets/img/illustrations/bulb-light.png' %}" class="img-fluid app-academy-img-height scaleX-n1-rtl" alt="Bulb in hand" data-app-light-img="illustrations/bulb-light.png" data-app-dark-img="illustrations/bulb-dark.png" height="90">
+                    </div>
+                    <div class="app-academy-md-50 card-body d-flex align-items-md-center flex-column text-md-center">
+                      <h3 class="card-title mb-4 lh-sm px-md-5 text-center">
+
+                        <span class="text-primary fw-medium text-nowrap">서울소프트 현황</span>
+                      </h3>
+                      <p class="mb-4">
+                        Grow your skill with the most reliable online courses and certifications in marketing,
+                        information technology, programming, and data science.
+                      </p>
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div id="chart_div"></div>
+                      </div>
+                    </div>
+                    <div class="app-academy-md-25 d-flex align-items-end justify-content-end">
+                      <img src="{% static 'sneat/assets/img/illustrations/pencil-rocket.png' %}" alt="pencil rocket" height="188" class="scaleX-n1-rtl">
+                    </div>
+                  </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<script type="text/javascript">
+    let add_list = [];
+    let first_text;
+    let depart_list = [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:oblique; width: 100px;">대표이사</div>'},
+           '',''];
+    add_list.push(depart_list);
+    // 부서목록 만들기
+    {% for depart in departs %}
+
+        add_list.push([{'v':'{{ depart.id }}', 'f':'<div style="color:blue; font-style:bold; width: 100px;">{{ depart.name }}</div>'},
+           'ceo',''])
+
+
+    {% endfor %}
+
+    //부서 직원 목록 만들기
+    {% for user in users %}
+        second_text = ''
+
+        {% if forloop.first %}
+        first_text = '{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>'
+        position_text = '{{ user.department_position_id }}'
+
+        add_list.push([first_text, position_text, ''])
+        {% else %}
+
+            current_podition = '{{ user.department_position_id }}'
+            second_text = '{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>'
+            if (position_text == current_podition){
+
+                add_list.push([second_text, first_text, ''])
+            }else{
+                add_list.push(['{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>', '{{ user.department_position_id }}', ''])
+            }
+            first_text = second_text;
+            position_text = current_podition;
+        {% endif %}
+
+
+    {% endfor %}
+
+      google.charts.load('current', {packages:["orgchart"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('string', 'Manager');
+        data.addColumn('string', 'ToolTip');
+
+        data.addRows(add_list);
+        // For each orgchart box, provide the name, manager, and tooltip to show.
+        {% comment %}data.addRows([
+          [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:italic">대표이사</div>'},
+           '', 'The CEO'],
+          [{'v':'D1', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>전략기획본부</span></div>'},
+           'ceo', ''],
+          [{'v':'D2', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>스마트사업본부</span></div>'},
+           'ceo', ''],
+          [{'v':'D3', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>개발1팀</span></div>'},
+           'ceo', ''],
+          [{'v':'D4', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>개발2팀</span></div>'},
+           'ceo', ''],
+          [{'v':'D5', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>모빌리티본부</span></div>'},
+           'ceo', ''],
+          [{'v':'F0', 'f':'김보미<div style="color:red; font-style:italic; width: 100px">Team Manger</div>'},
+           'ceo', ''],
+
+            ['고성호<div style="color:red; font-style:italic;">General Manger</div>', 'D1', ''],
+            ['김목화<div style="color:red; font-style:italic;">Team Manger</div>', '고성호<div style="color:red; font-style:italic;">General Manger</div>', ''],
+            ['김진란', '김목화<div style="color:red; font-style:italic;">Team Manger</div>', '']
+        ]);{% endcomment %}
+
+
+
+        // Create the chart.
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+        // Draw the chart, setting the allowHtml option to true for the tooltips.
+        chart.draw(data, {'allowHtml':true});
+      }
+   </script>
+</html>
