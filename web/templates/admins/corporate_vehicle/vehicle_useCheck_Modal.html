@@ -132,7 +132,7 @@
 
     $('#useCheckAdd_btn').click(function (e) {
         e.preventDefault();
-        console.log('eve_id', eventId)
+        // console.log('eve_id', eventId)
 
         var useCheck = $('#usecheck_true').is(':checked');
 
@@ -189,7 +189,7 @@
             data: {eventId: eventId},
             success: function (data) {
                 data = JSON.parse(data);
-                console.log('성공?', data)
+                // console.log('성공?', data)
                 var fields = data[0].fields;
                 $('#oiling_check').prop('checked', fields.oiling);
                 $('#distance_input').val(fields.distance);
@@ -199,7 +199,12 @@
                 $('#modal_title').text('사용확인등록 수정')
             },
             error: function (err) {
-                console.log(err)
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
             }
         });
     });

@@ -165,6 +165,12 @@ document.addEventListener('DOMContentLoaded', function () {
           if (instance.isMobile) {
             instance.mobileInput.setAttribute('step', null);
           }
+        },
+         onChange: function (selectedDates, dateStr, instance) {
+          var startDate = $('#eventStartDate').val();
+          var endDate = $('#eventEndDate').val() || $('#eventStartDate').val();
+
+          checkVehicleAvailability(startDate, endDate);
         }
       });
     }
@@ -197,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btnDeleteEvent.classList.remove('d-none');
 
       eventTitle.value = eventToUpdate.title;
+      eventLocation.value = eventToUpdate.extendedProps.location;
       start.setDate(eventToUpdate.start, true, 'Y-m-d');
       eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
       eventToUpdate.end !== null
@@ -212,8 +219,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var eventVehicleCode = eventToUpdate.extendedProps.vehicle;
       var startDate = $('#eventStartDate').val();
       var endDate = $('#eventEndDate').val();
-      console.log('startDate', startDate)
-      console.log('endDate', endDate)
+      // console.log('startDate', startDate)
+      // console.log('endDate', endDate)
 
       checkVehicleAvailability(startDate, endDate, eventVehicleCode);
 
@@ -365,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
       dateClick: function (info) {
-        console.log('info', info)
+        // console.log('info', info)
         let date = moment(info.date).format('YYYY-MM-DD');
         resetValues();
         bsAddEventSidebar.show();

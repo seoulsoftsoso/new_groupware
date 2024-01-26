@@ -34,7 +34,7 @@ let events_data = []
 
                       events_data.push(obj);
                   }
-                  console.log('obj', events_data)
+                  // console.log('obj', events_data)
                   if (typeof displayData === "function") {
                       displayData(events_data);
                   }
