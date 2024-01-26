@@ -1,6 +1,6 @@
 from datetime import date
 
-from django.db.models import Count, Q, Case, When, IntegerField
+from django.db.models import Count, Q, Case, When, IntegerField, F
 from django.db.models.functions import TruncDate
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -165,6 +165,23 @@ def admin_boardEdit_page(request, board_id):
     }
 
     return render(request, 'admins/board/edit.html', context)
+
+
+def organization_page(request):
+    depart = CodeMaster.objects.filter(group_id=1).values('id', 'code', 'name')
+
+    users = UserMaster.objects.filter(
+        is_active=True, department_position_id__isnull=False
+    ).prefetch_related('job_position').order_by(
+        F('department_position_id').asc(nulls_last=True),
+        F('job_position_id').asc(nulls_last=True)
+    ).values('id', 'username', 'department_position_id', 'job_position__explain')
+    context = {
+        'departs': depart,
+        'users': users
+    }
+
+    return render(request, 'admins/organization.html', context)
 
 
 def project_main_page(request):
