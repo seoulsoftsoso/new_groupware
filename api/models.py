@@ -319,6 +319,8 @@ class Participant(Model):
 class CorporateMgmt(Model):
     event_mgm = models.ForeignKey('EventMaster', models.CASCADE, null=False, verbose_name='차량정보 매핑')
     oiling = models.BooleanField(default=False, null=False, verbose_name='주유여부')  # True:주유, Fasle: 주유안함
+    oiling_cost = models.IntegerField(null=True, verbose_name='주유금액')
     distance = models.IntegerField(default=1, null=False, verbose_name='주행거리')  # 단위 Km
+    total_distance = models.IntegerField(default=1, null=False, verbose_name='누적주행거리')
     maintenance = models.TextField(null=True, verbose_name='정비내역')
     etc = models.CharField(max_length=256, null=True, verbose_name='기타')
