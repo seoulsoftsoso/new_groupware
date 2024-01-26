@@ -52,17 +52,19 @@
 <script type="text/javascript">
     let add_list = [];
     let first_text;
-    let depart_list = [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:italic">대표이사</div>'},
+    let depart_list = [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:oblique; width: 100px;">대표이사</div>'},
            '',''];
     add_list.push(depart_list);
+    // 부서목록 만들기
     {% for depart in departs %}
 
-        add_list.push([{'v':'{{ depart.id }}', 'f':'<div style="color:red; font-style:italic">{{ depart.name }}</div>'},
+        add_list.push([{'v':'{{ depart.id }}', 'f':'<div style="color:blue; font-style:bold; width: 100px;">{{ depart.name }}</div>'},
            'ceo',''])
 
 
     {% endfor %}
 
+    //부서 직원 목록 만들기
     {% for user in users %}
         second_text = ''
 
