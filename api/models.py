@@ -309,6 +309,7 @@ class EventMaster(Model):
                                    verbose_name='수정자')
     update_at = models.DateTimeField(null=True, auto_now_add=True)
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
+    etc = models.TextField(null=True, verbose_name='비고') # 비고란 (외부참석자 등 특이사항)
 
 
 class Participant(Model):
