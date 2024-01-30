@@ -157,7 +157,7 @@
 </body>
 {% include 'admins/admin_footer.html' %}
 <script>
-    var taginput = document.querySelector('input[name=TagifyUserListEdit]');
+    var taginput = document.querySelector('input[name=TagifyUserList]');
     var tagify = new Tagify(taginput);
     var eventId;
 
@@ -176,10 +176,47 @@
         eventId = $(this).data('id');
         tagify.removeAllTags();
 
-        var modal = $('#basicModal');
-        modal.on('hidden.bs.modal', function () {
-            $('#eventLocation').val('');
-        });
+        $.ajax({
+            url: "{% url 'businessEditModalData' %}",
+            type: "GET",
+            data: {
+                'id': eventId,
+            },
+            success: function (response) {
+                console.log('res', response)
+                $('#eventStartDate').val(response.start_date)
+                $('#eventEndDate').val(response.end_date)
+                if (response.allDay) {
+                    $('.allDay-switch').prop('checked', true);
+                } else {
+                    $('.allDay-switch').prop('checked', false);
+                }
+                if (response.participants.length > 0) {
+                    var guests = response.participants.map(function (guest) {
+                        return {
+                            value: guest.cuser_id,
+                            avatar: guest.cuser_department,
+                            name: guest.cuser_username,
+                            email: guest.cuser_position
+                        };
+                    });
+                    tagify.addTags(guests);
+                }
+                $('#eventLocation').val(response.location)
+                $('#eventDescription').val(response.description)
+                if (response.business_pair != null) {
+                    $('#customCheckTemp3').prop('checked', true)
+                    checkVehicleAvailability(response.start_date, response.end_date, response.vehicle);
+                } else {
+                    $('#customCheckTemp3').prop('checked', false)
+                    $('#carCheck').hide();
+                }
+
+                $('#business_add_btn').hide();
+                $('#business_edit_btn').show();
+                $('#business_delete_btn').show();
+            }
+        })
     });
 
 

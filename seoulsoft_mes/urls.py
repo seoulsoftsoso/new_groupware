@@ -196,6 +196,7 @@ urlpatterns = [
 
                   #출장관리
                   path('admins/business', business_main_page.as_view(), name="BusinessMain"),
+                  path('admins/business/edit_getdata', BusinessEditModal.as_view(), name="businessEditModalData"),
 
                   #조직도
                   path('admins/organization', organization_page, name='Organization'),

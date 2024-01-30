@@ -118,7 +118,7 @@ def check_in(request):
 
         # 지각시간
         latenessTime = None
-        if current_time.hour > 10:
+        if current_time.hour > 10 or (current_time.hour == 10 and current_time.minute > 0):
             latenessTime = cal_latenessTime(current_time)
             # print('지각 : ', latenessTime)
 

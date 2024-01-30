@@ -115,11 +115,10 @@
                      </div>
 
                     <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-label-secondary"
-                                data-bs-dismiss="modal">취소
-                        </button>
-                        <button type="button" class="btn btn-primary" id="business_add">등록완료</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="business_add_btn">등록완료</button>
+                        <button type="submit" class="btn btn-primary" id="business_edit_btn" style="display: none">수정</button>
+                        <button type="button" class="btn btn-danger" id="business_delete_btn" style="display: none">삭제</button>
                     </div>
                 </div>
             </div>
@@ -158,7 +157,7 @@
         });
     });
 
-    $(document).on('click', '#business_add', function(e) {
+    $(document).on('click', '#business_add_btn', function(e) {
         e.preventDefault()
 
         var checkbox = document.querySelector('.allDay-switch');
@@ -213,6 +212,74 @@
                      }
                  });
         });
+    })
+
+    $(document).on('click', '#business_edit_btn', function(e) {
+        e.preventDefault();
+
+        eventData = {
+            updateEventId: eventId,
+            eventTitle: '',
+            eventLabel: "Business",
+            eventStartDate: $("#eventStartDate").val(),
+            eventEndDate: $("#eventEndDate").val(),
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value),
+            vehicleSelect : $("#vehicle_select").val()
+        };
+
+        console.log('edata', eventData)
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(eventData),
+            success: function () {
+                console.log('수정데이터', eventData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 수정되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        });
+
+    })
+
+    $(document).on('click', '#business_delete_btn', function(e) {
+        e.preventDefault()
+
+        var formData = {
+            eventId: eventId
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function () {
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 삭제되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        });
+
     })
 </script>
 

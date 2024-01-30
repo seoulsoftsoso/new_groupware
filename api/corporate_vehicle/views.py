@@ -79,7 +79,7 @@ class CorporateMgmtCreateView(View):
 
             event_mgm = get_object_or_404(EventMaster, id=data['eventId'])
 
-            mgmt_add, created = CorporateMgmt.objects.update_or_create(
+            CorporateMgmt.objects.update_or_create(
                 event_mgm=event_mgm,
                 defaults={
                     'oiling': data['oiling'] == 'true',
@@ -90,11 +90,6 @@ class CorporateMgmtCreateView(View):
                     'etc': data['etc'],
                 }
             )
-
-            if created:
-                print("New CorporateMgmt created.")
-            else:
-                print("Existing CorporateMgmt updated.")
 
             return JsonResponse({"success": True}, status=200)
         else:

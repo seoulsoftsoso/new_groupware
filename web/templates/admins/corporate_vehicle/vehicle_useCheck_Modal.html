@@ -225,10 +225,11 @@
             data: {eventId: eventId},
             success: function (data) {
                 data = JSON.parse(data);
-                console.log('성공?', data)
+                // console.log('성공?', data)
                 var fields = data[0].fields;
                 $('#oiling_check').prop('checked', fields.oiling).change();
                 $('#distance_input').val(fields.distance);
+                $('#oiling_cost').val(fields.oiling_cost);
                 if(fields.total_distance===0){
                     console.log('here')
                     $('#total_distance_input').val('');

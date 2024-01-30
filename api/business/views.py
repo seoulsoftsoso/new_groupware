@@ -42,3 +42,30 @@ class business_main_page(ListView):
 
         return context
 
+
+class BusinessEditModal(View):
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get('id')
+
+        qs = EventMaster.objects.prefetch_related('participant_set').get(id=id)
+
+        participants = [{
+            'cuser_id': participant.cuser.id,
+            'cuser_department': participant.cuser.department_position.name,
+            'cuser_username': participant.cuser.username,
+            'cuser_position': participant.cuser.job_position.name
+        } for participant in qs.participant_set.all()]
+
+        data = {
+            'start_date': qs.start_date.strftime('%Y-%m-%d %H:%M'),
+            'end_date': qs.end_date.strftime('%Y-%m-%d %H:%M'),
+            'allDay': qs.allDay,
+            'participants': participants,
+            'location': qs.location,
+            'description': qs.description,
+            'etc': qs.etc,
+            'vehicle': qs.vehicle.code if qs.vehicle else None,
+            'business_pair': qs.business_pair
+        }
+
+        return JsonResponse(data)
