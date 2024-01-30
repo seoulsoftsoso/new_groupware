@@ -13,7 +13,8 @@ import json
 
 class get_eventDataAll(View):
     def get(self, request, *args, **kwargs):
-        qs = EventMaster.objects.filter(delete_flag='N').select_related('create_by').prefetch_related(Prefetch('participant_set', queryset=Participant.objects.select_related('cuser'))).order_by('-id')
+        qs = EventMaster.objects.filter(delete_flag='N').select_related('create_by').prefetch_related(
+            Prefetch('participant_set', queryset=Participant.objects.select_related('cuser'))).order_by('-id')
         data = []
 
         for event in qs:
@@ -68,7 +69,10 @@ class get_eventDataAll(View):
 
             # 참가자
             tagList = request.POST.get('tagList')
-            tagList = json.loads(tagList)
+            if tagList is not None:
+                tagList = json.loads(tagList)
+            else:
+                tagList = []
 
             # 법인차량
             vehicleCode = request.POST.get('vehicleSelect')

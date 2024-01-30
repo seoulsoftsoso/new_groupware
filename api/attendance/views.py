@@ -156,6 +156,7 @@ def check_out(request):
 
 class admin_work_schedule_page(ListView):
     template_name = 'admins/attendance/work_schedule.html'
+    paginate_by = 15
 
     def get_queryset(self):
         search_title = self.request.GET.get('search-title', None)

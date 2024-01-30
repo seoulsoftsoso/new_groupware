@@ -23,14 +23,12 @@
                 <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px; font-family: Pretendard;">출장관리</strong>
 
                 <div class="card-body">
-                    <form class="dt_adv_search" method="get">
-                        {% csrf_token %}
+                    <form method="get">
                         <div class="row">
                             <div class="col-12">
-                                <div class="row g-3">
-
+                                <div class="row">
                                     <!-- 시작 날짜와 끝 날짜 -->
-                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 30px;">
+                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 20px;">
                                         <div class="input-group input-daterange">
                                             <input id="datepicker_to" placeholder="시작 날짜" class="form-control"
                                                    name="search-to"
@@ -41,46 +39,47 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 30px;">
-                                        <div class="input-group" style="display: flex; flex-direction: row;">
-
+                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 20px;">
+                                        <div class="row" style="display: flex; flex-direction: row;">
                                             <!-- 검색 대상 선택 -->
                                             <div class="col-md-4 col-12 mb-3">
                                                 <select id="selectpickerBasic" class="selectpicker form-control">
-                                                    <option value="name" {% if 'name' in search_title %}selected {% endif %}>성명</option>
-                                                    <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
-                                                    <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
+                                                    <option value="name"
+                                                            {% if 'name' in search_title %}selected {% endif %}>성명
+                                                    </option>
+                                                    <option value="department"
+                                                            {% if 'department' in search_title %}selected {% endif %}>부서
+                                                    </option>
                                                 </select>
                                             </div>
 
                                             <!-- 검색어 입력과 검색 버튼 -->
                                             <div class="col-md-8 col-12 mb-3"
                                                  style="display: flex; flex-direction: row;">
-                                                <input type="text" placeholder="검색" class="form-control" id="form-search" name="search-content" value="{{ search_content | default_if_none:'' }}"/>
+                                                <input type="text" placeholder="검색" class="form-control"
+                                                       id="form-search" name="search-content"
+                                                       value="{{ search_content | default_if_none:'' }}"/>
                                                 <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">검색</button>
                                             </div>
                                         </div>
                                     </div>
-
-                                 <!-- 엑셀 다운로드 버튼 -->
-                                      <div class="d-flex justify-content-end">
-                                          <button
-                                                  type="button"
-                                                  style="width: 300px;"
-                                                  id="workHistory-xlsx-down"
-                                                  class="btn btn-outline-dark"
-                                                  data-bs-toggle="modal"
-                                                  data-bs-target="#basicModal">
-                                              <i class='bx bxs-briefcase-alt-2'></i>출장등록
-                                          </button>
-                                          {% include 'admins/business/business_add_Modal.html' %}
-                                      </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button
+                            type="button"
+                            style="width: 250px; margin: 0 30px 30px 0;"
+                            id="workHistory-xlsx-down"
+                            class="btn btn-outline-dark"
+                            data-bs-toggle="modal"
+                            data-bs-target="#basicModal">
+                        <i class='bx bxs-briefcase-alt-2'></i>출장등록
+                    </button>
+                    {% include 'admins/business/business_add_Modal.html' %}
                 </div>
 
 
@@ -89,34 +88,58 @@
                     <table class="dt-multilingual table border-top">
                         <thead>
                         <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
-                            <th style="font-size: medium; font-weight: bold">일정</th>
+                            <th style="font-size: medium; font-weight: bold">출타 일정</th>
+                            <th style="font-size: medium; font-weight: bold">복귀 일정</th>
+                            <th style="font-size: medium; font-weight: bold">등록자</th>
                             <th style="font-size: medium; font-weight: bold">참석자</th>
                             <th style="font-size: medium; font-weight: bold">장소</th>
                             <th style="font-size: medium; font-weight: bold">목적</th>
                             <th style="font-size: medium; font-weight: bold">법인차량</th>
                             <th style="font-size: medium; font-weight: bold">비고</th>
+                            <th></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        {% for obj in event_qs %}
+                            <tbody>
                             <tr style="text-align: center" data-toggle="modal" data-target="#editModal">
-                                <td>2024.01.01</td>
-                                <td>김진란</td>
-                                <td>서울소프트 사무실</td>
-                                <td>2024 ooo지원사업 ooo관련 ooo사용</td>
-                                <td>사용</td>
-                                <td>출장취소</td>
+                                <td>{{ obj.start_date|date:"Y-m-d a g:i" }}</td>
+                                <td>{{ obj.end_date|date:"Y-m-d a g:i" }}</td>
+                                <td>{{ obj.create_by }}</td>
+                                <td>
+                                    {% for participant in obj.participant_set.all %}
+                                        {{ participant.cuser }}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ obj.location }}</td>
+                                <td>{{ obj.description }}</td>
+                                {% if obj.id == obj.business_pair %}
+                                    <td>사용</td>
+                                {% else %}
+                                    <td>미사용</td>
+                                {% endif %}
+                                <td>{{ obj.etc|default:"" }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                               data-bs-target="#basicModal"
+                                               id="editModal"
+                                               data-id="{{ obj.id }}"
+                                               href="javascript:void(0);">
+                                                <i class="bx bx-edit-alt me-1"></i> 편집</a>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr style="text-align: center">
-                                <td>2024.01.01 ~ 2024.01.03</td>
-                                <td>김진란,홍재성</td>
-                                <td>서울소프트 사무실</td>
-                                <td>2024 ooo지원사업 ooo관련 ooo사용</td>
-                                <td>미사용</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
+                            </tbody>
+                        {% endfor %}
+
                     </table>
-                    {% include 'admins/business/business_edit_Modal.html' %}
                 </div>
               <div style="margin-bottom: 30px; margin-top: 50px;">
                   {% include 'admins/paging.html' %}
@@ -127,20 +150,40 @@
         </div>
     </div>
 </div>
-</body>
 <script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
+<script src="{% static 'js/api_corporate_vehicle_check.js' %}"></script>
+</body>
+{% include 'admins/admin_footer.html' %}
 <script>
+    var taginput = document.querySelector('input[name=TagifyUserListEdit]');
+    var tagify = new Tagify(taginput);
+    var eventId;
+
     $(function () {
         $("#datepicker_to").datepicker({format: 'yyyy-mm-dd'});
         $("#datepicker_from").datepicker({format: 'yyyy-mm-dd'});
     });
 
     $(document).ready(function () {
-
+        $.ajaxSetup({
+            headers: {"X-CSRFToken": '{{csrf_token}}'}
+        });
     });
 
+    $('.dropdown-item').click(function () {
+        eventId = $(this).data('id');
+        tagify.removeAllTags();
+
+        var modal = $('#basicModal');
+        modal.on('hidden.bs.modal', function () {
+            $('#eventLocation').val('');
+        });
+    });
+
+
+
 </script>
-{% include 'admins/admin_footer.html' %}
+
 </html>

@@ -7,12 +7,28 @@
    #change_clr:active {
        background-color: #9da8b5;
    }
+
+   .selected {
+       background-color: #f5f5f9;
+   }
+
+   .menu-sub {
+       width : 90%;
+   }
+
+    #change_clr.menu-link.menu-toggle::after {
+        display: none;
+   }
 </style>
 <body>
      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo" style="margin-left: 25px; margin-bottom: 10px; ">
-                <a href="{% url 'adminIndex' %}" class="app-brand-link">
+                <a href="{% url 'adminIndex' %}" class="app-brand-link main-page">
                     <img src="{% static 'img/logo.jpg' %}">
+                </a>
+
+                <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+                    <i class="bx bx-chevron-left bx-sm align-middle"></i>
                 </a>
             </div>
 
@@ -48,18 +64,18 @@
                      <div style="border-bottom: #9da8b5 solid 1px; margin-top: 30px; margin-left: 25px; width: 80%;"></div>
                 <div class="menu-inner-shadow"></div>
                 <ul class="menu-inner py-1 ps" style="margin-left: 25px;">
-                    <li class="menu-item" style="margin-top: 30px; width: 100%;">
+                    <li class="menu-item normal-menu" id="change_clr" style="margin-top: 30px; width: 90%;">
                         <a href="{% url 'adminNotice' %}" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/icon-park-outline_volume-notice.png' %}" style="margin-right: 8px"> <!-- Font Awesome bell icon -->
                                 <span data-i18n="공지사항">공지사항</span>
                             </div>
                         </a>
                     </li>
-                     <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                     <li class="menu-item normal-menu" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="{%  url 'adminBoard' %}" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px">
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/wpf_note.png' %}" style="margin-right: 8px">
                                 <span data-i18n="게시판">게시판</span>
@@ -93,27 +109,27 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item normal-menu" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/icon-park-outline_vacation.png'%}" style="margin-right: 8px">
                                 <span data-i18n="휴가관리">휴가관리</span>
                             </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item normal-menu" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="{% url 'BusinessMain' %}" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/material-symbols_business-center-outline.png' %}" style="margin-right: 8px">
                                 <span data-i18n="출장관리">출장관리</span>
                             </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item normal-menu" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="{% url 'vehicleMain' %}" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/ri_car-line.png' %}" style="margin-right: 8px">
                                 <span data-i18n="법인차량관리">법인차량관리</span>
@@ -160,36 +176,36 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item normal-menu" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/uil_calender.png' %}" style="margin-right: 8px">
                                 <span data-i18n="캘린더">캘린더</span>
                             </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/lets-icons_paper-alt.png' %}" style="margin-right: 8px">
                                 <span data-i18n="전자결재">전자결재</span>
                             </div>
                         </a>
                     </li>
-                    <li class="menu-item" style="margin-top: 10px; width: 100%;">
+                    <li class="menu-item" id="change_clr" style="margin-top: 10px; width: 90%;">
                         <a href="" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/ph_floppy-disk-bold.png' %}" style="margin-right: 8px">
                                 <span data-i18n="자료실">자료실</span>
                             </div>
                         </a>
                     </li>
-                   <li class="menu-item" style="margin-top: 10px; margin-bottom: 30px; width: 100%;">
+                   <li class="menu-item" id="change_clr" style="margin-top: 10px; margin-bottom: 30px; width: 90%;">
                         <a href="{% url 'Organization' %}" class="menu-link"
-                           style="display: block; text-align: left; margin-left: -10px" id="change_clr">
+                           style="display: block; text-align: left; margin-left: -10px" >
                             <div class="text-truncate">
                                 <img src="{% static 'admin/img/indexImg/icon-park-outline_system.png' %}" style="margin-right: 8px">
                                 <span data-i18n="조직관리">조직관리</span>

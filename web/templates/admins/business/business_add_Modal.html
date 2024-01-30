@@ -15,25 +15,33 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="row">
-                        <div class="col mb-3">
-                            <div class="col-md-12 col-12">
-                                <label for="nameBasic" class="form-label">*일정</label>
-                                <div class="mb-3 d-flex flex-row">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="flatpickr-start" placeholder="시작 날짜"/>
-                                        <input type="text" class="form-control" id="flatpickr-end" placeholder="끝 날짜"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="switch" style="margin-left: 20px; margin-top: 7px;">
-                                        <input type="checkbox" class="switch-input allDay-switch"/>
-                                        <span class="switch-toggle-slider"><span class="switch-on"></span><span class="switch-off"></span></span>
-                                        <span class="switch-label">All Day</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="eventStartDate">시작날짜</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="eventStartDate"
+                                name="eventStartDate"
+                                placeholder="시작 날짜"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="eventEndDate">종료날짜</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="eventEndDate"
+                                name="eventEndDate"
+                                placeholder="종료 날짜"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="switch">
+                            <input type="checkbox" class="switch-input allDay-switch"/>
+                            <span class="switch-toggle-slider">
+                                <span class="switch-on"></span>
+                                <span class="switch-off"></span>
+                              </span>
+                            <span class="switch-label">All Day</span>
+                        </label>
                     </div>
 
 
@@ -48,58 +56,33 @@
                         </div>
                     </div>
 
-                     <div class="row">
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">*외부참석자</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
-                                   class="form-control"
-                                   placeholder="외부참석자"
-                                   required/>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*장소</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
+                            <input type="text" id="eventLocation"
+                                   name="eventLocation"
                                    class="form-control"
-                                   placeholder="장소"
-                                   required/>
+                                   placeholder="장소" required/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*목적</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
+                            <input type="text" id="eventDescription"
+                                   name="eventDescription"
                                    class="form-control"
-                                   placeholder="목적"
-                                   required/>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">*관련사업명</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
-                                   class="form-control"
-                                   placeholder="목적"
-                                   required/>
+                                   placeholder="목적" required/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*비고</label>
-                            <input type="text" id="board_group_name"
-                                   name="board_group_name"
+                            <input type="text" id="eventEtc"
+                                   name="eventEtc"
                                    class="form-control"
-                                   placeholder="비고"
-                                   required/>
+                                   placeholder="비고"/>
                         </div>
                     </div>
 
@@ -120,16 +103,14 @@
                      <div class="row" id="carCheck">
                         <div class="col mb-3">
                             <label for="nameBasic" class="form-label">*사용차량</label>
+
                             <select
                               class="select2 select-event-guests form-select"
                               style="width: 250px;"
                               id="vehicle_select"
-                              name="vehicle_select"
-                              multiple>
-                              <option value="Jane Foster">QM3</option>
-                              <option value="Donna Frank">스포티지</option>
-                              <option value="Donna Frank">기타</option>
+                              name="vehicle_select">
                             </select>
+                            <p for="nameBasic" class="form-label" style="color: red">날짜와 시간을 입력하셔야 차량을 조회할 수 있습니다.</p>
                         </div>
                      </div>
 
@@ -138,9 +119,7 @@
                                 class="btn btn-label-secondary"
                                 data-bs-dismiss="modal">취소
                         </button>
-                        <button type="button" class="btn btn-primary"
-                                id="addBoardBtn">등록완료
-                        </button>
+                        <button type="button" class="btn btn-primary" id="business_add">등록완료</button>
                     </div>
                 </div>
             </div>
@@ -149,14 +128,23 @@
 </form>
 <script>
     $(function () {
-        $("#flatpickr-start").flatpickr({
+        $("#eventStartDate").flatpickr({
             dateFormat: 'Y-m-d H:i',
             enableTime: true
         });
-        $("#flatpickr-end").flatpickr({
+        $("#eventEndDate").flatpickr({
             dateFormat: 'Y-m-d H:i',
             enableTime: true
         });
+    });
+
+    $('#eventStartDate, #eventEndDate').on('change', function () {
+        var startDate = $("#eventStartDate").val();
+        var endDate = $("#eventEndDate").val();
+
+        if (startDate && endDate) {
+            checkVehicleAvailability(startDate, endDate);
+        }
     });
 
     $(document).ready(function () {
@@ -169,5 +157,62 @@
             }
         });
     });
+
+    $(document).on('click', '#business_add', function(e) {
+        e.preventDefault()
+
+        var checkbox = document.querySelector('.allDay-switch');
+        var startdate = $("#eventStartDate").val();
+        var enddate = $("#eventEndDate").val();
+
+        if (startdate > enddate){
+             Swal.fire({
+                title: 'Fail!',
+                text: '종료날짜를 확인해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
+        if (!checkbox.checked) {
+            if (startdate.length===10  || enddate.length===10){
+            Swal.fire({
+                title: 'Fail!',
+                text: '날짜를 클릭하여 시간을 선택해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+            }
+        }
+
+        var formData = {
+            eventTitle: ' ',
+            eventLabel: "Business",
+            eventStartDate: startdate,
+            eventEndDate: enddate,
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value),
+            vehicleSelect: $("#vehicle_select").val()
+        }
+
+        console.log('f', formData)
+
+        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
+                Swal.fire({
+                title: 'Success',
+                text: '일정이 등록되었습니다!',
+                icon: 'success',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+        });
+    })
 </script>
 

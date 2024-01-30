@@ -15,6 +15,7 @@ from api.models import UserMaster, CodeMaster, CorporateMgmt, EventMaster
 
 class CorporateMgmtListView(ListView):
     template_name = 'admins/corporate_vehicle/vehicle_main.html'
+    paginate_by = 15
 
     def get_queryset(self):
         self.today = timezone.now().date()
@@ -55,7 +56,8 @@ class CorporateMgmtListView(ListView):
         context = super().get_context_data(**kwargs)
         context['event_qs'] = context['object_list']
         context['today_qs'] = self.original_qs.filter(start_date__date__lte=self.today, end_date__date__gte=self.today)
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
+        # page
+        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
 
         return context
 
