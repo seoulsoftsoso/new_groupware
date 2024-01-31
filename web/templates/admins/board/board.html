@@ -93,7 +93,7 @@
                                                             style="margin-bottom: 10px;" onclick="renderlist({{ cm.id }})">
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </button>
-                                                    {% if requset.user.is_superuser %}
+                                                    {% if request.COOKIES.is_superuser == 'true' %}
                                                         <div class="dropdown">
                                                             <button type="button"
                                                                     class="btn p-0 dropdown-toggle hide-arrow"

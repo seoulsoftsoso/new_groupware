@@ -34,7 +34,7 @@
                 <!--공지사항 제목-->
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: x-large; margin-left: 40px">{{ notice.title }}</span>
-                    {% if request.user.is_superuser or notice.created_by == request.user.id %}
+                    {% if request.COOKIES.is_superuser == 'true' or notice.created_by == request.user.id %}
                     <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
                             <img src="{% static 'admin/img/indexImg/menu.png' %}">
