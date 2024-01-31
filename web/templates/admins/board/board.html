@@ -93,23 +93,25 @@
                                                             style="margin-bottom: 10px;" onclick="renderlist({{ cm.id }})">
                                                         <span style="letter-spacing: 1px;">{{ cm.name }}</span>
                                                     </button>
-                                                    <div class="dropdown">
-                                                        <button type="button"
-                                                                class="btn p-0 dropdown-toggle hide-arrow"
-                                                                data-bs-toggle="dropdown">
-                                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" data-bs-toggle="modal"
-                                                               data-bs-target="#editModal{{ cm.id }}"
-                                                               href="javascript:void(0);">
-                                                                <i class="bx bx-edit-alt me-1"></i> 수정</a>
-                                                            <a class="dropdown-item" data-bs-toggle="modal"
-                                                               data-bs-target="#deleteModal{{ cm.id }}"
-                                                               href="javascript:void(0);">
-                                                                <i class="bx bx-trash me-1"></i> 삭제</a>
+                                                    {% if requset.user.is_superuser %}
+                                                        <div class="dropdown">
+                                                            <button type="button"
+                                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                                    data-bs-toggle="dropdown">
+                                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                                   data-bs-target="#editModal{{ cm.id }}"
+                                                                   href="javascript:void(0);">
+                                                                    <i class="bx bx-edit-alt me-1"></i> 수정</a>
+                                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                                   data-bs-target="#deleteModal{{ cm.id }}"
+                                                                   href="javascript:void(0);">
+                                                                    <i class="bx bx-trash me-1"></i> 삭제</a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    {% endif %}
                                                 </li>
                                                 {% include 'admins/board/groupEditModal.html' %}
                                                 {% include 'admins/board/groupDeleteModal.html' %}

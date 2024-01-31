@@ -38,19 +38,21 @@
 
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: x-large; margin-left: 40px">{{ board.title }}</span>
-                    <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
-                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
-                            <img src="{% static 'admin/img/indexImg/menu.png' %}">
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="editItem();">
-                                <i class="bx bx-edit-alt me-1"></i> 수정
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0);" onclick="deleteItem();">
-                                <i class="bx bx-trash me-1"></i> 삭제
-                            </a>
+                    {% if request.user.is_superuser or request.user.user_id == board.created_by %}
+                        <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
+                                <img src="{% static 'admin/img/indexImg/menu.png' %}">
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="editItem();">
+                                    <i class="bx bx-edit-alt me-1"></i> 수정
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0);" onclick="deleteItem();">
+                                    <i class="bx bx-trash me-1"></i> 삭제
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
 
                 <div style="margin-left: 30px; margin-bottom: 100px;">

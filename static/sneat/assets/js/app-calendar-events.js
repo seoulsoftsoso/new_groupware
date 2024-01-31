@@ -24,6 +24,7 @@ let events_data = []
                               calendar: item.event_type,
                               location: item.location,
                               description: item.description,
+                              create_by_id: item.create_by_id,
                               created_by: item.create_by__username,
                               guests: participants,
                               vehicle: item.vehicleSelect,

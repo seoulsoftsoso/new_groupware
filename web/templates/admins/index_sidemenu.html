@@ -224,10 +224,10 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="{% url 'adminIndex' %}" class="app-brand-link main-page">
-            <img src="{% static 'img/logo.jpg' %}">
+            <img id="index_logo" src="{% static 'img/logo.jpg' %}">
         </a>
 
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto" id="sidebar_small_btn">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
         </a>
     </div>
@@ -411,6 +411,33 @@
     </ul>
 </aside>
 </body>
+<script>
+var index_logo = document.getElementById('index_logo');
+var html_tag = document.documentElement;
+
+$('#sidebar_small_btn').click(() => {
+    html_tag.addEventListener('transitionend', function() {
+        if (html_tag.classList.contains('layout-menu-collapsed')) {
+            index_logo.src = "{% static 'img/logo.png' %}";
+        } else {
+            index_logo.src = "{% static 'img/logo.jpg' %}";
+        }
+    }, { once: true });
+});
+
+
+document.getElementById('layout-menu').addEventListener('mouseover', function() {
+   index_logo.src = "{% static 'img/logo.jpg' %}";
+});
+
+document.getElementById('layout-menu').addEventListener('mouseout', function() {
+   if (html_tag.classList.contains('layout-menu-collapsed')) {
+       index_logo.src = "{% static 'img/logo.png' %}";
+   } else {
+       index_logo.src = "{% static 'img/logo.jpg' %}";
+   }
+});
+</script>
 <script>
     const checkInBtn = document.getElementById('checkInBtn');
     const checkOutBtn = document.getElementById('checkOutBtn');

@@ -109,7 +109,9 @@
                                     <span style="color: red">* {{ fixed_board.title }}</span><br/>
                                 {% endif %}
                                 {% for obj in board %}
-                                    <span>* {{ obj.title }}</span><br/>
+                                    <a href="{% url 'boardDetail' obj.id  %}">
+                                        <span style="color: #697a8d">* {{ obj.title }}</span><br/>
+                                    </a>
                                 {% endfor %}
                             </blockquote>
                         </div>
@@ -332,7 +334,7 @@
 {#                              placeholder="https://www.google.com" />#}
 {#                          </div>#}
                           <div class="mb-3 select2-primary">
-                            <label class="form-label" for="eventGuests">Add Guests</label>
+                            <label class="form-label" for="eventGuests">참석자</label>
                               <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
                           </div>
                           <div class="mb-3">
@@ -358,7 +360,9 @@
                                 Cancel
                               </button>
                             </div>
-                            <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+
+                                    <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+
                           </div>
                         </form>
                       </div>

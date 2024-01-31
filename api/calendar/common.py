@@ -38,6 +38,7 @@ class get_eventDataAll(View):
                 'end_date': event.end_date.isoformat(),
                 'allDay': event.allDay,
                 'event_type': event.event_type,
+                'create_by_id': event.create_by_id,
                 'create_by__username': event.create_by.username,
                 'description': event.description,
                 'location': event.location,

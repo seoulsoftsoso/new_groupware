@@ -119,21 +119,23 @@
                                 {% endif %}
                                 <td>{{ obj.etc|default:"" }}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button"
-                                                class="btn p-0 dropdown-toggle hide-arrow"
-                                                data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" data-bs-toggle="modal"
-                                               data-bs-target="#basicModal"
-                                               id="editModal"
-                                               data-id="{{ obj.id }}"
-                                               href="javascript:void(0);">
-                                                <i class="bx bx-edit-alt me-1"></i> 편집</a>
+                                    {% if request.user.is_superuser or obj.create_by == request.user.user_id %}
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                   data-bs-target="#basicModal"
+                                                   id="editModal"
+                                                   data-id="{{ obj.id }}"
+                                                   href="javascript:void(0);">
+                                                    <i class="bx bx-edit-alt me-1"></i> 편집</a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 </td>
                             </tr>
                             </tbody>
