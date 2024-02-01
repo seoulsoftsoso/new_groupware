@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <meta charset="UTF-8">
      {% include 'admins/admin_header.html' %}
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/animate-css/animate.css' %}"/>
 </head>
 <body>
 
@@ -13,12 +14,354 @@
          <div class="layout-page" style="">
             {% include 'admins/index_header.html' %}
 
-             <p>프로젝트 메인</p>
+            <div class="content-wrapper">
 
-         </div>
+        <!-- Content -->
+
+          <div class="container-xxl flex-grow-1 container-p-y">
+
+<div class="app-academy">
+  <div class="card p-0 mb-4">
+
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header d-flex flex-wrap justify-content-between gap-3">
+      <div class="card-title mb-0 me-1">
+        <h5 class="mb-1">전략기획본부</h5>
+        <p class="text-muted mb-0">총 6개의 프로젝트가 등록되어 있습니다.</p>
+      </div>
+      <div class="d-flex justify-content-md-end align-items-center gap-3 flex-wrap">
+          <span>새로운 프로젝트를 등록해보세요</span>
+          <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add_Modal" id="addModal"><i class="bx bx-plus-circle me-2"></i>등록</button>
+          <button type="button" class="btn rounded-pill btn-icon btn-outline-secondary" data-toggle="modal" data-target="#config_Modal" id="configModal">
+                              <span class="tf-icons bx bx-cog"></span>
+                            </button>
+      </div>
     </div>
+    <div class="card-body">
+      <div class="row gy-4 mb-4">
+         <!-- start project items -->
+        <div class="col-sm-6 col-lg-4">
+          <div class="card p-2 h-100 shadow-none border">
+
+            <div class="card-body p-3 pt-2">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-label-primary">국책지원사업</span>
+                <h6 class="d-flex align-items-center justify-content-center gap-1 mb-0">
+                  종료일 <span class="text-warning"><i class="bx bxs-calendar-alt me-1"></i></span><span class="text-muted">2024년 6월 30일</span>
+                </h6>
+              </div>
+                <a href="#" class="h5"><span class="text-muted">[2023Y4Q]</span><h2 style="color: crimson">버섯소비재시제품개발</h2></a>
+              <p class="mt-2">버섯소비재 시제품 개발 프로젝트를 위한 요약 멘트를 입력 </p>
+              <p class="d-flex align-items-center"><i class="bx bx-user-circle me-2"></i><span class="text-right">PM :  팀장 김목화</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-calendar-plus me-2"></i><span class="text-right">시작일 :  2023년 6월 1일</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>진척도</p>
+              <div class="progress mb-4" style="height: 8px">
+                <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
+                <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50" onclick="">
+                  <i class="bx bx-edit align-middle me-2 "></i><span>수정하기</span>
+                </a>
+                <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="">
+                  <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- end of project items -->
+        <!-- start project items -->
+        <div class="col-sm-6 col-lg-4">
+          <div class="card p-2 h-100 shadow-none border">
+
+            <div class="card-body p-3 pt-2">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-label-primary">국책지원사업</span>
+                <h6 class="d-flex align-items-center justify-content-center gap-1 mb-0">
+                  종료일 <span class="text-warning"><i class="bx bxs-calendar-alt me-1"></i></span><span class="text-muted">2024년 6월 30일</span>
+                </h6>
+              </div>
+              <a href="#" class="h5">[2023Y4Q]버섯소비재시제품개발</a>
+              <p class="mt-2">버섯소비재 시제품 개발 프로젝트를 위한 요약 멘트를 입력 </p>
+              <p class="d-flex align-items-center"><i class="bx bx-user-circle me-2"></i><span class="text-right">PM :  팀장 김목화</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-calendar-plus me-2"></i><span class="text-right">시작일 :  2023년 6월 1일</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>진척도</p>
+              <div class="progress mb-4" style="height: 8px">
+                <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
+                <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50" onclick="">
+                  <i class="bx bx-edit align-middle me-2 "></i><span>수정하기</span>
+                </a>
+                <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="">
+                  <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- end of project items -->
+
+        <!-- start project items -->
+        <div class="col-sm-6 col-lg-4">
+          <div class="card p-2 h-100 shadow-none border">
+
+            <div class="card-body p-3 pt-2">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-label-primary">국책지원사업</span>
+                <h6 class="d-flex align-items-center justify-content-center gap-1 mb-0">
+                  종료일 <span class="text-warning"><i class="bx bxs-calendar-alt me-1"></i></span><span class="text-muted">2024년 6월 30일</span>
+                </h6>
+              </div>
+              <a href="#" class="h5">[2023Y4Q]버섯소비재시제품개발</a>
+              <p class="mt-2">버섯소비재 시제품 개발 프로젝트를 위한 요약 멘트를 입력 </p>
+              <p class="d-flex align-items-center"><i class="bx bx-user-circle me-2"></i><span class="text-right">PM :  팀장 김목화</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-calendar-plus me-2"></i><span class="text-right">시작일 :  2023년 6월 1일</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>진척도</p>
+              <div class="progress mb-4" style="height: 8px">
+                <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
+                <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50" onclick="">
+                  <i class="bx bx-edit align-middle me-2 "></i><span>수정하기</span>
+                </a>
+                <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="">
+                  <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- end of project items -->
+
+        <!-- start project items -->
+        <div class="col-sm-6 col-lg-4">
+          <div class="card p-2 h-100 shadow-none border">
+
+            <div class="card-body p-3 pt-2">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-label-primary">국책지원사업</span>
+                <h6 class="d-flex align-items-center justify-content-center gap-1 mb-0">
+                  종료일 <span class="text-warning"><i class="bx bxs-calendar-alt me-1"></i></span><span class="text-muted">2024년 6월 30일</span>
+                </h6>
+              </div>
+              <a href="#" class="h5"><span class="text-muted">[2023Y4Q]</span>버섯소비재시제품개발</a>
+              <p class="mt-2">버섯소비재 시제품 개발 프로젝트를 위한 요약 멘트를 입력 </p>
+              <p class="d-flex align-items-center"><i class="bx bx-user-circle me-2"></i><span class="text-right">PM :  팀장 김목화</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-calendar-plus me-2"></i><span class="text-right">시작일 :  2023년 6월 1일</span></p>
+              <p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>진척도</p>
+              <div class="progress mb-4" style="height: 8px">
+                <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
+                <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50" onclick="">
+                  <i class="bx bx-edit align-middle me-2 "></i><span>수정하기</span>
+                </a>
+                <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="">
+                  <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          <!-- end of project items -->
+
+
+        <!-- start pagination  -->
+      {% comment %}<nav aria-label="Page navigation" class="d-flex align-items-center justify-content-center">
+        <ul class="pagination">
+          <li class="page-item prev">
+            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevron-left"></i></a>
+          </li>
+          <li class="page-item active">
+            <a class="page-link" href="javascript:void(0);">1</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0);">2</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0);">3</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0);">4</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0);">5</a>
+          </li>
+          <li class="page-item next">
+            <a class="page-link" href="javascript:void(0);"><i class="tf-icon bx bx-chevron-right"></i></a>
+          </li>
+        </ul>
+      </nav>{% endcomment %}
+          <!-- end of pagination  -->
+    </div>
+  </div>
+
+
+
+
 </div>
 
-</body>
+          </div>
+          <!-- / Content -->
+
+
+
+
+
+
+
+
+        </div>
+
+            </div>
+                        <div class="modal-onboarding modal fade animate__animated animate__slideInDown" id="add_Modal" tabindex="-1" aria-modal="true" role="dialog">
+                        <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content text-center">
+                            <div class="modal-header border-0">
+
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body onboarding-horizontal p-0">
+                              <div class="onboarding-media">
+
+                                <img src="{% static 'sneat/assets/img/illustrations/boy-verify-email-light.png' %}" alt="boy-verify-email-light" width="273" class="img-fluid" data-app-dark-img="illustrations/boy-verify-email-dark.png" data-app-light-img="illustrations/boy-verify-email-light.png">
+                              </div>
+                              <div class="onboarding-content mb-0">
+                                <h4 class="onboarding-title text-body">New Project Registration</h4>
+                                <div class="onboarding-info">
+                                  In this example you can see a form where you can request some additional information
+                                  from the customer when they land on the app page.
+                                </div>
+                                <form>
+                                  <div class="row">
+
+                                    <div class="col-lg-6 col-xl-6">
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="pjcode">Project Code</label>
+                        <input id="pjcode" type="text" class="form-control" placeholder="" value="">
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="sdate">시작일</label>
+                        <input id="sdate" type="date" class="form-control" placeholder="" value="">
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="pjtype">Project 유형</label>
+                        <select id="pjtype" class="form-select">
+                            <option value="">국책지원사업</option>
+                            <option value="">정부지원사업</option>
+                            <option value="">기타</option>
+                        </select>
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <div class="mb-3 select2-primary">
+                            <label class="form-label" for="pjmember">members</label>
+                              <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+                          </div>
+
+                      </div>
+                    </div>
+
+                                      <div class="col-lg-6 col-xl-6">
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="pjname">Project Name</label>
+                        <input id="pjname" type="text" class="form-control" placeholder="" value="">
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="edate">종료일</label>
+                        <input id="edate" type="date" class="form-control" placeholder="" value="">
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="company">고객사</label>
+                        <input id="company" type="text" class="form-control" placeholder="" value="">
+                      </div>
+                      <div class="mb-3 kt-form__grou">
+                        <label class="form-label" for="summary">Summary</label>
+                        <input id="summary" class="form-control" type="textarea" placeholder="" value="" autocomplete="off">
+                      </div>
+                    </div>
+
+
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                            <div class="modal-footer border-0">
+                              <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                                Close
+                              </button>
+                              <button type="button" class="btn btn-primary">Submit</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+       <!-- config modal start -->
+       <div class="modal fade" id="config_Modal" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel1">프로젝트 환경설정</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="row">
+                                  <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">선택해주세요</label>
+                                    <select class="form-select">
+                                        <option value="">프로젝트유형</option>
+                            <option value="">example</option>
+                            <option value="">기타등등</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                  <div class="row">
+                                  <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">value</label>
+                                    <input type="text" id="" class="form-control" placeholder="code">
+                                  </div>
+                                </div>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                                  Close
+                                </button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+             <!-- end of config modal -->
+             <!-- Footer -->
 {% include 'admins/admin_footer.html' %}
+<!-- / Footer -->
+
+         </div> <!-- end of layout-page -->
+    </div> <!-- end of layout-container -->
+</div>
+
+
+</body>
+<script>
+    $(document).ready(function () {
+       //Open Modal
+        openmodal();
+    });
+
+    function openmodal(){
+        // 프로젝트 신규 등록
+        $('#addModal').click(function (){
+           $("#add_Modal").modal('show');
+       });
+        // 설정 등록
+        $('#configModal').click(function (){
+           $("#config_Modal").modal('show');
+       });
+    }
+</script>
+
+
 </html>
