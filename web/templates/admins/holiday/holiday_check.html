@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">연차조회</strong>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="card-datatable table-responsive">
+                    <table class="dt-multilingual table border-top">
+                        <thead>
+                        <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                            <th style="font-size: medium; font-weight: bold">신청일</th>
+                            <th style="font-size: medium; font-weight: bold">부서</th>
+                            <th style="font-size: medium; font-weight: bold">직급</th>
+                            <th style="font-size: medium; font-weight: bold">성명</th>
+                            <th style="font-size: medium; font-weight: bold">휴가구분</th>
+                            <th style="font-size: medium; font-weight: bold">시작일</th>
+                            <th style="font-size: medium; font-weight: bold">종료일</th>
+                            <th style="font-size: medium; font-weight: bold">휴가일수</th>
+                            <th style="font-size: medium; font-weight: bold">결재상태</th>
+                            <th style="font-size: medium; font-weight: bold">사유</th>
+                            <th style="font-size: medium; font-weight: bold">잔여연차</th>
+                            <th style="font-size: medium; font-weight: bold">비고</th>
+                        </tr>
+                        </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                    </table>
+                 </div>
+
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Work Year</th>
+                        <th>Total Holiday</th>
+                        <th>Residual Holiday</th>
+                    </tr>
+                    {% for user in object_list %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.workYear }}</td>
+                            <td>{{ user.total_Holiday }}</td>
+                            <td>{{ user.residul_Holiday }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+</html>

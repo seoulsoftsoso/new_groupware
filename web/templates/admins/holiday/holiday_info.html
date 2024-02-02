@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">연차정책</strong>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row d-flex justify-content-center">
+                    <div class="table-container col-md-4 mb-4" style="overflow-x: auto; margin-top: 40px;">
+                        <table class="table table" style="text-align: center; overflow: auto">
+                            <thead>
+                            <tr style="width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold;">근속연수</th>
+                                <th style="font-size: medium; font-weight: bold;">연차일수</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1년미만</td>
+                                <td>월차 11개 생성</td>
+                            </tr>
+                            <tr>
+                                <td>1년(2년차)</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>2년(3년차)</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>3년(4년차)</td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>4년(5년차)</td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>5년(6년차)</td>
+                                <td>17</td>
+                            </tr>
+                            <tr>
+                                <td>6년(7년차)</td>
+                                <td>17</td>
+                            </tr>
+                            <tr>
+                                <td>7년(8년차)</td>
+                                <td>18</td>
+                            </tr>
+                            <tr>
+                                <td>8년(9년차)</td>
+                                <td>18</td>
+                            </tr>
+                            <tr>
+                                <td>9년(10년차)</td>
+                                <td>19</td>
+                            </tr>
+                            <tr>
+                                <td>10년(11년차)</td>
+                                <td>19</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-6 col-lg-7 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title" style="font-size: x-large; font-family: Pretendard;">* 연차 정책 안내 *</h5>
+                            </div>
+                            <div class="card-body mt-4">
+                                <p>1. 1년 미만 근로자는 1달 근로 시 (80%이상 출근) 1개의 월차가 생성됩니다. 1년간 총 11개의 월차 사용 가능합니다.</p>
+                                <p>2. 입사일 기준 1년 후 15개 연차가 추가 생성됩니다.</p>
+                                <p>3. 왼쪽 표와 같이 입사일 기준으로 1년마다 연차가 추가 생성 됩니다.</p>
+                                <p>4. 사내 복지 차원의 복지 연차는 매년 추가 연차로 생성되고 1년 동안 사용하지 않으면 소멸됩니다.</p>
+                                <p>5. 근로기준법의 연차는 최대 25일을 넘지 못합니다.</p>
+                                <p>6. 전 직원 퇴사 시 근로기준법 제공 연차에 근거하여 계산됩니다.</p>
+                                <p>7. 모든 연차는 그 해에 사용함을 원칙으로 하나 (연차 사용 촉진제) 부득이하게 이월 될 경우 잔여 연차로 표기됩니다.</p>
+                                <p>8. 당사는 연차사용촉진제를 시행하고 있는 회사입니다. 매년 휴가 사용 기간의 만료를 서면으로 통보 할 것이며 미 사용 연차 휴가에 대해 기업의 금전보상 의무가 면제됩니다.</p>
+                                <strong>* 근로자의 휴식과 여가 시간을 보장하기 위해 마련된 제도이오니 잘 활용하시어 의미있는 연차사용이 되시길 바랍니다.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+</html>

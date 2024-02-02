@@ -23,8 +23,14 @@ class LoginRequiredMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path.startswith('/admins/') and not request.COOKIES.get('Authorization'):
-            return redirect('/login/')
+        if request.path.startswith('/admins/'):
+            if not request.COOKIES.get('Authorization'):
+                return redirect('/login/')
+
+            # 'admins/holiday_adjustment'
+            if request.path == '/admins/holiday_adjustment':
+                if not request.COOKIES.get('is_superuser') == 'true':
+                    return redirect('/admins/index')
 
         response = self.get_response(request)
         return response

@@ -202,3 +202,15 @@ def weekly_report_main_page(request):
 def weekly_report_mgmt_page(request):
     context = {}
     return render(request, 'admins/weekly_report/weekly_report_mgmt.html', context)
+
+
+def holiday_info_page(request):
+
+    qs = CodeMaster.objects.filter(group_id=6)
+
+    context = {
+        'holiday': qs
+    }
+
+    return render(request, 'admins/holiday/holiday_info.html', context)
+

@@ -49,6 +49,7 @@ from api.attendance.views import *
 from api.corporate_vehicle.views import *
 from api.excel.views import *
 from api.business.views import *
+from api.holiday.views import *
 
 from web.views import *
 
@@ -209,6 +210,12 @@ urlpatterns = [
                   # 주간업무보고
                   path('admins/weekly_report_main', weekly_report_main_page, name="weeklyReportMain"),
                   path('admins/weekly_report_mgmt', weekly_report_mgmt_page, name="weeklyReportMgmt"),
+
+
+                  # 휴가관리
+                  path('admins/holiday_info', holiday_info_page, name="holidayInfo"),
+                  path('admins/holiday_check', HolidayCheckView.as_view(), name="HolidayCheckView"),
+                  path('admins/holiday_adjustment', HolidayAdjustmentView.as_view(), name="HolidayAdjustmentView"),
 
 
 
