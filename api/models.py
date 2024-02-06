@@ -332,8 +332,8 @@ class Holiday(Model):
     law_holiday = models.IntegerField(null=True, verbose_name='법적근속연수별 연차')
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayCreated_by', verbose_name='최초작성자')  # 최초작성자
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayUpdated_by', verbose_name='최종작성자')  # 최종작성자
-    created_at = models.DateField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
-    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
 
 
 class AdjustHoliday(Model):
@@ -342,7 +342,7 @@ class AdjustHoliday(Model):
     employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='Holiday_user', verbose_name="해당 유저 id")
     delete_flag = models.CharField(max_length=1, default='N', verbose_name="삭제여부" )  # 'N' = 유지, 'Y' = 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name="조정 날짜")
-    updated_at = models.DateField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustCreated_by', verbose_name='최초작성자')  # 최초작성자
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustUpdated_by', verbose_name='최종작성자')  # 최종작성자
 
