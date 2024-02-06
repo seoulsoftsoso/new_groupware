@@ -10,49 +10,105 @@ from Pagenation import PaginatorManager
 from api.models import EventMaster, UserMaster, Holiday, AdjustHoliday
 
 
+class DateDiff(Func):
+    function = 'DATEDIFF'
+    template = "%(function)s(%(expressions)s)"
+
+
 class HolidayCheckView(ListView):
     template_name = 'admins/holiday/holiday_check.html'
 
     def get_queryset(self):
-        now_date = datetime.now().date()
-        print('now : ', now_date)
 
+
+        # 근속연수 계산
+        current_date = datetime.now().date()
+
+        user_work_year =  ExpressionWrapper(
+    DateDiff(current_date, F('created_at')) / 365,
+    output_field=IntegerField()
+    )
+
+        # 법정연차 계산
         law_holiday_subquery = Holiday.objects.filter(
-            workYear=OuterRef('user_workYear')
+            workYear=user_work_year
         ).values('law_holiday')
 
-        # 조정 휴가 합계 계산
-        adjust_sum = AdjustHoliday.objects.values('employee_id').annotate(
-            adjust_sum=Sum('adjust_count')
+        adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id')).values('employee_id').annotate(
+            adjust_sum=Sum('adjust_count')).values('adjust_sum')[:1]
+
+        total_days = Sum(
+            ExpressionWrapper(
+                Case(
+                    When(event_creat__event_type='Holiday',
+                         then=F('event_creat__end_date') - F('event_creat__start_date') + 1),
+                    When(event_creat__event_type='Family',
+                         then=(F('event_creat__end_date') - F('event_creat__start_date') + 1) * 0.5),
+                    default=Value(0),
+                    output_field=DurationField()
+                ),
+                output_field=DurationField()
+            )
         )
 
-        result = UserMaster.objects.annotate(
-            user_workYear=ExpressionWrapper(
-                (now_date - F('created_at')),
-                output_field=FloatField()
-            ),
-            user_lawHoliday=Subquery(law_holiday_subquery[:1]),
-            residul_Holiday=ExpressionWrapper(
-                F('holidayCreated_by__law_holiday')
-                + Coalesce(Sum('adjustCreated_by__adjust_count'), 0)
-                - Coalesce(Sum(
-                    Case(
-                        When(event_creat__event_type='Holiday',
-                             then=F('event_creat__end_date') - F('event_creat__start_date')),
-                        When(event_creat__event_type='Family',
-                             then=((F('event_creat__end_date') - F('event_creat__start_date')) + 1) * 0.5),
-                        default=0,
-                    )
-                ), 0),
-                output_field=FloatField()
-            ),
-            total_Holiday=ExpressionWrapper(
-                F('holidayCreated_by__law_holiday') + Coalesce(Sum('adjustCreated_by__adjust_count'), 0),
-                output_field=FloatField()
+        result = (
+            UserMaster.objects.annotate(
+                user_workYear=user_work_year,
+                law_holiday=law_holiday_subquery,
+                total_days=total_days,
+                adjust_sum=Coalesce(Subquery(adjust_sum_subquery, output_field=IntegerField()),
+                                    Value(0, output_field=IntegerField())),
             )
-        ).filter(
-            Q(event_creat__event_type__in=['Holiday', 'Family']) & Q(event_creat__delete_flag='N')
+            .filter(created_at__lte=timezone.now(), is_master=False)
+            .values(
+                'id', 'username', 'user_workYear',
+                'law_holiday', 'adjust_sum',
+                'total_days',
+            )
         )
+
+
+
+        # user_work_year = ExpressionWrapper(
+        #     F('created_at') - F('created_at'),
+        #     output_field=IntegerField()
+        # )
+        #
+        # total_days = Sum(
+        #     Case(
+        #         When(event_creat__event_type='Holiday',
+        #              then=ExpressionWrapper(F('event_creat__end_date') - F('event_creat__start_date') + 1,
+        #                                     output_field=IntegerField())),
+        #         When(event_creat__event_type='Family',
+        #              then=ExpressionWrapper((F('event_creat__end_date') - F('event_creat__start_date') + 1) * 0.5,
+        #                                     output_field=IntegerField())),
+        #         default=Value(0),
+        #         output_field=IntegerField()
+        #     )
+        # )
+        #
+        # adjust_sum_subquery = Coalesce(
+        #     AdjustHoliday.objects.filter(employee_id=F('id')).aggregate(adjust_sum=Sum('adjust_count'))['adjust_sum'],
+        #     Value(0, output_field=IntegerField())
+        # )
+        #
+        # # 조정연차 계산
+        # adjust_holiday_subquery = AdjustHoliday.objects.filter(
+        #     employee_id=OuterRef('usermaster_id')).values('adjust_count')
+        #
+        # result = UserMaster.objects.annotate(
+        #     user_work_year=user_work_year,
+        #     total_days=total_days,
+        #     adjust_sum=adjust_sum_subquery,
+        #     law_holiday=OuterRef('holidayCreated_by__law_holiday'),
+        #     total_use_holiday=F('total_days') + F('adjust_sum'),
+        #     remain_holiday=F('law_holiday') + F('adjust_sum') - F('total_days'),
+        # ).select_related('law_holiday').values('remain_holiday')
+
+        for itme in result:
+            print(itme)
+            total_days_days_only = itme['total_days'].days
+            print(total_days_days_only)
 
         # result = UserMaster.objects.raw(
         #     """
