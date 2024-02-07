@@ -9,11 +9,6 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-"""
-This models.py is initially written based on '데이터베이스설계서(유니로보틱스).hwp' of which version 1.0
-For the explicit models, I did neither add class nor inherits any custom-made class and used naive models.Model.   
-"""
-
 
 class EnterpriseMaster(models.Model):
     class Meta:
@@ -309,7 +304,7 @@ class EventMaster(Model):
                                    verbose_name='수정자')
     update_at = models.DateTimeField(null=True, auto_now_add=True)
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
-    etc = models.TextField(null=True, verbose_name='비고') # 비고란 (외부참석자 등 특이사항)
+    etc = models.TextField(null=True, verbose_name='비고')  # 비고란 (외부참석자 등 특이사항)
 
 
 class Participant(Model):
@@ -330,8 +325,10 @@ class CorporateMgmt(Model):
 class Holiday(Model):
     workYear = models.IntegerField(null=True, verbose_name='근속 연차')
     law_holiday = models.IntegerField(null=True, verbose_name='법적근속연수별 연차')
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayCreated_by', verbose_name='최초작성자')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayUpdated_by', verbose_name='최종작성자')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='holidayUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
 
@@ -339,11 +336,76 @@ class Holiday(Model):
 class AdjustHoliday(Model):
     adjust_count = models.IntegerField(null=True, verbose_name="조정 수량")
     adjust_reason = models.CharField(max_length=128, null=True, verbose_name="조정 사유")
-    employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='Holiday_user', verbose_name="해당 유저 id")
-    delete_flag = models.CharField(max_length=1, default='N', verbose_name="삭제여부" )  # 'N' = 유지, 'Y' = 삭제
+    employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='Holiday_user',
+                                 verbose_name="해당 유저 id")
+    delete_flag = models.CharField(max_length=1, default='N', verbose_name="삭제여부")  # 'N' = 유지, 'Y' = 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name="조정 날짜")
     updated_at = models.DateTimeField(auto_now=True, verbose_name='최종작성일')  # 최종작성일
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustCreated_by', verbose_name='최초작성자')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustUpdated_by', verbose_name='최종작성자')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='adjustUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
 
 
+# 프로젝트 마스터
+class ProMaster(Model):
+    pjcode = models.CharField(max_length=64, null=False, verbose_name='프로젝트코드')
+    pjname = models.CharField(max_length=256, null=False, verbose_name='프로젝트이름')
+    start_date = models.DateTimeField(null=True, verbose_name='시작일')
+    end_date = models.DateTimeField(null=True, verbose_name='종료일')
+    pj_type = models.ForeignKey('CodeMaster', on_delete=models.DO_NOTHING, related_name='pjtype', verbose_name='프로젝트유형')
+    pj_customer = models.CharField(max_length=128, null=True, verbose_name='고객사')
+    pj_master = models.ForeignKey('ProMembers', on_delete=models.DO_NOTHING, related_name='pjmaster', verbose_name='PM')
+    pj_note = models.CharField(max_length=256, null=True, verbose_name='프로젝트 요약')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='promasterCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='promasterUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
+
+
+# 프로젝트 구성원
+class ProMembers(Model):
+    promaster = models.ForeignKey('ProMaster', on_delete=models.DO_NOTHING, related_name='promaster',
+                                  verbose_name='프로젝트 아이디')
+    task = models.ForeignKey('ProTask', on_delete=models.DO_NOTHING, null=True, related_name='task_member',
+                             verbose_name='task 아이디')
+    member = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='member', verbose_name='구성원')
+    position = models.CharField(max_length=64, null=True, verbose_name='직책')  # PM, PL, PE etc.
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='promemberCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='promemberUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
+
+
+class ProTask(Model):
+    pro_parent = models.ForeignKey('ProMaster', on_delete=models.DO_NOTHING, related_name='promastertask',
+                                   verbose_name='프로젝트 아이디')
+    task_name = models.CharField(max_length=256, null=False, verbose_name='Task명')
+    task_start = models.DateTimeField(null=False, verbose_name='task 시작일')
+    task_end = models.DateTimeField(null=False, verbose_name='task 종료일')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='protaskCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='protaskUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
+
+
+class ProTaskSub(Model):
+    task_parent = models.ForeignKey('ProTask', on_delete=models.DO_NOTHING, related_name='taskparent',
+                                    verbose_name='task 아이디')
+    task_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
+    task_status = models.CharField(max_length=1, default='S', null=False,
+                                   verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
+    due_date = models.DateTimeField(null=True, verbose_name='완료예정일')
+    finish_date = models.DateTimeField(null=True, verbose_name='실제완료일')
+    difficulty = models.CharField(max_length=1, null=False, default='B', verbose_name='난이도')  # 상:T, 중:M, 하:B
+    issue = models.TextField(null=True, verbose_name='이슈사항')
+    etc = models.CharField(max_length=256, null=True, verbose_name='기타')
