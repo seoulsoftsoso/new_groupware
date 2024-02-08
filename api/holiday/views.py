@@ -4,7 +4,7 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.views.generic import ListView
 from django.db.models import Sum, Case, When, FloatField, F, Value, ExpressionWrapper, fields, Q, Func, Subquery, \
-    OuterRef, IntegerField, DateField, DurationField, DateTimeField
+    OuterRef, IntegerField, DateField, DurationField, DateTimeField, Window
 from django.db.models.functions import Floor, Coalesce, ExtractYear, Now, Cast, ExtractDay, Round
 from Pagenation import PaginatorManager
 from api.models import EventMaster, UserMaster, Holiday, AdjustHoliday
@@ -29,7 +29,7 @@ class HolidayCheckView(ListView):
         # 근속연수 계산
         current_date = datetime.now().date()
 
-        adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id')).values('employee_id').annotate(
+        adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('create_by_id')).values('employee_id').annotate(
             adjust_sum=Sum('adjust_count')).values('adjust_sum')[:1]
 
         result = (
@@ -52,8 +52,14 @@ class HolidayCheckView(ListView):
                 ),  
             ).annotate(
                 total_holiday=F('law_holiday') + F('adjust_sum'),  # 총연차
+                cumulative_total_days=Window(
+                    expression=Sum('total_days'),
+                    partition_by=F('create_by_id'),
+                    order_by=F('id').asc(),
+                    output_field=FloatField()
+                ),
             ).annotate(
-                residual_holiday=ExpressionWrapper(F('total_holiday') - F('total_days'), output_field=FloatField())  # 잔여연차
+                residual_holiday=ExpressionWrapper(F('total_holiday') - F('cumulative_total_days'), output_field=FloatField())  # 잔여연차
             )
             .filter(create_at__lte=timezone.now(), create_by__is_master=False, event_type__in=['Holiday', 'Family'])
             .values(
