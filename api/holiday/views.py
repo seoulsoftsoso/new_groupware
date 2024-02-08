@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views.generic import ListView
 from django.db.models import Sum, Case, When, FloatField, F, Value, ExpressionWrapper, fields, Q, Func, Subquery, \
     OuterRef, IntegerField, DateField, DurationField, DateTimeField
-from django.db.models.functions import Floor, Coalesce, ExtractYear, Now, Cast, ExtractDay
+from django.db.models.functions import Floor, Coalesce, ExtractYear, Now, Cast, ExtractDay, Round
 from Pagenation import PaginatorManager
 from api.models import EventMaster, UserMaster, Holiday, AdjustHoliday
 
@@ -13,141 +13,70 @@ from api.models import EventMaster, UserMaster, Holiday, AdjustHoliday
 class DateDiff(Func):
     function = 'DATEDIFF'
     template = "%(function)s(%(expressions)s)"
+    output_field = IntegerField()
+
+
+class Days(Func):
+    function = 'DATEDIFF'
+    arity = 2  # number of arguments
+    output_field = fields.FloatField()
 
 
 class HolidayCheckView(ListView):
     template_name = 'admins/holiday/holiday_check.html'
 
     def get_queryset(self):
-
-
         # 근속연수 계산
         current_date = datetime.now().date()
-
-        user_work_year =  ExpressionWrapper(
-    DateDiff(current_date, F('created_at')) / 365,
-    output_field=IntegerField()
-    )
-
-        # 법정연차 계산
-        law_holiday_subquery = Holiday.objects.filter(
-            workYear=user_work_year
-        ).values('law_holiday')
 
         adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id')).values('employee_id').annotate(
             adjust_sum=Sum('adjust_count')).values('adjust_sum')[:1]
 
-        total_days = Sum(
-            ExpressionWrapper(
-                Case(
-                    When(event_creat__event_type='Holiday',
-                         then=F('event_creat__end_date') - F('event_creat__start_date') + 1),
-                    When(event_creat__event_type='Family',
-                         then=(F('event_creat__end_date') - F('event_creat__start_date') + 1) * 0.5),
-                    default=Value(0),
-                    output_field=DurationField()
-                ),
-                output_field=DurationField()
-            )
-        )
-
         result = (
-            UserMaster.objects.annotate(
-                user_workYear=user_work_year,
-                law_holiday=law_holiday_subquery,
-                total_days=total_days,
-                adjust_sum=Coalesce(Subquery(adjust_sum_subquery, output_field=IntegerField()),
+            EventMaster.objects.annotate(
+                user_workYear=Floor(  # 근속년수
+                    DateDiff(current_date, F('create_by__created_at')) / 365
+                ),
+                law_holiday=Subquery(  # 법정근속년수별 연차
+                    Holiday.objects.filter(
+                        workYear=OuterRef('user_workYear')
+                    ).values('law_holiday')[:1]
+                ),
+                adjust_sum=Coalesce(Subquery(adjust_sum_subquery, output_field=IntegerField()),  # 추가연차
                                     Value(0, output_field=IntegerField())),
+                total_days=Case(  # 사용 연차
+                    When(event_type='Holiday', then=Days('end_date', 'start_date') + Value(1.0)),
+                    When(event_type='Family', then=Value(0.5)),
+                    default=Value(1.0),
+                    output_field=fields.FloatField(),
+                ),  
+            ).annotate(
+                total_holiday=F('law_holiday') + F('adjust_sum'),  # 총연차
+            ).annotate(
+                residual_holiday=ExpressionWrapper(F('total_holiday') - F('total_days'), output_field=FloatField())  # 잔여연차
             )
-            .filter(created_at__lte=timezone.now(), is_master=False)
+            .filter(create_at__lte=timezone.now(), create_by__is_master=False, event_type__in=['Holiday', 'Family'])
             .values(
-                'id', 'username', 'user_workYear',
-                'law_holiday', 'adjust_sum',
-                'total_days',
-            )
+                'create_by__username', 'create_by__department_position__name', 'create_by__job_position__name',
+                'start_date', 'end_date', 'description', 'user_workYear',
+                'event_type', 'law_holiday', 'adjust_sum',
+                'total_days', 'total_holiday', 'residual_holiday',
+            ).order_by('-id')
         )
 
-
-
-        # user_work_year = ExpressionWrapper(
-        #     F('created_at') - F('created_at'),
-        #     output_field=IntegerField()
-        # )
-        #
-        # total_days = Sum(
-        #     Case(
-        #         When(event_creat__event_type='Holiday',
-        #              then=ExpressionWrapper(F('event_creat__end_date') - F('event_creat__start_date') + 1,
-        #                                     output_field=IntegerField())),
-        #         When(event_creat__event_type='Family',
-        #              then=ExpressionWrapper((F('event_creat__end_date') - F('event_creat__start_date') + 1) * 0.5,
-        #                                     output_field=IntegerField())),
-        #         default=Value(0),
-        #         output_field=IntegerField()
-        #     )
-        # )
-        #
-        # adjust_sum_subquery = Coalesce(
-        #     AdjustHoliday.objects.filter(employee_id=F('id')).aggregate(adjust_sum=Sum('adjust_count'))['adjust_sum'],
-        #     Value(0, output_field=IntegerField())
-        # )
-        #
-        # # 조정연차 계산
-        # adjust_holiday_subquery = AdjustHoliday.objects.filter(
-        #     employee_id=OuterRef('usermaster_id')).values('adjust_count')
-        #
-        # result = UserMaster.objects.annotate(
-        #     user_work_year=user_work_year,
-        #     total_days=total_days,
-        #     adjust_sum=adjust_sum_subquery,
-        #     law_holiday=OuterRef('holidayCreated_by__law_holiday'),
-        #     total_use_holiday=F('total_days') + F('adjust_sum'),
-        #     remain_holiday=F('law_holiday') + F('adjust_sum') - F('total_days'),
-        # ).select_related('law_holiday').values('remain_holiday')
+        # 일반 직원일 경우 자신의 연차 기록만 필터링
+        if self.request.COOKIES['is_superuser'] == 'false':
+            result = result.filter(create_by_id=self.request.COOKIES['user_id'])
 
         for itme in result:
             print(itme)
-            total_days_days_only = itme['total_days'].days
-            print(total_days_days_only)
-
-        # result = UserMaster.objects.raw(
-        #     """
-        #     SELECT a.*,
-        #             FLOOR(DATEDIFF(CURDATE(), a.created_at) / 365) AS 'user_workYear',
-        #             b.law_holiday AS 'user_lawHoliday',
-        #             c.event_type, c.delete_flag,
-        #             (b.law_holiday + IFNULL(d.adjust_sum, 0) - IFNULL(e.total_days, 0)) AS 'residul_Holiday',
-        #             (b.law_holiday + IFNULL(d.adjust_sum, 0)) AS 'total_Holiday'
-        #     FROM api_usermaster a
-        #     JOIN api_holiday b ON FLOOR(DATEDIFF(CURDATE(), a.created_at) / 365) = b.workYear
-        #     LEFT JOIN api_eventmaster c ON a.id = c.create_by_id
-        #     LEFT JOIN (
-        #         SELECT employee_id, SUM(adjust_count) AS adjust_sum
-        #         FROM api_adjustholiday
-        #         GROUP BY employee_id
-        #     ) d ON a.id = d.employee_id
-        #     LEFT JOIN (
-        #         SELECT create_by_id,
-        #                SUM(CASE
-        #                     WHEN event_type = 'Holiday' THEN DATEDIFF(end_date, start_date) + 1
-        #                     WHEN event_type = 'Family' THEN (DATEDIFF(end_date, start_date) + 1) * 0.5
-        #                     ELSE 0
-        #                 END) AS total_days
-        #         FROM api_eventmaster
-        #         WHERE delete_flag = 'N'
-        #         GROUP BY create_by_id
-        #     ) e ON a.id = e.create_by_id
-        #     WHERE DATEDIFF(CURDATE(), a.created_at) >= 0
-        #         AND ((c.event_type = 'Holiday' OR c.event_type = 'Family') AND c.delete_flag = 'N');
-        #     """
-        # )
 
         return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'] = self.get_queryset()
-        # context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
+        context['result'] = context['object_list']
+        # context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
         return context
 
 
@@ -155,4 +84,13 @@ class HolidayAdjustmentView(ListView):
     template_name = 'admins/holiday/holiday_adjustment.html'
 
     def get_queryset(self):
-        return Holiday.objects.all()
+
+        result = UserMaster.objects.filter(is_master=False, is_active=True, is_staff=True).order_by('job_position')
+
+        return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['result'] = self.get_queryset()
+        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
+        return context
