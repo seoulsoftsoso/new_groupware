@@ -50,24 +50,26 @@
                             <th style="font-size: medium; font-weight: bold">결재상태</th>
                             <th style="font-size: medium; font-weight: bold">사유</th>
                             <th style="font-size: medium; font-weight: bold">잔여연차</th>
-                            <th style="font-size: medium; font-weight: bold">비고</th>
                         </tr>
                         </thead>
                             <tbody>
-                            {% for user in result %}
-                                <tr>
+                            {% for obj in result %}
+                                <tr style="text-align: center;">
                                     <td>전자결재 제출일</td>
-                                    <td>{{ user.department_position }}</td>
-                                    <td>{{ user.job_position }}</td>
-                                    <td>{{ user.username }}</td>
-                                    <td>{{ user.event_type }}</td>
-                                    <td>{{ user.start_date }}</td>
-                                    <td>{{ user.end_date }}</td>
-                                    <td>{{ user.holiday_days }}</td>
-                                    <td>{{ user.approval_status }}</td>
-                                    <td>{{ user.reason }}</td>
-                                    <td>{{ user.residul_Holiday }}</td>
-                                    <td>{{ user.remarks }}</td>
+                                    <td>{{ obj.create_by__department_position__name }}</td>
+                                    <td>{{ obj.create_by__job_position__name }}</td>
+                                    <td>{{ obj.create_by__username }}</td>
+                                    {% if obj.event_type == "Holiday" %}
+                                        <td>연차</td>
+                                    {% else %}
+                                        <td>반차</td>
+                                    {% endif %}
+                                    <td>{{ obj.start_date|date:"Y-m-d a g:i" }}</td>
+                                    <td>{{ obj.end_date|date:"Y-m-d a g:i" }}</td>
+                                    <td>{{ obj.total_days }}일</td>
+                                    <td>미결재</td>
+                                    <td>{{ obj.description }}</td>
+                                    <td>{{ obj.residual_holiday }}개</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -80,24 +82,26 @@
                         <th>사용자 ID</th>
                         <th>근속 연수</th>
                         <th>법정 연차</th>
-                        <th>잔여 연차</th>
+                        <th>추가 연차</th>
                         <th>총 연차</th>
+                        <th>사용 연차</th>
+                        <th>잔여 연차</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for obj in result %}
                         <tr>
-                            <td>{{ obj.username }}</td>
+                            <td>{{ obj.create_by__username }}</td>
                             <td>{{ obj.user_workYear }}</td>
-                            <td>{{ obj.user_lawHoliday }}</td>
-                            <td>{{ obj.residul_Holiday }}</td>
-                            <td>{{ obj.total_Holiday }}</td>
+                            <td>{{ obj.law_holiday }}</td>
+                            <td>{{ obj.adjust_sum }}</td>
+                            <td>{{ obj.total_holiday }}</td>
+                            <td>{{ obj.total_days }}</td>
+                            <td>{{ obj.residual_holiday }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
-
-
 
             </div>
         </div>
