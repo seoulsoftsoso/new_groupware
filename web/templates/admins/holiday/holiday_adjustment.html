@@ -35,7 +35,105 @@
                     </div>
                 </div>
 
-                <p>연차조정</p>
+                <div class="d-flex flex-column flex-md-row justify-content-end">
+{#                    <div class="col-md-5 col-12 mb-4" style="padding-left: 1%">#}
+{#                        <button#}
+{#                                type="button"#}
+{#                                style="width: 40%; margin-bottom: 30px;"#}
+{#                                class="btn btn-outline-dark"#}
+{#                                data-bs-toggle="modal"#}
+{#                                data-bs-target="#adjust_btn">연차조정#}
+{#                        </button>#}
+{##}
+{#                    </div>#}
+                    <form method="get" class="col-12 col-md-auto" style="padding-right: 1%;">
+                        <div class="row">
+                            <div class="col-md-12 col-12 mb-4">
+                                <div class="row">
+                                    <!-- 검색 대상 선택 -->
+                                    <div class="col-md-4 col-12 mb-3">
+                                        <select id="selectpickerBasic" class="selectpicker form-control">
+                                            <option value="name"
+                                                    {% if 'name' in search_title %}selected {% endif %}>성명
+                                            </option>
+                                            <option value="department"
+                                                    {% if 'department' in search_title %}selected {% endif %}>부서
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- 검색어 입력과 검색 버튼 -->
+                                    <div class="col-md-8 col-12 mb-3 d-flex">
+                                        <input type="text" placeholder="검색" class="form-control"
+                                               id="form-search" name="search-content"
+                                               value="{{ search_content | default_if_none:'' }}"/>
+                                        <button class="btn btn-primary btn-compose"
+                                                data-bs-toggle="modal"
+                                                style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">
+                                            검색
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="card-datatable table-responsive">
+                    <table class="dt-multilingual table border-top">
+                        <thead>
+                        <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                            <th style="font-size: medium; font-weight: bold">부서</th>
+                            <th style="font-size: medium; font-weight: bold">직급</th>
+                            <th style="font-size: medium; font-weight: bold">성명</th>
+                            <th style="font-size: medium; font-weight: bold">근속년수</th>
+                            <th style="font-size: medium; font-weight: bold">입사일</th>
+                            <th style="font-size: medium; font-weight: bold">총연차</th>
+                            <th style="font-size: medium; font-weight: bold">잔여연차</th>
+                            <th style="font-size: medium; font-weight: bold">사용연차</th>
+                            <th style="font-size: medium; font-weight: bold">추가연차</th>
+                            <th style="font-size: medium; font-weight: bold">상세보기</th>
+                            <th style="font-size: medium; font-weight: bold">비고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in result %}
+                            <tr style="text-align: center" data-toggle="modal" data-target="#editModal">
+                                <td>{{ obj.department_position__name }}</td>
+                                <td>{{ obj.job_position__name }}</td>
+                                <td>{{ obj.username }}</td>
+                                <td>{{ obj.user_workYear }}</td>
+                                <td>{{ obj.created_at }}</td>
+                                <td>{{ obj.total_holiday }}개</td>
+                                <td>{{ obj.residual_holiday }}개</td>
+                                <td>{{ obj.total_days }}개</td>
+                                <td>{{ obj.adjust_sum }}개</td>
+                                <td></td>
+                                <td>
+                                    {% if obj.create_by == request.user.user_id %}
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                   data-bs-target="#adjust_btn"
+                                                   data-id="{{ obj.id }}"
+                                                   href="javascript:void(0);">
+                                                    <i class="bx bx-edit-alt me-1"></i> 연차조정</a>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% include 'admins/holiday/adjust_modal.html' %}
+                </div>
 
 
 

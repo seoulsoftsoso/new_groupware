@@ -27,7 +27,7 @@
 
             <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
 
-                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0" style="margin-bottom: -30px">
                     <div class="mb-xl-0 mb-4">
                         <div class="d-flex svg-illustration mb-3 gap-2">
                             <strong style="font-size: x-large; font-family: Pretendard;">연차조회</strong>
@@ -35,73 +35,130 @@
                     </div>
                 </div>
 
-                 <div class="card-datatable table-responsive">
-                    <table class="dt-multilingual table border-top">
-                        <thead>
-                        <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
-                            <th style="font-size: medium; font-weight: bold">신청일</th>
-                            <th style="font-size: medium; font-weight: bold">부서</th>
-                            <th style="font-size: medium; font-weight: bold">직급</th>
-                            <th style="font-size: medium; font-weight: bold">성명</th>
-                            <th style="font-size: medium; font-weight: bold">휴가구분</th>
-                            <th style="font-size: medium; font-weight: bold">시작일</th>
-                            <th style="font-size: medium; font-weight: bold">종료일</th>
-                            <th style="font-size: medium; font-weight: bold">휴가일수</th>
-                            <th style="font-size: medium; font-weight: bold">결재상태</th>
-                            <th style="font-size: medium; font-weight: bold">사유</th>
-                            <th style="font-size: medium; font-weight: bold">잔여연차</th>
-                        </tr>
-                        </thead>
-                            <tbody>
-                            {% for obj in result %}
-                                <tr style="text-align: center;">
-                                    <td>전자결재 제출일</td>
-                                    <td>{{ obj.create_by__department_position__name }}</td>
-                                    <td>{{ obj.create_by__job_position__name }}</td>
-                                    <td>{{ obj.create_by__username }}</td>
-                                    {% if obj.event_type == "Holiday" %}
-                                        <td>연차</td>
-                                    {% else %}
-                                        <td>반차</td>
-                                    {% endif %}
-                                    <td>{{ obj.start_date|date:"Y-m-d a g:i" }}</td>
-                                    <td>{{ obj.end_date|date:"Y-m-d a g:i" }}</td>
-                                    <td>{{ obj.total_days }}일</td>
-                                    <td>미결재</td>
-                                    <td>{{ obj.description }}</td>
-                                    <td>{{ obj.residual_holiday }}개</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                    </table>
-                 </div>
+                <form style="width: 100%; margin-top: 30px; display: flex; justify-content: end; padding-right: 40px;" method="get">
+                    {% csrf_token %}
+                    <div style="display: flex;">
+                        <div style="margin-right: 10px;">
+                            <select class="form-control" style="margin-right: 10px;" id="YEAR" name="YEAR"></select>
+                        </div>
+                        <div style="margin-right: 10px;">
+                            <select class="form-control" id="MONTH" name="MONTH">
+                                <option value='-1'>전체</option>
+                                <option value='1' {% if "1" in standard_month and "-1" not in standard_month %}selected {% endif %}>1월</option>
+                                <option value='2' {% if "2" in standard_month %} selected {% endif %}>2월</option>
+                                <option value='3' {% if "3" in standard_month %} selected {% endif %}>3월</option>
+                                <option value='4' {% if "4" in standard_month %} selected {% endif %}>4월</option>
+                                <option value='5' {% if "5" in standard_month %} selected {% endif %}>5월</option>
+                                <option value='6' {% if "6" in standard_month %} selected {% endif %}>6월</option>
+                                <option value='7' {% if "7" in standard_month %} selected {% endif %}>7월</option>
+                                <option value='8' {% if "8" in standard_month %} selected {% endif %}>8월</option>
+                                <option value='9' {% if "9" in standard_month %} selected {% endif %}>9월</option>
+                                <option value='10' {% if "10" in standard_month %} selected {% endif %}>10월</option>
+                                <option value='11' {% if "11" in standard_month %} selected {% endif %}>11월</option>
+                                <option value='12' {% if "12" in standard_month %} selected {% endif %}>12월</option>
+                            </select>
+                        </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>사용자 ID</th>
-                        <th>근속 연수</th>
-                        <th>법정 연차</th>
-                        <th>추가 연차</th>
-                        <th>총 연차</th>
-                        <th>사용 연차</th>
-                        <th>잔여 연차</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for obj in result %}
-                        <tr>
-                            <td>{{ obj.create_by__username }}</td>
-                            <td>{{ obj.user_workYear }}</td>
-                            <td>{{ obj.law_holiday }}</td>
-                            <td>{{ obj.adjust_sum }}</td>
-                            <td>{{ obj.total_holiday }}</td>
-                            <td>{{ obj.total_days }}</td>
-                            <td>{{ obj.residual_holiday }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        {% if request.COOKIES.is_superuser == "true" %}
+                            <div style="margin-right: 10px;">
+                                <select class="form-control" name="search-title">
+                                    <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                    <option value="number" {% if 'number' in search_title %} selected {% endif %}>사원번호</option>
+                                    <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
+                                </select>
+                            </div>
+
+                            <input type="text" class="form-control" style="width: 150px; margin-right: 10px;"
+                                   id="form-search" placeholder="Search" name="search-content"
+                                   value="{{ search_content | default_if_none:'' }}">
+                        {% endif %}
+
+                        <button type='submit' class="btn btn-primary w-15 h-90">검색</button>
+                    </div>
+
+                </form>
+
+                <div class="bs-stepper-content d-flex justify-content-center mt-5 mb-5">
+                    <div class="mt-2 col-9 h-px-300" style="border: lightgrey 1px solid;">
+                        <div class="d-flex" style="margin: 30px 20px;">
+                            <h5 style="font-family: Pretendard;">나의 연차 정보</h5>
+                            <h5 id="nowYear" style="font-family: Pretendard; margin-left: 5px;">-</h5>
+                        </div>
+                        <div>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table" id="today_use">
+                                    <thead>
+                                    <tr class="text-nowrap" style="text-align: center;">
+                                        <th>이름</th>
+                                        <th>입사일</th>
+                                        <th>총 연차</th>
+                                        <th>사용 연차</th>
+                                        <th>추가 연차</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in user_holiday %}
+                                        <tr style="text-align: center;">
+                                            <td>{{ item.create_by__username }}</td>
+                                            <td>{{ item.create_by__created_at }}</td>
+                                            <td>{{ item.total_holiday }}</td>
+                                            <td>{{ item.cumulative_total_days }}</td>
+                                            <td>{{ item.adjust_sum }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                     <div class="card-datatable table-responsive col-11">
+                        <table class="dt-multilingual table border-top" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
+                            <thead>
+                            <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold">신청일</th>
+                                <th style="font-size: medium; font-weight: bold">부서</th>
+                                <th style="font-size: medium; font-weight: bold">직급</th>
+                                <th style="font-size: medium; font-weight: bold">성명</th>
+                                <th style="font-size: medium; font-weight: bold">휴가구분</th>
+                                <th style="font-size: medium; font-weight: bold">시작일</th>
+                                <th style="font-size: medium; font-weight: bold">종료일</th>
+                                <th style="font-size: medium; font-weight: bold">휴가일수</th>
+                                <th style="font-size: medium; font-weight: bold">결재상태</th>
+                                <th style="font-size: medium; font-weight: bold">사유</th>
+                                <th style="font-size: medium; font-weight: bold">잔여연차</th>
+                            </tr>
+                            </thead>
+                                <tbody>
+                                {% for obj in result %}
+                                    <tr style="text-align: center;">
+                                        <td>전자결재 제출일</td>
+                                        <td>{{ obj.create_by__department_position__name }}</td>
+                                        <td>{{ obj.create_by__job_position__name }}</td>
+                                        <td>{{ obj.create_by__username }}</td>
+                                        {% if obj.event_type == "Holiday" %}
+                                            <td>연차</td>
+                                        {% else %}
+                                            <td>반차</td>
+                                        {% endif %}
+                                        <td>{{ obj.start_date|date:"Y-m-d a g:i" }}</td>
+                                        <td>{{ obj.end_date|date:"Y-m-d a g:i" }}</td>
+                                        <td>{{ obj.total_days }}일</td>
+                                        <td>미결재</td>
+                                        <td>{{ obj.description }}</td>
+                                        <td>{{ obj.residual_holiday }}개</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                     </div>
+                </div>
+
+                <div style="margin-bottom: 30px; margin-top: 50px;">
+                  {% include 'admins/paging.html' %}
+                </div>
 
             </div>
         </div>
@@ -110,4 +167,38 @@
 
 </body>
 {% include 'admins/admin_footer.html' %}
+<script>
+    $(document).ready(function () {
+        setDateBox();
+    });
+
+    function getCurrentDate() {
+        var year = today.getFullYear();
+
+        return '-' + year + '년';
+    }
+
+    document.getElementById('nowYear').innerHTML = getCurrentDate();
+
+    function setDateBox() {
+        var dt = new Date();
+        var year = "";
+        var com_year = dt.getFullYear();
+        var display_year = '{{ standard_year }}';
+        var month = '{{ standard_month }}';
+
+
+        $('#MONTH').val(month);
+        // 올해 기준으로 -10년부터 +5년을 보여준다.
+        for (var y = (com_year - 10); y <= (com_year + 5); y++) {
+            if (y == display_year) {
+                $("#YEAR").append("<option value='" + y + "' selected>" + y + "년" + "</option>");
+                continue;
+            }
+            $("#YEAR").append("<option value='" + y + "'>" + y + "년" + "</option>");
+        }
+
+
+    }
+</script>
 </html>

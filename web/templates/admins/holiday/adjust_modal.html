@@ -1,0 +1,43 @@
+{% load static %}
+<!-- Modal -->
+<form action="#" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="adjust_btn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">연차조정</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*조정수량</label>
+                            <input type="number" id="adjust_num"
+                                   name="adjust_num"
+                                   class="form-control"
+                                   placeholder="조정수량" required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">*조정사유</label>
+                            <textarea class="form-control" id="adjust_reason" name="adjust_reason" placeholder="조정사유" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="success_btn">확인</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
