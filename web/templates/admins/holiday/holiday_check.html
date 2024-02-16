@@ -109,6 +109,10 @@
                                             <td>{{ item.cumulative_total_days }}</td>
                                             <td>{{ item.residual_holiday }}</td>
                                         </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">연차 등록 정보가 없습니다.</td>
+                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
