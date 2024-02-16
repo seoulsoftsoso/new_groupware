@@ -41,7 +41,7 @@ class HolidayCheckView(ListView):
 
         result = (
             EventMaster.objects.annotate(
-                user_workYear=Floor(DateDiff(current_date, F('create_by__created_at')) / 365),
+                user_workYear=Floor(DateDiff(current_date, F('create_by__employment_date')) / 365),
                 law_holiday=Subquery(
                     Holiday.objects.filter(
                         workYear=OuterRef('user_workYear')
@@ -69,7 +69,7 @@ class HolidayCheckView(ListView):
             .filter(create_at__lte=timezone.now(), create_by__is_master=False, event_type__in=['Holiday', 'Family'])
             .values(
                 'create_by__username', 'create_by__department_position__name', 'create_by__job_position__name',
-                'create_by__created_at', 'cumulative_total_days',
+                'create_by__employment_date', 'cumulative_total_days',
                 'start_date', 'end_date', 'description', 'user_workYear',
                 'event_type', 'law_holiday', 'adjust_sum',
                 'total_days', 'total_holiday', 'residual_holiday', 'create_by_id'
@@ -129,7 +129,7 @@ class HolidayAdjustmentView(ListView):
 
         result = UserMaster.objects.annotate(
             user_workYear=Floor(  # 근속년수
-                DateDiff(current_date, F('created_at')) / 365
+                DateDiff(current_date, F('employment_date')) / 365
             ),
             law_holiday=Subquery(  # 법정근속년수별 연차
                 Holiday.objects.filter(
@@ -151,10 +151,10 @@ class HolidayAdjustmentView(ListView):
             residual_holiday=ExpressionWrapper(F('total_holiday') - F('cumulative_total_days'),
                                                output_field=FloatField())  # 잔여연차
         ).filter(is_master=False, is_active=True, is_staff=True).values(
-            'id', 'username', 'department_position__name', 'job_position__name', 'created_at',
+            'id', 'username', 'department_position__name', 'job_position__name', 'employment_date',
             'user_workYear', 'law_holiday', 'adjust_sum', 'total_days', 'total_holiday',
             'residual_holiday', 'cumulative_total_days'
-        ).order_by('job_position')
+        ).order_by('department_position_id', 'job_position_id')
 
         # for obj in result:
         #     print('obj:', obj)
@@ -213,9 +213,14 @@ def update_adjust_holiday(request):
 
     adjust_holiday = AdjustHoliday.objects.get(id=adjust_id)
 
+    user_id = request.COOKIES['user_id']
+    user = UserMaster.objects.get(id=user_id)
+
     adjust_holiday.adjust_count = adjust_count
     adjust_holiday.adjust_reason = adjust_reason
+    adjust_holiday.updated_by = user
     adjust_holiday.save()
+
 
     return JsonResponse({"success": "success"})
 

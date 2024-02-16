@@ -1,10 +1,48 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
 <body>
 
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">내 정보 관리</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!--여기부터 작성-->
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+{% include 'admins/admin_footer.html' %}
 </html>

@@ -50,6 +50,7 @@ from api.corporate_vehicle.views import *
 from api.excel.views import *
 from api.business.views import *
 from api.holiday.views import *
+from api.administrator.approval_views import *
 
 from web.views import *
 
@@ -220,6 +221,14 @@ urlpatterns = [
                   path('admins/create_adjust_holiday', create_adjust_holiday, name="createAdjustHoliday"),
                   path('admins/update_adjust_holiday', update_adjust_holiday, name="updateAdjustHoliday"),
                   path('admins/delete_adjust_holiday', delete_adjust_holiday, name="deleteAdjustHoliday"),
+
+
+                  # ADMINS
+                  path('admins/approval_delete_page', approval_delete_page, name="approvalDeletePage"),
+                  path('admins/user_approval', user_approval, name="userApproval"),
+                  path('admins/user_authority_page', user_authority_page, name="userAuthorityPage"),
+                  path('admins/pay_question_page', pay_question_page, name="payQuestionPage"),
+                  path('admins/user_settings_page', user_settings_page, name="userSettingsPage"),
 
 
 

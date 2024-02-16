@@ -1,5 +1,4 @@
 from datetime import date
-
 from django.db.models import Count, Q, Case, When, IntegerField, F
 from django.db.models.functions import TruncDate
 from django.http import JsonResponse, HttpResponseRedirect
@@ -9,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster
-
+from api.views import get_member_info
 
 def index(request):
     return render(request, 'index.html', {})
@@ -213,4 +212,30 @@ def holiday_info_page(request):
     }
 
     return render(request, 'admins/holiday/holiday_info.html', context)
+
+
+def approval_delete_page(request):
+    qs = UserMaster.objects.filter(is_master=False).values(
+        'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
+        'created_at', 'department_position__name', 'job_position__name'
+    ).order_by('department_position', 'job_position')
+
+    context = {}
+    context['result'] = list(qs)
+    return render(request, 'admins/administrator/approval_delete.html', context)
+
+
+def user_authority_page(request):
+    context = get_member_info()
+    return render(request, 'admins/administrator/user_authority.html', context)
+
+
+def pay_question_page(request):
+    context = {}
+    return render(request, 'admins/administrator/pay_question.html', context)
+
+
+def user_settings_page(request):
+    context = {}
+    return  render(request, 'admins/administrator/user_setting.html', context)
 

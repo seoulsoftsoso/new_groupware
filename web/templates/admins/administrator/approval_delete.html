@@ -1,10 +1,134 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
 <body>
 
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">가입승인 / 탈퇴처리</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!--여기부터 작성-->
+                <div class="row justify-content-center">
+                    <div class="card-datatable table-responsive col-11">
+                        <table class="dt-multilingual table border-top" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
+                            <thead>
+                            <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold">부서</th>
+                                <th style="font-size: medium; font-weight: bold">직급</th>
+                                <th style="font-size: medium; font-weight: bold">성명</th>
+                                <th style="font-size: medium; font-weight: bold">사원번호</th>
+                                <th style="font-size: medium; font-weight: bold">회원가입일</th>
+                                <th style="font-size: medium; font-weight: bold">가입승인 상태</th>
+                                <th style="font-size: medium; font-weight: bold">탈퇴승인 상태</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in result %}
+                                <tr style="text-align: center" data-id="{{ obj.id }}">
+                                    <td>{{ obj.department_position__name }}</td>
+                                    <td>{{ obj.job_position__name }}</td>
+                                    <td>{{ obj.username }}</td>
+                                    <td>{{ obj.code }}</td>
+                                    <td>{{ obj.created_at }}</td>
+                                    {% if obj.is_staff == True and obj.is_active == True %}
+                                        <td><button type="button" class="btn btn-label-success" disabled>가입승인완료</button></td>
+                                    {% else %}
+                                        <td><button type="button" class="btn btn-outline-warning standBy_btn" id="confirm_text">가입승인대기</button></td>
+                                    {% endif %}
+                                    <td>asdf</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+{% include 'admins/admin_footer.html' %}
+<script>
+    $(document).ready(function () {
+        $(".standBy_btn").click(function () {
+            var tr = $(this).closest('tr');
+            var data_id = tr.data('id');
+            console.log(data_id)
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "가입승인을 허락하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function (result) {
+
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{% url 'userApproval' %}",
+                        method: "GET",
+                        data: {
+                            id : data_id,
+                        },
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '승인 완료!',
+                                text: '가입승인이 완료되었습니다.',
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            }).then(function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+
+            });
+        })
+    });
+
+
+</script>
 </html>
