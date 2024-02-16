@@ -216,6 +216,10 @@ urlpatterns = [
                   path('admins/holiday_info', holiday_info_page, name="holidayInfo"),
                   path('admins/holiday_check', HolidayCheckView.as_view(), name="HolidayCheckView"),
                   path('admins/holiday_adjustment', HolidayAdjustmentView.as_view(), name="HolidayAdjustmentView"),
+                  path('admins/get_adjust_holiday', get_adjust_holiday, name="getAdjustHoliday"),
+                  path('admins/create_adjust_holiday', create_adjust_holiday, name="createAdjustHoliday"),
+                  path('admins/update_adjust_holiday', update_adjust_holiday, name="updateAdjustHoliday"),
+                  path('admins/delete_adjust_holiday', delete_adjust_holiday, name="deleteAdjustHoliday"),
 
 
 

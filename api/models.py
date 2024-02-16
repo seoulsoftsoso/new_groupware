@@ -334,7 +334,7 @@ class Holiday(Model):
 
 
 class AdjustHoliday(Model):
-    adjust_count = models.IntegerField(null=True, verbose_name="조정 수량")
+    adjust_count = models.FloatField(null=True, verbose_name="조정 수량")
     adjust_reason = models.CharField(max_length=128, null=True, verbose_name="조정 사유")
     employee = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='Holiday_user',
                                  verbose_name="해당 유저 id")

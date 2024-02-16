@@ -79,7 +79,7 @@
                 </form>
 
                 <div class="bs-stepper-content d-flex justify-content-center mt-5 mb-5">
-                    <div class="mt-2 col-9 h-px-300" style="border: lightgrey 1px solid;">
+                    <div class="card mt-2 col-9 h-px-300">
                         <div class="d-flex" style="margin: 30px 20px;">
                             <h5 style="font-family: Pretendard;">나의 연차 정보</h5>
                             <h5 id="nowYear" style="font-family: Pretendard; margin-left: 5px;">-</h5>
@@ -91,9 +91,11 @@
                                     <tr class="text-nowrap" style="text-align: center;">
                                         <th>이름</th>
                                         <th>입사일</th>
+                                        <th>법적근속년수별 연차</th>
+                                        <th>추가 연차</th>
                                         <th>총 연차</th>
                                         <th>사용 연차</th>
-                                        <th>추가 연차</th>
+                                        <th>잔여 연차</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -101,9 +103,11 @@
                                         <tr style="text-align: center;">
                                             <td>{{ item.create_by__username }}</td>
                                             <td>{{ item.create_by__created_at }}</td>
+                                            <td>{{ item.law_holiday }}</td>
+                                            <td>{{ item.adjust_sum }}</td>
                                             <td>{{ item.total_holiday }}</td>
                                             <td>{{ item.cumulative_total_days }}</td>
-                                            <td>{{ item.adjust_sum }}</td>
+                                            <td>{{ item.residual_holiday }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

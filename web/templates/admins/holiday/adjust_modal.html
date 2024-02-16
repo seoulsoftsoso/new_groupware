@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="success_btn">확인</button>
+                        <button type="button" class="btn btn-primary" id="adjust_add_btn">확인</button>
                         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                     </div>
                 </div>
@@ -41,3 +41,42 @@
         </div>
     </div>
 </form>
+<script>
+    var objId;
+
+    $('#adjust_add_btn').click(function () {
+        var adjust_num = $('#adjust_num').val()
+        var adjust_reason = $('#adjust_reason').val()
+
+        $.ajax({
+            url: "{% url 'createAdjustHoliday' %}",
+            type: 'GET',
+            data: {
+                'id': currentId,
+                'adjust_num': adjust_num,
+                'adjust_reason': adjust_reason
+            },
+            success: function (res) {
+                Swal.fire({
+                title: 'Success!',
+                text: '연차조정이 등록되었습니다.',
+                icon: 'success',
+                confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function(err) {
+               Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        })
+
+    })
+</script>

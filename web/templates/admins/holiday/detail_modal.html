@@ -1,0 +1,129 @@
+{% load static %}
+<!-- Modal -->
+<form action="#" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="detail_btn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">상세보기 팝업</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="table-responsive text-nowrap">
+                                <table class="table" id="today_use">
+                                    <thead>
+                                    <tr class="text-nowrap" style="text-align: center;">
+                                        <th>조정일</th>
+                                        <th>조정수량</th>
+                                        <th>조정사유</th>
+                                        <th>비고</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="modal_tbody"></tbody>
+                                </table>
+                            </div>
+
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-primary" id="save_btn" style="display: none" onclick="saveItem(event)">저장</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+function editItem() {
+    currentRow = $(event.target).closest('tr')[0];
+
+    for (var i = 0; i < currentRow.cells.length - 1; i++) {
+        var cell = currentRow.cells[i];
+
+        if (i === 1 || i === 2) {
+            var text = cell.innerText;
+            var type = (i === 1) ? 'number' : 'text';
+            cell.innerHTML = '<input type="' + type + '" class="form-control" value="' + text + '">';
+        }
+    }
+
+    $('#save_btn').show();
+}
+
+function saveItem(event) {
+    var row = currentRow;
+    var id = $(row).data('id');
+    console.log('id : ', id)
+    var adjustCount = $(row.cells[1]).find('input').val();
+    var adjustReason = $(row.cells[2]).find('input').val();
+
+    $.ajax({
+        url: "{% url 'updateAdjustHoliday' %}",
+        type: 'GET',
+        data: {
+            'id': id,
+            'adjust_count': adjustCount,
+            'adjust_reason': adjustReason
+        },
+        success: function(res) {
+            Swal.fire({
+                title: 'Success!',
+                text: '연차조정이 수정되었습니다.',
+                icon: 'success',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        },
+        error: function(err) {
+           Swal.fire({
+                title: 'Fail!',
+                text: '관리자에게 문의바랍니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+        }
+    });
+}
+
+function deleteItem() {
+    currentRow = $(event.target).closest('tr')[0];
+    var id = $(currentRow).data('id');
+
+    $.ajax({
+        url: "{% url 'deleteAdjustHoliday' %}",
+        type: 'GET',
+        data: {
+            'id': id,
+        },
+        success: function(res) {
+            Swal.fire({
+                title: 'Success!',
+                text: '연차조정이 삭제되었습니다.',
+                icon: 'success',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        },
+        error: function(err) {
+           Swal.fire({
+                title: 'Fail!',
+                text: '관리자에게 문의바랍니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+        }
+    });
+
+}
+</script>

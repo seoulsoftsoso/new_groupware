@@ -89,12 +89,13 @@
                             <th style="font-size: medium; font-weight: bold">성명</th>
                             <th style="font-size: medium; font-weight: bold">근속년수</th>
                             <th style="font-size: medium; font-weight: bold">입사일</th>
-                            <th style="font-size: medium; font-weight: bold">총연차</th>
-                            <th style="font-size: medium; font-weight: bold">잔여연차</th>
-                            <th style="font-size: medium; font-weight: bold">사용연차</th>
+                            <th style="font-size: medium; font-weight: bold">근속년수별연차</th>
                             <th style="font-size: medium; font-weight: bold">추가연차</th>
+                            <th style="font-size: medium; font-weight: bold">총연차</th>
+                            <th style="font-size: medium; font-weight: bold">사용연차</th>
+                            <th style="font-size: medium; font-weight: bold">잔여연차</th>
                             <th style="font-size: medium; font-weight: bold">상세보기</th>
-                            <th style="font-size: medium; font-weight: bold">비고</th>
+                            <th style="font-size: medium; font-weight: bold">연차조정</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -103,35 +104,47 @@
                                 <td>{{ obj.department_position__name }}</td>
                                 <td>{{ obj.job_position__name }}</td>
                                 <td>{{ obj.username }}</td>
-                                <td>{{ obj.user_workYear }}</td>
+                                {% if obj.user_workYear == 0 %}
+                                    <td>1년 미만</td>
+                                {% else %}
+                                    <td>{{ obj.user_workYear }}년차</td>
+                                {% endif %}
                                 <td>{{ obj.created_at }}</td>
-                                <td>{{ obj.total_holiday }}개</td>
-                                <td>{{ obj.residual_holiday }}개</td>
-                                <td>{{ obj.total_days }}개</td>
+                                <td>{{ obj.law_holiday }}개</td>
                                 <td>{{ obj.adjust_sum }}개</td>
-                                <td></td>
+                                <td>{{ obj.total_holiday }}개</td>
+                                <td>{{ obj.total_days }}개</td>
+                                <td>{{ obj.residual_holiday }}개</td>
                                 <td>
-                                    {% if obj.create_by == request.user.user_id %}
-                                        <div class="dropdown">
-                                            <button type="button"
-                                                    class="btn p-0 dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown">
-                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" data-bs-toggle="modal"
-                                                   data-bs-target="#adjust_btn"
-                                                   data-id="{{ obj.id }}"
-                                                   href="javascript:void(0);">
-                                                    <i class="bx bx-edit-alt me-1"></i> 연차조정</a>
-                                            </div>
+                                    <button type="button"
+                                            class="detail_button btn btn-outline-dark"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#detail_btn"
+                                            data-id="{{ obj.id }}">상세보기
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                               data-bs-target="#adjust_btn"
+                                               data-id="{{ obj.id }}"
+                                               href="javascript:void(0);"
+                                               onclick="openModal(this);">
+                                                <i class="bx bx-edit-alt me-1"></i> 연차조정</a>
                                         </div>
-                                    {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% include 'admins/holiday/detail_modal.html' %}
                     {% include 'admins/holiday/adjust_modal.html' %}
                 </div>
 
@@ -144,4 +157,63 @@
 
 </body>
 {% include 'admins/admin_footer.html' %}
+<script>
+    var currentRow;
+    var currentId;
+
+    $('.detail_button').click(function () {
+        var userId = $(this).data('id');
+
+        $.ajax({
+            url: "{% url 'getAdjustHoliday' %}",
+            type: 'GET',
+            data: {
+                'user_id': userId
+            },
+            success: function (res) {
+                console.log('res', res)
+                var tbody = $('#modal_tbody');
+
+                tbody.empty();
+
+                $.each(res, function (index, data) {
+                    var date = new Date(data.updated_at);
+                    var year = date.getFullYear();
+                    var month = String(date.getMonth() + 1).padStart(2, '0');
+                    var day = String(date.getDate()).padStart(2, '0');
+                    var formattedDate = year + '-' + month + '-' + day;
+
+                    var dropdown = '<div class="dropdown">' +
+                           '<button type="button"' +
+                           'class="btn p-0 dropdown-toggle hide-arrow"' +
+                           'data-bs-toggle="dropdown">' +
+                           '<i class="bx bx-dots-vertical-rounded"></i>' +
+                           '</button>' +
+                           '<div class="dropdown-menu">' +
+                           '<a class="dropdown-item" href="javascript:void(0);" onclick="editItem();">' +
+                           '<i class="bx bx-edit-alt me-1"></i> 수정' +
+                           '</a>' +
+                           '<a class="dropdown-item" href="javascript:void(0);" onclick="deleteItem();">' +
+                           '<i class="bx bx-trash me-1"></i> 삭제' +
+                           '</a>' +
+                           '</div>' +
+                           '</div>';
+
+                    var row = '<tr style="text-align: center;" data-id="' + data.id + '">' +
+                              '<td>' + formattedDate + '</td>' +
+                              '<td>' + data.adjust_count + '</td>' +
+                              '<td>' + data.adjust_reason + '</td>' +
+                              '<td>' + dropdown + '</td>' +
+                              '</tr>';
+
+                    tbody.append(row);
+                });
+            }
+        });
+    })
+
+    function openModal(element) {
+        currentId = $(element).data('id');
+    }
+</script>
 </html>
