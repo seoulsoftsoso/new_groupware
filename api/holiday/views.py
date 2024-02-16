@@ -221,7 +221,6 @@ def update_adjust_holiday(request):
     adjust_holiday.updated_by = user
     adjust_holiday.save()
 
-
     return JsonResponse({"success": "success"})
 
 

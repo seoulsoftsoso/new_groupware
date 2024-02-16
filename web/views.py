@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster
-from api.views import get_member_info
+from api.views import *
 
 def index(request):
     return render(request, 'index.html', {})
@@ -220,8 +220,15 @@ def approval_delete_page(request):
         'created_at', 'department_position__name', 'job_position__name'
     ).order_by('department_position', 'job_position')
 
-    context = {}
-    context['result'] = list(qs)
+    department_info = get_department_info()
+    job_info = get_job_info()
+
+    context = {
+        'result': list(qs),
+        'department_info': department_info['department_info'],
+        'job_info': job_info['job_info']
+    }
+
     return render(request, 'admins/administrator/approval_delete.html', context)
 
 

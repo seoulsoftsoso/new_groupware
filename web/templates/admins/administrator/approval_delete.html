@@ -61,7 +61,14 @@
                                     {% if obj.is_staff == True and obj.is_active == True %}
                                         <td><button type="button" class="btn btn-label-success" disabled>가입승인완료</button></td>
                                     {% else %}
-                                        <td><button type="button" class="btn btn-outline-warning standBy_btn" id="confirm_text">가입승인대기</button></td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-outline-warning standBy_btn confirm_text"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#confirm_btn"
+                                                    data-id="{{ obj.id }}">가입승인대기
+                                            </button>
+                                        </td>
                                     {% endif %}
                                     <td>asdf</td>
                                 </tr>
@@ -69,6 +76,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {% include 'admins/administrator/approval_modalForm.html' %}
                 </div>
 
 
@@ -79,56 +87,56 @@
 </div>
 </body>
 {% include 'admins/admin_footer.html' %}
-<script>
-    $(document).ready(function () {
-        $(".standBy_btn").click(function () {
-            var tr = $(this).closest('tr');
-            var data_id = tr.data('id');
-            console.log(data_id)
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "가입승인을 허락하시겠습니까?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '확인',
-                customClass: {
-                    confirmButton: 'btn btn-primary me-3',
-                    cancelButton: 'btn btn-label-secondary'
-                },
-                buttonsStyling: false
-            }).then(function (result) {
-
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "{% url 'userApproval' %}",
-                        method: "GET",
-                        data: {
-                            id : data_id,
-                        },
-                        success: function (response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: '승인 완료!',
-                                text: '가입승인이 완료되었습니다.',
-                                customClass: {
-                                    confirmButton: 'btn btn-success'
-                                }
-                            }).then(function () {
-                                location.reload();
-                            });
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                }
-
-            });
-        })
-    });
-
-
-</script>
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#        $(".standBy_btn").click(function () {#}
+{#            var tr = $(this).closest('tr');#}
+{#            var data_id = tr.data('id');#}
+{#            console.log(data_id)#}
+{##}
+{#            Swal.fire({#}
+{#                title: 'Are you sure?',#}
+{#                text: "가입승인을 허락하시겠습니까?",#}
+{#                icon: 'warning',#}
+{#                showCancelButton: true,#}
+{#                confirmButtonText: '확인',#}
+{#                customClass: {#}
+{#                    confirmButton: 'btn btn-primary me-3',#}
+{#                    cancelButton: 'btn btn-label-secondary'#}
+{#                },#}
+{#                buttonsStyling: false#}
+{#            }).then(function (result) {#}
+{##}
+{#                if (result.value) {#}
+{#                    $.ajax({#}
+{#                        type: 'POST',#}
+{#                        url: "{% url 'userApproval' %}",#}
+{#                        method: "GET",#}
+{#                        data: {#}
+{#                            id : data_id,#}
+{#                        },#}
+{#                        success: function (response) {#}
+{#                            Swal.fire({#}
+{#                                icon: 'success',#}
+{#                                title: '승인 완료!',#}
+{#                                text: '가입승인이 완료되었습니다.',#}
+{#                                customClass: {#}
+{#                                    confirmButton: 'btn btn-success'#}
+{#                                }#}
+{#                            }).then(function () {#}
+{#                                location.reload();#}
+{#                            });#}
+{#                        },#}
+{#                        error: function (error) {#}
+{#                            console.log(error);#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{##}
+{#            });#}
+{#        })#}
+{#    });#}
+{##}
+{##}
+{#</script>#}
 </html>

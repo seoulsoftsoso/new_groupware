@@ -37,6 +37,29 @@ def get_member_info():
     return context
 
 
+def get_department_info():
+    qs = CodeMaster.objects.filter(group_id=1).values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'department_info': list(qs)
+    }
+    return context
+
+
+def get_job_info():
+    qs = CodeMaster.objects.filter(group_id=2).values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'job_info': list(qs)
+    }
+
+    return context
+
+
 class GetMemberInfo(View):
     def get(self, request, *args, **kwargs):
         context = get_member_info()
