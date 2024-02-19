@@ -30,6 +30,15 @@
                     </div>
 
                     <div class="col-md-12 col-12 mb-3">
+                        <label for="placeOfWork_select" class="form-label">* 근무지</label>
+                        <select class="select2 form-select form-select-lg" id="placeOfWork_select" name="placeOfWork_select" required>
+                            {% for obj in pow_info %}
+                                <option value="{{ obj.id }}">{{ obj.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
                         <label for="job_select" class="form-label">* 직급</label>
                         <select class="select2 form-select form-select-lg" id="job_select" name="job_select" required>
                             {% for obj in job_info %}
@@ -41,6 +50,11 @@
                     <div class="col-md-12 col-12 mb-3">
                         <label for="phone_num" class="form-label">* 연락처</label>
                         <input type="tel" class="form-control" id="phone_num" pattern="\d*" placeholder="연락처를 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="phone_num" class="form-label">* 과학기술인번호</label>
+                        <input type="tel" class="form-control" id="research_num" pattern="\d*" placeholder="과학기술인번호를 입력해주세요." required>
                     </div>
 
                 </div>
@@ -56,6 +70,7 @@
     </div>
 </form>
 <script>
+
      $(function () {
         $("#employment_date").flatpickr({
             dateFormat: 'Y-m-d',
@@ -71,13 +86,32 @@
                 url: $(this).attr('action'),
                 type: 'POST',
                 data: {
-
+                    'id':userId,
+                    'employment_date':$("#employment_date").val(),
+                    'department_select':$("#department_select").val(),
+                    'job_select':$("#job_select").val(),
+                    'phone_num':$("#phone_num").val(),
+                    'research_num':$("#research_num").val(),
                 },
                 success: function(response) {
-                    console.log(response)
+                    Swal.fire({
+                    title: 'Success!',
+                    text: '가입승인 완료!',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
                 },
-                error: function(response) {
-                    console.log(response)
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Fail!',
+                        text: '관리자에게 문의바랍니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
                 }
             });
         });

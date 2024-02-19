@@ -47,7 +47,8 @@
                                 <th style="font-size: medium; font-weight: bold">사원번호</th>
                                 <th style="font-size: medium; font-weight: bold">회원가입일</th>
                                 <th style="font-size: medium; font-weight: bold">가입승인 상태</th>
-                                <th style="font-size: medium; font-weight: bold">탈퇴승인 상태</th>
+                                <th style="font-size: medium; font-weight: bold">재직여부</th>
+                                <th style="font-size: medium; font-weight: bold">퇴사처리</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -59,24 +60,51 @@
                                     <td>{{ obj.code }}</td>
                                     <td>{{ obj.created_at }}</td>
                                     {% if obj.is_staff == True and obj.is_active == True %}
-                                        <td><button type="button" class="btn btn-label-success" disabled>가입승인완료</button></td>
+                                        <td><button type="button" class="btn btn-label-success" disabled>승인 완료</button></td>
                                     {% else %}
                                         <td>
                                             <button type="button"
                                                     class="btn btn-outline-warning standBy_btn confirm_text"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#confirm_btn"
-                                                    data-id="{{ obj.id }}">가입승인대기
+                                                    data-id="{{ obj.id }}"
+                                                    onclick="confirm_openModal(this)">승인 대기
                                             </button>
                                         </td>
                                     {% endif %}
-                                    <td>asdf</td>
+                                    {% if obj.department_position__name and obj.is_staff == False %}
+                                        <td>퇴사</td>
+                                    {% elif obj.is_staff == True and obj.is_active == True %}
+                                        <td>재직 중</td>
+                                    {% else %}
+                                        <td>승인 대기</td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item resignationBtn"
+                                                   data-id="{{ obj.id }}"
+                                                   href="javascript:void(0);"
+                                                   onclick="resignation(this);">
+                                                   ❌ 퇴사처리</a>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% include 'admins/administrator/approval_modalForm.html' %}
+                </div>
+
+                <div style="margin-bottom: 30px; margin-top: 50px;">
+                    {% include 'admins/paging.html' %}
                 </div>
 
 
@@ -87,56 +115,63 @@
 </div>
 </body>
 {% include 'admins/admin_footer.html' %}
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        $(".standBy_btn").click(function () {#}
-{#            var tr = $(this).closest('tr');#}
-{#            var data_id = tr.data('id');#}
-{#            console.log(data_id)#}
-{##}
-{#            Swal.fire({#}
-{#                title: 'Are you sure?',#}
-{#                text: "가입승인을 허락하시겠습니까?",#}
-{#                icon: 'warning',#}
-{#                showCancelButton: true,#}
-{#                confirmButtonText: '확인',#}
-{#                customClass: {#}
-{#                    confirmButton: 'btn btn-primary me-3',#}
-{#                    cancelButton: 'btn btn-label-secondary'#}
-{#                },#}
-{#                buttonsStyling: false#}
-{#            }).then(function (result) {#}
-{##}
-{#                if (result.value) {#}
-{#                    $.ajax({#}
-{#                        type: 'POST',#}
-{#                        url: "{% url 'userApproval' %}",#}
-{#                        method: "GET",#}
-{#                        data: {#}
-{#                            id : data_id,#}
-{#                        },#}
-{#                        success: function (response) {#}
-{#                            Swal.fire({#}
-{#                                icon: 'success',#}
-{#                                title: '승인 완료!',#}
-{#                                text: '가입승인이 완료되었습니다.',#}
-{#                                customClass: {#}
-{#                                    confirmButton: 'btn btn-success'#}
-{#                                }#}
-{#                            }).then(function () {#}
-{#                                location.reload();#}
-{#                            });#}
-{#                        },#}
-{#                        error: function (error) {#}
-{#                            console.log(error);#}
-{#                        }#}
-{#                    });#}
-{#                }#}
-{##}
-{#            });#}
-{#        })#}
-{#    });#}
-{##}
-{##}
-{#</script>#}
+<script>
+    var userId;
+
+    $.ajaxSetup({
+        headers: {"X-CSRFToken": '{{ csrf_token }}'}
+    });
+
+    function confirm_openModal(element) {
+        userId = $(element).data('id');
+    }
+
+    function resignation(element) {
+        userId = $(element).data('id');
+    }
+
+    $(document).ready(function () {
+        $(".resignationBtn").click(function () {
+            console.log(userId)
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "퇴사처리 하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function (result) {
+
+                if (result.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{% url 'userResignation' %}",
+                        method: "GET",
+                        data: {
+                            id: userId,
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                title: 'Fail!',
+                                text: '관리자에게 문의바랍니다.',
+                                icon: 'error',
+                                confirmButtonText: '확인'
+                            })
+                        }
+                    });
+                }
+            });
+
+        })
+    });
+
+</script>
 </html>

@@ -60,6 +60,18 @@ def get_job_info():
     return context
 
 
+def get_pow_info():
+    qs = CodeMaster.objects.filter(group_id__code="POW").values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'pow_info': list(qs)
+    }
+
+    return context
+
+
 class GetMemberInfo(View):
     def get(self, request, *args, **kwargs):
         context = get_member_info()

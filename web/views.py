@@ -214,24 +214,6 @@ def holiday_info_page(request):
     return render(request, 'admins/holiday/holiday_info.html', context)
 
 
-def approval_delete_page(request):
-    qs = UserMaster.objects.filter(is_master=False).values(
-        'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
-        'created_at', 'department_position__name', 'job_position__name'
-    ).order_by('department_position', 'job_position')
-
-    department_info = get_department_info()
-    job_info = get_job_info()
-
-    context = {
-        'result': list(qs),
-        'department_info': department_info['department_info'],
-        'job_info': job_info['job_info']
-    }
-
-    return render(request, 'admins/administrator/approval_delete.html', context)
-
-
 def user_authority_page(request):
     context = get_member_info()
     return render(request, 'admins/administrator/user_authority.html', context)
