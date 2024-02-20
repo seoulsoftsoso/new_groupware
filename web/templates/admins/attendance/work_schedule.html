@@ -102,7 +102,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for obj in contacts %}
+                        {% for obj in attendance_queryset %}
                             <tr style="text-align: center" data-pk="{{ obj.id }}">
                                 <td>{{ obj.date }}</td>
                                 <td>{{ obj.employee.username }}</td>
@@ -122,7 +122,7 @@
                     </table>
                 </div>
               <div style="margin-bottom: 30px; margin-top: 50px;">
-                  {% include 'admins/paging.html' %}
+                  {% include 'admins/search_to_from_paging.html' with search_to=search_to search_from=search_from search_content=search_content %}
               </div>
 
               </div>

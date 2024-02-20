@@ -163,6 +163,7 @@ class admin_work_schedule_page(ListView):
         search_content = self.request.GET.get('search-content', None)
         search_to = self.request.GET.get('search-to', None)
         search_from = self.request.GET.get('search-from', None)
+        print(f'Search To: {search_to}, Search From: {search_from}, Search Content: {search_content}')
         attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username')
 
         if search_to != "" and search_to != None:
@@ -191,10 +192,10 @@ class admin_work_schedule_page(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(admin_work_schedule_page, self).get_context_data(**kwargs)
         context['USER'] = self.request.user.id
-        # paging
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, self.get_queryset())
-
-        # print('context : ', context)
+        context['attendance_queryset'] = context['object_list']
+        context['search_to'] = self.request.GET.get('search-to', None)
+        context['search_from'] = self.request.GET.get('search-from', None)
+        context['search_content'] = self.request.GET.get('search-content', None)
 
         return context
 
