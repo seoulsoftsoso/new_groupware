@@ -140,7 +140,7 @@
                             </tr>
                             </thead>
                                 <tbody>
-                                {% for obj in result %}
+                                {% for obj in object_list %}
                                     <tr style="text-align: center;">
                                         <td>전자결재 제출일</td>
                                         <td>{{ obj.create_by__department_position__name }}</td>
@@ -165,7 +165,7 @@
                 </div>
 
                 <div style="margin-bottom: 30px; margin-top: 50px;">
-                  {% include 'admins/paging.html' %}
+                  {% include 'admins/paging.html' with YEAR=request.GET.YEAR MONTH=request.GET.MONTH %}
                 </div>
 
             </div>

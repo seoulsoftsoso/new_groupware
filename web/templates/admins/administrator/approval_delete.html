@@ -35,6 +35,28 @@
                     </div>
                 </div>
 
+                <div class="col-md-12 d-flex justify-content-end">
+                    <form method="get">
+                        {% csrf_token %}
+                        <div class="col-md-8 col-12 mb-3" style="display: flex; flex-direction: row;">
+                            <div class="col-md-4">
+                                <select class="form-control" id="statusFilter" name="statusFilter">
+                                    <option value="">모두 보기</option>
+                                    <option value="resignation" {% if request.GET.statusFilter == 'resignation' %} selected {% endif %}>퇴사</option>
+                                    <option value="working" {% if request.GET.statusFilter == 'working' %} selected {% endif %}>재직 중</option>
+                                    <option value="standby" {% if request.GET.statusFilter == 'standby' %} selected {% endif %}>승인 대기</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="검색" class="form-control" id="form-search"
+                                   name="search_content" value="{{ search_content | default_if_none:'' }}"/>
+                            <button class="btn btn-primary btn-compose" data-bs-toggle="modal"
+                                    style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">
+                                검색
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
                 <!--여기부터 작성-->
                 <div class="row justify-content-center">
                     <div class="card-datatable table-responsive col-11">
@@ -104,7 +126,7 @@
                 </div>
 
                 <div style="margin-bottom: 30px; margin-top: 50px;">
-                    {% include 'admins/paging.html' %}
+                    {% include 'admins/administrator/approval_paging.html' with statusFilter=statusFilter %}
                 </div>
 
 

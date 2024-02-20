@@ -10,6 +10,7 @@ from api.models import UserMaster, EventMaster
 
 class business_main_page(ListView):
     template_name = 'admins/business/business_main.html'
+    paginate_by = 15
 
     def get_queryset(self):
         self.today = timezone.now().date()
@@ -38,7 +39,6 @@ class business_main_page(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['event_qs'] = context['object_list']
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
 
         return context
 

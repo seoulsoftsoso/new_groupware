@@ -27,8 +27,9 @@ class Days(Func):
 
 class HolidayCheckView(ListView):
     template_name = 'admins/holiday/holiday_check.html'
+    paginate_by = 15
 
-    def get_queryset(self):
+    def get_original_queryset(self):
         current_date = datetime.now().date()
         search_title = self.request.GET.get('search-title', None)
         search_content = self.request.GET.get('search-content', None)
@@ -93,26 +94,37 @@ class HolidayCheckView(ListView):
 
         return result, original_result
 
+    def get_queryset(self):
+        # 새로운 get_queryset 메서드에서는 result만 반환합니다.
+        result, original_result = self.get_original_queryset()
+        return result
+
     def get_user_holiday(self):
         user_id = self.request.COOKIES['user_id']
-        _, original_result = self.get_queryset()
+        _, original_result = self.get_original_queryset()
         return original_result.filter(create_by_id=user_id).order_by('-id')[:1]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'], context['original_result'] = context['object_list']
+        # get_original_queryset 메서드로부터 original_result를 얻습니다.
+        _, original_result = self.get_original_queryset()
+        context['original_result'] = original_result
         context['user_holiday'] = self.get_user_holiday()
         context['standard_year'] = self.request.GET.get('YEAR', datetime.today().year)
         context['standard_month'] = self.request.GET.get('MONTH', datetime.today().month)
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
         return context
 
 
 class HolidayAdjustmentView(ListView):
     template_name = 'admins/holiday/holiday_adjustment.html'
+    paginate_by = 15
 
     def get_queryset(self):
         current_date = datetime.now().date()
+        search_title = self.request.GET.get('search_title', None)
+        search_content = self.request.GET.get('search_content', None)
+        print(search_title)
+        print(search_content)
 
         adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id'), delete_flag="N").values(
             'employee_id').annotate(
@@ -156,6 +168,11 @@ class HolidayAdjustmentView(ListView):
             'residual_holiday', 'cumulative_total_days'
         ).order_by('department_position_id', 'job_position_id')
 
+        if search_title == 'name' and search_content:
+            result = result.filter(username__icontains=search_content)
+        elif search_title == 'department' and search_content:
+            result = result.filter(department_position__name__icontains=search_content)
+
         # for obj in result:
         #     print('obj:', obj)
 
@@ -163,8 +180,8 @@ class HolidayAdjustmentView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'] = self.get_queryset()
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
+        context['result'] = context['object_list']
+        # context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
         return context
 
 
