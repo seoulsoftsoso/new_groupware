@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.filter
 def basename(value):
-    return os.path.basename(value)
+    return os.path.basename(value.path)
 
 
 @register.filter

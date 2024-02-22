@@ -1,3 +1,4 @@
+import requests
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -68,14 +69,8 @@ def admin_noticewrite_add(request):
 
         if files:
             for file in files:
-                file_path = os.path.join(settings.MEDIA_ROOT, file.name)
-
-                with open(file_path, 'wb') as destination:
-                    for chunk in file.chunks():
-                        destination.write(chunk)
-
                 FileBoardMaster.objects.create(
-                    parent=board_instance, file_path=file_path, created_by_id=created_by_id
+                    parent=board_instance, file_path=file, created_by_id=created_by_id
                 )
 
     else:
@@ -112,14 +107,8 @@ def admin_noticewrite_edit(request, notice_id):
 
         if files:
             for file in files:
-                file_path = os.path.join(settings.MEDIA_ROOT, file.name)
-
-                with open(file_path, 'wb') as destination:
-                    for chunk in file.chunks():
-                        destination.write(chunk)
-
                 FileBoardMaster.objects.create(
-                    parent=board_instance, file_path=file_path, created_by_id=created_by_id
+                    parent=board_instance, file_path=file, created_by_id=created_by_id
                 )
 
     else:
@@ -130,20 +119,28 @@ def admin_noticewrite_edit(request, notice_id):
 
 def download_File(request, file_id):
     file_instance = FileBoardMaster.objects.get(pk=file_id, delete_flag="N")
-    # 파일 경로
-    file_path = os.path.join(settings.MEDIA_ROOT, file_instance.file_path)
+    print('file_instance', file_instance)
 
-    # 파일 읽어오기
-    with open(file_path, 'rb') as file:
-        # 파일의 확장자를 통해 MIME 타입을 추정
-        content_type, _ = mimetypes.guess_type(file_path)
-        # 추정이 불가능한 경우, 일반적인 바이너리 데이터를 의미하는 'application/octet-stream'을 사용
-        if content_type is None:
-            content_type = 'application/octet-stream'
-        # Response 객체 생성
-        response = HttpResponse(FileWrapper(file), content_type=content_type)
-        # 파일 이름 설정
-        response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(quote(os.path.basename(file_path)))
+    # 파일의 URL을 가져옴
+    file_url = file_instance.file_path.url
+    print('file_url:', file_url)
+
+    # 파일 다운로드
+    response = requests.get(file_url, stream=True)
+    print('response:', response)
+
+    # 파일의 확장자를 통해 MIME 타입을 추정
+    content_type, _ = mimetypes.guess_type(file_url)
+    # 추정이 불가능한 경우, 일반적인 바이너리 데이터를 의미하는 'application/octet-stream'을 사용
+    if content_type is None:
+        content_type = 'application/octet-stream'
+
+    # Response 객체 생성
+    file_name = os.path.basename(file_url)
+    file_wrapper = FileWrapper(response.raw)
+    response = HttpResponse(file_wrapper, content_type=content_type)
+    # 파일 이름 설정
+    response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(quote(file_name))
 
     return response
 
