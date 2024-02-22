@@ -236,7 +236,8 @@ class FileBoardMaster(models.Model):
                                verbose_name='파일첨부')
     replyparent = models.ForeignKey('ReplyMaster', models.CASCADE, null=True, related_name='fiel_reply',
                                     verbose_name='댓글 고유식별자')
-    file_path = models.CharField(max_length=128, null=False)
+#    file_path = models.CharField(max_length=128, null=False)
+    file_path = models.FileField(upload_to='board', default=None, null=True, verbose_name='첨부파일')
     created_by = models.ForeignKey('UserMaster', models.CASCADE, null=True, related_name='file_user_by',
                                    verbose_name='최초작성자')  # 최초작성자
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='최초작성일')  # 최초작성일
@@ -355,8 +356,10 @@ class ProMaster(Model):
     end_date = models.DateTimeField(null=True, verbose_name='종료일')
     pj_type = models.ForeignKey('CodeMaster', on_delete=models.DO_NOTHING, related_name='pjtype', verbose_name='프로젝트유형')
     pj_customer = models.CharField(max_length=128, null=True, verbose_name='고객사')
-    pj_master = models.ForeignKey('ProMembers', on_delete=models.DO_NOTHING, related_name='pjmaster', verbose_name='PM')
+    pj_master = models.ForeignKey('UserMaster', on_delete=models.DO_NOTHING, related_name='pjmaster', verbose_name='PM')
     pj_note = models.CharField(max_length=256, null=True, verbose_name='프로젝트 요약')
+    pro_status = models.CharField(max_length=1, default='S', null=False,
+                                   verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
@@ -401,6 +404,7 @@ class ProTask(Model):
 class ProTaskSub(Model):
     task_parent = models.ForeignKey('ProTask', on_delete=models.DO_NOTHING, related_name='taskparent',
                                     verbose_name='task 아이디')
+    task_title = models.CharField(max_length=256, null=False, verbose_name='제목')
     task_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
     task_status = models.CharField(max_length=1, default='S', null=False,
                                    verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
@@ -409,3 +413,11 @@ class ProTaskSub(Model):
     difficulty = models.CharField(max_length=1, null=False, default='B', verbose_name='난이도')  # 상:T, 중:M, 하:B
     issue = models.TextField(null=True, verbose_name='이슈사항')
     etc = models.CharField(max_length=256, null=True, verbose_name='기타')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='protasksubCreated_by',
+                                   verbose_name='최초작성자')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='protasksubUpdated_by',
+                                   verbose_name='최종작성자')  # 최종작성자
+
