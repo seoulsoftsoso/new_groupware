@@ -73,7 +73,7 @@
             <div class="aside-box col d-flex justify-content-center my-auto px-0">
                 <ul>
                     {% if request.COOKIES.is_active %}
-                    {% if request.COOKIES.is_staff %}
+                    {% if request.COOKIES.is_staff == 'true' %}
                         <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
                     {% endif %}
                     <li><a href=""><span class="user">{{request.COOKIES.username}}</span></a></li>

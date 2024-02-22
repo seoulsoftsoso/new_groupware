@@ -52,7 +52,7 @@
                                 <div class="row">
                                     <!-- 검색 대상 선택 -->
                                     <div class="col-md-4 col-12 mb-3">
-                                        <select id="selectpickerBasic" class="selectpicker form-control">
+                                        <select id="selectpickerBasic" class="selectpicker form-control" name="search_title">
                                             <option value="name"
                                                     {% if 'name' in search_title %}selected {% endif %}>성명
                                             </option>
@@ -65,7 +65,7 @@
                                     <!-- 검색어 입력과 검색 버튼 -->
                                     <div class="col-md-8 col-12 mb-3 d-flex">
                                         <input type="text" placeholder="검색" class="form-control"
-                                               id="form-search" name="search-content"
+                                               id="form-search" name="search_content"
                                                value="{{ search_content | default_if_none:'' }}"/>
                                         <button class="btn btn-primary btn-compose"
                                                 data-bs-toggle="modal"
@@ -99,7 +99,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            {% for obj in result %}
+                            {% for obj in page_obj.object_list %}
                             <tr style="text-align: center" data-toggle="modal" data-target="#editModal">
                                 <td>{{ obj.department_position__name }}</td>
                                 <td>{{ obj.job_position__name }}</td>
@@ -109,7 +109,7 @@
                                 {% else %}
                                     <td>{{ obj.user_workYear }}년차</td>
                                 {% endif %}
-                                <td>{{ obj.created_at }}</td>
+                                <td>{{ obj.employment_date }}</td>
                                 <td>{{ obj.law_holiday }}개</td>
                                 <td>{{ obj.adjust_sum }}개</td>
                                 <td>{{ obj.total_holiday }}개</td>
@@ -146,6 +146,10 @@
                     </table>
                     {% include 'admins/holiday/detail_modal.html' %}
                     {% include 'admins/holiday/adjust_modal.html' %}
+                </div>
+
+                <div style="margin-bottom: 30px; margin-top: 50px;">
+                  {% include 'admins/year_month_paging.html' %}
                 </div>
 
 

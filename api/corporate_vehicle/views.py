@@ -56,8 +56,6 @@ class CorporateMgmtListView(ListView):
         context = super().get_context_data(**kwargs)
         context['event_qs'] = context['object_list']
         context['today_qs'] = self.original_qs.filter(start_date__date__lte=self.today, end_date__date__gte=self.today)
-        # page
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
 
         return context
 

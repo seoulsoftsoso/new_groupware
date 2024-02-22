@@ -1,5 +1,4 @@
 from datetime import date
-
 from django.db.models import Count, Q, Case, When, IntegerField, F
 from django.db.models.functions import TruncDate
 from django.http import JsonResponse, HttpResponseRedirect
@@ -9,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster
-
+from api.views import *
 
 def index(request):
     return render(request, 'index.html', {})
@@ -213,4 +212,19 @@ def holiday_info_page(request):
     }
 
     return render(request, 'admins/holiday/holiday_info.html', context)
+
+
+def user_authority_page(request):
+    context = get_member_info()
+    return render(request, 'admins/administrator/user_authority.html', context)
+
+
+def pay_question_page(request):
+    context = {}
+    return render(request, 'admins/administrator/pay_question.html', context)
+
+
+def user_settings_page(request):
+    context = {}
+    return  render(request, 'admins/administrator/user_setting.html', context)
 

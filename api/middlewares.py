@@ -24,7 +24,7 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
         if request.path.startswith('/admins/'):
-            if not request.COOKIES.get('Authorization'):
+            if not request.COOKIES.get('Authorization') or request.COOKIES.get('is_staff') == 'false':
                 return redirect('/login/')
 
             # 'admins/holiday_adjustment'

@@ -27,8 +27,9 @@ class Days(Func):
 
 class HolidayCheckView(ListView):
     template_name = 'admins/holiday/holiday_check.html'
+    paginate_by = 15
 
-    def get_queryset(self):
+    def get_original_queryset(self):
         current_date = datetime.now().date()
         search_title = self.request.GET.get('search-title', None)
         search_content = self.request.GET.get('search-content', None)
@@ -41,7 +42,7 @@ class HolidayCheckView(ListView):
 
         result = (
             EventMaster.objects.annotate(
-                user_workYear=Floor(DateDiff(current_date, F('create_by__created_at')) / 365),
+                user_workYear=Floor(DateDiff(current_date, F('create_by__employment_date')) / 365),
                 law_holiday=Subquery(
                     Holiday.objects.filter(
                         workYear=OuterRef('user_workYear')
@@ -69,7 +70,7 @@ class HolidayCheckView(ListView):
             .filter(create_at__lte=timezone.now(), create_by__is_master=False, event_type__in=['Holiday', 'Family'])
             .values(
                 'create_by__username', 'create_by__department_position__name', 'create_by__job_position__name',
-                'create_by__created_at', 'cumulative_total_days',
+                'create_by__employment_date', 'cumulative_total_days',
                 'start_date', 'end_date', 'description', 'user_workYear',
                 'event_type', 'law_holiday', 'adjust_sum',
                 'total_days', 'total_holiday', 'residual_holiday', 'create_by_id'
@@ -93,26 +94,37 @@ class HolidayCheckView(ListView):
 
         return result, original_result
 
+    def get_queryset(self):
+        # 새로운 get_queryset 메서드에서는 result만 반환합니다.
+        result, original_result = self.get_original_queryset()
+        return result
+
     def get_user_holiday(self):
         user_id = self.request.COOKIES['user_id']
-        _, original_result = self.get_queryset()
+        _, original_result = self.get_original_queryset()
         return original_result.filter(create_by_id=user_id).order_by('-id')[:1]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'], context['original_result'] = context['object_list']
+        # get_original_queryset 메서드로부터 original_result를 얻습니다.
+        _, original_result = self.get_original_queryset()
+        context['original_result'] = original_result
         context['user_holiday'] = self.get_user_holiday()
         context['standard_year'] = self.request.GET.get('YEAR', datetime.today().year)
         context['standard_month'] = self.request.GET.get('MONTH', datetime.today().month)
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['object_list'])
         return context
 
 
 class HolidayAdjustmentView(ListView):
     template_name = 'admins/holiday/holiday_adjustment.html'
+    paginate_by = 15
 
     def get_queryset(self):
         current_date = datetime.now().date()
+        search_title = self.request.GET.get('search_title', None)
+        search_content = self.request.GET.get('search_content', None)
+        print(search_title)
+        print(search_content)
 
         adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id'), delete_flag="N").values(
             'employee_id').annotate(
@@ -129,7 +141,7 @@ class HolidayAdjustmentView(ListView):
 
         result = UserMaster.objects.annotate(
             user_workYear=Floor(  # 근속년수
-                DateDiff(current_date, F('created_at')) / 365
+                DateDiff(current_date, F('employment_date')) / 365
             ),
             law_holiday=Subquery(  # 법정근속년수별 연차
                 Holiday.objects.filter(
@@ -151,10 +163,15 @@ class HolidayAdjustmentView(ListView):
             residual_holiday=ExpressionWrapper(F('total_holiday') - F('cumulative_total_days'),
                                                output_field=FloatField())  # 잔여연차
         ).filter(is_master=False, is_active=True, is_staff=True).values(
-            'id', 'username', 'department_position__name', 'job_position__name', 'created_at',
+            'id', 'username', 'department_position__name', 'job_position__name', 'employment_date',
             'user_workYear', 'law_holiday', 'adjust_sum', 'total_days', 'total_holiday',
             'residual_holiday', 'cumulative_total_days'
-        ).order_by('job_position')
+        ).order_by('department_position_id', 'job_position_id')
+
+        if search_title == 'name' and search_content:
+            result = result.filter(username__icontains=search_content)
+        elif search_title == 'department' and search_content:
+            result = result.filter(department_position__name__icontains=search_content)
 
         # for obj in result:
         #     print('obj:', obj)
@@ -163,8 +180,8 @@ class HolidayAdjustmentView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['result'] = self.get_queryset()
-        context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
+        context['result'] = context['object_list']
+        # context['page_range'], context['contacts'] = PaginatorManager(self.request, context['result'])
         return context
 
 
@@ -213,8 +230,12 @@ def update_adjust_holiday(request):
 
     adjust_holiday = AdjustHoliday.objects.get(id=adjust_id)
 
+    user_id = request.COOKIES['user_id']
+    user = UserMaster.objects.get(id=user_id)
+
     adjust_holiday.adjust_count = adjust_count
     adjust_holiday.adjust_reason = adjust_reason
+    adjust_holiday.updated_by = user
     adjust_holiday.save()
 
     return JsonResponse({"success": "success"})

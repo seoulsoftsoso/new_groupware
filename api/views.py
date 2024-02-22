@@ -1,19 +1,11 @@
 import time
 import json
-import traceback
-import requests
-import numpy as np
-from django.core.serializers import serialize
-from django.shortcuts import render, redirect
-from rest_framework.exceptions import ValidationError
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 from django.core import serializers
 from .models import UserMaster, CodeMaster
-from rest_framework import viewsets
-
-from .models import Question
+from api import views
 
 
 # Create your views here.
@@ -34,15 +26,55 @@ def checkIn(request):
     return HttpResponse(context)
 
 
+def get_member_info():
+    qs = UserMaster.objects.filter(is_master=False, is_active=True, is_staff=True).values(
+        'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
+        'created_at', 'department_position__name', 'job_position__name'
+    ).order_by('department_position', 'job_position')
+
+    context = {}
+    context['result'] = list(qs)
+    return context
+
+
+def get_department_info():
+    qs = CodeMaster.objects.filter(group_id=1).values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'department_info': list(qs)
+    }
+    return context
+
+
+def get_job_info():
+    qs = CodeMaster.objects.filter(group_id=2).values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'job_info': list(qs)
+    }
+
+    return context
+
+
+def get_pow_info():
+    qs = CodeMaster.objects.filter(group_id__code="POW").values(
+        'id', 'code', 'name', 'created_at', 'updated_at', 'group_id'
+    )
+
+    context = {
+        'pow_info': list(qs)
+    }
+
+    return context
+
+
 class GetMemberInfo(View):
     def get(self, request, *args, **kwargs):
-
-        qs = UserMaster.objects.filter(is_master=False, is_active=True, is_staff=True).values(
-            'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
-            'created_at', 'department_position__name', 'job_position__name'
-        ).order_by('department_position', 'job_position')
-        context = {}
-        context['result'] = list(qs)
+        context = get_member_info()
         return JsonResponse(context, safe=False)
 
 

@@ -102,12 +102,16 @@
                                     {% for item in user_holiday %}
                                         <tr style="text-align: center;">
                                             <td>{{ item.create_by__username }}</td>
-                                            <td>{{ item.create_by__created_at }}</td>
+                                            <td>{{ item.create_by__employment_date }}</td>
                                             <td>{{ item.law_holiday }}</td>
                                             <td>{{ item.adjust_sum }}</td>
                                             <td>{{ item.total_holiday }}</td>
                                             <td>{{ item.cumulative_total_days }}</td>
                                             <td>{{ item.residual_holiday }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" style="text-align: center;">연차 등록 정보가 없습니다.</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -136,7 +140,7 @@
                             </tr>
                             </thead>
                                 <tbody>
-                                {% for obj in result %}
+                                {% for obj in object_list %}
                                     <tr style="text-align: center;">
                                         <td>전자결재 제출일</td>
                                         <td>{{ obj.create_by__department_position__name }}</td>
@@ -161,7 +165,7 @@
                 </div>
 
                 <div style="margin-bottom: 30px; margin-top: 50px;">
-                  {% include 'admins/paging.html' %}
+                  {% include 'admins/year_month_paging.html' with YEAR=request.GET.YEAR MONTH=request.GET.MONTH %}
                 </div>
 
             </div>

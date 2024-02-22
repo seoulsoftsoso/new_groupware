@@ -1,10 +1,199 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
 <body>
 
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">가입승인 / 탈퇴처리</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-end">
+                    <form method="get">
+                        {% csrf_token %}
+                        <div class="col-md-8 col-12 mb-3" style="display: flex; flex-direction: row;">
+                            <div class="col-md-4">
+                                <select class="form-control" id="statusFilter" name="statusFilter">
+                                    <option value="">모두 보기</option>
+                                    <option value="resignation" {% if request.GET.statusFilter == 'resignation' %} selected {% endif %}>퇴사</option>
+                                    <option value="working" {% if request.GET.statusFilter == 'working' %} selected {% endif %}>재직 중</option>
+                                    <option value="standby" {% if request.GET.statusFilter == 'standby' %} selected {% endif %}>승인 대기</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="검색" class="form-control" id="form-search"
+                                   name="search_content" value="{{ search_content | default_if_none:'' }}"/>
+                            <button class="btn btn-primary btn-compose" data-bs-toggle="modal"
+                                    style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">
+                                검색
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!--여기부터 작성-->
+                <div class="row justify-content-center">
+                    <div class="card-datatable table-responsive col-11">
+                        <table class="dt-multilingual table border-top" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
+                            <thead>
+                            <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold">부서</th>
+                                <th style="font-size: medium; font-weight: bold">직급</th>
+                                <th style="font-size: medium; font-weight: bold">성명</th>
+                                <th style="font-size: medium; font-weight: bold">사원번호</th>
+                                <th style="font-size: medium; font-weight: bold">회원가입일</th>
+                                <th style="font-size: medium; font-weight: bold">가입승인 상태</th>
+                                <th style="font-size: medium; font-weight: bold">재직여부</th>
+                                <th style="font-size: medium; font-weight: bold">퇴사처리</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in result %}
+                                <tr style="text-align: center" data-id="{{ obj.id }}">
+                                    <td>{{ obj.department_position__name }}</td>
+                                    <td>{{ obj.job_position__name }}</td>
+                                    <td>{{ obj.username }}</td>
+                                    <td>{{ obj.code }}</td>
+                                    <td>{{ obj.created_at }}</td>
+                                    {% if obj.is_staff == True and obj.is_active == True %}
+                                        <td><button type="button" class="btn btn-label-success" disabled>승인 완료</button></td>
+                                    {% else %}
+                                        <td>
+                                            <button type="button"
+                                                    class="btn btn-outline-warning standBy_btn confirm_text"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#confirm_btn"
+                                                    data-id="{{ obj.id }}"
+                                                    onclick="confirm_openModal(this)">승인 대기
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                    {% if obj.department_position__name and obj.is_staff == False %}
+                                        <td>퇴사</td>
+                                    {% elif obj.is_staff == True and obj.is_active == True %}
+                                        <td>재직 중</td>
+                                    {% else %}
+                                        <td>승인 대기</td>
+                                    {% endif %}
+                                    <td>
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item resignationBtn"
+                                                   data-id="{{ obj.id }}"
+                                                   href="javascript:void(0);"
+                                                   onclick="resignation(this);">
+                                                   ❌ 퇴사처리</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% include 'admins/administrator/approval_modalForm.html' %}
+                </div>
+
+                <div style="margin-bottom: 30px; margin-top: 50px;">
+                    {% include 'admins/administrator/approval_paging.html' with statusFilter=statusFilter %}
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+{% include 'admins/admin_footer.html' %}
+<script>
+    var userId;
+
+    $.ajaxSetup({
+        headers: {"X-CSRFToken": '{{ csrf_token }}'}
+    });
+
+    function confirm_openModal(element) {
+        userId = $(element).data('id');
+    }
+
+    function resignation(element) {
+        userId = $(element).data('id');
+    }
+
+    $(document).ready(function () {
+        $(".resignationBtn").click(function () {
+            console.log(userId)
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "퇴사처리 하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function (result) {
+
+                if (result.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{% url 'userResignation' %}",
+                        method: "GET",
+                        data: {
+                            id: userId,
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (error) {
+                            Swal.fire({
+                                title: 'Fail!',
+                                text: '관리자에게 문의바랍니다.',
+                                icon: 'error',
+                                confirmButtonText: '확인'
+                            })
+                        }
+                    });
+                }
+            });
+
+        })
+    });
+
+</script>
 </html>

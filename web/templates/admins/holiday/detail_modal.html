@@ -41,6 +41,7 @@
 <script>
 function editItem() {
     currentRow = $(event.target).closest('tr')[0];
+    $(currentRow).addClass('modified');  // 수정 누른 행 class 추가
 
     for (var i = 0; i < currentRow.cells.length - 1; i++) {
         var cell = currentRow.cells[i];
@@ -55,41 +56,43 @@ function editItem() {
     $('#save_btn').show();
 }
 
-function saveItem(event) {
-    var row = currentRow;
-    var id = $(row).data('id');
-    console.log('id : ', id)
-    var adjustCount = $(row.cells[1]).find('input').val();
-    var adjustReason = $(row.cells[2]).find('input').val();
 
-    $.ajax({
-        url: "{% url 'updateAdjustHoliday' %}",
-        type: 'GET',
-        data: {
-            'id': id,
-            'adjust_count': adjustCount,
-            'adjust_reason': adjustReason
-        },
-        success: function(res) {
-            Swal.fire({
-                title: 'Success!',
-                text: '연차조정이 수정되었습니다.',
-                icon: 'success',
-                confirmButtonText: '확인'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    location.reload();
-                }
-            });
-        },
-        error: function(err) {
-           Swal.fire({
-                title: 'Fail!',
-                text: '관리자에게 문의바랍니다.',
-                icon: 'error',
-                confirmButtonText: '확인'
-            })
-        }
+function saveItem(event) {
+    $('#modal_tbody tr.modified').each(function() {
+        var row = $(this);
+        var id = row.data('id');
+        var adjustCount = row.find('td:eq(1) input').val();
+        var adjustReason = row.find('td:eq(2) input').val();
+
+        $.ajax({
+            url: "{% url 'updateAdjustHoliday' %}",
+            type: 'GET',
+            data: {
+                'id': id,
+                'adjust_count': adjustCount,
+                'adjust_reason': adjustReason
+            },
+            success: function(res) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '연차조정이 수정되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function(err) {
+               Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
     });
 }
 

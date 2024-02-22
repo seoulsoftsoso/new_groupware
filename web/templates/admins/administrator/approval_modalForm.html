@@ -1,0 +1,119 @@
+{% load static %}
+<!-- Modal -->
+<form id="approval_form" action="{% url 'userApproval' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="confirm_btn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">가입승인 작성 폼</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="employment_date" class="form-label">* 입사일자</label>
+                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="employment_date" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="department_select" class="form-label">* 부서</label>
+                        <select class="select2 form-select form-select-lg" id="department_select" name="department_select" required>
+                            {% for obj in department_info %}
+                                <option value="{{ obj.id }}">{{ obj.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="placeOfWork_select" class="form-label">* 근무지</label>
+                        <select class="select2 form-select form-select-lg" id="placeOfWork_select" name="placeOfWork_select" required>
+                            {% for obj in pow_info %}
+                                <option value="{{ obj.id }}">{{ obj.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="job_select" class="form-label">* 직급</label>
+                        <select class="select2 form-select form-select-lg" id="job_select" name="job_select" required>
+                            {% for obj in job_info %}
+                                <option value="{{ obj.id }}">{{ obj.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="phone_num" class="form-label">* 연락처</label>
+                        <input type="tel" class="form-control" id="phone_num" pattern="\d*" placeholder="연락처를 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="phone_num" class="form-label">* 과학기술인번호</label>
+                        <input type="tel" class="form-control" id="research_num" pattern="\d*" placeholder="과학기술인번호를 입력해주세요." required>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="approval_btn">확인</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+
+     $(function () {
+        $("#employment_date").flatpickr({
+            dateFormat: 'Y-m-d',
+            enableTime: false
+        });
+    });
+
+     $(document).ready(function() {
+        $('#approval_form').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: {
+                    'id':userId,
+                    'employment_date':$("#employment_date").val(),
+                    'department_select':$("#department_select").val(),
+                    'job_select':$("#job_select").val(),
+                    'phone_num':$("#phone_num").val(),
+                    'research_num':$("#research_num").val(),
+                },
+                success: function(response) {
+                    Swal.fire({
+                    title: 'Success!',
+                    text: '가입승인 완료!',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Fail!',
+                        text: '관리자에게 문의바랍니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
+                }
+            });
+        });
+    });
+</script>
