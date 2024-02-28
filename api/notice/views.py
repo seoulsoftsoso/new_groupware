@@ -55,7 +55,7 @@ def admin_noticewrite_add(request):
         content = formdata.get('content')
         fixed_flag = formdata.get('fixed_flag')
         files = request.FILES.getlist('file')
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         if fixed_flag == 'true':
             fixed_flag = True
@@ -87,7 +87,7 @@ def admin_noticewrite_edit(request, notice_id):
         content = formdata.get('content')
         fixed_flag = formdata.get('fixed_flag')
         files = request.FILES.getlist('file')
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         if fixed_flag == 'true':
             fixed_flag = True
@@ -119,15 +119,9 @@ def admin_noticewrite_edit(request, notice_id):
 
 def download_File(request, file_id):
     file_instance = FileBoardMaster.objects.get(pk=file_id, delete_flag="N")
-    print('file_instance', file_instance)
 
-    # 파일의 URL을 가져옴
     file_url = file_instance.file_path.url
-    print('file_url:', file_url)
-
-    # 파일 다운로드
     response = requests.get(file_url, stream=True)
-    print('response:', response)
 
     # 파일의 확장자를 통해 MIME 타입을 추정
     content_type, _ = mimetypes.guess_type(file_url)
@@ -135,11 +129,10 @@ def download_File(request, file_id):
     if content_type is None:
         content_type = 'application/octet-stream'
 
-    # Response 객체 생성
     file_name = os.path.basename(file_url)
     file_wrapper = FileWrapper(response.raw)
     response = HttpResponse(file_wrapper, content_type=content_type)
-    # 파일 이름 설정
+    # 파일 이름
     response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(quote(file_name))
 
     return response

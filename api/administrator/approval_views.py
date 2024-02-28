@@ -1,13 +1,11 @@
 from django.http import JsonResponse
 from django.views.generic import ListView
-
-from Pagenation import PaginatorManager
 from api.models import UserMaster
 from api.views import get_department_info, get_job_info, get_pow_info
 
 
 class ApprovalDeletePageView(ListView):
-    template_name = 'admins/administrator/approval_delete.html'
+    template_name = 'admins/administrator/approval/approval_delete.html'
     paginate_by = 15
 
     def get_queryset(self):

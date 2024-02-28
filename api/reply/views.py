@@ -15,7 +15,7 @@ def reply_add(request):
     if request.method == "POST":
         reply = request.POST.get('reply')
         parent_id = request.POST.get('parent_id')
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         reply_instance = ReplyMaster.objects.create(
             reply=reply, parent_id=parent_id, created_by_id=created_by_id

@@ -51,6 +51,8 @@ from api.excel.views import *
 from api.business.views import *
 from api.holiday.views import *
 from api.administrator.approval_views import *
+from api.administrator.pqy_question_views import *
+from api.administrator.user_setting_views import *
 
 from web.views import *
 
@@ -172,6 +174,7 @@ urlpatterns = [
                   path('download/<int:file_id>/', download_File, name='download_file'),
                   path('delete_file/', delete_file, name="delete_file"),
                   path('work_xlsx_download/', excel_download, name="xlsxDownload"),
+                  re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 
                   #게시판
                   path('admins/board', amdin_board_page, name="adminBoard"),
@@ -224,12 +227,19 @@ urlpatterns = [
 
 
                   # ADMINS
+                  # 가입승인/탈퇴
                   path('admins/approval_delete_page', ApprovalDeletePageView.as_view(), name="approvalDeletePage"),
                   path('admins/user_approval', user_approval, name="userApproval"),
                   path('admins/user_resignation', user_resignation, name="userResignation"),
                   path('admins/user_authority_page', user_authority_page, name="userAuthorityPage"),
-                  path('admins/pay_question_page', pay_question_page, name="payQuestionPage"),
-                  path('admins/user_settings_page', user_settings_page, name="userSettingsPage"),
+                  # 견적문의
+                  path('admins/pay_question_page', PayQuestionPage.as_view(), name="payQuestionPage"),
+                  path('admins/pay_question/detail/<int:question_id>/', PayQuestionDetail.as_view(), name="PayQuestionDetail"),
+                  # 내정보 관리
+                  path('admins/user_settings_page', UserSettingsPage.as_view(), name="userSettingsPage"),
+                  path('admins/change_password', change_password, name="changePassword"),
+                  path('admins/signature_img_upload', signature_img_upload, name="signatureImgUpload"),
+                  path('admins/testform', test_form, name="testForm"),
 
 
 

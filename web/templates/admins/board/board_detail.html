@@ -38,7 +38,7 @@
 
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: x-large; margin-left: 40px">{{ board.title }}</span>
-                    {% if request.COOKIES.is_superuser == 'true' or request.user.user_id == board.created_by %}
+                    {% if request.user.is_superuser or request.user.user_id == board.created_by %}
                         <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
                                 <img src="{% static 'admin/img/indexImg/menu.png' %}">

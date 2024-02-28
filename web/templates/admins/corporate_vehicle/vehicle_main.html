@@ -36,26 +36,33 @@
                 </div>
 
 
-                <div class="card-body">
-                    <form method="get">
+                <div class="card-header">
+                    <form method="get" class="">
                         {% csrf_token %}
-                        <div class="row">
+                        <div class="row justify-content-end">
                             <div class="col-md-3 col-12">
-                                <div class="input-group input-daterange" id="bs-datepicker-daterange">
-                                    <input id="datepicker_to" autocomplete="off" placeholder="시작 날짜" class="form-control" name="search-to" value="{{ search_to | default_if_none:'' }}"/>
-                                    <input id="datepicker_from" autocomplete="off" placeholder="끝 날짜" class="form-control" name="search-from" value="{{ search_from | default_if_none:'' }}"/>
+                                <div class="input-group input-daterange">
+                                    <input id="datepicker_to" placeholder="시작 날짜" class="form-control"
+                                           name="search-to"
+                                           value="{{ search_to | default_if_none:'' }}" autocomplete="off"/>
+                                    <input id="datepicker_from" placeholder="끝 날짜" class="form-control"
+                                           name="search-from"
+                                           value="{{ search_from | default_if_none:'' }}" autocomplete="off"/>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-12">
-                                <select id="selectpickerBasic" class="form-control">
-                                    <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
-                                    <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
+                            <div class="col-md-2 col-12">
+                                <select id="selectpickerBasic" class="selectpicker form-control" name="search_title">
+                                    <option value="name"
+                                            {% if 'name' in search_title %}selected {% endif %}>성명
+                                    </option>
                                 </select>
                             </div>
-                            <div class="col-md-3 col-12">
-                                <input type="text" placeholder="검색" class="form-control" id="form-search" name="search-content" value="{{ search_content | default_if_none:'' }}"/>
+                            <div class="col-md-2 col-12">
+                                <input type="text" placeholder="검색" class="form-control"
+                                       id="form-search" name="search_content"
+                                       value="{{ search_content | default_if_none:'' }}"/>
                             </div>
-                            <div class="col-md-3 col-12">
+                            <div class="col-md-1 col-12">
                                 <button type="submit" class="btn btn-secondary w-100">검색</button>
                             </div>
                         </div>
@@ -161,7 +168,7 @@
                                     </td>
                                 {% endif %}
                                 <td>
-                                    {% if request.COOKIES.is_superuser == 'true' or obj.create_by == request.user.user_id %}
+                                    {% {% if request.user.is_superuser %} or obj.create_by == request.user.user_id %}
                                         <div class="dropdown">
                                             <button type="button"
                                                     class="btn p-0 dropdown-toggle hide-arrow"
@@ -186,7 +193,7 @@
                     {% include 'admins/corporate_vehicle/vehicle_edit_Modal.html' %}
                 </div>
                 <div style="margin-bottom: 30px; margin-top: 50px;">
-                  {% include 'admins/year_month_paging.html' %}
+                  {% include 'admins/search_to_from_paging.html' with search_to=search_to search_from=search_from search_title=search_title search_content=search_content %}
                 </div>
 
 

@@ -130,8 +130,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'groupware',
-        'USER': 'cluster',
-        'PASSWORD': 'Cluster1105!@',
+        'USER': 'root',
+        'PASSWORD': 'hong11',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }

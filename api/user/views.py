@@ -5,6 +5,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
+from django.contrib.auth import authenticate, login
 from api.models import UserMaster, CodeMaster
 from api.serializers import UserMasterSerializer
 from rest_framework import status, viewsets
@@ -22,8 +23,8 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
 
-        #         Token.objects.filter(user=user, created__lt=get_expire_time()).delete()
+        # Token.objects.filter(user=user, created__lt=get_expire_time()).delete()
+        # token, created = Token.objects.get_or_create(user=user)
+        login(request, user)
 
-        token, created = Token.objects.get_or_create(user=user)
-
-        return Response({'token': token.key, 'user': UserMasterSerializer(user).data}, status=status.HTTP_200_OK)
+        return Response({'user': UserMasterSerializer(user).data}, status=status.HTTP_200_OK)

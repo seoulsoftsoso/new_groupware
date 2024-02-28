@@ -180,6 +180,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
+    signature_file_path = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='전자서명')
 
     # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 

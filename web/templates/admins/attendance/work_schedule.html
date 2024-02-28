@@ -23,64 +23,62 @@
                 <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px; font-family: Pretendard;">근태관리</strong>
                  <!--Search Form -->
                   <div class="card-body">
-                      <form class="dt_adv_search" method="get">
-                          {% csrf_token %}
-                          <div class="row">
-                              <div class="col-12">
-                                  <div class="row g-3">
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <!-- 시작 날짜와 끝 날짜 -->
+                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 20px;">
+                                        <div class="input-group input-daterange">
+                                            <input id="datepicker_to" placeholder="시작 날짜" class="form-control"
+                                                   name="search-to"
+                                                   value="{{ search_to | default_if_none:'' }}" autocomplete="off"/>
+                                            <input id="datepicker_from" placeholder="끝 날짜" class="form-control"
+                                                   name="search-from"
+                                                   value="{{ search_from | default_if_none:'' }}" autocomplete="off"/>
+                                        </div>
+                                    </div>
 
-                                      <!-- 시작 날짜와 끝 날짜 -->
-                                      <div class="col-md-6 col-12 mb-4" style="margin-top: 30px;">
-                                          <div class="input-group input-daterange">
-                                              <input id="datepicker_to" placeholder="시작 날짜" class="form-control" name="search-to" value="{{ search_to | default_if_none:'' }}" autocomplete="off"/>
-                                              <span class="input-group-text">to</span>
-                                              <input id="datepicker_from" placeholder="끝 날짜" class="form-control" name="search-from" value="{{ search_from | default_if_none:'' }}" autocomplete="off"/>
+                                    <div class="col-md-6 col-12 mb-4" style="margin-top: 20px;">
+                                        <div class="row" style="display: flex; flex-direction: row;">
+                                            <!-- 검색 대상 선택 -->
+                                            <div class="col-md-4 col-12 mb-3">
+                                                <select id="selectpickerBasic" class="selectpicker form-control" name="search_title">
+                                                    <option value="name"
+                                                            {% if 'name' in search_title %}selected {% endif %}>성명
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <!-- 검색어 입력과 검색 버튼 -->
+                                            <div class="col-md-8 col-12 mb-3"
+                                                 style="display: flex; flex-direction: row;">
+                                                <input type="text" placeholder="검색" class="form-control"
+                                                       id="form-search" name="search_content"
+                                                       value="{{ search_content | default_if_none:'' }}"/>
+                                                <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">검색</button>
+                                            </div>
+
+                                            <!-- 엑셀 다운로드 버튼 -->
+                                          <div class="d-flex justify-content-end">
+                                              <button
+                                                      type="button"
+                                                      style="width: 300px;"
+                                                      id="workHistory-xlsx-down"
+                                                      class="btn btn-outline-dark"
+                                                      data-bs-toggle="modal"
+                                                      data-bs-target="#workHistory-xlsx-download">
+                                                  <i class='bx bxs-download'></i>엑셀 다운로드
+                                              </button>
+                                              {% include 'admins/attendance/xlsx_download_modal.html' %}
                                           </div>
-                                      </div>
-
-                                      <!-- 검색 조건과 검색 버튼 -->
-                                      <div class="col-md-6 col-12 mb-4" style="margin-top: 30px;">
-                                          <div class="input-group" style="display: flex; flex-direction: row;">
-
-                                              <!-- 검색 대상 선택 -->
-                                              <div class="col-md-4 col-12 mb-3">
-                                                  <select id="selectpickerBasic" class="selectpicker form-control">
-                                                      <option value="name" {% if 'name' in search_title %}selected {% endif %}>성명</option>
-                                                      <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
-                                                      <option value="department" {% if 'department' in search_title %}selected {% endif %}>부서</option>
-                                                  </select>
-                                              </div>
-
-                                              <!-- 검색어 입력과 검색 버튼 -->
-                                              <div class="col-md-8 col-12 mb-3"
-                                                   style="display: flex; flex-direction: row;">
-                                                  <input type="text" placeholder="검색" class="form-control"
-                                                         id="form-search" name="search-content"
-                                                         value="{{ search_content | default_if_none:'' }}"/>
-                                                  <button class="btn btn-primary btn-compose" data-bs-toggle="modal" style="margin-left: 10px; width: 150px; background-color: #6c757d; border-color: #6c757d;">검색</button>
-                                              </div>
-                                          </div>
-                                      </div>
-
-                                      <!-- 엑셀 다운로드 버튼 -->
-                                      <div class="d-flex justify-content-end">
-                                          <button
-                                                  type="button"
-                                                  style="width: 300px;"
-                                                  id="workHistory-xlsx-down"
-                                                  class="btn btn-outline-dark"
-                                                  data-bs-toggle="modal"
-                                                  data-bs-target="#workHistory-xlsx-download">
-                                              <i class='bx bxs-download'></i>엑셀 다운로드
-                                          </button>
-                                          {% include 'admins/attendance/xlsx_download_modal.html' %}
-                                      </div>
-
-                                  </div>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                   <!--Search form-->
                 <div class="card-datatable table-responsive">
                     <table class="dt-multilingual table border-top">
@@ -105,9 +103,9 @@
                         {% for obj in attendance_queryset %}
                             <tr style="text-align: center" data-pk="{{ obj.id }}">
                                 <td>{{ obj.date }}</td>
-                                <td>{{ obj.employee.username }}</td>
-                                <td>{{ obj.jobTitle | default_if_none:'' }}</td>
-                                <td>{{ obj.department }}</td>
+                                <td>{{ obj.employee__username }}</td>
+                                <td>{{ obj.jobTitle__name | default_if_none:'' }}</td>
+                                <td>{{ obj.department__name }}</td>
                                 <td>{{ obj.attendanceTime|date:"H:i" }}</td>
                                 <td>{{ obj.offworkTime|date:"H:i" }}</td>
                                 <td>{{ obj.workTime|date:"H:i" }}</td>
@@ -122,7 +120,7 @@
                     </table>
                 </div>
               <div style="margin-bottom: 30px; margin-top: 50px;">
-                  {% include 'admins/search_to_from_paging.html' with search_to=search_to search_from=search_from search_content=search_content %}
+                  {% include 'admins/search_to_from_paging.html' with search_to=search_to search_from=search_from search_title=search_title search_content=search_content %}
               </div>
 
               </div>

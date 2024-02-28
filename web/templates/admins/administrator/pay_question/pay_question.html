@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+
+                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-3 gap-2">
+                            <strong style="font-size: x-large; font-family: Pretendard;">견적문의</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-header">
+                    <form method="get" class="">
+                        {% csrf_token %}
+                        <div class="row justify-content-end">
+                            <div class="col-md-3 col-12">
+                                <div class="input-group input-daterange" id="bs-datepicker-daterange">
+                                    <input id="datepicker_to" autocomplete="off" placeholder="시작 날짜" class="form-control" name="search-to" value="{{ search_to | default_if_none:'' }}"/>
+                                    <input id="datepicker_from" autocomplete="off" placeholder="끝 날짜" class="form-control" name="search-from" value="{{ search_from | default_if_none:'' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-12">
+                                <select id="selectpickerBasic" class="form-control">
+                                    <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
+                                    <option value="number" {% if 'number' in search_title %}selected {% endif %}>사원번호</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-12">
+                                <input type="text" placeholder="검색" class="form-control" id="form-search" name="search-content" value="{{ search_content | default_if_none:'' }}"/>
+                            </div>
+                            <div class="col-md-1 col-12">
+                                <button type="submit" class="btn btn-secondary w-100">검색</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                <!--여기부터 작성-->
+                <div class="row justify-content-center mt-5">
+                    <div class="card-datatable table-responsive col-11">
+                        <table class="dt-multilingual table border-top table table-hover" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
+                            <thead>
+                            <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold">기업(기관)명</th>
+                                <th style="font-size: medium; font-weight: bold">부서</th>
+                                <th style="font-size: medium; font-weight: bold">직책/직급</th>
+                                <th style="font-size: medium; font-weight: bold">성명</th>
+                                <th style="font-size: medium; font-weight: bold">작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in result %}
+                                <tr style="text-align: center; cursor: pointer;" onclick="window.location='{% url 'PayQuestionDetail' obj.id %}'">
+                                    <td>{{ obj.Question_company }}</td>
+                                    <td>{{ obj.Question_department }}</td>
+                                    <td>{{ obj.Question_position }}</td>
+                                    <td>{{ obj.Question_name }}</td>
+                                    <td>{{ obj.Question_date|date:"Y년 m월 d일 a g:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% include 'admins/admin_footer.html' %}
+<script>
+    $(function () {
+        $("#datepicker_to").datepicker({format: 'yyyy-mm-dd'});
+        $("#datepicker_from").datepicker({format: 'yyyy-mm-dd'});
+    });
+</script>
+</html>

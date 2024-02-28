@@ -78,7 +78,7 @@ def admin_boardwrite_add(request):
 
         fixed_flag = formdata.get('fixed_flag')
         files = request.FILES.getlist('file')
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         if fixed_flag == 'true':
             fixed_flag = True
@@ -116,7 +116,7 @@ def admin_boardwrite_edit(request, board_id):
         content = formdata.get('content')
         fixed_flag = formdata.get('fixed_flag')
         files = request.FILES.getlist('file')
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         boardcode_id = formdata.get('boardcode')
         boardcode = CodeMaster.objects.filter(id=boardcode_id).first()
@@ -161,7 +161,7 @@ def admin_boardGroup_add(request):
         name = request.POST.get('board_group_name')
         group = GroupCodeMaster.objects.get(id=3)
         enterprise = EnterpriseMaster.objects.get(id=1)
-        created_by_id = request.COOKIES.get('user_id')
+        created_by_id = request.user.id
 
         new_codemaster = CodeMaster(
             code=code, name=name, group=group, enterprise=enterprise, created_by_id=created_by_id

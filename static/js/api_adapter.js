@@ -11,18 +11,13 @@ function api_login(username, password, done_callback) {
             // add cookie
 
             document.cookie = "Authorization=Token " + json.token + "; path=/;";
-            document.cookie = "user_id=" + json.user.id + "; path=/;";
             document.cookie = "usercode=" + json.user.code + "; path=/;";
             document.cookie = "username=" + json.user.username + "; path=/;";
-            document.cookie = "is_superuser=" + json.user.is_superuser + "; path=/;";
-            document.cookie = "is_master=" + json.user.is_master + "; path=/;";
             document.cookie = "permissions=" + json.user.permissions + "; path=/;";
             document.cookie = "enterprise_id=" + json.user.enterprise + "; path=/;";
             document.cookie = "enterprise_name=" + json.user.enterprise_name + "; path=/;";
             document.cookie = "enterprise_manage=" + json.user.enterprise_manage + "; path=/;";
             document.cookie = "order_company=" + json.user.order_company + "; path=/;";
-            document.cookie = "is_active=" + json.user.is_active + "; path=/;";
-            document.cookie = "is_staff=" + json.user.is_staff + "; path=/;";
             done_callback();
         })
         .fail(handle_error);

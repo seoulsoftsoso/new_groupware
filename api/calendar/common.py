@@ -54,13 +54,14 @@ class get_eventDataAll(View):
 
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
-            created_by_id = request.COOKIES.get('user_id')
+            created_by_id = request.user.id
 
             # 날짜,시간 파싱
             startDate_str = request.POST.get('eventStartDate')
             endDate_str = request.POST.get('eventEndDate')
             start_date = parse_datetime(startDate_str) or datetime.strptime(startDate_str, '%Y-%m-%d')
             end_date = parse_datetime(endDate_str) or datetime.strptime(endDate_str, '%Y-%m-%d')
+            event_type = request.POST.get('eventLabel')
 
             allDay_str = request.POST.get('allDay')
             allDay = True if allDay_str.lower() == 'true' else False
@@ -81,13 +82,16 @@ class get_eventDataAll(View):
             if vehicleCode:
                 selected_vehicle = CodeMaster.objects.get(code=vehicleCode)
 
+            if EventMaster.objects.filter(start_date=start_date, end_date=end_date, event_type=event_type, create_by_id=request.user.id).exists():
+                return JsonResponse({'error': '중복된 일정이 있습니다.'}, status=400)
+
             event_add = EventMaster(
                 url='',
                 title=request.POST.get('eventTitle'),
                 start_date=start_date,
                 end_date=end_date,
                 allDay=allDay,
-                event_type=request.POST.get('eventLabel'),
+                event_type=event_type,
                 create_by_id=created_by_id,
                 updated_by_id=created_by_id,
                 description=request.POST.get('eventDescription'),
@@ -153,8 +157,8 @@ class get_eventDataAll(View):
                 event.title = eventData.get('eventTitle')
                 event.allDay = allDay
                 event.event_type = eventData.get('eventLabel')
-                event.create_by_id = request.COOKIES.get('user_id')
-                event.updated_by_id = request.COOKIES.get('user_id')
+                event.create_by_id = request.user.id
+                event.updated_by_id = request.user.id
                 event.description = eventData.get('eventDescription')
                 event.location = eventData.get('eventLocation')
                 event.vehicle = selected_vehicle

@@ -10,35 +10,39 @@ from api.models import UserMaster, EventMaster
 
 class business_main_page(ListView):
     template_name = 'admins/business/business_main.html'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         self.today = timezone.now().date()
-        search_title = self.request.GET.get('search-title', None)
-        search_content = self.request.GET.get('search-content', None)
-        search_to = self.request.GET.get('search-to', None)
-        search_from = self.request.GET.get('search-from', None)
 
-        qs = EventMaster.objects.filter(event_type="Business", delete_flag="N").prefetch_related('participant_set').order_by('-id')
-        event_qs = qs
-        if search_to != "" and search_to != None:
-            event_qs = event_qs.filter(start_date__date__gte=search_to)
-        if search_from != "" and search_from != None:
-            event_qs = event_qs.filter(start_date__date__lte=search_from)
+        search_to = self.request.GET.get('search-to')
+        search_from = self.request.GET.get('search-from')
+        search_title = self.request.GET.get('search_title')
+        search_content = self.request.GET.get('search_content')
+        # print(f'Search To: {search_to}, Search From: {search_from},Search Title: {search_title}, Search Content: {search_content}')
 
-        if search_title == 'name' or search_title == None:
-            if search_content is not None and search_content != "":
-                event_qs = event_qs.filter(create_by__username=str(search_content))
-        elif search_title == 'number':
-            if search_content is not None and search_content != "":
-                event_qs = event_qs.filter(employee__employee_number__contains=str(search_content))
+        qs = EventMaster.objects.filter(event_type="Business", delete_flag="N").prefetch_related(
+            'participant_set').order_by('-id')
 
-        self.original_qs = qs
-        return event_qs
+        if search_to and search_from:
+            qs = qs.filter(start_date__lte=search_from, end_date__gte=search_to)
+
+        if search_title == 'name' and search_content:
+            qs = qs.filter(create_by__username__contains=str(search_content))
+
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['event_qs'] = context['object_list']
+        search_to = self.request.GET.get('search-to')
+        search_from = self.request.GET.get('search-from')
+        if search_to and search_from:
+            context['search_to'] = search_to
+            context['search_from'] = search_from
+
+        context['search_title'] = self.request.GET.get('search_title')
+        context['search_content'] = self.request.GET.get('search_content')
 
         return context
 

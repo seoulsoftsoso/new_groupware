@@ -24,12 +24,22 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
         if request.path.startswith('/admins/'):
-            if not request.COOKIES.get('Authorization') or request.COOKIES.get('is_staff') == 'false':
+            if not request.user.is_staff:
                 return redirect('/login/')
 
-            # 'admins/holiday_adjustment'
+            # 휴가관리/연차조정
             if request.path == '/admins/holiday_adjustment':
-                if not request.COOKIES.get('is_superuser') == 'true':
+                if not request.user.is_superuser:
+                    return redirect('/admins/index')
+
+            # ADMINS/가입승인/탈퇴
+            if request.path == '/admins/approval_delete_page':
+                if not request.user.is_superuser:
+                    return redirect('/admins/index')
+
+            # ADMINS/견적문의
+            if request.path == '/admins/pay_question_page':
+                if not request.user.is_superuser:
                     return redirect('/admins/index')
 
         response = self.get_response(request)

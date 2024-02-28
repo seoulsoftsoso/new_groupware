@@ -14,7 +14,7 @@ from api.models import Attendance, CodeMaster, UserMaster, EventMaster
 
 
 def last_attendance(request):
-    user_id = request.GET.get('user_id')
+    user_id = request.user.id
     end_date = datetime.now().replace(microsecond=0)
     start_date = (end_date + relativedelta(weekday=SU(-1))).replace(hour=0, minute=0, second=0, microsecond=0)
     next_sunday = (end_date + relativedelta(weekday=SU(+1))).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -105,7 +105,7 @@ def CalculationDayAttendance(last_attendance):
 def check_in(request):
     if request.method == "POST":
         print(request.POST)
-        user_id = request.COOKIES.get('user_id')
+        user_id = request.user.id
         user = UserMaster.objects.get(id=user_id)
         department_id = user.department_position.id
         jobposition_id = user.job_position.id
@@ -139,7 +139,7 @@ def check_in(request):
 
 def check_out(request):
     if request.method == "POST":
-        user_id = request.COOKIES.get('user_id')
+        user_id = request.user.id
         last_attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
 
         if last_attendance.date == datetime.today().date():  # 오늘 날짜랑 마지막 출근일이랑 같은 경우
@@ -159,43 +159,36 @@ class admin_work_schedule_page(ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        search_title = self.request.GET.get('search-title', None)
-        search_content = self.request.GET.get('search-content', None)
-        search_to = self.request.GET.get('search-to', None)
-        search_from = self.request.GET.get('search-from', None)
-        print(f'Search To: {search_to}, Search From: {search_from}, Search Content: {search_content}')
-        attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username')
+        search_to = self.request.GET.get('search-to')
+        search_from = self.request.GET.get('search-from')
+        search_title = self.request.GET.get('search_title')
+        search_content = self.request.GET.get('search_content')
+        # print(f'Search To: {search_to}, Search From: {search_from},Search Title: {search_title}, Search Content: {search_content}')
 
-        if search_to != "" and search_to != None:
-            attendance_queryset = attendance_queryset.filter(date__gte=search_to)
-        if search_from != "" and search_from != None:
-            attendance_queryset = attendance_queryset.filter(date__lte=search_from)
+        attendance_queryset = Attendance.objects.all().order_by('-date', 'employee__username').values(
+            'date', 'employee__username', 'jobTitle__name', 'department__name', 'attendanceTime', 'offworkTime', 'workTime',
+            'extendTime', 'latenessTime', 'earlyleaveTime', 'attendance_ip', 'offwork_ip'
+        )
 
-        if search_title == 'name' or search_title == None:
-            if search_content is not None and search_content != "":
-                attendance_queryset = attendance_queryset.filter(employee__username__contains=str(search_content))
-        elif search_title == 'number':
-            if search_content is not None and search_content != "":
-                attendance_queryset = attendance_queryset.filter(
-                    employee__employee_number__contains=str(search_content))
-        elif search_title == 'department':
-            if search_content is not None and search_content != "":
-                try:
-                    department_id = CodeMaster.objects.get(department__contains=str(search_content)).id
-                    attendance_queryset = attendance_queryset.filter(department_id=department_id)
-                except ObjectDoesNotExist:
-                    print("존재하지 않는 부서를 검색!")
-                    return None
+        if search_to and search_from:
+            attendance_queryset = attendance_queryset.filter(date__lte=search_from, end_date__gte=search_to)
+
+        if search_title == 'name' and search_content:
+            attendance_queryset = attendance_queryset.filter(create_by__username__contains=str(search_content))
 
         return attendance_queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(admin_work_schedule_page, self).get_context_data(**kwargs)
-        context['USER'] = self.request.user.id
+        context = super().get_context_data(**kwargs)
         context['attendance_queryset'] = context['object_list']
-        context['search_to'] = self.request.GET.get('search-to', None)
-        context['search_from'] = self.request.GET.get('search-from', None)
-        context['search_content'] = self.request.GET.get('search-content', None)
+        search_to = self.request.GET.get('search-to')
+        search_from = self.request.GET.get('search-from')
+        if search_to and search_from:
+            context['search_to'] = search_to
+            context['search_from'] = search_from
+
+        context['search_title'] = self.request.GET.get('search_title')
+        context['search_content'] = self.request.GET.get('search_content')
 
         return context
 

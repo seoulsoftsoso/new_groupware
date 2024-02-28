@@ -59,7 +59,7 @@
                             </select>
                         </div>
 
-                        {% if request.COOKIES.is_superuser == "true" %}
+                        {% if request.user.is_superuser %}
                             <div style="margin-right: 10px;">
                                 <select class="form-control" name="search-title">
                                     <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>

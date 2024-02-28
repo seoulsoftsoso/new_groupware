@@ -216,15 +216,10 @@ def holiday_info_page(request):
 
 def user_authority_page(request):
     context = get_member_info()
-    return render(request, 'admins/administrator/user_authority.html', context)
+    return render(request, 'admins/administrator/user_authority/user_authority.html', context)
 
 
-def pay_question_page(request):
+def test_form(request):
     context = {}
-    return render(request, 'admins/administrator/pay_question.html', context)
-
-
-def user_settings_page(request):
-    context = {}
-    return  render(request, 'admins/administrator/user_setting.html', context)
+    return render(request, 'admins/administrator/test_form.html', context)
 

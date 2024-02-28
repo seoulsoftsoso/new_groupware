@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+
+    <meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.css' %}" />
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="row">
+                        <!-- User Sidebar -->
+                        <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
+                            <!-- User Card -->
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="user-avatar-section">
+                                        <div class="d-flex align-items-center flex-column">
+                                            <i class='bx bxs-user-circle' style='font-size: 144px;'></i>
+                                            <div class="user-info text-center">
+                                                <h4 class="mb-2" style="font-size: x-large; font-family: Pretendard;">{{ result.username }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-around flex-wrap my-4 py-3"></div>
+                                    <h5 class="pb-2 border-bottom mb-4">Details</h5>
+                                    <div class="info-container">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3">
+                                                <span class="fw-medium me-2">Username:</span>
+                                                <span>{{ result.username }}</span>
+                                            </li>
+                                            <li class="mb-3">
+                                                <span class="fw-medium me-2">Email:</span>
+                                                <span>{{ result.email }}</span>
+                                            </li>
+                                            <li class="mb-3">
+                                                <span class="fw-medium me-2">Department:</span>
+                                                <span>{{ result.department_position }}</span>
+                                            </li>
+                                            <li class="mb-3">
+                                                <span class="fw-medium me-2">Position:</span>
+                                                <span>{{ result.job_position }}</span>
+                                            </li>
+                                            <li class="mb-3">
+                                                <span class="fw-medium me-2">tel:</span>
+                                                <span>{{ result.tel }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% include 'admins/administrator/user_setting/userProfileEditModal.html' %}
+
+                        <!-- User Content -->
+                        <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+
+                            <!-- Change Password -->
+                            <div class="card mb-4">
+                                <h5 class="card-header" style="font-size: x-large; font-family: Pretendard;">패스워드 변경</h5>
+                                <div class="card-body">
+                                    <form id="formChangePassword" method="POST" onsubmit="return false">
+                                        {% csrf_token %}
+                                        <div class="alert alert-warning" role="alert">
+                                            <span>최소 8자 이상 입력해주세요.</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="mb-3 col-12 col-sm-4 form-password-toggle">
+                                                <label class="form-label" for="nowPassword">현재 패스워드</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input class="form-control" type="password" id="nowPassword" name="nowPassword"
+                                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"/>
+                                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 col-12 col-sm-4 form-password-toggle">
+                                                <label class="form-label" for="newPassword">새로운 패스워드</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input class="form-control" type="password" id="newPassword" name="newPassword"
+                                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"/>
+                                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 col-12 col-sm-4 form-password-toggle">
+                                                <label class="form-label" for="confirmPassword">새로운 패스워드 확인</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input class="form-control" type="password" name="confirmPassword" id="confirmPassword" oninput="checkPasswordMatch()"
+                                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"/>
+                                                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                                                </div>
+                                            </div>
+                                            <p id="password-match-message" style="color: red;"></p>
+                                            <div>
+                                                <button type="submit" class="btn btn-primary me-2" id="change_pwd_btn">패스워드 변경</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!--/ Change Password -->
+
+                            <div class="card mb-4">
+                                <h5 class="card-header" style="font-size: x-large; font-family: Pretendard;">전자서명</h5>
+                                <div class="card-body">
+                                    <div class="alert alert-warning" role="alert">
+                                        <span>※ 서명은 최대 55x40 pixel 이며, 사이즈가 크면 비율에 맞춰 적용됩니다.</span>
+                                    </div>
+                                    <form method="post" id="signature_form" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <!--저장된 파일 미리보기-->
+                                        <div class="col-md-2" style="display: flex; justify-content: center; align-items: center; border: 1px solid #ddd; background-color: #f9f9f9; height: 60px; margin-bottom: 15px;">
+                                            <div id="preview">
+                                                {% if result.signature_file_path %}
+                                                    <img id="signatureImage" src="{{ result.signature_file_path.url }}" style="max-width: 55px; max-height: 40px;" />
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <input type="file" class="form-control" id="id_signature" required onchange="previewImage(event)" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3" id="signature_btn">전자서명 업로드</button>
+                                    </form>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                        <!--/ User Content -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+</body>
+{% include 'admins/admin_footer.html' %}
+<script src="{% static 'sneat/assets/vendor/libs/dropzone/dropzone.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-file-upload.js' %}"></script>
+<script>
+    function checkPasswordMatch() {
+        var password1 = document.getElementById("newPassword").value;
+        var password2 = document.getElementById("confirmPassword").value;
+        var message = document.getElementById("password-match-message");
+        var submitButton = document.getElementById("change_pwd_btn");
+
+        if (password1 !== password2) {
+            message.innerHTML = "비밀번호가 일치하지 않습니다.";
+            submitButton.disabled = true;
+        } else {
+            message.innerHTML = "";
+            submitButton.disabled = false;
+        }
+    }
+
+    function previewImage(event) {
+        var input = event.target;
+        var preview = document.getElementById('preview');
+
+        if (input.files.length === 0 || !input.files[0].type.match('image.*')) {
+            preview.innerHTML = '';
+            return;
+        }
+
+        var reader = new FileReader();
+
+        reader.onload = function () {
+            var imgElement = document.createElement('img');
+            imgElement.src = reader.result;
+            imgElement.style.maxWidth = '55px';
+            imgElement.style.maxHeight = '40px';
+            preview.innerHTML = '';
+            preview.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+</script>
+<script>
+    $.ajaxSetup({
+        headers: {"X-CSRFToken": '{{ csrf_token }}'}
+    });
+
+    $('#change_pwd_btn').click(function () {
+        var now_password = $("#nowPassword").val()
+        var new_password = $("#newPassword").val()
+        var confirmPassword = $("#confirmPassword").val()
+
+        $.ajax({
+            url: "{% url 'changePassword' %}",
+            method: "POST",
+            data: {
+                now_password: now_password,
+                new_password: new_password,
+                confirmPassword: confirmPassword
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: '인증 갱신을 위해 다시 로그인 해주세요.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '/logout',
+                                method: 'GET',
+                                success: function () {
+                                    document.cookie = 'Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                                    location.href = '/login';
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Fail!',
+                        text: response.msg,
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    })
+                }
+            },
+            error: function (response) {
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        })
+    })
+
+    $('#signature_btn').click(function (event) {
+        event.preventDefault();
+
+        if ($('#id_signature')[0].files.length === 0) {
+            Swal.fire({
+                title: 'Error!',
+                text: '선택된 파일이 없습니다!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('signature', $('#id_signature')[0].files[0]);
+
+        $.ajax({
+            url: "{% url 'signatureImgUpload' %}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success',
+                    text: '업로드 성공!',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (error) {
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
+    });
+</script>
+</html>

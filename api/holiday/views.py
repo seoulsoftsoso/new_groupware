@@ -79,8 +79,8 @@ class HolidayCheckView(ListView):
 
         original_result = deepcopy(result)
 
-        if self.request.COOKIES['is_superuser'] == 'false':
-            result = result.filter(create_by_id=self.request.COOKIES['user_id'])
+        if not self.request.user.is_superuser:
+            result = result.filter(create_by_id=self.request.user.id)
 
         if search_title == 'name' or search_title == None:
             if search_content is not None and search_content != "":
@@ -100,7 +100,7 @@ class HolidayCheckView(ListView):
         return result
 
     def get_user_holiday(self):
-        user_id = self.request.COOKIES['user_id']
+        user_id = self.request.user.id
         _, original_result = self.get_original_queryset()
         return original_result.filter(create_by_id=user_id).order_by('-id')[:1]
 

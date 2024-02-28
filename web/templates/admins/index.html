@@ -42,7 +42,7 @@
                                 <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
                                 {% for event in events %}
                                     {% if event.event_type == "Holiday" %}
-                                        <strong>{{ event.create_by }}</strong>
+                                        <strong>{{ event.create_by }}</strong>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -60,7 +60,9 @@
                             <div class="card-body" style="padding: 20px;">
                                 <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
                                 {% for obj in events %}
-                                    <strong>{{ obj.vehicle }}({{ obj.create_by }})</strong>{% if not forloop.last %},{% endif %}
+                                    {% if obj.vehicle %}
+                                        <strong>{{ obj.vehicle }}({{ obj.create_by }})</strong>{% if not forloop.last %},{% endif %}
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                     </div>

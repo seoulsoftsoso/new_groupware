@@ -72,16 +72,16 @@
         <div id="aside" class="col d-flex justify-content-center px-0">
             <div class="aside-box col d-flex justify-content-center my-auto px-0">
                 <ul>
-                    {% if request.COOKIES.is_active %}
-                    {% if request.COOKIES.is_staff == 'true' %}
-                        <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
-                    {% endif %}
-                    <li><a href=""><span class="user">{{request.COOKIES.username}}</span></a></li>
-                    <li><a href="{% url 'logout' %}" id="logout"><span>로그아웃</span></a></li>
-                    <li><a href=""><span>ADAS/AVM</span></a></li>
+                    {% if request.user.is_active %}
+                        {% if request.user.is_staff %}
+                            <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
+                        {% endif %}
+                        <li><a href=""><span class="user">{{ request.COOKIES.username }}</span></a></li>
+                        <li><a href="{% url 'logout' %}" id="logout"><span>로그아웃</span></a></li>
+                        <li><a href=""><span>ADAS/AVM</span></a></li>
                     {% else %}
-                    <li><a href="/signup/"><span>회원가입</span></a></li>
-                    <li><a href="/login/"><span>로그인</span></a></li>
+                        <li><a href="/signup/"><span>회원가입</span></a></li>
+                        <li><a href="/login/"><span>로그인</span></a></li>
                     {% endif %}
                 </ul>
             </div>
