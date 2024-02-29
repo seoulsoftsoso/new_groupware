@@ -416,15 +416,15 @@ class ProTask(Model):
 class ProTaskSub(Model):
     task_parent = models.ForeignKey('ProTask', on_delete=models.DO_NOTHING, related_name='taskparent',
                                     verbose_name='task 아이디')
-    task_title = models.CharField(max_length=256, null=False, verbose_name='제목')
-    task_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
-    task_status = models.CharField(max_length=1, default='S', null=False,
+    sub_title = models.CharField(max_length=256, null=False, verbose_name='제목')
+    sub_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
+    sub_status = models.CharField(max_length=1, default='S', null=False,
                                    verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
     due_date = models.DateTimeField(null=True, verbose_name='완료예정일')
-    finish_date = models.DateTimeField(null=True, verbose_name='실제완료일')
+    sub_finish_date = models.DateTimeField(null=True, verbose_name='실제완료일')
     difficulty = models.CharField(max_length=1, null=False, default='B', verbose_name='난이도')  # 상:T, 중:M, 하:B
     issue = models.TextField(null=True, verbose_name='이슈사항')
-    etc = models.CharField(max_length=256, null=True, verbose_name='기타')
+    sub_etc = models.CharField(max_length=256, null=True, verbose_name='기타')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')

@@ -1,14 +1,24 @@
-from datetime import date
-from django.db.models import Count, Q, Case, When, IntegerField, F
-from django.db.models.functions import TruncDate
+from datetime import date, datetime
+
+from django.db import models
+from django.db.models import Count, Q, Case, When, IntegerField, F, Func
+from django.db.models.functions import TruncDate, Floor
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import SignUpForm, QuestionForm
-from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster
+from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
+    ProTask, ProMembers
 from api.views import *
+
+
+class DateDiff(Func):
+    function = 'DATEDIFF'
+    template = "%(function)s(%(expressions)s)"
+    output_field = IntegerField()
+
 
 def index(request):
     return render(request, 'index.html', {})
@@ -50,7 +60,7 @@ def check_vehicle_availability(request):
         if vehicle.code == "CETC":
             is_available = True
         else:
-            is_available = not EventMaster.objects.filter( # 참이면 is_available을 true로 변경 후 리스트에 들어감
+            is_available = not EventMaster.objects.filter(  # 참이면 is_available을 true로 변경 후 리스트에 들어감
                 vehicle=vehicle,
                 start_date__lt=end_date,
                 end_date__gt=start_date,
@@ -184,13 +194,75 @@ def organization_page(request):
 
 
 def project_main_page(request):
-    context = {}
+    userid = request.user.id
+    userinfo = UserMaster.objects.filter(id=userid).annotate(
+        cnt=Count('member__id', filter=models.Q(member__task_id__isnull=True))
+    ).select_related('department_position').values(
+        'department_position__name', 'cnt', 'id', 'username').first()
+
+    project = ProMaster.objects.filter(delete_flag='N') \
+        .select_related('pj_master', 'pj_type') \
+        .values('id', 'pjcode', 'pjname', 'start_date', 'end_date', 'pj_customer', 'pj_note',
+                'pj_master__username', 'pj_type__name') \
+        .distinct() \
+        .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
+
+    userlist = ProMembers.objects.filter(
+        task_id__isnull=True,
+        ).select_related('member').values('id', 'promaster_id', 'member__username')
+
+    context = {'project': project, 'userinfo':userinfo, 'userlist':userlist}
+
     return render(request, 'admins/project_mgmt/project_main.html', context)
 
 
 def project_mgmt_page(request):
     context = {}
     return render(request, 'admins/project_mgmt/project_mgmt.html', context)
+
+
+def task_mgmt_page(request):
+    pro = request.GET.get('param', None)
+    project_name = None
+    task = None
+    if pro:
+        task = ProTask.objects.filter(pro_parent=pro).annotate(
+            task_remain=Floor(DateDiff(F('task_end'), datetime.now().date()))
+        ).select_related(
+            'pro_parent'
+        ).values(
+            'id', 'task_name', 'task_end', 'pro_parent_id', 'task_remain', 'pro_parent__pjcode', 'pro_parent__pjname'
+        ).order_by('-id')
+
+        #project_name = task.first()['pro_parent__pjname']
+        project_name = get_object_or_404(ProMaster, pk=pro, delete_flag='N')
+
+    userlist = ProMembers.objects.filter(
+        promaster_id=pro,
+        task_id__isnull=False
+    ).select_related('member').values(
+        'id',
+        'position',
+        'task_id',
+        'member__username'
+    )
+
+    userid = request.user.id
+    project = ProMaster.objects.filter(delete_flag='N') \
+        .select_related('pj_master', 'pj_type') \
+        .values('id', 'pjcode', 'pjname', 'start_date', 'end_date', 'pj_customer', 'pj_note',
+                'pj_master__username', 'pj_type__name') \
+        .distinct() \
+        .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
+
+    context = {
+        'task': task,
+        'userlist': userlist,
+        'pjname': project_name,
+        'projectlist':project
+    }
+
+    return render(request, 'admins/project_mgmt/task_mgmt.html', context)
 
 
 def weekly_report_main_page(request):
@@ -204,7 +276,6 @@ def weekly_report_mgmt_page(request):
 
 
 def holiday_info_page(request):
-
     qs = CodeMaster.objects.filter(group_id=6)
 
     context = {

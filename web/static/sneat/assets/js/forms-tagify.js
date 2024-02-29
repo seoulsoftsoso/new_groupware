@@ -110,10 +110,18 @@ let get_usersList_tag = [];
 
     const TagifyUserListEl = document.querySelector('#TagifyUserList');
 
+    const Type = document.querySelector('#typehidden');
+    const typeUnit = Type ? Type.value : null;
+
+    let urlText = '/admins/member_info/'
+    if (typeUnit != null){
+        urlText = urlText + '?param=' + typeUnit
+    }
+
     // 사용자 정보를 가져오는 비동기 함수
     function fetchData() {
     $.ajax({
-        url: '/admins/member_info/',
+        url: urlText,
         type: 'GET',
         success: function(response) {
             // console.log('res', response.result)
