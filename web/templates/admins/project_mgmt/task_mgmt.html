@@ -1,0 +1,495 @@
+{% load static %}
+<!DOCTYPE html>
+<meta charset="UTF-8">
+     {% include 'admins/admin_header.html' %}
+
+{% comment %}<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/@form-validation/umd/styles/index.min.css' %}"/>{% endcomment %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+
+</head>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+         <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <div class="content-wrapper">
+
+                <!-- Content -->
+
+          <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="alert alert-outline-primary alert-dismissible" role="alert">
+
+                <select class="form-select" style="width: 25%">
+                    {% for pro in projectlist %}
+                        <option value={{ pro.id }}>[{{ pro.pjcode }}]{{ pro.pjname }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+
+
+
+              <div class="row">
+                <!-- Customer-detail Sidebar -->
+                <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
+                  <!-- Customer-detail Card -->
+
+
+                  <!-- Address accordion -->
+
+                  <div class="card card-action mb-4">
+                    <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                      <h5 class="card-action-title mb-0">{{ pjname.pjname }}</h5>
+                      <div class="card-action-element">
+                        <button class="btn btn-label-primary" type="button" data-bs-toggle="modal" data-bs-target="#addNT">
+                          Add new Task
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="accordion accordion-flush accordion-arrow-left" id="ecommerceBillingAccordionAddress">
+                        {% for item in task %}
+                        <div class="accordion-item" id="accordion">
+                          <div class="accordion-header d-flex justify-content-between align-items-center flex-wrap flex-sm-nowrap" id="headingHome{{ forloop.counter }}">
+                            <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}" aria-expanded="false" aria-controls="headingHome{{ forloop.counter }}" role="button">
+                              <span>
+                                <span class="d-flex gap-2 align-items-baseline">
+                                  <span class="h6 mb-0">{{ item.task_name }}</span>
+                                  <span class="badge bg-label-info">진행</span>
+                                </span>
+                                  <span class="badge bg-label-warning ms-auto">{{ item.task_remain }} Days left</span>
+                                {% comment %}<span class="mb-0 text-muted">{{ item.task_remain }} DAY LEFT.</span>{% endcomment %}
+                              </span>
+                            </a>
+                            <div class="d-flex gap-3 p-4 p-sm-0 pt-0 ms-1 ms-sm-0">
+                              <a href="javascript:void(0);"><i class="bx bx-pencil text-secondary fs-4"></i></a>
+                              <a href="javascript:void(0);"><i class="bx bx-trash text-secondary fs-4"></i></a>
+                              <a href="javascript:void(0);" onclick="drawSubData({{ item.id }});" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}">
+                                  <i class="bx bxs-search text-secondary fs-4"></i></a>
+
+                            </div>
+                          </div>
+                          <div id="taskitem{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#ecommerceBillingAccordionAddress" style="">
+                            <div class="accordion-body ps-4 ms-1">
+                              <h6 class="mb-1">종료예정일 : {{ item.task_end }}</h6>
+                              <p class="mb-1">참여 :
+                                  {% for list in userlist %}
+                                      {% if list.task_id == item.id %}
+                                        {{ list.member__username }}
+                                      {% endif %}
+                              {% endfor %}
+                              </p>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                      </div>
+                    </div>
+
+
+                </div>
+                  <!-- /Customer-detail Card -->
+
+                </div>
+                <!--/ Customer Sidebar -->
+
+                <!-- Customer Content -->
+                <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+                <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                    <div class="row">
+                    <div class="col-md-6">
+                      <button class="btn btn-label-primary" type="button" data-bs-toggle="modal" data-bs-target="#">
+                          주간업무보고
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                      <button class="btn btn-label-slack" type="button">
+                          진행
+                        </button>
+                        <button class="btn btn-label-slack" type="button">
+                          중지
+                        </button>
+                        <button class="btn btn-label-slack" type="button">
+                          보류
+                        </button>
+                        <button class="btn btn-label-slack" type="button">
+                          완료
+                        </button>
+                    </div>
+                    </div>
+                    </div>
+                 <!-- table start -->
+
+                    {% comment %}<div class="card mb-4">{% endcomment %}
+                    <table id="TaskSub" class="display table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th style="width: 20%">제목</th>
+                <th style="width: 25%">내용</th>
+                <th style="width: 8%">상태</th>
+                <th style="width: 10%">종료일</th>
+                <th style="width: 20%">이슈</th>
+                <th style="width: 20%">기타</th>
+            </tr>
+        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                  </div>
+
+              {% comment %}</div>{% endcomment %}
+                  <!-- table end -->
+
+                </div>
+                <!--/ Customer Content -->
+              </div>
+
+
+            </div>
+
+<!-- Modal Task -->
+<div class="modal fade" id="addNT" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                  <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <div class="text-center mb-4">
+                        <h3 class="address-title">Task 등록</h3>
+                        <p class="address-subtitle">새로운 Task를 등록하세요</p>
+                      </div>
+                      <form id="addNTForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
+                        {% csrf_token %}
+                        <div class="col-12 col-md-12 fv-plugins-icon-container">
+                          <label class="form-label" for="task_name">Task name</label>
+                          <input type="text" id="task_name" name="task_name" class="form-control " placeholder="Task 입력">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+
+                        <div class="col-12">
+                          <label class="form-label" for="task_start">시작일</label>
+                            <input id="task_start" name="task_start" type="date" class="form-control" placeholder="" value="">
+
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label" for="task_end">종료일</label>
+                            <input id="task_end" name="task_end" type="date" class="form-control" placeholder="" value="">
+
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label" for="TagifyUserList">참석자</label>
+                            <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+
+                        </div>
+
+
+                        <div class="col-12 text-center">
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_task">Submit</button>
+                          <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Cancel
+                          </button>
+                        </div>
+                      <input type="hidden">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+         <!-- Modal Task -->
+<div class="modal fade" id="addNTS" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                  <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <div class="text-center mb-4">
+                        <h3 class="address-title">세부내용 등록</h3>
+                        <p class="address-subtitle"></p>
+                      </div>
+                      <form id="addNTSForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
+                        {% csrf_token %}
+                        <div class="col-12 col-md-6 fv-plugins-icon-container">
+                          <label class="form-label" for="sub_title">제목</label>
+                          <input type="text" id="sub_title" name="sub_title" class="form-control" placeholder="제목 입력">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+
+                        <div class="col-12 col-md-6 fv-plugins-icon-container">
+                          <label class="form-label" for="sub_content">내용</label>
+                          <input type="text" id="sub_content" name="sub_content" class="form-control " placeholder="내용 입력">
+                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+
+                        <div class="col-12 col-md-6 fv-plugins-icon-container">
+                          <label class="form-label" for="due_date">종료 예정일</label>
+                            <input id="due_date" name="due_date" type="date" class="form-control" placeholder="" value="">
+
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label" for="issue">이슈</label>
+                            <input id="issue" name="issue" type="text" class="form-control" placeholder="" value="">
+
+                        </div>
+
+                        <div class="col-12">
+                          <label class="form-label" for="sub_etc">기타</label>
+                            <input id="sub_etc" name="sub_etc" class="form-control"/>
+
+                        </div>
+
+
+                        <div class="col-12 text-center">
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_sub">Submit</button>
+                          <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Cancel
+                          </button>
+                        </div>
+                      <input type="hidden">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+<div>
+<input type="hidden" id="typehidden" value={{ pjname.id }}>
+</div>
+{% include 'admins/admin_footer.html' %}
+<!-- / Footer -->
+            </div>
+         </div> <!-- end of layout-page -->
+    </div> <!-- end of layout-container -->
+</div>
+
+
+</body>
+
+<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
+<script>
+    let maintable = null;
+    let selected_task_id = null;
+
+    $(document).ready(function () {
+
+       maintable = new DataTable('#TaskSub', {
+               layout: {
+            topStart: {
+                buttons: [
+                    {
+                        text: '등록',
+                        className: 'subaddClass',
+                        action: function (e, dt, node, config) {
+                            btnTaskSubAction('A');
+                        },
+                        enabled: true
+                    },
+                    {
+                        text: '수정',
+                        className: 'subeditClass',
+                        action: function (e, dt, node, config) {
+                            // 선택된 체크박스의 행 데이터 가져오기
+                            let selectedRowsData = dt.rows({ selected: true }).data().toArray()[0]['id'];
+
+                            btnTaskSubAction('E', selectedRowsData);
+                        },
+                        enabled: false
+                    },
+                    {
+                        text: '삭제',
+                        className: 'subdelClass',
+                        action: function (e, dt, node, config) {
+                            let allSelectedRowsData = dt.rows({ selected: true }).data().toArray();
+                            let selected_list=[]
+
+                            // 각 행에 대한 로직 추가
+                            for (let i = 0; i < allSelectedRowsData.length; i++) {
+
+                                selected_list.push(allSelectedRowsData[i]['id']);
+
+                            }
+
+                            btnTaskSubAction('D', selected_list);
+                        },
+                        enabled: false
+                    }
+                ]
+            }
+        },
+        columnDefs: [
+            {
+                orderable: false,
+                render: DataTable.render.select(),
+                targets: 0
+            },
+            {
+                targets: 3,
+                render: function(data, type, row, meta) {
+                    switch (data){
+                        case 'S' :
+                            data = '대기'
+                            break;
+                        case 'P' :
+                            data = '진행'
+                            break;
+                        case 'H' :
+                            data = '보류'
+                            break;
+                        case 'R' :
+                            data = '재검토'
+                            break;
+                        default:
+                            data = '완료'
+                            break
+                    }
+
+                    return data;
+                }
+            },{
+            targets: 4,
+            render: DataTable.render.datetime('YY-MM-DD')
+        }
+        ],
+
+        select: {
+            style: 'multi',
+            selector: 'td:first-child'
+        },
+        order: [[1, 'asc']],
+        "rowCallback": function(row, data) {
+            $(row).on('click', function() {
+
+
+            });
+        }
+    });
+        // 버튼 활성화
+       maintable.on('select deselect', function () {
+            let selectedRows = maintable.rows({ selected: true }).count();
+
+            maintable.button(0).enable(selectedRows < 1);
+            maintable.button(1).enable(selectedRows === 1);
+            maintable.button(2).enable(selectedRows > 0);
+        });
+
+    });
+
+    function drawSubData(taskId) {
+        //task_id 셋팅
+        selected_task_id = taskId;
+        let paramData = []
+        paramData.push({name:'taskid', value:taskId})
+        //get ajax 요청
+        if(selected_task_id != null){
+            api_gp("{% url 'getSubData' %}", "GET", paramData, (done) => {
+                let drawData = formatData(done.results);
+
+
+            maintable.rows().remove().draw();
+
+            maintable.rows.add(drawData).draw();
+
+            });
+        }else{
+            alert('잘못된 task입니다.')
+        }
+
+        $('#accordion').addClass('active');
+        //maintable.buttons( '.subaddClass' ).enable();
+
+
+
+    }
+
+    $('#add_btn_modal_task').click(function() {
+
+      let allData = $('#addNTForm').serializeArray();
+      let promaster = $('#typehidden').val()
+      allData.push({name:'promasterid', value:promaster})
+      allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
+
+      //유효성 검사 체크
+      let val_check = true;
+
+      if (val_check){
+          api_gp("{% url 'TaskAdd' %}", "POST", allData, (done) => {
+
+            // task reload
+              if (done.message=='success'){
+                    location.reload() ;
+                }
+            });
+      }
+    });
+
+
+    function formatData(results) {
+
+          return results.map(result => [
+            null,
+              result.sub_title,
+            result.sub_content,
+            result.sub_status,
+            result.due_date,
+              result.issue,
+              result.sub_etc,
+                  result.id
+
+          ]);
+        }
+
+    function btnTaskSubAction(type) {
+        if(type==='A'){
+            $('#addNTS').modal('show');
+        }else{
+
+        }
+    }
+
+    $('#add_btn_modal_sub').click(function() {
+
+      let allData = $('#addNTSForm').serializeArray();
+      let promaster = $('#typehidden').val()
+      allData.push({name:'selected_task_id', value:selected_task_id})
+      allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
+
+      //유효성 검사 체크
+      let val_check = true;
+
+      if (val_check){
+          api_gp("{% url 'getSubData' %}", "POST", allData, (done) => {
+
+
+            window.location.reload() ;
+
+            $('#addNTS').modal('hide');
+
+            // task reload
+            });
+      }
+    });
+
+</script>
+
+</html>
