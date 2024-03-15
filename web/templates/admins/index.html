@@ -319,22 +319,10 @@
                                             id="vehicle_select"
                                             name="vehicle_select"
                                             data-placeholder="차량을 선택하세요.">
-{#                                        <option value="CQM3">QM3</option>#}
-{#                                        <option value="CSPO">스포티지</option>#}
-{#                                        <option value="CETC">기타</option>#}
                                     </select>
                                 </div>
                                 <!-- /Basic Custom Radios -->
                             </div>
-{#                          <div class="mb-3">#}
-{#                            <label class="form-label" for="eventURL">참조 URL</label>#}
-{#                            <input#}
-{#                              type="url"#}
-{#                              class="form-control"#}
-{#                              id="eventURL"#}
-{#                              name="eventURL"#}
-{#                              placeholder="https://www.google.com" />#}
-{#                          </div>#}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">참석자</label>
                               <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
@@ -524,9 +512,9 @@
 
         if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
             eventData.vehicleSelect = $("#vehicle_select").val();
+        } else {
+            eventData.vehicleSelect = null
         }
-
-        console.log('edata', eventData)
 
         $.ajax({
             url: "{% url 'get_eventDataAll' %}",

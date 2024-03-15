@@ -74,7 +74,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="card mb-4">
-
+                                        {% if request.user.is_superuser %}
                                         <button
                                                 style="width: 150px; margin: 20px 0 20px 20px;"
                                                 type="button"
@@ -84,9 +84,10 @@
                                             게시판 추가<i class='bx bx-message-add'></i>
                                         </button>
                                         {% include 'admins/board/groupAddModal.html' %}
+                                        {% endif %}
 
 
-                                        <div class="list-container">
+                                        <div class="list-container mt-3 mb-2">
                                             {% for cm in codemaster %}
                                                 <li class="d-flex justify-content-between" style="margin-left: 20px;">
                                                     <button class="btn rounded-pill btn-label-slack"
@@ -127,40 +128,45 @@
 
 
                     <div class="col-md-9">
-                      <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center" style="margin-bottom: 20px;">
-                          <h5 class="mb-0">게시물 미리보기</h5>
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center"
+                                 style="margin-bottom: 20px;">
+                                <h5 class="mb-0">게시물 미리보기</h5>
+                            </div>
+                            <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
+                                <div>
+                                    <div class="card-body">
+                                        <div style="margin-bottom: 20px;">
+                                            <strong style="font-size: large"
+                                                    id="group_name">{{ boardcode_name }}</strong>
+                                        </div>
+                                        <div class="table-container" style="margin-top: 30px; overflow-x: auto;">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr style="background-color: #fffbfb">
+                                                    <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
+                                                    <th style="font-size: medium; font-weight: bold; text-align: center; width: 35%">제목</th>
+                                                    <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
+                                                    <th style="font-size: medium; font-weight: bold; text-align: center; width: 25%;">작성일시</th>
+                                                    <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
+                                                    <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mt-5">
+                                            {% include 'admins/search_to_from_paging.html' %}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
                         </div>
-                          <div style="border-top: lightgrey solid 1px; margin-bottom: 20px;">
-                              <div>
-                                  <div class="card-body">
-                                      <div style="margin-bottom: 20px;">
-                                          <strong style="font-size: large" id="group_name">{{ boardcode_name }}</strong>
-                                      </div>
-                                      <div class="table-container" style="margin-top: 30px; overflow-x: auto;">
-                                          <table class="table table-hover">
-                                              <thead>
-                                                  <tr style="background-color: #fffbfb">
-                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
-                                                      <th style="font-size: medium; font-weight: bold; text-align: center; width: 35%">제목</th>
-                                                      <th style="font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                                                      <th style="font-size: medium; font-weight: bold; text-align: center; width: 25%;">작성일시</th>
-                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
-                                                      <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-
-                                              </tbody>
-                                          </table>
-                                      </div>
-                                  </div>
-
-
-                              </div>
-                          </div>
-
-                      </div>
                     </div>
               </div>
 

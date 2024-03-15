@@ -34,33 +34,35 @@
                                         <!-- Basic -->
                                         <div class="col-md-6 mb-4" style="margin-top: 33px; margin-left: 30px;">
                                             <select id="selectpickerBasic" class="selectpicker w-100" data-style="btn-default" required>
-                                                <option disabled selected>--게시판을 선택해주세요--</option>
+                                                <option disabled>--게시판을 선택해주세요--</option>
                                                 {% for cm in codemaster %}
-                                                    <option name="boardcode" value="{{ cm.id }}">{{ cm.name }}</option>
+                                                    <option name="boardcode" value="{{ cm.id }}" {% if cm.id == board.boardcode_id %}selected{% endif %}>{{ cm.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                     </div>
 
-                                    <div style="margin-top: 30px;">
-                                        <label class="switch switch-danger"
-                                               style="margin-right: 60px; margin-top: 8px;">
-                                            <input type="hidden" name="fixed_flag" value="false">
-                                            <input type="checkbox" class="switch-input" name="fixed_flag" value="true">
-                                            <span class="switch-label">상단공지등록</span>
-                                            <span class="switch-toggle-slider">
-                                            <span class="switch-on">
-                                                <i class="bx bx-check"></i>
-                                            </span>
-                                            <span class="switch-off">
-                                                <i class="bx bx-x"></i>
-                                            </span>
-                                        </span>
-                                        </label>
-                                        <!--임시저장 버튼-->
-                                        {% include 'admins/board/temporarySave_modal.html' %}
-                                         <button type="submit" class="btn btn-label-secondary" id="submitBtn">등록</button>
-                                    </div>
+                                        <div style="margin-top: 30px;">
+                                            <label class="switch switch-danger"
+                                                   style="margin-right: 60px; margin-top: 8px;">
+                                                <input type="hidden" name="fixed_flag" value="false">
+                                                <input type="checkbox" class="switch-input" name="fixed_flag"
+                                                       value="true" {% if board.fixed_flag %}checked{% endif %}>
+                                                <span class="switch-label">상단공지등록</span>
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
+                                                </span>
+                                            </label>
+                                            <!--임시저장 버튼-->
+                                            {% include 'admins/board/temporarySave_modal.html' %}
+                                            <button type="submit" class="btn btn-label-secondary" id="submitBtn">등록
+                                            </button>
+                                        </div>
                                     </div>
 
 
@@ -202,7 +204,7 @@
     }
 
     // 변환된 텍스트를 콘솔에 출력
-    console.log('수정 원본글:', deltaToText(delta));
+    //console.log('수정 원본글:', deltaToText(delta));
 </script>
 <script>
 

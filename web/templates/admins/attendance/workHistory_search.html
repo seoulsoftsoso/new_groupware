@@ -163,8 +163,8 @@
                     </div>
                     <!--/ Team Members -->
 
-            <div class="col-md-8 col-12 d-flex flex-md-row flex-sm-column flex-column" style="margin: auto">
-                <div class="card col-md-6 col-12" style="margin-top: 40px; padding: 30px; ">
+            <div class="col-md-11 col-12 mb-5" style="margin: auto">
+                <div class="card col-md-12 col-12" style="margin-top: 40px; padding: 30px; ">
                     <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🚫 {{ yesterday }} 퇴근 미등록자 🚫</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}
@@ -199,7 +199,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="card col-md-6 col-12" style="margin-top: 40px; padding: 30px; ">
+                <div class="card col-md-12 col-12" style="margin-top: 40px; padding: 30px; ">
                     <h3 class="mb-4 doc-page-title" style="font-family: Pretendard;">🟠 {{ yesterday }} 지각 🟠</h3>
                     {% if yesterday.weekday == 5 or yesterday.weekday == 6 %}
                         {% if yesterday.weekday == 5 %}

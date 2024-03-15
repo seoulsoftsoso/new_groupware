@@ -26,7 +26,7 @@ class CorporateMgmtListView(ListView):
         # print(f'Search To: {search_to}, Search From: {search_from},Search Title: {search_title}, Search Content: {search_content}')
 
         qs = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', 'corporatemgmt_set')
-        qs = qs.filter(delete_flag='N').filter(business_pair__isnull=False).order_by('-id')
+        qs = qs.filter(delete_flag='N').filter(business_pair__isnull=False, vehicle__isnull=False).order_by('-id')
         event_qs = qs
 
         if search_to and search_from:
@@ -99,10 +99,10 @@ class CorporateMgmtCreateView(View):
 def corporate_edit_data(request):
     if request.method == 'GET':
         id = request.GET.get('id')
-        event = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', 'corporatemgmt_set').get(id=id)
-
-        for participant in event.participant_set.all():
-            print(participant)
+        try:
+            event = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', 'corporatemgmt_set').get(id=id)
+        except EventMaster.DoesNotExist:
+            return JsonResponse({'message': '등록된 법인차량 없음'}, status=404)
 
         participants = [{
             'cuser_id': participant.cuser.id,
@@ -119,7 +119,7 @@ def corporate_edit_data(request):
             'guests': participants,
             'description': event.description,
             'location': event.location,
-            'vehicleSelect': event.vehicle.code
+            'vehicleSelect': event.vehicle.code if event.vehicle else None  # vehicle 필드가 None인 경우 처리
         }
 
         return JsonResponse(data)

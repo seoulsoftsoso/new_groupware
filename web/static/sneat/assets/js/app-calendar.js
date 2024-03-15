@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // eventUrl = document.querySelector('#eventURL'),
       eventLabel = $('#eventLabel'), // ! Using jquery vars due to select2 jQuery dependency
       vehicle_select = document.querySelector('#vehicle_select'),
+      vehicle_checkBox = document.querySelector('#customCheckTemp3'),
       eventGuests = document.querySelector('#TagifyUserList'), // ! Using jquery vars due to select2 jQuery dependency
       eventLocation = document.querySelector('#eventLocation'),
       eventDescription = document.querySelector('#eventDescription'),
@@ -231,6 +232,12 @@ document.addEventListener('DOMContentLoaded', function () {
         tagify.addTags(guests);
       } else {
         tagify.removeAllTags();
+      }
+      if (eventVehicleCode == null){
+        vehicle_checkBox.checked = false;
+        if (vehicle_checkBox.checked === false) {
+          $('#carCheck').hide();
+        }
       }
       eventToUpdate.extendedProps.description !== undefined
         ? (eventDescription.value = eventToUpdate.extendedProps.description)

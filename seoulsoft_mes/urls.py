@@ -39,7 +39,7 @@ from api.base.groupcodemaster_views import GroupCodeMasterViewSet, GenerateCodeM
 
 from api.base.user_views import UserMasterViewSet, UserMasterSelectViewSet
 from api.calendar.common import get_eventDataAll
-from api.project_mgmt.common import taskmgmt, getSubData, projectmgmtadd, projectmgmtedit
+from api.project_mgmt.common import *
 
 from api.user.views import CustomObtainAuthToken
 from api.views import *
@@ -177,9 +177,12 @@ urlpatterns = [
 
                   path('project/projectmgmt/', projectmgmtadd.as_view(), name='ProjectAdd'),
                   path('project/projectmgmtedit/', projectmgmtedit.as_view(), name='ProjectEdit'),
+                  path('project/protask_edit',ProTaskEdit.as_view(), name="ProTaskEdit"),
                   path('project/taskadd/', taskmgmt.as_view(), name='TaskAdd'),
+                  path('porject/taskedit', GetSubDataEdit.as_view(), name='GetSubDataEdit'),
                   #path('project/tasksubadd/', taskmgmt.as_view(), name='TaskSubAdd'),
                   path('project/getsub/', getSubData.as_view(), name='getSubData'),
+                  path('project/member_list_get', ProMemberListGet.as_view(), name="ProMemberListGet"),
 
 
                   # 주간업무보고

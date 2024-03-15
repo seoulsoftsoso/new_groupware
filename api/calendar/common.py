@@ -147,7 +147,7 @@ class get_eventDataAll(View):
 
                 # 법인차량
                 vehicleCode = json.loads(request.body).get('vehicleSelect')
-                print('vehicleCode', vehicleCode)
+                # print('vehicleCode', vehicleCode)
                 selected_vehicle = None
                 if vehicleCode:
                     selected_vehicle = CodeMaster.objects.get(code=vehicleCode)

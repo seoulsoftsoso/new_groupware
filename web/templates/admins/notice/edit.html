@@ -29,19 +29,20 @@
                                     {% csrf_token %}
                                     <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-right: 20px;">
                                         <label class="switch switch-danger"
-                                               style="margin-right: 60px; margin-top: 8px;">
-                                            <input type="hidden" name="fixed_flag" value="false">
-                                            <input type="checkbox" class="switch-input" name="fixed_flag" value="true">
-                                            <span class="switch-label">상단공지등록</span>
-                                            <span class="switch-toggle-slider">
-                                            <span class="switch-on">
-                                                <i class="bx bx-check"></i>
-                                            </span>
-                                            <span class="switch-off">
-                                                <i class="bx bx-x"></i>
-                                            </span>
-                                        </span>
-                                        </label>
+                                                   style="margin-right: 60px; margin-top: 8px;">
+                                                <input type="hidden" name="fixed_flag" value="false">
+                                                <input type="checkbox" class="switch-input" name="fixed_flag"
+                                                       value="true" {% if notice.fixed_flag %}checked{% endif %}>
+                                                <span class="switch-label">상단공지등록</span>
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
+                                                </span>
+                                            </label>
                                         <!--임시저장 버튼-->
                                         {% include 'admins/notice/temporarySave_modal.html' %}
                                          <button type="submit" class="btn btn-label-secondary" id="submitBtn">등록</button>
@@ -180,7 +181,7 @@
     }
 
     // 변환된 텍스트를 콘솔에 출력
-    console.log('수정 원본글:', deltaToText(delta));
+    // console.log('수정 원본글:', deltaToText(delta));
 </script>
 <script>
 
@@ -201,7 +202,7 @@
        var iterator = formdata.entries();
        var result = iterator.next();
        while (!result.done) {
-           console.log(result.value);
+           //console.log(result.value);
            result = iterator.next();
        }
 

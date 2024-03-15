@@ -207,11 +207,18 @@ def project_main_page(request):
         .distinct() \
         .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
 
+    formatted_projects = []
+    for project in project:
+        formatted_project = project
+        formatted_project['start_date'] = project['start_date'].strftime('%Y-%m-%d')
+        formatted_project['end_date'] = project['end_date'].strftime('%Y-%m-%d')
+        formatted_projects.append(formatted_project)
+
     userlist = ProMembers.objects.filter(
-        task_id__isnull=True,
+        task_id__isnull=True, position='PE'
         ).select_related('member').values('id', 'promaster_id', 'member__username')
 
-    context = {'project': project, 'userinfo':userinfo, 'userlist':userlist}
+    context = {'project': formatted_projects, 'userinfo': userinfo, 'userlist': userlist}
 
     return render(request, 'admins/project_mgmt/project_main.html', context)
 
@@ -225,17 +232,26 @@ def task_mgmt_page(request):
     pro = request.GET.get('param', None)
     project_name = None
     task = None
+    formatted_projects = []
     if pro:
         task = ProTask.objects.filter(pro_parent=pro).annotate(
             task_remain=Floor(DateDiff(F('task_end'), datetime.now().date()))
         ).select_related(
             'pro_parent'
         ).values(
-            'id', 'task_name', 'task_end', 'pro_parent_id', 'task_remain', 'pro_parent__pjcode', 'pro_parent__pjname'
+            'id', 'task_name', 'task_start', 'task_end', 'pro_parent_id', 'task_remain', 'pro_parent__pjcode', 'pro_parent__pjname'
         ).order_by('-id')
+
+        for task in task:
+            formatted_project = task
+            formatted_project['task_start'] = task['task_start'].strftime('%Y-%m-%d')
+            formatted_project['task_end'] = task['task_end'].strftime('%Y-%m-%d')
+            formatted_projects.append(formatted_project)
 
         #project_name = task.first()['pro_parent__pjname']
         project_name = get_object_or_404(ProMaster, pk=pro, delete_flag='N')
+
+        print('pro : ', pro)
 
     userlist = ProMembers.objects.filter(
         promaster_id=pro,
@@ -256,11 +272,12 @@ def task_mgmt_page(request):
         .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
 
     context = {
-        'task': task,
+        'task': formatted_projects,
         'userlist': userlist,
         'pjname': project_name,
         'projectlist':project
     }
+    print(context)
 
     return render(request, 'admins/project_mgmt/task_mgmt.html', context)
 

@@ -116,7 +116,7 @@
                                 {% endif %}
                                 <td>{{ obj.etc|default:"" }}</td>
                                 <td>
-                                    {% {% if request.user.is_superuser %} or obj.create_by == request.user.user_id %}
+                                    {% if request.user.is_superuser or obj.create_by == request.user.user_id %}
                                         <div class="dropdown">
                                             <button type="button"
                                                     class="btn p-0 dropdown-toggle hide-arrow"
@@ -182,7 +182,7 @@
                 'id': eventId,
             },
             success: function (response) {
-                console.log('res', response)
+                // console.log('res', response)
                 $('#eventStartDate').val(response.start_date)
                 $('#eventEndDate').val(response.end_date)
                 if (response.allDay) {

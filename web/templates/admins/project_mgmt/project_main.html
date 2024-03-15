@@ -54,25 +54,28 @@
                   종료일 <span class="text-warning"><i class="bx bxs-calendar-alt me-1"></i></span><span class="text-muted">{{ item.end_date }}</span>
                 </h6>
               </div>
-                <a href="/admins/task_mgmt/?param={{ item.id }}" class="h5"><span class="text-muted">[{{ item.pjcode }}]</span><h2 style="color: crimson">{{ item.pjname }}</h2></a>
+                <a href="/admins/task_mgmt/?param={{ item.id }}" class="h5"><span class="text-muted">[{{ item.pjcode }}]</span><h4 style="color: crimson">{{ item.pjname }}</h4></a>
               <p class="mt-2">{{ item.pj_note }}</p>
               <p class="d-flex align-items-center"><i class="bx bx-user-circle me-2"></i><span class="text-right">PM :  {{ item.pj_master__username }}</span></p>
               <p class="d-flex align-items-center"><i class="bx bx-calendar-plus me-2"></i><span class="text-right">시작일 :  {{ item.start_date }}</span></p>
               <p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>참여 :
-                {% for list in userlist %}
-                                      {% if list.promaster_id == item.id %}
-                                       <span class="badge bg-label-info" style="margin-left: 10px;">{{ list.member__username }}</span>
-                                      {% endif %}
-                              {% endfor %}
+                  {% for list in userlist %}
+                      {% if list.promaster_id == item.id %}
+                          <span class="badge bg-label-info" style="margin-left: 10px;">{{ list.member__username }}</span>
+                      {% endif %}
+                  {% endfor %}
               </p>
               {% comment %}<p class="d-flex align-items-center"><i class="bx bx-time-five me-2"></i>진척도</p>
               <div class="progress mb-4" style="height: 8px">
                 <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
               </div>{% endcomment %}
               <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
-                <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50" onclick="">
-                  <i class="bx bx-edit align-middle me-2 "></i><span>수정하기</span>
-                </a>
+                  <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50"
+                     onclick="project_main_edit_btn('{{ item.id }}', '{{ item.pjcode }}', '{{ item.pjname }}',
+                             '{{ item.start_date }}', '{{ item.end_date }}', '{{ item.pj_type }}', '{{ item.pj_customer }}',
+                             '{{ item.pj_note }}')">
+                      <i class="bx bx-edit align-middle me-2"></i><span>수정하기</span>
+                  </a>
                 <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="delProject({{ item.id }})">
                   <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
                 </a>
@@ -163,7 +166,7 @@
                       </div>
                       <div class="mb-3 kt-form__grou">
                         <label class="form-label" for="sdate">시작일</label>
-                        <input id="sdate" name="start_date" type="date" class="form-control" placeholder="" value="">
+                        <input id="sdate" name="start_date" class="form-control datepicker_startDate">
                       </div>
                       <div class="mb-3 kt-form__grou">
                         <label class="form-label" for="pjtype">Project 유형</label>
@@ -189,7 +192,7 @@
                       </div>
                       <div class="mb-3 kt-form__grou">
                         <label class="form-label" for="edate">종료일</label>
-                        <input id="edate" name="end_date" type="date" class="form-control" placeholder="" value="">
+                        <input id="edate" name="end_date" class="form-control datepicker_endDate">
                       </div>
                       <div class="mb-3 kt-form__grou">
                         <label class="form-label" for="company">고객사</label>
@@ -209,10 +212,9 @@
                             </div>
 
                             <div class="modal-footer border-0">
-                              <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                                종료
-                              </button>
-                              <button type="button" class="btn btn-primary" onclick="submit_add()">등록</button>
+                              <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">종료</button>
+                              <button type="button" class="btn btn-primary" id="promaster_add_btn" onclick="submit_add()">등록</button>
+                              <button type="button" class="btn btn-primary" id="promaster_edit_btn" style="display: none">수정</button>
                             </div>
                           </div>
                         </div>
@@ -269,15 +271,27 @@
 
 </body>
 <script>
+    var taginput = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(taginput);
+    var promasterId;
+
     $(document).ready(function () {
        //Open Modal
         openmodal();
     });
 
+     $(function () {
+        $(".datepicker_startDate").datepicker({format: 'yyyy-mm-dd'});
+        $(".datepicker_endDate").datepicker({format: 'yyyy-mm-dd'});
+    });
+
     function openmodal(){
         // 프로젝트 신규 등록
         $('#addModal').click(function (){
+           $("#addModalform").trigger("reset");
            $("#add_Modal").modal('show');
+           $("#promaster_edit_btn").hide();
+           $("#promaster_add_btn").show();
        });
         // 설정 등록
         $('#configModal').click(function (){
@@ -304,11 +318,77 @@
 
 
         api_gp("{% url 'ProjectEdit' %}", "POST", alldata, (data) => {
-                if (data.message=='success'){
+                if (data.message==='success'){
                     location.reload() ;
                 }
         });
     }
+
+    function project_main_edit_btn(id, pjcode, pjname, start_date, end_date, pj_type, pj_customer, pj_note) {
+        $("#promaster_edit_btn").show();
+        $("#promaster_add_btn").hide();
+        tagify.removeAllTags();
+        promasterId = id
+
+        $.ajax({
+            url:'{% url "ProMemberListGet" %}',
+            type:'get',
+            data:{
+                pro_id: id
+            },
+            success: function (response) {
+                console.log(response)
+                if (response.memberlist.length > 0) {
+                    var guests = response.memberlist.map(function (guest) {
+                        return {
+                            value: guest.cuser_id,
+                            avatar: guest.cuser_department,
+                            name: guest.cuser_username,
+                            email: guest.cuser_position
+                        };
+                    });
+                    tagify.addTags(guests);
+                }
+                $('#pjcode').val(pjcode);
+                $('#pjname').val(pjname);
+                $('#sdate').val(start_date);
+                $('#edate').val(end_date);
+                $('#pjtype').val(pj_type);
+                $('#pj_customer').val(pj_customer);
+                $('#pj_note').val(pj_note);
+
+                $('#add_Modal').modal('show');
+            }
+        })
+    }
+
+    $("#promaster_edit_btn").click(function (e) {
+        e.preventDefault();
+        let formDataArray = $('#addModalform').serializeArray();
+        let alldata = formDataArray;
+
+        alldata.push({name: 'proid', value: promasterId});
+        alldata.push({name: 'type', value: 'E'});
+        alldata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+
+        $.ajax({
+            url: '{% url "ProjectEdit" %}',
+            type: 'POST',
+            data: $.param(alldata),
+            success: function (response) {
+                Swal.fire({
+                     title: 'Success!',
+                     text: '수정 완료',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        });
+    });
 </script>
 
 

@@ -35,7 +35,8 @@
           <div class="container-xxl flex-grow-1 container-p-y">
               <div class="alert alert-outline-primary alert-dismissible" role="alert">
 
-                <select class="form-select" style="width: 25%">
+                <select class="form-select" id="projectSelect" style="width: 25%">
+                    <option>--프로젝트를 선택해주세요--</option>
                     {% for pro in projectlist %}
                         <option value={{ pro.id }}>[{{ pro.pjcode }}]{{ pro.pjname }}</option>
                     {% endfor %}
@@ -56,8 +57,8 @@
                     <div class="card-header align-items-center flex-wrap gap-3 py-4">
                       <h5 class="card-action-title mb-0">{{ pjname.pjname }}</h5>
                       <div class="card-action-element">
-                        <button class="btn btn-label-primary" type="button" data-bs-toggle="modal" data-bs-target="#addNT">
-                          Add new Task
+                        <button class="btn btn-label-primary" id="add_protask_btn" style="font-family: Pretendard;" type="button" data-bs-toggle="modal" data-bs-target="#addNT">
+                          Task 등록
                         </button>
                       </div>
                     </div>
@@ -77,10 +78,13 @@
                               </span>
                             </a>
                             <div class="d-flex gap-3 p-4 p-sm-0 pt-0 ms-1 ms-sm-0">
-                              <a href="javascript:void(0);"><i class="bx bx-pencil text-secondary fs-4"></i></a>
+                              <a href="javascript:void(0);"><i class="bx bx-pencil text-secondary fs-4"
+                                                               onclick="protask_pencil(
+                                                                       '{{ item.id }}', '{{ item.task_name }}', '{{ item.task_start }}', '{{ item.task_end }}'
+                                                                       )"></i></a>
                               <a href="javascript:void(0);"><i class="bx bx-trash text-secondary fs-4"></i></a>
                               <a href="javascript:void(0);" onclick="drawSubData({{ item.id }});" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}">
-                                  <i class="bx bxs-search text-secondary fs-4"></i></a>
+                                  <i class="bx bx-zoom-in text-secondary fs-4"></i></a>
 
                             </div>
                           </div>
@@ -92,9 +96,9 @@
                                       {% if list.task_id == item.id %}
                                         {{ list.member__username }}
                                       {% endif %}
-                              {% endfor %}
-                              </p>
+                                  {% endfor %}
 
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -113,25 +117,25 @@
                 <!--/ Customer Sidebar -->
 
                 <!-- Customer Content -->
-                <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+                <div class="card col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
                 <div class="card-header align-items-center flex-wrap gap-3 py-4">
                     <div class="row">
                     <div class="col-md-6">
-                      <button class="btn btn-label-primary" type="button" data-bs-toggle="modal" data-bs-target="#">
+                      <button class="btn btn-label-primary" style="font-family: Pretendard;" type="button" data-bs-toggle="modal" data-bs-target="#">
                           주간업무보고
                         </button>
                     </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-label-slack" type="button">
+                    <div class="col-md-6 d-flex justify-content-end">
+                      <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
                           진행
                         </button>
-                        <button class="btn btn-label-slack" type="button">
+                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
                           중지
                         </button>
-                        <button class="btn btn-label-slack" type="button">
+                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
                           보류
                         </button>
-                        <button class="btn btn-label-slack" type="button">
+                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
                           완료
                         </button>
                     </div>
@@ -175,8 +179,8 @@
                     <div class="modal-body">
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       <div class="text-center mb-4">
-                        <h3 class="address-title">Task 등록</h3>
-                        <p class="address-subtitle">새로운 Task를 등록하세요</p>
+                        <h3 class="address-title" id="addNT_title"></h3>
+                        <p class="address-subtitle" id="addNT_subtitle">새로운 Task를 등록하세요</p>
                       </div>
                       <form id="addNTForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
                         {% csrf_token %}
@@ -187,13 +191,13 @@
 
                         <div class="col-12">
                           <label class="form-label" for="task_start">시작일</label>
-                            <input id="task_start" name="task_start" type="date" class="form-control" placeholder="" value="">
+                            <input id="task_start" name="task_start" class="form-control datepicker_startDate">
 
                         </div>
 
                         <div class="col-12">
                           <label class="form-label" for="task_end">종료일</label>
-                            <input id="task_end" name="task_end" type="date" class="form-control" placeholder="" value="">
+                            <input id="task_end" name="task_end" class="form-control datepicker_endDate">
 
                         </div>
 
@@ -205,7 +209,8 @@
 
 
                         <div class="col-12 text-center">
-                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_task">Submit</button>
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_task">등록</button>
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="edit_btn_modal_task" onclick="edit_protask_func()">수정</button>
                           <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
                             Cancel
                           </button>
@@ -224,7 +229,7 @@
                     <div class="modal-body">
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       <div class="text-center mb-4">
-                        <h3 class="address-title">세부내용 등록</h3>
+                        <h3 class="address-title" id="taks_title_h3"></h3>
                         <p class="address-subtitle"></p>
                       </div>
                       <form id="addNTSForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
@@ -241,7 +246,7 @@
 
                         <div class="col-12 col-md-6 fv-plugins-icon-container">
                           <label class="form-label" for="due_date">종료 예정일</label>
-                            <input id="due_date" name="due_date" type="date" class="form-control" placeholder="" value="">
+                            <input id="due_date" name="due_date" class="form-control datepicker_startDate">
 
                         </div>
 
@@ -259,7 +264,8 @@
 
 
                         <div class="col-12 text-center">
-                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_sub">Submit</button>
+                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_sub">등록</button>
+                          <button type="submit" style="display: none" class="btn btn-primary me-sm-3 me-1" id="edit_btn_modal_sub">수정</button>
                           <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
                             Cancel
                           </button>
@@ -290,8 +296,29 @@
 <script>
     let maintable = null;
     let selected_task_id = null;
+    let global_protask_id = null;
+    var taginput = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(taginput);
+
+     $(function () {
+        $("#due_date").datepicker({format: 'yyyy-mm-dd'});
+        $("#task_start").datepicker({format: 'yyyy-mm-dd'});
+        $("#task_end").datepicker({format: 'yyyy-mm-dd'});
+    });
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var selectedOption = urlParams.get('param');
+
+    if (selectedOption) {
+        $('#projectSelect').val(selectedOption);
+    }
 
     $(document).ready(function () {
+
+        $('#projectSelect').change(function () {
+            var param = $(this).val();
+            window.location.href = '/admins/task_mgmt/?param=' + param;
+        });
 
        maintable = new DataTable('#TaskSub', {
                layout: {
@@ -301,6 +328,14 @@
                         text: '등록',
                         className: 'subaddClass',
                         action: function (e, dt, node, config) {
+                            $('#add_btn_modal_sub').show()
+                            $('#edit_btn_modal_sub').hide()
+                            $('#taks_title_h3').text('세부내용 등록')
+                            console.log(selected_task_id)
+                            if(selected_task_id == null) {
+                                alert('왼쪽 돋보기 아이콘을 클릭하여 TASK를 선택해주세요.')
+                                return false
+                            }
                             btnTaskSubAction('A');
                         },
                         enabled: true
@@ -309,10 +344,46 @@
                         text: '수정',
                         className: 'subeditClass',
                         action: function (e, dt, node, config) {
-                            // 선택된 체크박스의 행 데이터 가져오기
-                            let selectedRowsData = dt.rows({ selected: true }).data().toArray()[0]['id'];
+                            let selectedRowData = dt.row({selected: true}).data();
+                            // console.log(selectedRowData);
+                            $('#add_btn_modal_sub').hide();
+                            $('#edit_btn_modal_sub').show();
+                            $('#taks_title_h3').text('세부내용 수정');
+                            $('#edit_btn_modal_sub').off('click');
 
-                            btnTaskSubAction('E', selectedRowsData);
+                            $('#edit_btn_modal_sub').on('click', function () {
+                                let allData = $('#addNTSForm').serializeArray();
+                                allData.push({name: 'selected_task_id', value: selectedRowData[7]});
+                                allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+                                allData.push({name: 'type', value: 'edit'});
+
+                                console.log(allData);
+
+                                let val_check = true;
+
+                                if (val_check) {
+                                    $.ajax({
+                                        url: "{% url 'GetSubDataEdit' %}",
+                                        type: "POST",
+                                        data: allData,
+                                        success: function (response) {
+                                            Swal.fire({
+                                                title: 'Success!',
+                                                text: '수정 완료',
+                                                icon: 'success',
+                                                confirmButtonText: '확인'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    drawSubData(selected_task_id)
+                                                    $('#addNTS').modal('hide')
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+
+                            btnTaskSubAction('E', selectedRowData);
                         },
                         enabled: false
                     },
@@ -321,14 +392,36 @@
                         className: 'subdelClass',
                         action: function (e, dt, node, config) {
                             let allSelectedRowsData = dt.rows({ selected: true }).data().toArray();
+                            console.log(allSelectedRowsData)
                             let selected_list=[]
 
                             // 각 행에 대한 로직 추가
                             for (let i = 0; i < allSelectedRowsData.length; i++) {
 
-                                selected_list.push(allSelectedRowsData[i]['id']);
+                                selected_list.push(allSelectedRowsData[i][7]);
 
                             }
+                            console.log(selected_list)
+
+                            $.ajax({
+                                url: "{% url 'GetSubDataEdit' %}",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(selected_list),
+                                headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                                success: function (res){
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: '삭제 완료',
+                                        icon: 'success',
+                                        confirmButtonText: '확인'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                }
+                            })
 
                             btnTaskSubAction('D', selected_list);
                         },
@@ -423,7 +516,6 @@
     }
 
     $('#add_btn_modal_task').click(function() {
-
       let allData = $('#addNTForm').serializeArray();
       let promaster = $('#typehidden').val()
       allData.push({name:'promasterid', value:promaster})
@@ -434,9 +526,8 @@
 
       if (val_check){
           api_gp("{% url 'TaskAdd' %}", "POST", allData, (done) => {
-
             // task reload
-              if (done.message=='success'){
+              if (done.message==='success'){
                     location.reload() ;
                 }
             });
@@ -459,18 +550,28 @@
           ]);
         }
 
-    function btnTaskSubAction(type) {
-        if(type==='A'){
+    function btnTaskSubAction(type, selectedRowData) {
+        if(type === 'A'){
             $('#addNTS').modal('show');
-        }else{
+        }else if (type === 'E'){
+            $('#sub_title').val(selectedRowData[1])
+            $('#sub_content').val(selectedRowData[2])
 
+            // 날짜변환 2024-04-01T00:00:00 -> 2024-04-01
+            moment.locale('ko');
+            let formattedDate = moment(selectedRowData[4]).format('YYYY-MM-DD');
+            $('#due_date').val(formattedDate);
+
+            $('#issue').val(selectedRowData[5])
+            $('#sub_etc').val(selectedRowData[6])
+
+            $('#addNTS').modal('show');
         }
     }
 
     $('#add_btn_modal_sub').click(function() {
 
       let allData = $('#addNTSForm').serializeArray();
-      let promaster = $('#typehidden').val()
       allData.push({name:'selected_task_id', value:selected_task_id})
       allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
@@ -480,7 +581,6 @@
       if (val_check){
           api_gp("{% url 'getSubData' %}", "POST", allData, (done) => {
 
-
             window.location.reload() ;
 
             $('#addNTS').modal('hide');
@@ -489,6 +589,82 @@
             });
       }
     });
+
+    function protask_pencil(protask_id, task_name, task_start, task_end){
+        $('#edit_btn_modal_task').show();
+        $('#add_btn_modal_task').hide();
+        $("#addNT_title").html('Task 수정')
+        $("#addNT_subtitle").html('')
+        tagify.removeAllTags();
+        global_protask_id = protask_id;
+
+        $.ajax({
+            url:'{% url "ProMemberListGet" %}',
+            type:'get',
+            data:{
+                pro_id: protask_id,
+                pro_type: 'pt_get',
+                promaster_id: selectedOption
+            },
+            success: function (response) {
+                if (response.memberlist.length > 0) {
+                    var guests = response.memberlist.map(function (guest) {
+                        return {
+                            value: guest.cuser_id,
+                            avatar: guest.cuser_department,
+                            name: guest.cuser_username,
+                            email: guest.cuser_position
+                        };
+                    });
+                    tagify.addTags(guests);
+                }
+                $('#task_name').val(task_name);
+                $('#task_start').val(task_start);
+                $('#task_end').val(task_end);
+                $('#addNT').modal('show')
+
+            }
+        })
+
+    }
+
+    $('#add_protask_btn').click(function (){
+        $('#edit_btn_modal_task').hide();
+        $('#add_btn_modal_task').show();
+        $("#addNTForm").trigger("reset");
+        $("#addNT_title").html('Task 등록')
+    })
+
+    function edit_protask_func() {
+        let formDataArray = $('#addNTForm').serializeArray();
+        let alldata = formDataArray;
+
+        alldata.push({name: 'proid', value: global_protask_id});
+        alldata.push({name: 'promaster_id', value: selectedOption});
+        alldata.push({name: 'type', value: 'E'});
+        alldata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+
+        console.log(alldata)
+
+        $.ajax({
+            url:'{% url "ProTaskEdit" %}',
+            type:'POST',
+            data:alldata,
+            success: function (response) {
+                Swal.fire({
+                     title: 'Success!',
+                     text: '수정 완료',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        })
+
+    }
 
 </script>
 

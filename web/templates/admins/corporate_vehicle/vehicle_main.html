@@ -168,7 +168,7 @@
                                     </td>
                                 {% endif %}
                                 <td>
-                                    {% {% if request.user.is_superuser %} or obj.create_by == request.user.user_id %}
+                                    {% if request.user.is_superuser or obj.create_by == request.user.user_id %}
                                         <div class="dropdown">
                                             <button type="button"
                                                     class="btn p-0 dropdown-toggle hide-arrow"

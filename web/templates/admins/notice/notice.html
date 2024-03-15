@@ -56,13 +56,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 d-flex justify-content-end mb-3" style="padding-right: 30px;">
+                    {% if request.user.is_superuser %}
+                    <div class="col-12 d-flex justify-content-end mb-3 mt-3" style="padding-right: 30px;">
                         <a href="{% url 'noticeWritePage' %}">
                             <button type="button" class="btn btn-outline-dark">🖋 작성하기</button>
                         </a>
                     </div>
+                    {% endif %}
 
-                    <hr class="my-0">
+                    <hr class="my-0 mt-5">
 
                     <div class="table-responsive" style="overflow-x: auto;">
                         <table class="table border-top m-0">
@@ -108,7 +110,7 @@
                         </table>
                     </div>
                     <div style="margin-bottom: 30px; margin-top: 50px;">
-                        {% include 'admins/year_month_paging.html' %}
+                        {% include 'admins/search_to_from_paging.html' %}
                     </div>
                 </div>
             </div>
