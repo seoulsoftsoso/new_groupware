@@ -180,7 +180,7 @@ def organization_page(request):
     depart = CodeMaster.objects.filter(group_id=1).values('id', 'code', 'name')
 
     users = UserMaster.objects.filter(
-        is_active=True, department_position_id__isnull=False
+        is_staff=True, department_position_id__isnull=False
     ).prefetch_related('job_position').order_by(
         F('department_position_id').asc(nulls_last=True),
         F('job_position_id').asc(nulls_last=True)
@@ -234,7 +234,7 @@ def task_mgmt_page(request):
     task = None
     formatted_projects = []
     if pro:
-        task = ProTask.objects.filter(pro_parent=pro).annotate(
+        task = ProTask.objects.filter(pro_parent=pro, delete_flag="N").annotate(
             task_remain=Floor(DateDiff(F('task_end'), datetime.now().date()))
         ).select_related(
             'pro_parent'

@@ -342,6 +342,17 @@ class GetSubDataEdit(View):
                 print(e)
                 return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
+        elif type == 'cng_status':
+            proTaskSub_id = request.POST.get('proTaskSub_id')
+            code = request.POST.get('code')
+
+            proTaskSub = ProTaskSub.objects.get(id=proTaskSub_id)
+
+            proTaskSub.sub_status = code
+            proTaskSub.save()
+
+            return JsonResponse({'success': True})
+
         else:
             try:
                 task_id = json.loads(request.body)
@@ -363,42 +374,58 @@ class GetSubDataEdit(View):
 
 class ProTaskEdit(View):
     def post(self, request, *args, **kwargs):
-        try:
-            protask_id = request.POST.get('proid')
-            promaster_id = request.POST.get('promaster_id')
+        type = request.POST.get('type')
 
-            # 멤버 수정할 때 객체를 완전삭제 후 다시 생성
-            ProMembers.objects.filter(task_id=protask_id, promaster_id=promaster_id).delete()
+        if type == 'E':
+            try:
+                protask_id = request.POST.get('proid')
+                promaster_id = request.POST.get('promaster_id')
 
-            protask = ProTask.objects.get(id=protask_id)
+                # 멤버 수정할 때 객체를 완전삭제 후 다시 생성
+                ProMembers.objects.filter(task_id=protask_id, promaster_id=promaster_id).delete()
 
-            protask.task_name = request.POST.get('task_name')
-            protask.task_start = request.POST.get('task_start')
-            protask.task_end = request.POST.get('task_end')
-            protask.save()
+                protask = ProTask.objects.get(id=protask_id)
 
-            tagList = json.loads(request.POST.get('TagifyUserList', '[]'))
-            tagUserIds = [tag['value'] for tag in tagList]
+                protask.task_name = request.POST.get('task_name')
+                protask.task_start = request.POST.get('task_start')
+                protask.task_end = request.POST.get('task_end')
+                protask.save()
 
-            ProMembers.objects.filter(promaster_id=promaster_id, task_id=protask_id).exclude(member_id__in=tagUserIds).update(task_id=None, update_at=timezone.now())
+                tagList = json.loads(request.POST.get('TagifyUserList', '[]'))
+                tagUserIds = [tag['value'] for tag in tagList]
 
-            for tag in tagList:
-                user_id = tag['value']
+                ProMembers.objects.filter(promaster_id=promaster_id, task_id=protask_id).exclude(member_id__in=tagUserIds).update(task_id=None, update_at=timezone.now())
 
-                # ProMembers 객체가 존재하지 않을 경우에만 생성합니다.
-                if not ProMembers.objects.filter(member_id=user_id, promaster_id=promaster_id, task_id=protask_id).exists():
-                    participant = ProMembers.objects.create(
-                        position='PE',
-                        member_id=user_id,
-                        promaster_id=promaster_id,
-                        task_id=protask_id,
-                        update_at=timezone.now(),
-                        created_by_id=request.user.id
-                    )
-                    participant.save()
+                for tag in tagList:
+                    user_id = tag['value']
 
-            return JsonResponse({'success': True})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'error': 'fail'}, status=400)
+                    # ProMembers 객체가 존재하지 않을 경우에만 생성
+                    if not ProMembers.objects.filter(member_id=user_id, promaster_id=promaster_id, task_id=protask_id).exists():
+                        participant = ProMembers.objects.create(
+                            position='PE',
+                            member_id=user_id,
+                            promaster_id=promaster_id,
+                            task_id=protask_id,
+                            update_at=timezone.now(),
+                            created_by_id=request.user.id
+                        )
+                        participant.save()
+
+                return JsonResponse({'success': True})
+            except Exception as e:
+                print(e)
+                return JsonResponse({'error': 'fail'}, status=400)
+
+        elif type == 'del':
+            try:
+                protask_id = request.POST.get('protask_id')
+                proTask = ProTask.objects.get(id=protask_id)
+
+                proTask.delete_flag = "Y"
+                proTask.save()
+
+                return JsonResponse({'success': True})
+            except Exception as e:
+                print(e)
+                return JsonResponse({'error': 'fail'}, status=400)
 

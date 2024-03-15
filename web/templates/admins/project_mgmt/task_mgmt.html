@@ -82,7 +82,7 @@
                                                                onclick="protask_pencil(
                                                                        '{{ item.id }}', '{{ item.task_name }}', '{{ item.task_start }}', '{{ item.task_end }}'
                                                                        )"></i></a>
-                              <a href="javascript:void(0);"><i class="bx bx-trash text-secondary fs-4"></i></a>
+                              <a href="javascript:void(0);"><i class="bx bx-trash text-secondary fs-4" onclick="protask_trash('{{ item.id }}')"></i></a>
                               <a href="javascript:void(0);" onclick="drawSubData({{ item.id }});" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}">
                                   <i class="bx bx-zoom-in text-secondary fs-4"></i></a>
 
@@ -441,19 +441,19 @@
                 render: function(data, type, row, meta) {
                     switch (data){
                         case 'S' :
-                            data = '대기'
+                            data = '<span class="badge rounded-pill bg-secondary">대기</span>';
                             break;
                         case 'P' :
-                            data = '진행'
+                            data = '<span class="badge rounded-pill bg-info">진행</span>';
                             break;
                         case 'H' :
-                            data = '보류'
+                            data = '<span class="badge rounded-pill bg-warning">보류</span>';
                             break;
                         case 'R' :
-                            data = '재검토'
+                            data = '<span class="badge rounded-pill bg-danger">재검토</span>';
                             break;
                         default:
-                            data = '완료'
+                           data = '<span class="badge rounded-pill bg-success">완료</span>';
                             break
                     }
 
@@ -628,6 +628,30 @@
 
     }
 
+    function protask_trash(protask_id) {
+        $.ajax({
+            url: '{% url "ProTaskEdit" %}',
+            type: 'POST',
+            data:{
+                type: 'del',
+                protask_id: protask_id
+            },
+            headers: { "X-CSRFToken": '{{ csrf_token }}' },
+            success: function (res){
+                Swal.fire({
+                     title: 'Success!',
+                     text: '삭제 완료',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+            }
+        })
+    }
+
     $('#add_protask_btn').click(function (){
         $('#edit_btn_modal_task').hide();
         $('#add_btn_modal_task').show();
@@ -664,6 +688,42 @@
             }
         })
 
+    }
+
+    $('button:contains("진행")').click(function() {
+        changeStatus_proTaskSub('P');
+    });
+    $('button:contains("중지")').click(function() {
+        changeStatus_proTaskSub('R');
+    });
+    $('button:contains("보류")').click(function() {
+        changeStatus_proTaskSub('H');
+    });
+    $('button:contains("완료")').click(function() {
+        changeStatus_proTaskSub('F');
+    });
+
+    function changeStatus_proTaskSub(code) {
+        if (maintable.row({selected: true}).data() === undefined) {
+            alert('업무 리스트에 체크박스 선택 후 다시 시도해주세요.');
+            return false;
+        }
+        var proTaskSub_id = maintable.row({selected: true}).data()[7];
+
+        $.ajax({
+            url: '{% url "GetSubDataEdit" %}',
+            type: 'POST',
+            data: {
+                code: code,
+                proTaskSub_id : proTaskSub_id,
+                type : 'cng_status'
+            },
+            headers: { "X-CSRFToken": '{{ csrf_token }}' },
+            success: function(res){
+                console.log(res)
+                drawSubData(selected_task_id)
+            }
+        })
     }
 
 </script>

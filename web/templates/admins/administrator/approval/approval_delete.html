@@ -82,7 +82,11 @@
                                     <td>{{ obj.code }}</td>
                                     <td>{{ obj.created_at }}</td>
                                     {% if obj.is_staff == True and obj.is_active == True %}
-                                        <td><button type="button" class="btn btn-label-success" disabled>승인 완료</button></td>
+                                        <td><button type="button" class="btn btn-label-success"
+                                                    onclick="approval_suc_btn('{{ obj.id }}','{{ obj.employment_date }}',
+                                                            '{{ obj.department_position__name }}','' ,'{{ obj.job_position__name }}',
+                                                            '{{ obj.tel }}', ''
+                                                            )">승인 완료</button></td>
                                     {% else %}
                                         <td>
                                             <button type="button"
@@ -194,6 +198,16 @@
 
         })
     });
+
+    function approval_suc_btn(id, employment_date, department, job_position, tel){
+        $('#confirm_btn').modal('show')
+
+        $('#employment_date').val(employment_date)
+        $('#department_select').val(department)
+        $('#phone_num').val(tel)
+        $('#job_select').val(job_position)
+    }
+
 
 </script>
 </html>

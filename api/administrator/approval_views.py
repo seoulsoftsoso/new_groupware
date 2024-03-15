@@ -27,7 +27,8 @@ class ApprovalDeletePageView(ListView):
 
         result = queryset.values(
             'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
-            'created_at', 'department_position__name', 'job_position__name'
+            'created_at', 'department_position__name', 'job_position__name', 'employment_date', 'postal_code', 'address',
+            'etc', 'tel'
         ).order_by('-id')
 
         return result
