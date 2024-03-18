@@ -84,8 +84,8 @@
                                     {% if obj.is_staff == True and obj.is_active == True %}
                                         <td><button type="button" class="btn btn-label-success"
                                                     onclick="approval_suc_btn('{{ obj.id }}','{{ obj.employment_date }}',
-                                                            '{{ obj.department_position__name }}','' ,'{{ obj.job_position__name }}',
-                                                            '{{ obj.tel }}', ''
+                                                            '{{ obj.department_position__name }}', '{{ obj.job_position__name }}',
+                                                            '{{ obj.tel }}', '{{ obj.research_num }}', '{{ obj.place_of_work__name }}'
                                                             )">승인 완료</button></td>
                                     {% else %}
                                         <td>
@@ -150,6 +150,12 @@
 
     function confirm_openModal(element) {
         userId = $(element).data('id');
+        $("#approval_form").trigger("reset");
+        $('#department_select').trigger('change');
+        $('#placeOfWork_select').trigger('change');
+        $('#job_select').trigger('change');
+        $("#approval_btn").show();
+        $("#approval_edit_btn").hide();
     }
 
     function resignation(element) {
@@ -199,14 +205,77 @@
         })
     });
 
-    function approval_suc_btn(id, employment_date, department, job_position, tel){
-        $('#confirm_btn').modal('show')
-
+    function approval_suc_btn(id, employment_date, department_name, job_position_name, tel, research_num, place_of_work) {
+        $("#approval_btn").hide();
+        $("#approval_edit_btn").show();
         $('#employment_date').val(employment_date)
-        $('#department_select').val(department)
         $('#phone_num').val(tel)
-        $('#job_select').val(job_position)
+        $('#research_num').val(research_num)
+        userId = id
+        console.log(userId)
+
+        $('#department_select option').each(function () {
+            if ($(this).text() === department_name) {
+                $(this).prop('selected', true);
+                $('#department_select').trigger('change');
+            }
+        });
+
+        $('#job_select option').each(function () {
+            if ($(this).text() === job_position_name) {
+                $(this).prop('selected', true);
+                $('#job_select').trigger('change');
+            }
+        });
+
+        $('#placeOfWork_select option').each(function () {
+            if ($(this).text() === place_of_work) {
+                $(this).prop('selected', true);
+                $('#placeOfWork_select').trigger('change');
+            }
+        });
+
+        $('#confirm_btn').modal('show');
     }
+
+    $('#approval_edit_btn').click(function () {
+        console.log('여기')
+        $.ajax({
+            url: '{% url "userApproval" %}',
+            type: 'POST',
+            data: {
+                'id': userId,
+                'type': 'E',
+                'employment_date': moment($("#employment_date").val(), "YYYY년 MM월 DD일").format("YYYY-MM-DD"),
+                'department_select': $("#department_select").val(),
+                'job_select': $("#job_select").val(),
+                'phone_num': $("#phone_num").val(),
+                'research_num': $("#research_num").val(),
+                'place_of_work': $("#placeOfWork_select").val(),
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '수정 완료!',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (response) {
+                console.log(response)
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '관리자에게 문의바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
+    })
 
 
 </script>

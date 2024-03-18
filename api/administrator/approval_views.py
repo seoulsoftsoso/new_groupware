@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import JsonResponse
 from django.views.generic import ListView
 from api.models import UserMaster
@@ -28,7 +30,7 @@ class ApprovalDeletePageView(ListView):
         result = queryset.values(
             'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
             'created_at', 'department_position__name', 'job_position__name', 'employment_date', 'postal_code', 'address',
-            'etc', 'tel'
+            'etc', 'tel', 'research_num', 'place_of_work__name'
         ).order_by('-id')
 
         return result
@@ -50,34 +52,55 @@ class ApprovalDeletePageView(ListView):
 
 def user_approval(request):
     if request.method == 'POST':
-        user_id = request.POST.get('id')
-        employment_date = request.POST.get('employment_date')
-        department_select = request.POST.get('department_select')
-        job_select = request.POST.get('job_select')
-        phone_num = request.POST.get('phone_num')
-        research_num = request.POST.get('research_num')
-        update_user_id = request.COOKIES['user_id']
-        user = UserMaster.objects.get(id=update_user_id)
+        type = request.POST.get('type')
+        if type == 'A':
+            print(request.POST)
+            user_id = request.POST.get('id')
+            employment_date = request.POST.get('employment_date')
+            department_select = request.POST.get('department_select')
+            job_select = request.POST.get('job_select')
+            phone_num = request.POST.get('phone_num')
+            research_num = request.POST.get('research_num')
+            place_of_work = request.POST.get('place_of_work')
+            update_user_id = request.user.id
+            user = UserMaster.objects.get(id=update_user_id)
 
-        usermaster = UserMaster.objects.get(id=user_id)
+            usermaster = UserMaster.objects.get(id=user_id)
 
-        usermaster.employment_date = employment_date
-        usermaster.department_position_id = department_select
-        usermaster.job_position_id = job_select
-        usermaster.tel = phone_num
-        usermaster.is_staff = True
-        usermaster.is_active = True
-        usermaster.created_by_id = user
+            usermaster.employment_date = employment_date
+            usermaster.department_position_id = department_select
+            usermaster.job_position_id = job_select
+            usermaster.tel = phone_num
+            usermaster.research_num = research_num
+            usermaster.place_of_work_id = place_of_work
+            usermaster.is_staff = True
+            usermaster.is_active = True
+            usermaster.created_by_id = user
 
-        usermaster.save()
+            usermaster.save()
 
-        return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': 'success'})
+
+        elif type == 'E':
+            print(request.POST)
+            id = request.POST.get('id')
+            usermaster = UserMaster.objects.get(id=id)
+
+            usermaster.employment_date = datetime.strptime(request.POST.get('employment_date'), "%Y-%m-%d").date()
+            usermaster.department_position_id = request.POST.get('department_select')
+            usermaster.job_position_id = request.POST.get('job_select')
+            usermaster.tel = request.POST.get('phone_num')
+            usermaster.place_of_work_id = request.POST.get('place_of_work')
+            usermaster.research_num = request.POST.get('research_num')
+            usermaster.save()
+
+            return JsonResponse({'status': 'success'})
 
 
 def user_resignation(request):
 
     user_id = request.GET.get('id')
-    update_user_id = request.COOKIES['user_id']
+    update_user_id = request.user.id
     user = UserMaster.objects.get(id=update_user_id)
 
     usermaster = UserMaster.objects.get(id=user_id)

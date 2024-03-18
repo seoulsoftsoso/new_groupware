@@ -181,6 +181,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
     signature_file_path = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='전자서명')
+    research_num = models.CharField(max_length=15, null=True, verbose_name='과학기술인번호')
+    place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work', verbose_name='근무지')
 
     # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
