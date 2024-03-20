@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
-     // console.log('eve_update2', eventToUpdate)
+      // console.log('eve_update2', eventToUpdate)
       updateEventId= eventToUpdate._def.publicId
       // if (eventToUpdate.url) {
       //   info.jsEvent.preventDefault();

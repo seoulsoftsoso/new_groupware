@@ -133,6 +133,11 @@ def SubView(request, menu_num):
     return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
 
 
+# def cost_page(request):
+#
+#     return render(request,'sub/menu01/me')
+
+
 def submit_question(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST)
@@ -303,7 +308,7 @@ def holiday_info_page(request):
 
 
 def user_authority_page(request):
-    context = get_member_info()
+    context = {}
     return render(request, 'admins/administrator/user_authority/user_authority.html', context)
 
 
