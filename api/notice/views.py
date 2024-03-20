@@ -14,9 +14,9 @@ from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, Co
 
 def admin_notice_page(request):
     fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")[:2]
+        reply_count=Count('reply_board')).order_by("-id")[:2]
     notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")
+        reply_count=Count('reply_board')).order_by("-id")
 
     context = {
         'fixed_notice': fixed_notice,

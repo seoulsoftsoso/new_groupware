@@ -180,7 +180,7 @@ class HolidayCheckView(ListView):
                 # create_at__lt=next_replace_employment_date,
                 # create_at__gte=replace_employment_date,
                 create_by__is_master=False,
-                event_type__in=['Holiday', 'Family']
+                event_type__in=['Holiday', 'Family'],
             )
             .values(
                 'create_by__username', 'create_by__department_position__name', 'create_by__job_position__name',
@@ -318,11 +318,28 @@ class HolidayAdjustmentView(ListView):
         search_title = self.request.GET.get('search_title', None)
         search_content = self.request.GET.get('search_content', None)
 
+        # employee = UserMaster.objects.filter(is_staff=True)
+        # current_year_employment_dates = {}
+        # next_year_employment_dates = {}
+        #
+        # for member in employee:
+        #     if member.employment_date:
+        #         current_year_employment_date = member.employment_date.replace(year=timezone.now().year) + timedelta(days=1)
+        #         next_year_employment_date = member.employment_date.replace(year=timezone.now().year) + relativedelta(years=1)
+        #         current_year_employment_dates[member.id] = current_year_employment_date
+        #         next_year_employment_dates[member.id] = next_year_employment_date
+        #
+        # print(current_year_employment_dates)
+        # print(next_year_employment_dates)
+
         adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id'), delete_flag="N").values(
             'employee_id').annotate(
             adjust_sum=Sum('adjust_count')).values('adjust_sum')[:1]
 
-        total_days_subquery = EventMaster.objects.filter(create_by_id=OuterRef('id'), event_type__in=["Holiday", "Family"]).annotate(
+        total_days_subquery = EventMaster.objects.filter(
+            create_by_id=OuterRef('id'),
+            event_type__in=["Holiday", "Family"]
+        ).annotate(
             days_diff=Case(
                 When(event_type='Holiday', then=Days('end_date', 'start_date') + Value(1.0)),
                 When(event_type='Family', then=Value(0.5)),
@@ -358,6 +375,7 @@ class HolidayAdjustmentView(ListView):
             is_master=False,
             is_active=True,
             is_staff=True,
+            # event_creat__start_date__range=()
         ).values(
             'id', 'username', 'department_position__name', 'job_position__name', 'employment_date',
             'user_workYear', 'law_holiday', 'adjust_sum', 'total_days', 'total_holiday',

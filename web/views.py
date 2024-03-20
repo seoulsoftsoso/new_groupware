@@ -31,13 +31,13 @@ def admin_index_page(request):
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
     fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at").first()
+        reply_count=Count('reply_board')).order_by("-id").first()
     notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9, fixed_flag=False).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")[:3]
+        reply_count=Count('reply_board')).order_by("-id")[:3]
     fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N", fixed_flag=True).annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at").first()
+        reply_count=Count('reply_board')).order_by("-id").first()
     board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
-        reply_count=Count('reply_board')).order_by("-updated_at")[:3]
+        reply_count=Count('reply_board')).order_by("-id")[:3]
 
     context = {
         'events': events,
@@ -48,6 +48,19 @@ def admin_index_page(request):
     }
 
     return render(request, 'admins/index.html', context)
+
+
+def calendar_page(request):
+    today = timezone.now()
+
+    events = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', ).filter(
+        start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
+
+    context = {
+        'events': events
+    }
+
+    return render(request, 'admins/index_calendar.html', context)
 
 
 def check_vehicle_availability(request):

@@ -113,6 +113,7 @@ urlpatterns = [
 
                   #관리자페이지(그룹웨어)
                   path('admins/index/', admin_index_page, name="adminIndex"),
+                  path('admins/calendar', calendar_page, name="calendarPage"),
     
                   #근태관련
                   path('admins/work_schedule/', admin_work_schedule_page.as_view(), name="adminWorkSchedule"),
