@@ -18,37 +18,38 @@
             <div class="content-wrapper">
                 <!-- Content -->
 
-                <div class="container-xxl flex-grow-1 container-p-y">
-                    <h4 class="py-3 mb-4"><span class="text-muted fw-light">Form Wizard/</span> Numbered</h4>
-
+                <div class="container-fluid flex-grow-1 container-p-y">
                     <!-- Default -->
                     <div class="row">
-                        <div class="col-12">
-                            <h5>Default</h5>
-                        </div>
-
-                        <!-- Default Wizard -->
-                        <div class="col-12 mb-4">
-                            <div class="bs-stepper wizard-numbered mt-2">
-
-
-                            </div>
-                        </div>
-                        <!-- /Default Wizard -->
-
-
                         <!-- Vertical Wizard -->
                         <div class="col-12 mb-4">
-                            <small class="text-light fw-medium">Vertical</small>
+
                             <div class="bs-stepper wizard-vertical vertical mt-2">
-                                <div class="bs-stepper-header">
+                                <div class="col-md-3 bs-stepper-header">
+                                    <div class="mb-3 select2-primary">
+{#                                        <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>#}
+                                        <select id="select2Basic"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option value="AK" data-select2-id="2">Alaska</option>
+                                        </select>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                                    data-bs-target="#basicModalAdd">새로만들기
+                                            </button>
+                                            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+                                                    data-bs-target="#basicModalAdd">검색
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div class="step" data-target="#account-details-1">
                                         <button type="button" class="step-trigger">
-                                            <span class="bs-stepper-circle">1</span>
+                                            <span class="bs-stepper-circle">3</span>
                                             <span class="bs-stepper-label mt-1">
-                            <span class="bs-stepper-title">3월 4주차</span>
-                            <span class="bs-stepper-subtitle">2024-03-18 ~ 2024-03-22</span>
-                          </span>
+                                                <span class="bs-stepper-title">3월 4주차</span>
+                                                <span class="bs-stepper-subtitle">2024-03-18 ~ 2024-03-22</span>
+                                            </span>
                                         </button>
                                     </div>
                                     <div class="line"></div>
@@ -56,19 +57,19 @@
                                         <button type="button" class="step-trigger">
                                             <span class="bs-stepper-circle">2</span>
                                             <span class="bs-stepper-label mt-1">
-                            <span class="bs-stepper-title">Personal Info</span>
-                            <span class="bs-stepper-subtitle">Add personal info</span>
-                          </span>
+                                                <span class="bs-stepper-title">3월 3주차</span>
+                                                <span class="bs-stepper-subtitle">2024-03-11 ~ 2024-03-15</span>
+                                            </span>
                                         </button>
                                     </div>
                                     <div class="line"></div>
                                     <div class="step" data-target="#social-links-1">
                                         <button type="button" class="step-trigger">
-                                            <span class="bs-stepper-circle">3</span>
+                                            <span class="bs-stepper-circle">1</span>
                                             <span class="bs-stepper-label mt-1">
-                            <span class="bs-stepper-title">Social Links</span>
-                            <span class="bs-stepper-subtitle">Add social links</span>
-                          </span>
+                                                <span class="bs-stepper-title">3월 2주차</span>
+                                                <span class="bs-stepper-subtitle">2024-03-04 ~ 2024-03-08</span>
+                                            </span>
                                         </button>
                                     </div>
                                 </div>
@@ -82,8 +83,10 @@
                                             </div>
                                             <div class="row g-3">
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="username-vertical">유저이름</label>
-                                                    <input type="text" id="username-vertical" class="form-control"
+                                                    <label class="form-label"
+                                                           for="username-vertical">유저이름</label>
+                                                    <input type="text" id="username-vertical"
+                                                           class="form-control"
                                                            placeholder="johndoe"/>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -96,7 +99,8 @@
                                                             aria-label="john.doe"/>
                                                 </div>
                                                 <div class="col-sm-6 form-password-toggle">
-                                                    <label class="form-label" for="password-vertical">Password</label>
+                                                    <label class="form-label"
+                                                           for="password-vertical">Password</label>
                                                     <div class="input-group input-group-merge">
                                                         <input
                                                                 type="password"
@@ -148,16 +152,20 @@
                                                 <div class="col-sm-6">
                                                     <label class="form-label" for="first-name-vertical">First
                                                         Name</label>
-                                                    <input type="text" id="first-name-vertical" class="form-control"
+                                                    <input type="text" id="first-name-vertical"
+                                                           class="form-control"
                                                            placeholder="John"/>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="last-name-vertical">Last Name</label>
-                                                    <input type="text" id="last-name-vertical" class="form-control"
+                                                    <label class="form-label" for="last-name-vertical">Last
+                                                        Name</label>
+                                                    <input type="text" id="last-name-vertical"
+                                                           class="form-control"
                                                            placeholder="Doe"/>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="country-vertical">Country</label>
+                                                    <label class="form-label"
+                                                           for="country-vertical">Country</label>
                                                     <select class="select2" id="country-vertical">
                                                         <option label=" "></option>
                                                         <option>UK</option>
@@ -169,7 +177,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="language-vertical">Language</label>
+                                                    <label class="form-label"
+                                                           for="language-vertical">Language</label>
                                                     <select
                                                             class="selectpicker w-auto"
                                                             id="language-vertical"
@@ -202,7 +211,8 @@
                                             </div>
                                             <div class="row g-3">
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="twitter-vertical">Twitter</label>
+                                                    <label class="form-label"
+                                                           for="twitter-vertical">Twitter</label>
                                                     <input
                                                             type="text"
                                                             id="twitter-vertical"
@@ -210,7 +220,8 @@
                                                             placeholder="https://twitter.com/abc"/>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="facebook-vertical">Facebook</label>
+                                                    <label class="form-label"
+                                                           for="facebook-vertical">Facebook</label>
                                                     <input
                                                             type="text"
                                                             id="facebook-vertical"
@@ -218,7 +229,8 @@
                                                             placeholder="https://facebook.com/abc"/>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="google-vertical">Google+</label>
+                                                    <label class="form-label"
+                                                           for="google-vertical">Google+</label>
                                                     <input
                                                             type="text"
                                                             id="google-vertical"
@@ -226,7 +238,8 @@
                                                             placeholder="https://plus.google.com/abc"/>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label" for="linkedin-vertical">LinkedIn</label>
+                                                    <label class="form-label"
+                                                           for="linkedin-vertical">LinkedIn</label>
                                                     <input
                                                             type="text"
                                                             id="linkedin-vertical"
@@ -244,6 +257,8 @@
                                         </div>
                                     </form>
                                 </div>
+
+
                             </div>
                         </div>
                         <!-- /Vertical Wizard -->
@@ -268,6 +283,8 @@
 
 </body>
 {% include 'admins/admin_footer.html' %}
+<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
 <script src="{% static 'sneat/assets/js/form-wizard-numbered.js' %}"></script>
 <script src="{% static 'sneat/assets/js/form-wizard-validation.js' %}"></script>

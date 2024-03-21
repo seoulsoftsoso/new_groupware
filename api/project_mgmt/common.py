@@ -301,17 +301,6 @@ class getSubData(View):
 
         return JsonResponse({'error': False, 'message': 'success'})
 
-    def patch(self, request, *args, **kwargs):
-        try:
-            data = json.loads(request.body)
-            print(data)
-
-            return JsonResponse({'success': True})
-
-        except Exception as e:
-            print(e)
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
 
 class GetSubDataEdit(View):
     def post(self, request, *args, **kwargs):
@@ -343,13 +332,19 @@ class GetSubDataEdit(View):
                 return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
         elif type == 'cng_status':
-            proTaskSub_id = request.POST.get('proTaskSub_id')
+            proTaskSub_id_list = request.POST.get('proTaskSub_id_list')
             code = request.POST.get('code')
 
-            proTaskSub = ProTaskSub.objects.get(id=proTaskSub_id)
+            object_id_list = json.loads(proTaskSub_id_list)
 
-            proTaskSub.sub_status = code
-            proTaskSub.save()
+            for proTaskSub_id in object_id_list:
+                try:
+                    proTaskSub = ProTaskSub.objects.get(id=proTaskSub_id)
+                    proTaskSub.sub_status = code
+                    proTaskSub.save()
+                except ProTaskSub.DoesNotExist:
+                    return JsonResponse(
+                        {'success': False, 'error': 'ProTaskSub with id {} does not exist.'.format(proTaskSub_id)})
 
             return JsonResponse({'success': True})
 

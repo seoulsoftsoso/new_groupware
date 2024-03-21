@@ -321,166 +321,166 @@
             window.location.href = '/admins/task_mgmt/?param=' + param;
         });
 
-       maintable = new DataTable('#TaskSub', {
-               layout: {
-            topStart: {
-                buttons: [
-                    {
-                        text: '등록',
-                        className: 'subaddClass',
-                        action: function (e, dt, node, config) {
-                            $('#add_btn_modal_sub').show()
-                            $('#edit_btn_modal_sub').hide()
-                            $('#taks_title_h3').text('세부내용 등록')
-                            console.log(selected_task_id)
-                            if(selected_task_id == null) {
-                                alert('왼쪽 돋보기 아이콘을 클릭하여 TASK를 선택해주세요.')
-                                return false
-                            }
-                            btnTaskSubAction('A');
-                        },
-                        enabled: true
-                    },
-                    {
-                        text: '수정',
-                        className: 'subeditClass',
-                        action: function (e, dt, node, config) {
-                            let selectedRowData = dt.row({selected: true}).data();
-                            // console.log(selectedRowData);
-                            $('#add_btn_modal_sub').hide();
-                            $('#edit_btn_modal_sub').show();
-                            $('#taks_title_h3').text('세부내용 수정');
-                            $('#edit_btn_modal_sub').off('click');
-
-                            $('#edit_btn_modal_sub').on('click', function () {
-                                let allData = $('#addNTSForm').serializeArray();
-                                allData.push({name: 'selected_task_id', value: selectedRowData[7]});
-                                allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
-                                allData.push({name: 'type', value: 'edit'});
-
-                                console.log(allData);
-
-                                let val_check = true;
-
-                                if (val_check) {
-                                    $.ajax({
-                                        url: "{% url 'GetSubDataEdit' %}",
-                                        type: "POST",
-                                        data: allData,
-                                        success: function (response) {
-                                            Swal.fire({
-                                                title: 'Success!',
-                                                text: '수정 완료',
-                                                icon: 'success',
-                                                confirmButtonText: '확인'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    drawSubData(selected_task_id)
-                                                    $('#addNTS').modal('hide')
-                                                }
-                                            });
-                                        }
-                                    });
+        maintable = new DataTable('#TaskSub', {
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: '등록',
+                            className: 'subaddClass',
+                            action: function (e, dt, node, config) {
+                                $('#add_btn_modal_sub').show()
+                                $('#edit_btn_modal_sub').hide()
+                                $('#taks_title_h3').text('세부내용 등록')
+                                // console.log(selected_task_id)
+                                if (selected_task_id == null) {
+                                    alert('왼쪽 돋보기 아이콘을 클릭하여 TASK를 선택해주세요.')
+                                    return false
                                 }
-                            });
-
-                            btnTaskSubAction('E', selectedRowData);
+                                btnTaskSubAction('A');
+                            },
+                            enabled: true
                         },
-                        enabled: false
-                    },
-                    {
-                        text: '삭제',
-                        className: 'subdelClass',
-                        action: function (e, dt, node, config) {
-                            let allSelectedRowsData = dt.rows({ selected: true }).data().toArray();
-                            console.log(allSelectedRowsData)
-                            let selected_list=[]
+                        {
+                            text: '수정',
+                            className: 'subeditClass',
+                            action: function (e, dt, node, config) {
+                                let selectedRowData = dt.row({selected: true}).data();
+                                // console.log(selectedRowData);
+                                $('#add_btn_modal_sub').hide();
+                                $('#edit_btn_modal_sub').show();
+                                $('#taks_title_h3').text('세부내용 수정');
+                                $('#edit_btn_modal_sub').off('click');
 
-                            // 각 행에 대한 로직 추가
-                            for (let i = 0; i < allSelectedRowsData.length; i++) {
+                                $('#edit_btn_modal_sub').on('click', function () {
+                                    let allData = $('#addNTSForm').serializeArray();
+                                    allData.push({name: 'selected_task_id', value: selectedRowData[7]});
+                                    allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+                                    allData.push({name: 'type', value: 'edit'});
 
-                                selected_list.push(allSelectedRowsData[i][7]);
+                                    // console.log(allData);
 
-                            }
-                            console.log(selected_list)
+                                    let val_check = true;
 
-                            $.ajax({
-                                url: "{% url 'GetSubDataEdit' %}",
-                                type: "POST",
-                                contentType: "application/json",
-                                data: JSON.stringify(selected_list),
-                                headers: { "X-CSRFToken": '{{ csrf_token }}' },
-                                success: function (res){
-                                    Swal.fire({
-                                        title: 'Success!',
-                                        text: '삭제 완료',
-                                        icon: 'success',
-                                        confirmButtonText: '확인'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
+                                    if (val_check) {
+                                        $.ajax({
+                                            url: "{% url 'GetSubDataEdit' %}",
+                                            type: "POST",
+                                            data: allData,
+                                            success: function (response) {
+                                                Swal.fire({
+                                                    title: 'Success!',
+                                                    text: '수정 완료',
+                                                    icon: 'success',
+                                                    confirmButtonText: '확인'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        drawSubData(selected_task_id)
+                                                        $('#addNTS').modal('hide')
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+
+                                btnTaskSubAction('E', selectedRowData);
+                            },
+                            enabled: false
+                        },
+                        {
+                            text: '삭제',
+                            className: 'subdelClass',
+                            action: function (e, dt, node, config) {
+                                let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                // console.log(allSelectedRowsData)
+                                let selected_list = []
+
+                                // 각 행에 대한 로직 추가
+                                for (let i = 0; i < allSelectedRowsData.length; i++) {
+
+                                    selected_list.push(allSelectedRowsData[i][7]);
+
                                 }
-                            })
+                                // console.log(selected_list)
 
-                            btnTaskSubAction('D', selected_list);
-                        },
-                        enabled: false
-                    }
-                ]
-            }
-        },
-        columnDefs: [
-            {
-                orderable: false,
-                render: DataTable.render.select(),
-                targets: 0
-            },
-            {
-                targets: 3,
-                render: function(data, type, row, meta) {
-                    switch (data){
-                        case 'S' :
-                            data = '<span class="badge rounded-pill bg-secondary">대기</span>';
-                            break;
-                        case 'P' :
-                            data = '<span class="badge rounded-pill bg-info">진행</span>';
-                            break;
-                        case 'H' :
-                            data = '<span class="badge rounded-pill bg-warning">보류</span>';
-                            break;
-                        case 'R' :
-                            data = '<span class="badge rounded-pill bg-danger">재검토</span>';
-                            break;
-                        default:
-                           data = '<span class="badge rounded-pill bg-success">완료</span>';
-                            break
-                    }
+                                $.ajax({
+                                    url: "{% url 'GetSubDataEdit' %}",
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(selected_list),
+                                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                                    success: function (res) {
+                                        Swal.fire({
+                                            title: 'Success!',
+                                            text: '삭제 완료',
+                                            icon: 'success',
+                                            confirmButtonText: '확인'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                })
 
-                    return data;
+                                btnTaskSubAction('D', selected_list);
+                            },
+                            enabled: false
+                        }
+                    ]
                 }
-            },{
-            targets: 4,
-            render: DataTable.render.datetime('YY-MM-DD')
-        }
-        ],
+            },
+            columnDefs: [
+                {
+                    orderable: false,
+                    render: DataTable.render.select(),
+                    targets: 0
+                },
+                {
+                    targets: 3,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
 
-        select: {
-            style: 'multi',
-            selector: 'td:first-child'
-        },
-        order: [[1, 'asc']],
-        "rowCallback": function(row, data) {
-            $(row).on('click', function() {
+                        return data;
+                    }
+                }, {
+                    targets: 4,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }
+            ],
+
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            "rowCallback": function (row, data) {
+                $(row).on('click', function () {
 
 
-            });
-        }
-    });
+                });
+            }
+        });
         // 버튼 활성화
-       maintable.on('select deselect', function () {
-            let selectedRows = maintable.rows({ selected: true }).count();
+        maintable.on('select deselect', function () {
+            let selectedRows = maintable.rows({selected: true}).count();
 
             maintable.button(0).enable(selectedRows < 1);
             maintable.button(1).enable(selectedRows === 1);
@@ -503,6 +503,7 @@
             maintable.rows().remove().draw();
 
             maintable.rows.add(drawData).draw();
+            updateButtonStates();
 
             });
         }else{
@@ -516,23 +517,36 @@
 
     }
 
-    $('#add_btn_modal_task').click(function() {
-      let allData = $('#addNTForm').serializeArray();
-      let promaster = $('#typehidden').val()
-      allData.push({name:'promasterid', value:promaster})
-      allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
+    function updateButtonStates() {
+        maintable.button(0).enable(true);
+        maintable.button(1).enable(false);
+        maintable.button(2).enable(false);
+    }
 
-      //유효성 검사 체크
-      let val_check = true;
+    $('#add_btn_modal_task').click(function () {
+        let allData = $('#addNTForm').serializeArray();
+        let promaster = $('#typehidden').val()
+        allData.push({name: 'promasterid', value: promaster})
+        allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
-      if (val_check){
-          api_gp("{% url 'TaskAdd' %}", "POST", allData, (done) => {
-            // task reload
-              if (done.message==='success'){
-                    location.reload() ;
+        //유효성 검사 체크
+        let val_check = true;
+
+        if (val_check) {
+            $.ajax({
+                url: "{% url 'TaskAdd' %}",
+                type: "POST",
+                data: allData,
+                success: function (res) {
+                    alert('등록되었습니다.')
+                    $("#addNT").modal('hide');
+                    window.location.reload()
+                },
+                error: function (res){
+                    console.log('관리자에게 문의 바랍니다.')
                 }
-            });
-      }
+            })
+        }
     });
 
 
@@ -575,19 +589,21 @@
       let allData = $('#addNTSForm').serializeArray();
       allData.push({name:'selected_task_id', value:selected_task_id})
       allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
-
+        console.log('여기인가?')
       //유효성 검사 체크
       let val_check = true;
 
       if (val_check){
-          api_gp("{% url 'getSubData' %}", "POST", allData, (done) => {
-
-            window.location.reload() ;
-
-            $('#addNTS').modal('hide');
-
-            // task reload
-            });
+          $.ajax({
+              url: "{% url 'getSubData' %}",
+              type: "POST",
+              data: allData,
+              success: function (res) {
+                  alert('등록되었습니다.')
+                  $("#addNTS").modal('hide');
+                  drawSubData(selected_task_id)
+              }
+          })
       }
     });
 
@@ -669,7 +685,7 @@
         alldata.push({name: 'type', value: 'E'});
         alldata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
 
-        console.log(alldata)
+        // console.log(alldata)
 
         $.ajax({
             url:'{% url "ProTaskEdit" %}',
@@ -709,19 +725,24 @@
             alert('업무 리스트에 체크박스 선택 후 다시 시도해주세요.');
             return false;
         }
-        var proTaskSub_id = maintable.row({selected: true}).data()[7];
+        let rows_array = maintable.rows({selected: true}).data().toArray()
+        // console.log('rowdata : ', rows_array)
+        let proTaskSub_id_list = []
+
+        for(let i=0; i < rows_array.length; i++){
+            proTaskSub_id_list.push(rows_array[i][7])
+        }
 
         $.ajax({
             url: '{% url "GetSubDataEdit" %}',
             type: 'POST',
             data: {
                 code: code,
-                proTaskSub_id : proTaskSub_id,
+                proTaskSub_id_list : JSON.stringify(proTaskSub_id_list),
                 type : 'cng_status'
             },
             headers: { "X-CSRFToken": '{{ csrf_token }}' },
             success: function(res){
-                console.log(res)
                 drawSubData(selected_task_id)
             }
         })
