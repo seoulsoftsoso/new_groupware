@@ -3,14 +3,16 @@ from datetime import datetime, timedelta, date
 
 from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import RawSQL, CombinedExpression
+from django.forms import CharField
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import ListView
 from django.db.models import Sum, Case, When, FloatField, F, Value, ExpressionWrapper, fields, Q, Func, Subquery, \
     OuterRef, IntegerField, DateField, DurationField, DateTimeField, Window
-from django.db.models.functions import Floor, Coalesce, ExtractYear, Now, Cast, ExtractDay, Round
+from django.db.models.functions import Floor, Coalesce, ExtractYear, Now, Cast, ExtractDay, Round, Extract, Substr, \
+    Concat
 from Pagenation import PaginatorManager
 from api.models import EventMaster, UserMaster, Holiday, AdjustHoliday
 
@@ -25,6 +27,11 @@ class Days(Func):
     function = 'DATEDIFF'
     arity = 2  # number of arguments
     output_field = fields.FloatField()
+
+
+class DateAdd(Func):
+    function = 'DATE_ADD'
+    template = "%(function)s(%(expressions)s, INTERVAL %(days)s DAY)"
 
 
 # class HolidayCheckView(ListView):
@@ -315,22 +322,17 @@ class HolidayAdjustmentView(ListView):
 
     def get_queryset(self):
         current_date = datetime.now().date()
+        current_year = timezone.now().year
         search_title = self.request.GET.get('search_title', None)
         search_content = self.request.GET.get('search_content', None)
 
-        # employee = UserMaster.objects.filter(is_staff=True)
-        # current_year_employment_dates = {}
-        # next_year_employment_dates = {}
-        #
-        # for member in employee:
-        #     if member.employment_date:
-        #         current_year_employment_date = member.employment_date.replace(year=timezone.now().year) + timedelta(days=1)
-        #         next_year_employment_date = member.employment_date.replace(year=timezone.now().year) + relativedelta(years=1)
-        #         current_year_employment_dates[member.id] = current_year_employment_date
-        #         next_year_employment_dates[member.id] = next_year_employment_date
-        #
-        # print(current_year_employment_dates)
-        # print(next_year_employment_dates)
+        now_employ_year_raw_sql = RawSQL("""
+            DATE_ADD(DATE_ADD(employment_date, INTERVAL FLOOR(DATEDIFF(CURDATE(), employment_date) / 365) YEAR), INTERVAL 1 DAY)
+        """, [])
+
+        next_employ_year_raw_sql = RawSQL("""
+            DATE_ADD(DATE_ADD(employment_date, INTERVAL FLOOR(DATEDIFF(CURDATE(), employment_date) / 365) YEAR), INTERVAL 1 YEAR)
+        """, [])
 
         adjust_sum_subquery = AdjustHoliday.objects.filter(employee_id=OuterRef('id'), delete_flag="N").values(
             'employee_id').annotate(
@@ -338,7 +340,9 @@ class HolidayAdjustmentView(ListView):
 
         total_days_subquery = EventMaster.objects.filter(
             create_by_id=OuterRef('id'),
-            event_type__in=["Holiday", "Family"]
+            event_type__in=["Holiday", "Family"],
+            start_date__gt=now_employ_year_raw_sql,
+            start_date__lte=next_employ_year_raw_sql
         ).annotate(
             days_diff=Case(
                 When(event_type='Holiday', then=Days('end_date', 'start_date') + Value(1.0)),
@@ -352,6 +356,8 @@ class HolidayAdjustmentView(ListView):
             user_workYear=Floor(  # 근속년수
                 DateDiff(current_date, F('employment_date')) / 365
             ),
+            now_employ_year=now_employ_year_raw_sql,
+            next_employ_year=next_employ_year_raw_sql,
             law_holiday=Subquery(  # 법정근속년수별 연차
                 Holiday.objects.filter(
                     workYear=OuterRef('user_workYear')
@@ -375,7 +381,6 @@ class HolidayAdjustmentView(ListView):
             is_master=False,
             is_active=True,
             is_staff=True,
-            # event_creat__start_date__range=()
         ).values(
             'id', 'username', 'department_position__name', 'job_position__name', 'employment_date',
             'user_workYear', 'law_holiday', 'adjust_sum', 'total_days', 'total_holiday',
