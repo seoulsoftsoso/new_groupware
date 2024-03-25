@@ -28,35 +28,35 @@ $(function () {
 (function () {
   // Numbered Wizard
   // --------------------------------------------------------------------
-  const wizardNumbered = document.querySelector('.wizard-numbered'),
-    wizardNumberedBtnNextList = [].slice.call(wizardNumbered.querySelectorAll('.btn-next')),
-    wizardNumberedBtnPrevList = [].slice.call(wizardNumbered.querySelectorAll('.btn-prev')),
-    wizardNumberedBtnSubmit = wizardNumbered.querySelector('.btn-submit');
-
-  if (typeof wizardNumbered !== undefined && wizardNumbered !== null) {
-    const numberedStepper = new Stepper(wizardNumbered, {
-      linear: false
-    });
-    if (wizardNumberedBtnNextList) {
-      wizardNumberedBtnNextList.forEach(wizardNumberedBtnNext => {
-        wizardNumberedBtnNext.addEventListener('click', event => {
-          numberedStepper.next();
-        });
-      });
-    }
-    if (wizardNumberedBtnPrevList) {
-      wizardNumberedBtnPrevList.forEach(wizardNumberedBtnPrev => {
-        wizardNumberedBtnPrev.addEventListener('click', event => {
-          numberedStepper.previous();
-        });
-      });
-    }
-    if (wizardNumberedBtnSubmit) {
-      wizardNumberedBtnSubmit.addEventListener('click', event => {
-        alert('Submitted..!!');
-      });
-    }
-  }
+  // const wizardNumbered = document.querySelector('.wizard-numbered'),
+  //   wizardNumberedBtnNextList = [].slice.call(wizardNumbered.querySelectorAll('.btn-next')),
+  //   wizardNumberedBtnPrevList = [].slice.call(wizardNumbered.querySelectorAll('.btn-prev')),
+  //   wizardNumberedBtnSubmit = wizardNumbered.querySelector('.btn-submit');
+  //
+  // if (typeof wizardNumbered !== undefined && wizardNumbered !== null) {
+  //   const numberedStepper = new Stepper(wizardNumbered, {
+  //     linear: false
+  //   });
+  //   if (wizardNumberedBtnNextList) {
+  //     wizardNumberedBtnNextList.forEach(wizardNumberedBtnNext => {
+  //       wizardNumberedBtnNext.addEventListener('click', event => {
+  //         numberedStepper.next();
+  //       });
+  //     });
+  //   }
+  //   if (wizardNumberedBtnPrevList) {
+  //     wizardNumberedBtnPrevList.forEach(wizardNumberedBtnPrev => {
+  //       wizardNumberedBtnPrev.addEventListener('click', event => {
+  //         numberedStepper.previous();
+  //       });
+  //     });
+  //   }
+  //   if (wizardNumberedBtnSubmit) {
+  //     wizardNumberedBtnSubmit.addEventListener('click', event => {
+  //       alert('Submitted..!!');
+  //     });
+  //   }
+  // }
 
   // Vertical Wizard
   // --------------------------------------------------------------------
@@ -93,63 +93,63 @@ $(function () {
 
   // Modern Wizard
   // --------------------------------------------------------------------
-  const wizardModern = document.querySelector('.wizard-modern-example'),
-    wizardModernBtnNextList = [].slice.call(wizardModern.querySelectorAll('.btn-next')),
-    wizardModernBtnPrevList = [].slice.call(wizardModern.querySelectorAll('.btn-prev')),
-    wizardModernBtnSubmit = wizardModern.querySelector('.btn-submit');
-  if (typeof wizardModern !== undefined && wizardModern !== null) {
-    const modernStepper = new Stepper(wizardModern, {
-      linear: false
-    });
-    if (wizardModernBtnNextList) {
-      wizardModernBtnNextList.forEach(wizardModernBtnNext => {
-        wizardModernBtnNext.addEventListener('click', event => {
-          modernStepper.next();
-        });
-      });
-    }
-    if (wizardModernBtnPrevList) {
-      wizardModernBtnPrevList.forEach(wizardModernBtnPrev => {
-        wizardModernBtnPrev.addEventListener('click', event => {
-          modernStepper.previous();
-        });
-      });
-    }
-    if (wizardModernBtnSubmit) {
-      wizardModernBtnSubmit.addEventListener('click', event => {
-        alert('Submitted..!!');
-      });
-    }
-  }
+  // const wizardModern = document.querySelector('.wizard-modern-example'),
+  //   wizardModernBtnNextList = [].slice.call(wizardModern.querySelectorAll('.btn-next')),
+  //   wizardModernBtnPrevList = [].slice.call(wizardModern.querySelectorAll('.btn-prev')),
+  //   wizardModernBtnSubmit = wizardModern.querySelector('.btn-submit');
+  // if (typeof wizardModern !== undefined && wizardModern !== null) {
+  //   const modernStepper = new Stepper(wizardModern, {
+  //     linear: false
+  //   });
+  //   if (wizardModernBtnNextList) {
+  //     wizardModernBtnNextList.forEach(wizardModernBtnNext => {
+  //       wizardModernBtnNext.addEventListener('click', event => {
+  //         modernStepper.next();
+  //       });
+  //     });
+  //   }
+  //   if (wizardModernBtnPrevList) {
+  //     wizardModernBtnPrevList.forEach(wizardModernBtnPrev => {
+  //       wizardModernBtnPrev.addEventListener('click', event => {
+  //         modernStepper.previous();
+  //       });
+  //     });
+  //   }
+  //   if (wizardModernBtnSubmit) {
+  //     wizardModernBtnSubmit.addEventListener('click', event => {
+  //       alert('Submitted..!!');
+  //     });
+  //   }
+  // }
 
   // Modern Vertical Wizard
   // --------------------------------------------------------------------
-  const wizardModernVertical = document.querySelector('.wizard-modern-vertical'),
-    wizardModernVerticalBtnNextList = [].slice.call(wizardModernVertical.querySelectorAll('.btn-next')),
-    wizardModernVerticalBtnPrevList = [].slice.call(wizardModernVertical.querySelectorAll('.btn-prev')),
-    wizardModernVerticalBtnSubmit = wizardModernVertical.querySelector('.btn-submit');
-  if (typeof wizardModernVertical !== undefined && wizardModernVertical !== null) {
-    const modernVerticalStepper = new Stepper(wizardModernVertical, {
-      linear: false
-    });
-    if (wizardModernVerticalBtnNextList) {
-      wizardModernVerticalBtnNextList.forEach(wizardModernVerticalBtnNext => {
-        wizardModernVerticalBtnNext.addEventListener('click', event => {
-          modernVerticalStepper.next();
-        });
-      });
-    }
-    if (wizardModernVerticalBtnPrevList) {
-      wizardModernVerticalBtnPrevList.forEach(wizardModernVerticalBtnPrev => {
-        wizardModernVerticalBtnPrev.addEventListener('click', event => {
-          modernVerticalStepper.previous();
-        });
-      });
-    }
-    if (wizardModernVerticalBtnSubmit) {
-      wizardModernVerticalBtnSubmit.addEventListener('click', event => {
-        alert('Submitted..!!');
-      });
-    }
-  }
+  // const wizardModernVertical = document.querySelector('.wizard-modern-vertical'),
+  //   wizardModernVerticalBtnNextList = [].slice.call(wizardModernVertical.querySelectorAll('.btn-next')),
+  //   wizardModernVerticalBtnPrevList = [].slice.call(wizardModernVertical.querySelectorAll('.btn-prev')),
+  //   wizardModernVerticalBtnSubmit = wizardModernVertical.querySelector('.btn-submit');
+  // if (typeof wizardModernVertical !== undefined && wizardModernVertical !== null) {
+  //   const modernVerticalStepper = new Stepper(wizardModernVertical, {
+  //     linear: false
+  //   });
+  //   if (wizardModernVerticalBtnNextList) {
+  //     wizardModernVerticalBtnNextList.forEach(wizardModernVerticalBtnNext => {
+  //       wizardModernVerticalBtnNext.addEventListener('click', event => {
+  //         modernVerticalStepper.next();
+  //       });
+  //     });
+  //   }
+  //   if (wizardModernVerticalBtnPrevList) {
+  //     wizardModernVerticalBtnPrevList.forEach(wizardModernVerticalBtnPrev => {
+  //       wizardModernVerticalBtnPrev.addEventListener('click', event => {
+  //         modernVerticalStepper.previous();
+  //       });
+  //     });
+  //   }
+  //   if (wizardModernVerticalBtnSubmit) {
+  //     wizardModernVerticalBtnSubmit.addEventListener('click', event => {
+  //       alert('Submitted..!!');
+  //     });
+  //   }
+  // }
 })();
