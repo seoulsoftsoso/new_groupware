@@ -96,6 +96,10 @@
                                                 <td>{{ obj.start_date|date:"Y-m-d a g:i" }} ~ {{ obj.end_date|date:"Y-m-d a g:i" }}</td>
                                             </tr>
                                             </tbody>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="7" style="text-align: center;">차량 등록 정보가 없습니다.</td>
+                                            </tr>
                                         {% endfor %}
                                     </table>
                                 </div>
@@ -126,6 +130,10 @@
                                                 <td>{{ obj.start_date|date:"Y-m-d a g:i" }} ~ {{ obj.end_date|date:"Y-m-d a g:i" }}</td>
                                             </tr>
                                             </tbody>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="7" style="text-align: center;">차량 등록 정보가 없습니다.</td>
+                                            </tr>
                                         {% endfor %}
                                     </table>
                                 </div>
