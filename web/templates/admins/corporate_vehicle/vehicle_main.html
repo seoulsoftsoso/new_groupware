@@ -35,7 +35,6 @@
                     </div>
                 </div>
 
-
                 <div class="card-header">
                     <form method="get" class="">
                         {% csrf_token %}
@@ -70,43 +69,74 @@
                 </div>
 
 
-
-
-
-
-            <!--오늘 사용 예약현황-->
-                <div class="bs-stepper-content d-flex justify-content-center">
-                    <div class="mt-5 col-9" style="height: 350px; border: lightgrey 1px solid;">
-                        <div style="margin: 30px 20px;">
-                            <h5 id="todayDate" style="font-family: Pretendard; margin-right: 10px;"></h5>
-                            <h5 style="font-family: Pretendard;">사용 예약 현황</h5>
-                        </div>
-                        <div>
-                            <div class="table-responsive text-nowrap">
-                                <table class="table" id="today_use">
-                                    <thead>
-                                    <tr class="text-nowrap" style="text-align: center;">
-                                        <th>이름</th>
-                                        <th>차량</th>
-                                        <th>사용 기간</th>
-                                    </tr>
-                                    </thead>
-                                    {% for obj in today_qs %}
-                                        <tbody style="text-align: center">
+                <!--오늘 사용 예약현황-->
+                <!-- Examples -->
+                <div class="row mb-5 mt-5 justify-content-center">
+                    <div class="col-md-6 col-lg-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 id="todayDate" style="font-family: Pretendard; margin-right: 10px;"></h5>
+                                <h5 style="font-family: Pretendard;">사용 예약 현황</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table" id="today_use">
+                                        <thead>
+                                        <tr class="text-nowrap" style="text-align: center;">
+                                            <th>이름</th>
+                                            <th>차량</th>
+                                            <th>사용 기간</th>
+                                        </tr>
+                                        </thead>
+                                        {% for obj in today_qs %}
+                                            <tbody style="text-align: center">
                                             <tr>
                                                 <td>{{ obj.create_by }}</td>
                                                 <td>{{ obj.vehicle }}</td>
                                                 <td>{{ obj.start_date|date:"Y-m-d a g:i" }} ~ {{ obj.end_date|date:"Y-m-d a g:i" }}</td>
                                             </tr>
-                                        </tbody>
-                                    {% endfor %}
-                                </table>
+                                            </tbody>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 id="tomorrowDate" style="font-family: Pretendard; margin-right: 10px;"></h5>
+                                <h5 style="font-family: Pretendard;">사용 예약 현황</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table" id="today_use">
+                                        <thead>
+                                        <tr class="text-nowrap" style="text-align: center;">
+                                            <th>이름</th>
+                                            <th>차량</th>
+                                            <th>사용 기간</th>
+                                        </tr>
+                                        </thead>
+                                        {% for obj in tomorrow_qs %}
+                                            <tbody style="text-align: center">
+                                            <tr>
+                                                <td>{{ obj.create_by }}</td>
+                                                <td>{{ obj.vehicle }}</td>
+                                                <td>{{ obj.start_date|date:"Y-m-d a g:i" }} ~ {{ obj.end_date|date:"Y-m-d a g:i" }}</td>
+                                            </tr>
+                                            </tbody>
+                                        {% endfor %}
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Examples -->
 
-                <div class="mt-5">
+
+                <div>
                     <div class="mt-3 d-flex justify-content-end" style="margin-right: 65px;">
                         <!-- Button trigger modal -->
                         <button
@@ -241,6 +271,23 @@
         return year + '-' + month + '-' + day + ' '+ '(' + weekday + ')';
     }
     document.getElementById('todayDate').innerHTML = getCurrentDate();
+
+
+    function getTomorrowDate() {
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        var year = tomorrow.getFullYear();
+        var month = (tomorrow.getMonth() + 1).toString().padStart(2, '0');
+        var day = tomorrow.getDate().toString().padStart(2, '0');
+
+        var weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        var weekday = weekdays[tomorrow.getDay()];
+
+        return year + '-' + month + '-' + day + ' ' + '(' + weekday + ')';
+    }
+
+    document.getElementById('tomorrowDate').innerHTML = getTomorrowDate();
 
 
     function corporateEditForm(data) {

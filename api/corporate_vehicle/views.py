@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
@@ -50,6 +52,10 @@ class CorporateMgmtListView(ListView):
         context = super().get_context_data(**kwargs)
         context['event_qs'] = context['object_list']
         context['today_qs'] = self.original_qs.filter(start_date__date__lte=self.today, end_date__date__gte=self.today)
+
+        tomorrow = self.today + timedelta(days=1)
+        context['tomorrow_qs'] = self.original_qs.filter(start_date__date__lte=tomorrow, end_date__date__gte=tomorrow)
+
         search_to = self.request.GET.get('search-to')
         search_from = self.request.GET.get('search-from')
         if search_to and search_from:

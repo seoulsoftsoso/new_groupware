@@ -125,6 +125,8 @@
     });
 
     $(document).on('click', '#vehicle_add', function(e) {
+        var taginput_add = document.querySelector('input[name=TagifyUserList]');
+        var tagify_add = new Tagify(taginput_add);
 
         var checkbox = document.querySelector('.allDay-switch');
         var startdate = $("#eventStartDate").val();
@@ -160,11 +162,11 @@
             allDay: $(".allDay-switch").prop("checked") === true,
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            tagList : JSON.stringify(tagify.value),
+            tagList : JSON.stringify(tagify_add.value),
             vehicleSelect: $("#vehicle_select").val()
         }
 
-        // console.log('f', formData)
+        console.log('f', formData)
 
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
                 Swal.fire({

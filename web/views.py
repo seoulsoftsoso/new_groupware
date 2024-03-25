@@ -66,8 +66,8 @@ def calendar_page(request):
 def check_vehicle_availability(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-    print('sta', start_date)
-    print('end', end_date)
+    # print('sta', start_date)
+    # print('end', end_date)
     vehicle_list = []
     for vehicle in CodeMaster.objects.filter(code__in=["CQM3", "CSPO", "CETC"]):
         if vehicle.code == "CETC":
