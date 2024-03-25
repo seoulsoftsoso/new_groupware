@@ -137,6 +137,7 @@ urlpatterns = [
 
                   #파일첨부
                   path('download/<int:file_id>/', download_File, name='download_file'),
+                  path('preview_file/<int:file_id>/', preview_File, name='preview_file'),
                   path('delete_file/', delete_file, name="delete_file"),
                   path('work_xlsx_download/', excel_download, name="xlsxDownload"),
                   re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),

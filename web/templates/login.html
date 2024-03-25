@@ -117,38 +117,6 @@
         }
     }
 
-    {#function setCookie(name, value, expiredays) {#}
-    {#    var todayDate = new Date();#}
-    {#    todayDate.setTime(todayDate.getTime() + 0);#}
-    {#    if(todayDate > expiredays){#}
-    {#        document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expiredays + ";";#}
-    {#    }else if(todayDate < expiredays){#}
-    {#        todayDate.setDate(todayDate.getDate() + expiredays);#}
-    {#        document.cookie = name + "=" + escape(value) + "; path=/; expires=" + todayDate.toGMTString() + ";";#}
-    {#    }#}
-    {##}
-    {##}
-    {#}#}
-    {##}
-    {#function getCookie(Name) {#}
-    {#    var search = Name + "=";#}
-    {##}
-    {#    if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면#}
-    {#        offset = document.cookie.indexOf(search);#}
-    {#        if (offset != -1) { // 쿠키가 존재하면#}
-    {#            offset += search.length;#}
-    {#            // set index of beginning of value#}
-    {#            end = document.cookie.indexOf(";", offset);#}
-    {#            // 쿠키 값의 마지막 위치 인덱스 번호 설정#}
-    {#            if (end == -1)#}
-    {#                end = document.cookie.length;#}
-    {##}
-    {#            return unescape(document.cookie.substring(offset, end));#}
-    {#        }#}
-    {#    }#}
-    {#    return "";#}
-    {#}#}
-
     function setStorage(name, value) {
         localStorage.setItem(name, value);
     }
@@ -175,65 +143,6 @@
         let username = $('#login [name="username"]').val();
         let password = $('#login [name="password"]').val();
 
-        // KPI 로그인
-        let paramData = {"companyCode": "1210598790"};  //소공인 회사코드(사업자번호 10자리)
-        let session_id = "";
-       {% comment %} jQuery.ajax({
-            type: "post",
-            contentType: "application/json; charset=utf-8", url: "http://smart-kpi.kr:7000/kpi/login",
-            data: JSON.stringify(paramData), dataType: "json",
-            success: function (data) {
-                console.log(data);
-
-                console.log(data.status);
-                console.log(data.companyCode);
-                console.log(data.companyName);
-                console.log(data.sessionId);
-
-                session_id = data.sessionId;
-
-                // KPI Level-1
-                let paramData1 =
-                    {
-                        "sessionId": session_id,
-
-                        "kpiDate": "2021-10-25",
-                        "activeUserCnt": 10,
-                        "systemMenuCnt": 50,
-                        "activeModuleCnt": 33,
-                        "tableCnt": 75,
-                        "recordCnt": 123
-                    };
-                jQuery.ajax({
-                    type: "post",
-                    contentType: "application/json; charset=utf-8", url: "http://smart-kpi.kr:7000/kpi/level1/create",
-                    data: JSON.stringify(paramData1), dataType: "json",
-                    success: function (data) {
-                        console.log(data);
-
-                    },
-                    complete: function (data) {
-                        console.log('complete');
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('error');
-                        console.log(error);
-                    }
-                });
-
-            },
-            complete: function (data) {
-                console.log('complete');
-            },
-            error: function (xhr, status, error) {
-                console.log('error');
-                console.log(error);
-            }
-        });{% endcomment %}
-
-
-
-        // call login api (api_login에서 유저정보를 cookie에 저장, 추후 보안이슈 발생 시 session으로 수정해야댐)
         api_login(
             username,
             password,

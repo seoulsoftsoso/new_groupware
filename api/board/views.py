@@ -92,14 +92,8 @@ def admin_boardwrite_add(request):
 
         if files:
             for file in files:
-                file_path = os.path.join(settings.MEDIA_ROOT, file.name)
-
-                with open(file_path, 'wb') as destination:
-                    for chunk in file.chunks():
-                        destination.write(chunk)
-
                 FileBoardMaster.objects.create(
-                    parent=board_instance, file_path=file_path, created_by_id=created_by_id
+                    parent=board_instance, file_path=file, created_by_id=created_by_id
                 )
 
     else:
@@ -139,14 +133,8 @@ def admin_boardwrite_edit(request, board_id):
 
         if files:
             for file in files:
-                file_path = os.path.join(settings.MEDIA_ROOT, file.name)
-
-                with open(file_path, 'wb') as destination:
-                    for chunk in file.chunks():
-                        destination.write(chunk)
-
                 FileBoardMaster.objects.create(
-                    parent=board_instance, file_path=file_path, created_by_id=created_by_id
+                    parent=board_instance, file_path=file, created_by_id=created_by_id
                 )
 
     else:

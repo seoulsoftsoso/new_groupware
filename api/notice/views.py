@@ -138,6 +138,23 @@ def download_File(request, file_id):
     return response
 
 
+def preview_File(request, file_id):
+    file_instance = FileBoardMaster.objects.get(pk=file_id, delete_flag="N")
+    file_url = file_instance.file_path.url
+    response = requests.get(file_url, stream=True)
+
+    content_type, _ = mimetypes.guess_type(file_url)
+    if content_type is None:
+        content_type = 'application/octet-stream'
+
+    file_name = os.path.basename(file_url)
+    file_wrapper = FileWrapper(response.raw)
+    response = HttpResponse(file_wrapper, content_type=content_type)
+    response['Content-Disposition'] = f'inline; filename*=UTF-8\'\'{quote(file_name)}'
+
+    return response
+
+
 def delete_file(request):
     if request.method == "POST":
         file_id = request.POST.get("file_id")

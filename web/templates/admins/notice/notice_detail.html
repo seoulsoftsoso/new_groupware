@@ -62,7 +62,12 @@
                 <div class="card-body col-11" style="display: grid; border: rgb(242, 247, 255) 2px dashed; margin: auto">
                     {% load custom_filters %}
                     {% for file in files %}
-                        <a href="{% url 'download_file' file.id %}" download>{{ file.file_path|basename }}</a>
+                        <div>
+                            <a href="{% url 'download_file' file.id %}" download>{{ file.file_path|basename }}</a>
+                            {% if file.file_path|is_previewable %}
+                                | <button class="btn btn-sm btn-outline-primary"><a href="{% url 'preview_file' file.id %}" target="_blank">미리보기</a></button>
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 </div>
 

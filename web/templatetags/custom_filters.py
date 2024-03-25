@@ -11,6 +11,16 @@ def basename(value):
 
 
 @register.filter
+def is_previewable(file_field):
+    if not file_field:
+        return False
+    file_path = file_field.name  # FieldFile 객체에서 파일 경로를 문자열로 가져옴
+    previewable_extensions = ['.pdf', '.jpg', '.jpeg', '.png', '.gif']
+    extension = os.path.splitext(file_path)[1].lower()
+    return extension in previewable_extensions
+
+
+@register.filter
 def attendance_status(attendance_rec):
     # print('at_rec : ', attendance_rec)
     if attendance_rec is None or attendance_rec.attendanceTime is None:
