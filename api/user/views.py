@@ -24,7 +24,11 @@ class CustomObtainAuthToken(ObtainAuthToken):
         user = serializer.validated_data['user']
 
         # Token.objects.filter(user=user, created__lt=get_expire_time()).delete()
-        # token, created = Token.objects.get_or_create(user=user)
+        token, created = Token.objects.get_or_create(user=user)
+        print(token)
         login(request, user)
 
-        return Response({'user': UserMasterSerializer(user).data}, status=status.HTTP_200_OK)
+        return Response({
+            'user': UserMasterSerializer(user).data,
+            'token': token.key
+        }, status=status.HTTP_200_OK)

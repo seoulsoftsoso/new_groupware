@@ -2,7 +2,7 @@
 <div class="layout-navbar container-fluid navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
      id="layout-navbar" style="">
     <div style="width: 100%; text-align: right">
-        <span id="username"></span>/
+        <span id="username">{{ request.user.username }}</span>/
         <a href="{% url 'userSettingsPage' %}"><span style="color: #697a8d">내 정보 관리 </span></a>/
         <a href="{% url 'logout' %}" id="logout"><span style="color: #697a8d">로그아웃</span></a>
     </div>
@@ -27,11 +27,4 @@
         document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
-    const username = getCookie('username');
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const username = getCookie('username');
-        if (username) {
-            document.getElementById('username').textContent = username + '님 ';
-        }
-    });
 </script>

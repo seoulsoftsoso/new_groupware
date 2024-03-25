@@ -77,7 +77,7 @@
                         {% if request.user.is_staff %}
                             <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
                         {% endif %}
-                        <li><a href=""><span class="user">{{ request.COOKIES.username }}</span></a></li>
+                        <li><a href=""><span class="user">{{ request.user.username }}</span></a></li>
                         <li><a href="{% url 'logout' %}" id="logout"><span>로그아웃</span></a></li>
                         <li><a href=""><span>ADAS/AVM</span></a></li>
                     {% else %}

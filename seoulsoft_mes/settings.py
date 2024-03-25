@@ -245,3 +245,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:7000',
     'http://localhost:8000',
 ]
+
+# sessionid(django에서 기본으로 제공하는 세션id) 2주 -> 한 달로 변경
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+
