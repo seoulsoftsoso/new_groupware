@@ -12,13 +12,9 @@ from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, Co
 
 
 def amdin_board_page(request):
-    fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-id")[:2]
-    boardmasters = BoardMaster.objects.filter(delete_flag="N").exclude(boardcode=9).annotate(reply_count=Count('reply_board')).order_by("-id")
     codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
     context = {
-        'fixed_board': fixed_board,
-        'boardmaster': boardmasters,
         'codemaster': codemaster,
     }
 
@@ -26,18 +22,14 @@ def amdin_board_page(request):
 
 
 def admin_boardList_page(request, id):
-    fixed_board = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=id).annotate(reply_count=Count('reply_board')).order_by("-id")[:2]
     board = BoardMaster.objects.filter(delete_flag="N", boardcode_id=id).exclude(boardcode_id=9).annotate(reply_count=Count('reply_board')).order_by("-id")
-    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
 
-    fixed_boardmaster_data = [obj.as_dict() for obj in fixed_board]
     boardmaster_data = [obj.as_dict() for obj in board]
     boardcode_name = CodeMaster.objects.get(id=id).name
 
     context = {
-        'fixed_boardmaster': fixed_boardmaster_data,
         'boardmaster': boardmaster_data,
-        'boardcode_name': boardcode_name
+        'boardcode_name': boardcode_name,
     }
 
     return JsonResponse(context)
