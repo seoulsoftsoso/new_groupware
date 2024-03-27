@@ -1,3 +1,4 @@
+from django.core.files.storage import FileSystemStorage
 from django.core.serializers import serialize
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
@@ -184,3 +185,15 @@ def admin_board_delete(request):
         return JsonResponse({'status': 'ok'})
     else:
         return JsonResponse({'status': 'fail'})
+
+
+def image_upload(request):
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        if image:
+            fs = FileSystemStorage()
+            filename = fs.save(image.name, image)
+            image_url = fs.url(filename)
+            return JsonResponse({'imageUrl': image_url})
+    return JsonResponse({'error': '이미지 업로드에 실패했습니다.'}, status=400)
+

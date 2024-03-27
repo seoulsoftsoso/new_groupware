@@ -141,6 +141,8 @@ urlpatterns = [
                   path('delete_file/', delete_file, name="delete_file"),
                   path('work_xlsx_download/', excel_download, name="xlsxDownload"),
                   re_path(r'^data/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
+                  # 이미지업로드 테스트
+                  path('img_test/', image_upload, name="image_upload"),
 
                   #게시판
                   path('admins/board', amdin_board_page, name="adminBoard"),

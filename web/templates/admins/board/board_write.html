@@ -158,69 +158,105 @@
         theme: 'snow'
     });
 
-    document.querySelector('form').addEventListener('submit', function (event) {
 
-        var content = JSON.stringify(quill.getContents());
+    function imageHandler() {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
 
+        input.onchange = () => {
+            var file = input.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('image', file);
 
-        document.querySelector('#content-input').value = content;
-    });
-</script>
-<script>
-
-   $("#submitBtn").click(function(e) {
-    e.preventDefault();
-
-    var formdata = new FormData($("#textform")[0]);
-    formdata.append('title', $("#defaultFormControlInput").val());
-    formdata.append('content', JSON.stringify(quill.getContents()));
-    formdata.append('fixed_flag', $("input[name='fixed_flag']:checked").val());
-    formdata.append('boardcode', $("#selectpickerBasic").val());
-
-    var fileData = $("#dropzone-multi").get(0).dropzone.files;
-
-    for (var i = 0; i < fileData.length; i++) {
-        formdata.append('file', fileData[i]);
+                $.ajax({
+                    url: '{% url "image_upload" %}',
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": getCookie('csrftoken'),
+                    },
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // 통신 성공 -> 이미지 URL get
+                        var imageUrl = response.imageUrl;
+                        // 에디터의 현재 위치에 이미지 삽입
+                        const range = quill.getSelection();
+                        quill.insertEmbed(range.index, 'image', imageUrl);
+                    },
+                    error: function () {
+                        console.error('이미지 업로드 실패');
+                    }
+                });
+            }
+        };
     }
 
-       var iterator = formdata.entries();
-       var result = iterator.next();
-       while (!result.done) {
-           // console.log(result.value);
-           result = iterator.next();
-       }
+    quill.getModule('toolbar').addHandler('image', imageHandler);
 
-    $.ajax({
-      url: "{% url 'boardWriteAdd' %}",
-      type: "POST",
-      xhrFields: {
-            withCredentials: true
-       },
-      data: formdata,
-      processData: false,
-      contentType: false,
-        success: function (response) {
-            Swal.fire({
-                title: 'Success!',
-                text: '작성글이 등록되었습니다.',
-                icon: 'success',
-                confirmButtonText: '확인'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{% url 'adminBoard' %}";
-                }
-            });
-        },
-        error: function (error) {
-            console.log(error);
-            Swal.fire({
-                title: 'Error!',
-                text: '관리자에게 문의 바랍니다.',
-                icon: 'error',
-                confirmButtonText: '확인'
-            })
-        }
+
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var content = JSON.stringify(quill.getContents());
+        document.querySelector('#content-input').value = content;
     });
-  });
+
+
+    $("#submitBtn").click(function (e) {
+        e.preventDefault();
+
+        var formdata = new FormData($("#textform")[0]);
+        formdata.append('title', $("#defaultFormControlInput").val());
+        formdata.append('content', JSON.stringify(quill.getContents()));
+        formdata.append('fixed_flag', $("input[name='fixed_flag']:checked").val());
+        formdata.append('boardcode', $("#selectpickerBasic").val());
+
+        var fileData = $("#dropzone-multi").get(0).dropzone.files;
+
+        for (var i = 0; i < fileData.length; i++) {
+            formdata.append('file', fileData[i]);
+        }
+
+        var iterator = formdata.entries();
+        var result = iterator.next();
+        while (!result.done) {
+            // console.log(result.value);
+            result = iterator.next();
+        }
+
+        $.ajax({
+            url: "{% url 'boardWriteAdd' %}",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '작성글이 등록되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'adminBoard' %}";
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
+    });
 </script>
 </html>
