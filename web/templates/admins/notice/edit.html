@@ -155,12 +155,49 @@
         theme: 'snow'
     });
 
+
+    function imageHandler() {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = () => {
+            var file = input.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('image', file);
+
+                $.ajax({
+                    url: '{% url "image_upload" %}',
+                    type: 'POST',
+                    headers: {
+                        "X-CSRFToken": getCookie('csrftoken'),
+                    },
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        // 통신 성공 -> 이미지 URL get
+                        var imageUrl = response.imageUrl;
+                        // 에디터의 현재 위치에 이미지 삽입
+                        const range = quill.getSelection();
+                        quill.insertEmbed(range.index, 'image', imageUrl);
+                    },
+                    error: function () {
+                        console.error('이미지 업로드 실패');
+                    }
+                });
+            }
+        };
+    }
+
+    quill.getModule('toolbar').addHandler('image', imageHandler);
+
+
     // 에디터에서 작성된 내용,디자인,서식 서버로 저장
     document.querySelector('form').addEventListener('submit', function (event) {
-
         var content = JSON.stringify(quill.getContents());
-
-
         document.querySelector('#content-input').value = content;
     });
 
