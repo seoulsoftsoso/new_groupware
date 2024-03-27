@@ -124,7 +124,7 @@ urlpatterns = [
                   path('last_attendance/', last_attendance, name='last_attendance'),
 
                   #공지사항
-                  path('admins/notice', admin_notice_page, name="adminNotice"),
+                  path('admins/notice', admin_notice_page.as_view(), name="adminNotice"),
                   path('admins/notice/write_form', amdin_noticewrite_page, name="noticeWritePage"),
                   path('admins/notice/detail/<int:notice_id>/edit/', admin_noticeEdit_page, name="noticeEdit"),
                   path('admins/notice/detail/<int:notice_id>/', amdin_noticedetail_page, name="noticeDetail"),

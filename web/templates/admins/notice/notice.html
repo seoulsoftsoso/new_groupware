@@ -72,7 +72,7 @@
                             <tr style="background-color: #fffbfb">
                                 <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center; width: 50%">제목</th>
-                                <th style="font-size: medium; font-weight: bold; text-align: center;">작성자</th>
+                                <th style="font-size: medium; font-weight: bold;">작성자</th>
                                 <th style="font-size: medium; font-weight: bold; text-align: center;">작성일시</th>
                                 <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">조회</th>
                                 <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center;">댓글</th>
@@ -88,19 +88,19 @@
                                         style="margin-right: 8px"></td>
                                 <td style="color: red">{{ obj.title }}</td>
                                 <td class="text-start" style="color: red; text-align: center;">{{ obj.created_by.username }}</td>
-                                <td class="updated_at" style="color: red;">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td class="updated_at" style="color: red; text-align: center;">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
                                 <td class="hide-on-small-screen" style="color: red; text-align: center;">{{ obj.click_cnt }}</td>
                                 <td class="hide-on-small-screen" style="color: red; text-align: center;">{{ obj.reply_count }}</td>
                             </tr>
                             {% endfor %}
 
                             <!--일반공지-->
-                            {% for obj in notice %}
+                            {% for obj in result %}
                             <tr style="cursor: pointer;" onclick="window.location='{% url 'noticeDetail' obj.id %}'">
                                 <td class="hide-on-small-screen" style="text-align:center;">{{ forloop.counter }}</td>
                                 <td>{{ obj.title }}</td>
                                 <td class="text-start" style="text-align:center;">{{ obj.created_by.username }}</td>
-                                <td class="updated_at">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
+                                <td class="updated_at" style="text-align: center;">{{ obj.updated_at|date:"Y-m-d H:i:s" }}</td>
                                 <td class="hide-on-small-screen" style="text-align:center;">{{ obj.click_cnt }}</td>
                                 <td class="hide-on-small-screen" style="text-align:center;">{{ obj.reply_count }}</td>
                             </tr>

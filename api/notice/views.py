@@ -7,23 +7,28 @@ import mimetypes
 from wsgiref.util import FileWrapper
 from django.conf import settings
 from django.utils import timezone
+from django.views.generic import ListView
 from rest_framework.exceptions import ValidationError
 from urllib.parse import quote
 from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, CodeMaster
 
 
-def admin_notice_page(request):
-    fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-id")[:2]
-    notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9).annotate(
-        reply_count=Count('reply_board')).order_by("-id")
+class admin_notice_page(ListView):
+    template_name = 'admins/notice/notice.html'
+    paginate_by = 10
 
-    context = {
-        'fixed_notice': fixed_notice,
-        'notice': notice,
-    }
+    def get_queryset(self):
+        result = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9).annotate(
+            reply_count=Count('reply_board')).order_by("-id")
+        return result
 
-    return render(request, 'admins/notice/notice.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['result'] = context['object_list']
+        context['fixed_notice'] = BoardMaster.objects.filter(
+            fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
+            reply_count=Count('reply_board')).order_by("-id")[:2]
+        return context
 
 
 def amdin_noticedetail_page(request, notice_id):

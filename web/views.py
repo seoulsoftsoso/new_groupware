@@ -301,7 +301,13 @@ def task_mgmt_page(request):
 
 
 def weekly_report_main_page(request):
-    context = {}
+    type = request.GET.get('param', None)
+    employee_list = get_member_info(type)
+
+    context = {
+        'employee_list': employee_list['result']
+    }
+
     return render(request, 'admins/weekly_report/weekly_report_main.html', context)
 
 

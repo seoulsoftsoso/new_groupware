@@ -19,59 +19,91 @@
                 <!-- Content -->
 
                 <div class="container-fluid flex-grow-1 container-p-y">
+
+                    <div class="row justify-content-end mt-4">
+                        <div class="col-md-2 mb-4">
+                            <select id="year_select"
+                                    class="select2 form-select form-select-lg select2-hidden-accessible"
+                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                    aria-hidden="true">
+                                <option data-select2-id="2" value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <select id="month_select"
+                                    class="select2 form-select form-select-lg select2-hidden-accessible"
+                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                    aria-hidden="true">
+                                <option data-select2-id="2" value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <select id="employee_select"
+                                    class="select2 form-select form-select-lg select2-hidden-accessible"
+                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                    aria-hidden="true">
+                                <option data-select2-id="2">------직원을 선택해주세요------</option>
+                                {% for obj in employee_list %}
+                                    <option data-select2-id="2" value="{{ obj.id }}">
+                                        {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-1 mb-4">
+                            <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색</button>
+                        </div>
+                    </div>
+
+
                     <!-- Default -->
-                    <div class="row">
+                    <div class="row mt-4">
                         <!-- Vertical Wizard -->
                         <div class="col-12 mb-4">
 
                             <div class="bs-stepper wizard-vertical vertical mt-2">
                                 <div class="col-md-3 bs-stepper-header">
                                     <div class="mb-3 select2-primary">
-{#                                        <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>#}
-                                        <select id="select2Basic"
-                                                class="select2 form-select form-select-lg select2-hidden-accessible"
-                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                                aria-hidden="true">
-                                            <option value="AK" data-select2-id="2">Alaska</option>
-                                        </select>
-                                        <div class="d-flex justify-content-between mt-2">
-                                            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                                                    data-bs-target="#basicModalAdd">새로만들기
-                                            </button>
-                                            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
-                                                    data-bs-target="#basicModalAdd">검색
-                                            </button>
+
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <button type="button" class="btn btn-outline-dark" id="create_new_step">새로만들기</button>
                                         </div>
                                     </div>
-                                    <div class="step" data-target="#account-details-1">
-                                        <button type="button" class="step-trigger">
-                                            <span class="bs-stepper-circle">3</span>
-                                            <span class="bs-stepper-label mt-1">
+
+
+                                    <div id="steps_container">
+                                        <div class="step" data-target="#account-details-1">
+                                            <button type="button" class="step-trigger">
+                                                <span class="bs-stepper-circle">3</span>
+                                                <span class="bs-stepper-label mt-1">
                                                 <span class="bs-stepper-title">3월 4주차</span>
                                                 <span class="bs-stepper-subtitle">2024-03-18 ~ 2024-03-22</span>
                                             </span>
-                                        </button>
-                                    </div>
-                                    <div class="line"></div>
-                                    <div class="step" data-target="#personal-info-1">
-                                        <button type="button" class="step-trigger">
-                                            <span class="bs-stepper-circle">2</span>
-                                            <span class="bs-stepper-label mt-1">
+                                            </button>
+                                        </div>
+                                        <div class="line"></div>
+                                        <div class="step" data-target="#personal-info-1">
+                                            <button type="button" class="step-trigger">
+                                                <span class="bs-stepper-circle">2</span>
+                                                <span class="bs-stepper-label mt-1">
                                                 <span class="bs-stepper-title">3월 3주차</span>
                                                 <span class="bs-stepper-subtitle">2024-03-11 ~ 2024-03-15</span>
                                             </span>
-                                        </button>
-                                    </div>
-                                    <div class="line"></div>
-                                    <div class="step" data-target="#social-links-1">
-                                        <button type="button" class="step-trigger">
-                                            <span class="bs-stepper-circle">1</span>
-                                            <span class="bs-stepper-label mt-1">
+                                            </button>
+                                        </div>
+                                        <div class="line"></div>
+                                        <div class="step" data-target="#social-links-1">
+                                            <button type="button" class="step-trigger">
+                                                <span class="bs-stepper-circle">1</span>
+                                                <span class="bs-stepper-label mt-1">
                                                 <span class="bs-stepper-title">3월 2주차</span>
                                                 <span class="bs-stepper-subtitle">2024-03-04 ~ 2024-03-08</span>
                                             </span>
-                                        </button>
+                                            </button>
+                                        </div>
                                     </div>
+
+
                                 </div>
                                 <div class="bs-stepper-content">
                                     <form onSubmit="return false">
@@ -283,9 +315,20 @@
 
 </body>
 {% include 'admins/admin_footer.html' %}
-<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
-<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
 <script src="{% static 'sneat/assets/vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
 <script src="{% static 'sneat/assets/js/form-wizard-numbered.js' %}"></script>
 <script src="{% static 'sneat/assets/js/form-wizard-validation.js' %}"></script>
+<script>
+$(document).ready(function() {
+    var yearSelect = $('#year_select');
+    var currentYear = new Date().getFullYear();
+
+    for (var year = currentYear - 10; year <= currentYear + 10; year++) {
+        var isSelected = (year === currentYear) ? 'selected' : '';
+        yearSelect.append(`<option value="${year}" ${isSelected}>${year}</option>`);
+    }
+
+    yearSelect.select2();
+});
+</script>
 </html>
