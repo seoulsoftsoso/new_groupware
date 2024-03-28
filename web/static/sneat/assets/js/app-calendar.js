@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       dateClick: function (info) {
         // console.log('info', info)
-        let date = moment(info.date).format('YYYY-MM-DD');
+        let date = moment(info.date).format('YYYY-MM-DD 12:00');
         resetValues();
         bsAddEventSidebar.show();
 
@@ -393,12 +393,22 @@ document.addEventListener('DOMContentLoaded', function () {
         btnSubmit.classList.remove('btn-update-event');
         btnSubmit.classList.add('btn-add-event');
         btnDeleteEvent.classList.add('d-none');
+
+        if (start) {
+          start.setDate(date, true);
+        }
+        if (end) {
+          end.setDate(date, true);
+        }
+
         eventStartDate.value = date;
         eventEndDate.value = date;
 
-        var startDate = date + ' 00:00';
-        var endDate = date + ' 23:59';
-        checkVehicleAvailability(startDate, endDate);
+        // var startDate = date + ' 00:00';
+        // var endDate = date + ' 23:59';
+        var check_startDate = date;
+        var check_endDate = date;
+        checkVehicleAvailability(check_startDate, check_endDate);
 
       },
 
