@@ -201,7 +201,8 @@ def organization_page(request):
         is_staff=True, department_position_id__isnull=False
     ).prefetch_related('job_position').order_by(
         F('department_position_id').asc(nulls_last=True),
-        F('job_position_id').asc(nulls_last=True)
+        F('job_position_id').asc(nulls_last=True),
+        F('id').asc(nulls_last=True),
     ).values('id', 'username', 'department_position_id', 'job_position__explain')
     context = {
         'departs': depart,
