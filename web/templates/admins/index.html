@@ -108,7 +108,9 @@
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
                                 {% if fixed_board %}
-                                    <span style="color: red">* {{ fixed_board.title }}</span><br/>
+                                    <a href="{% url 'boardDetail' fixed_board.id  %}">
+                                        <span style="color: red">* {{ fixed_board.title }}</span><br/>
+                                    </a>
                                 {% endif %}
                                 {% for obj in board %}
                                     <a href="{% url 'boardDetail' obj.id  %}">

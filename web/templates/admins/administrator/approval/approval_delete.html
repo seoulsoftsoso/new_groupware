@@ -240,7 +240,6 @@
     }
 
     $('#approval_edit_btn').click(function () {
-        console.log('여기')
         $.ajax({
             url: '{% url "userApproval" %}',
             type: 'POST',

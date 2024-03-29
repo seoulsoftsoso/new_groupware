@@ -79,46 +79,47 @@
         });
     });
 
-     $(document).ready(function () {
-         $('#approval_btn').click(function () {
-             $.ajax({
-                 url: '{% url "userApproval" %}',
-                 type: 'POST',
-                 data: {
-                     'id': userId,
-                     'type': 'A',
-                     'employment_date': $("#employment_date").val(),
-                     'department_select': $("#department_select").val(),
-                     'job_select': $("#job_select").val(),
-                     'phone_num': $("#phone_num").val(),
-                     'research_num': $("#research_num").val(),
-                     'place_of_work': $("#placeOfWork_select").val(),
-                 },
-                 headers: { "X-CSRFToken": '{{ csrf_token }}' },
-                 success: function (response) {
-                     Swal.fire({
-                         title: 'Success!',
-                         text: '가입승인 완료!',
-                         icon: 'success',
-                         confirmButtonText: '확인'
-                     }).then((result) => {
-                         if (result.isConfirmed) {
-                             location.reload();
-                         }
-                     });
-                 },
-                 error: function (response) {
-                     Swal.fire({
-                         title: 'Fail!',
-                         text: '관리자에게 문의바랍니다.',
-                         icon: 'error',
-                         confirmButtonText: '확인'
-                     })
-                 }
-             });
-         })
+     $('#approval_btn').click(function (event) {
+         event.preventDefault();
 
-     });
+         $.ajax({
+             url: '{% url "userApproval" %}',
+             type: 'POST',
+             data: {
+                 'id': userId,
+                 'type': 'A',
+                 'employment_date': $("#employment_date").val(),
+                 'department_select': $("#department_select").val(),
+                 'job_select': $("#job_select").val(),
+                 'phone_num': $("#phone_num").val(),
+                 'research_num': $("#research_num").val(),
+                 'place_of_work': $("#placeOfWork_select").val(),
+             },
+             headers: {"X-CSRFToken": '{{ csrf_token }}'},
+             success: function (response) {
+                 Swal.fire({
+                     title: 'Success!',
+                     text: '가입승인 완료!',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+             },
+             error: function (response) {
+                 Swal.fire({
+                     title: 'Fail!',
+                     text: '관리자에게 문의바랍니다.',
+                     icon: 'error',
+                     confirmButtonText: '확인'
+                 })
+             }
+         });
+     })
+
+
 
 
 </script>

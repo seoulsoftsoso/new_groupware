@@ -17,12 +17,12 @@ class ApprovalDeletePageView(ListView):
         queryset = UserMaster.objects.filter(is_master=False)
 
         if status_filter:
-            if status_filter == 'resignation':
+            if status_filter == 'resignation':  # 퇴사
                 queryset = queryset.filter(is_staff=False, department_position__id__isnull=False)
-            elif status_filter == 'working':
+            elif status_filter == 'working':  # 재직 중
                 queryset = queryset.filter(is_active=True, is_staff=True)
-            elif status_filter == 'standby':
-                queryset = queryset.filter(is_staff=False, department_position__id__isnull=True)
+            elif status_filter == 'standby':  # 승인 대기
+                queryset = queryset.filter(is_staff=False, code__isnull=True)
 
         if name_filter:
             queryset = queryset.filter(username__icontains=name_filter)
@@ -65,9 +65,30 @@ def user_approval(request):
             update_user_id = request.user.id
             user = UserMaster.objects.get(id=update_user_id)
 
+            # 사원번호 생성
+            try:
+                temp_year_month = employment_date.split('-')[0][2:] + employment_date.split('-')[1]
+
+                if department_select == '38' or department_select == '39' or department_select == '41':
+                    temp_depart = 'D'
+                elif department_select == '42':
+                    temp_depart = 'B'
+                else:
+                    temp_depart = 'P'
+
+                temp_user_id = str(user_id).zfill(5)
+
+                employee_code = temp_year_month + '-' + temp_depart + '-' + temp_user_id
+                print('employee_code : ', employee_code)
+
+            except Exception as e:
+                print(e)
+                return JsonResponse({'error': 'Data Error'}, status=400)
+
             usermaster = UserMaster.objects.get(id=user_id)
 
             usermaster.employment_date = employment_date
+            usermaster.code = employee_code
             usermaster.department_position_id = department_select
             usermaster.job_position_id = job_select
             usermaster.tel = phone_num
