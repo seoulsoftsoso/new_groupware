@@ -20,6 +20,7 @@ if (isRtl) {
 let calendar;
 
 let updateEventId;
+let event_creat_id;
 
   function handleEventsData(data) {
     // 여기서 data를 사용하여 필요한 작업 수행
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vehicle_select = document.querySelector('#vehicle_select'),
       vehicle_checkBox = document.querySelector('#customCheckTemp3'),
       eventGuests = document.querySelector('#TagifyUserList'), // ! Using jquery vars due to select2 jQuery dependency
+      employ_select = document.querySelector('#employee_select'),
       eventLocation = document.querySelector('#eventLocation'),
       eventDescription = document.querySelector('#eventDescription'),
       allDaySwitch = document.querySelector('.allDay-switch'),
@@ -70,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
       filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
       inlineCalendar = document.querySelector('.inline-calendar');
       tagify = new Tagify(eventGuests);
+      $('#employee_select').select2();
 
 
     let eventToUpdate,
@@ -187,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
-      // console.log('eve_update2', eventToUpdate)
+      console.log('eve_update2', eventToUpdate)
       updateEventId= eventToUpdate._def.publicId
       // if (eventToUpdate.url) {
       //   info.jsEvent.preventDefault();
@@ -224,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // console.log('endDate', endDate)
 
       checkVehicleAvailability(startDate, endDate, eventVehicleCode);
+      event_creat_id = eventToUpdate.extendedProps.create_by_id
 
       if (eventToUpdate.extendedProps.guests !== undefined) {
         var guests = eventToUpdate.extendedProps.guests.map(function (guest) {
@@ -249,6 +253,9 @@ document.addEventListener('DOMContentLoaded', function () {
       //   // eventToUpdate.remove();
       //   bsAddEventSidebar.hide();
       // });
+
+      var created_by_id = eventToUpdate.extendedProps.create_by_id;
+      $('#employee_select').val(created_by_id).trigger('change');
     }
 
     // Modify sidebar toggler
@@ -381,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       dateClick: function (info) {
         // console.log('info', info)
+        $('#employee_select').val(null).trigger('change');
         let date = moment(info.date).format('YYYY-MM-DD 12:00');
         resetValues();
         bsAddEventSidebar.show();

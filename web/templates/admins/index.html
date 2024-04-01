@@ -325,6 +325,21 @@
                                 </div>
                                 <!-- /Basic Custom Radios -->
                             </div>
+                            {% if request.user.is_superuser %}
+                                <div class="mb-3 select2-primary">
+                                    <label class="form-label" for="employee_select">작성자 (관리자 전용)</label>
+                                    <select id="employee_select"
+                                            class="select2 form-select form-select-lg select2-hidden-accessible"
+                                            data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                            aria-hidden="true">
+                                        {% for obj in employee_list %}
+                                            <option data-select2-id="2" value="{{ obj.id }}">
+                                                {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">참석자</label>
                               <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
@@ -396,6 +411,7 @@
     var request_userId = {{ request.user.id }};
 </script>
 <script>
+
     $(function (event) {
 
         setTimeout(function() {
@@ -423,6 +439,7 @@
 
     var input = document.querySelector('input[name=TagifyUserList]');
     var tagify = new Tagify(input);
+
 
     $(document).on('click', '.btn-add-event', function(e) {
         e.preventDefault();
@@ -473,7 +490,8 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            tagList : JSON.stringify(tagify.value)
+            tagList : JSON.stringify(tagify.value),
+            employee_select : $('#employee_select').val()
         };
 
         if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
@@ -516,7 +534,8 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            tagList : JSON.stringify(tagify.value)
+            tagList : JSON.stringify(tagify.value),
+            employee_select : $('#employee_select').val()
         };
 
         if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){

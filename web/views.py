@@ -39,12 +39,16 @@ def admin_index_page(request):
     board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
         reply_count=Count('reply_board')).order_by("-id")[:3]
 
+    type = request.GET.get('param', None)
+    employee_list = get_member_info(type)
+
     context = {
         'events': events,
         'fixed_notice': fixed_notice,
         'notice': notice,
         'fixed_board': fixed_board,
-        'board': board
+        'board': board,
+        'employee_list': employee_list['result']
     }
 
     return render(request, 'admins/index.html', context)
@@ -106,7 +110,6 @@ def signup_page(request):
 
 def UserCreate(request):
     if request.method == 'POST':
-        print(request.POST)
         form = SignUpForm(request.POST)  # UserCreationForm 객체를 생성하도록 수정
         if form.is_valid():
             form.save()

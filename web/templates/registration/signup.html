@@ -162,16 +162,24 @@
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $("#signup_btn").click(function () {
-            var isFormValid = validateForm();
+    $("#signup_btn").click(function (e) {
+        var isFormValid = validateForm();
 
-            if (isFormValid) {
-                alert('회원가입이 완료되었습니다.');
-            } else {
-                alert('필수 항목을 입력하세요.');
-            }
-        });
+        var email = $("#id_email").val();
+        var allowedDomains = ["seoul-soft.com", "solic.kr"];
+        var emailDomain = email.substring(email.lastIndexOf("@") + 1);
+
+        if (allowedDomains.indexOf(emailDomain) === -1) {
+            alert("유효하지 않은 형식의 메일입니다.");
+            return false;
+        }
+
+        if (isFormValid) {
+            alert('회원가입이 완료되었습니다.');
+        } else {
+            alert('필수 항목을 입력하세요.');
+            e.preventDefault();
+        }
     });
 
     function validateForm() {

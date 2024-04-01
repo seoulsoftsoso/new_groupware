@@ -62,6 +62,7 @@ class get_eventDataAll(View):
             start_date = parse_datetime(startDate_str) or datetime.strptime(startDate_str, '%Y-%m-%d')
             end_date = parse_datetime(endDate_str) or datetime.strptime(endDate_str, '%Y-%m-%d')
             event_type = request.POST.get('eventLabel')
+            employee_select = request.POST.get('employee_select')
 
             allDay_str = request.POST.get('allDay')
             allDay = True if allDay_str.lower() == 'true' else False
@@ -84,6 +85,11 @@ class get_eventDataAll(View):
 
             if EventMaster.objects.filter(start_date=start_date, end_date=end_date, event_type=event_type, create_by_id=request.user.id, delete_flag='N').exists():
                 return JsonResponse({'error': '중복된 일정이 있습니다.'}, status=400)
+
+            # 작성자
+            if employee_select:
+                created_by_id = employee_select
+                print(created_by_id)
 
             event_add = EventMaster(
                 url='',
@@ -124,6 +130,8 @@ class get_eventDataAll(View):
             eventData = body_data
             updateEventId = eventData.get('updateEventId')
             event = EventMaster.objects.get(id=updateEventId)
+            employee_select = eventData.get('employee_select')
+            created_by_id = request.user.id
 
             tagList = json.loads(eventData.get('tagList', '[]'))
 
@@ -152,13 +160,17 @@ class get_eventDataAll(View):
                 if vehicleCode:
                     selected_vehicle = CodeMaster.objects.get(code=vehicleCode)
 
+                # 작성자
+                if employee_select:
+                    created_by_id = employee_select
+
                 event.start_date = start_date
                 event.end_date = end_date
                 event.title = eventData.get('eventTitle')
                 event.allDay = allDay
                 event.event_type = eventData.get('eventLabel')
-                event.create_by_id = request.user.id
-                event.updated_by_id = request.user.id
+                event.create_by_id = created_by_id
+                event.updated_by_id = created_by_id
                 event.description = eventData.get('eventDescription')
                 event.location = eventData.get('eventLocation')
                 event.vehicle = selected_vehicle
