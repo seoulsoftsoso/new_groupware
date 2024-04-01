@@ -20,6 +20,7 @@ if (isRtl) {
 let calendar;
 
 let updateEventId;
+let event_creat_id;
 
   function handleEventsData(data) {
     // 여기서 data를 사용하여 필요한 작업 수행
@@ -224,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // console.log('endDate', endDate)
 
       checkVehicleAvailability(startDate, endDate, eventVehicleCode);
+      event_creat_id = eventToUpdate.extendedProps.create_by_id
 
       if (eventToUpdate.extendedProps.guests !== undefined) {
         var guests = eventToUpdate.extendedProps.guests.map(function (guest) {

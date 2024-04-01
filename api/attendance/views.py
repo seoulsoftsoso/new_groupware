@@ -116,6 +116,10 @@ def check_in(request):
         current_date = datetime.now().date()
         current_time = datetime.now().time().replace(second=0, microsecond=0)
 
+        attendance_record = Attendance.objects.filter(date=current_date, employee_id=user_id).first()
+        if attendance_record:
+            return JsonResponse({"message": "이미 출근 기록이 있습니다."}, status=400)
+
         # 지각시간
         latenessTime = None
         if current_time.hour > 10 or (current_time.hour == 10 and current_time.minute > 0):
@@ -139,6 +143,7 @@ def check_in(request):
 
 def check_out(request):
     if request.method == "POST":
+        print('out', request.POST)
         user_id = request.user.id
         last_attendance = Attendance.objects.filter(employee_id=user_id).order_by('-date', '-attendanceTime').first()
 

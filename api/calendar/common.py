@@ -82,7 +82,7 @@ class get_eventDataAll(View):
             if vehicleCode:
                 selected_vehicle = CodeMaster.objects.get(code=vehicleCode)
 
-            if EventMaster.objects.filter(start_date=start_date, end_date=end_date, event_type=event_type, create_by_id=request.user.id).exists():
+            if EventMaster.objects.filter(start_date=start_date, end_date=end_date, event_type=event_type, create_by_id=request.user.id, delete_flag='N').exists():
                 return JsonResponse({'error': '중복된 일정이 있습니다.'}, status=400)
 
             event_add = EventMaster(

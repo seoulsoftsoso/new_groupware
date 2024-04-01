@@ -362,6 +362,7 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
     }
 
      $('#checkInBtn').click(() => {
+        checkInBtn.disabled = true;
 
         const se = document.createElement('script');
         se.src = `https://ipinfo.io/?token=${token}&callback=checkInFunction`;
@@ -404,7 +405,9 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
                  });
                  checkInBtn.disabled = true;
                  checkOutBtn.disabled = false;
-
+             },
+             error: function (response) {
+                 alert(response.responseJSON.message)
              }
          });
     }
@@ -434,7 +437,7 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
                          location.reload();
                      }
                  });
-                 checkInBtn.disabled = false;
+                 // checkInBtn.disabled = false;
                  checkOutBtn.disabled = true;
              }
          });

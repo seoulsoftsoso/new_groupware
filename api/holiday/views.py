@@ -97,6 +97,7 @@ class HolidayCheckView(ListView):
             .filter(
                 create_by__is_master=False,
                 event_type__in=['Holiday', 'Family'],
+                delete_flag='N'
             )
             .values(
                 'create_by__username', 'create_by__department_position__name', 'create_by__job_position__name',
@@ -180,7 +181,8 @@ class HolidayAdjustmentView(ListView):
             create_by_id=OuterRef('id'),
             event_type__in=["Holiday", "Family"],
             start_date__gt=now_employ_year_raw_sql,
-            start_date__lte=next_employ_year_raw_sql
+            start_date__lte=next_employ_year_raw_sql,
+            delete_flag='N'
         ).annotate(
             days_diff=Case(
                 When(event_type='Holiday', then=Days('end_date', 'start_date') + Value(1.0)),

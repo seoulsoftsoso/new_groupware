@@ -344,7 +344,7 @@
                           </div>
                           <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
                             <div>
-                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">Add</button>
+                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">등록</button>
                               <button
                                 type="reset"
                                 class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
@@ -353,7 +353,7 @@
                               </button>
                             </div>
 
-                                    <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+                                <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
 
                           </div>
                         </form>
@@ -391,7 +391,10 @@
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
 <script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
-
+<script type="text/javascript">
+    var request_isSuperuser = {{ request.user.is_superuser|lower }};
+    var request_userId = {{ request.user.id }};
+</script>
 <script>
     $(function (event) {
 
@@ -497,6 +500,10 @@
 
     $(document).on('click', '.btn-update-event', function (e) {
         e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
+        }
 
         eventData = {
             updateEventId: updateEventId,
@@ -524,7 +531,7 @@
             contentType: 'application/json',
             data: JSON.stringify(eventData),
             success: function () {
-                console.log('수정데이터', eventData);
+                // console.log('수정데이터', eventData);
                 Swal.fire({
                      title: 'Success!',
                      text: '일정이 수정되었습니다.',
@@ -542,6 +549,11 @@
 
 
     $(".btn-delete-event").click(function(e) {
+        e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
+        }
 
         var formData = {
             eventId: updateEventId
@@ -553,7 +565,17 @@
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function () {
-                console.log('삭제 아이디', formData);
+                // console.log('삭제 아이디', formData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 삭제되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                });
             }
         });
 

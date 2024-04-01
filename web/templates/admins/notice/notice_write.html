@@ -181,8 +181,6 @@
         var content = JSON.stringify(quill.getContents());
         document.querySelector('#content-input').value = content;
     });
-</script>
-<script>
 
    $("#submitBtn").click(function(e) {
     e.preventDefault();
@@ -201,7 +199,7 @@
        var iterator = formdata.entries();
        var result = iterator.next();
        while (!result.done) {
-           console.log(result.value);
+           // console.log(result.value);
            result = iterator.next();
        }
 
