@@ -221,6 +221,21 @@
                                 </div>
                                 <!-- /Basic Custom Radios -->
                             </div>
+                            {% if request.user.is_superuser %}
+                                <div class="mb-3 select2-primary">
+                                    <label class="form-label" for="employee_select">작성자 (관리자 전용)</label>
+                                    <select id="employee_select"
+                                            class="select2 form-select form-select-lg select2-hidden-accessible"
+                                            data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                            aria-hidden="true">
+                                        {% for obj in employee_list %}
+                                            <option data-select2-id="2" value="{{ obj.id }}">
+                                                {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
                           <div class="mb-3 select2-primary">
                             <label class="form-label" for="eventGuests">참석자</label>
                               <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
@@ -289,64 +304,66 @@
 <script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
 
 <script>
+
     $(function (event) {
 
-    setTimeout(function () {
-        calendar.refetchEvents();
-    }, 500);
-});
-
-$.ajaxSetup({
-    headers: {"X-CSRFToken": '{{ csrf_token }}'}
-});
-
-$(document).ready(function () {
-    toggleRadioGroup($('#eventLabel').val());
-
-    $('#eventLabel, #customCheckTemp3').change(function () {
-        toggleRadioGroup($('#eventLabel').val());
+        setTimeout(function() {
+            calendar.refetchEvents();
+        }, 500);
     });
 
-});
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
 
-function toggleRadioGroup(selectedValue) {
-    $('#radioCheck').toggle(selectedValue === 'Business');
-    $('#carCheck').toggle(selectedValue === 'Business' && $('#customCheckTemp3').is(":checked"));
-}
+    $(document).ready(function () {
+        toggleRadioGroup($('#eventLabel').val());
 
-var input = document.querySelector('input[name=TagifyUserList]');
-var tagify = new Tagify(input);
+        $('#eventLabel, #customCheckTemp3').change(function () {
+            toggleRadioGroup($('#eventLabel').val());
+        });
 
-$(document).on('click', '.btn-add-event', function (e) {
-    e.preventDefault();
-    console.log('guest', tagify.value)
+    });
 
-    if ($("#eventTitle").val() === '') {
-        Swal.fire({
-            title: 'Fail!',
-            text: '일정제목을 입력해주세요!',
-            icon: 'error',
-            confirmButtonText: '확인'
-        })
-        return false;
+    function toggleRadioGroup(selectedValue) {
+        $('#radioCheck').toggle(selectedValue === 'Business');
+        $('#carCheck').toggle(selectedValue === 'Business' && $('#customCheckTemp3').is(":checked"));
     }
 
-    var checkbox = document.querySelector('.allDay-switch');
-    var startdate = $("#eventStartDate").val();
-    var enddate = $("#eventEndDate").val();
+    var input = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(input);
 
-    if (startdate > enddate) {
-        Swal.fire({
-            title: 'Fail!',
-            text: '종료날짜를 확인해주세요!',
-            icon: 'error',
-            confirmButtonText: '확인'
-        })
-        return false;
-    }
 
-    if (!checkbox.checked) {
-        if (startdate.length === 10 || enddate.length === 10) {
+    $(document).on('click', '.btn-add-event', function(e) {
+        e.preventDefault();
+        console.log('guest', tagify.value)
+
+         if ($("#eventTitle").val()===''){
+              Swal.fire({
+                title: 'Fail!',
+                text: '일정제목을 입력해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+         }
+
+        var checkbox = document.querySelector('.allDay-switch');
+        var startdate = $("#eventStartDate").val();
+        var enddate = $("#eventEndDate").val();
+
+        if (startdate > enddate){
+             Swal.fire({
+                title: 'Fail!',
+                text: '종료날짜를 확인해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
+        if (!checkbox.checked) {
+            if (startdate.length===10  || enddate.length===10){
             Swal.fire({
                 title: 'Fail!',
                 text: '날짜를 클릭하여 시간을 선택해주세요!',
@@ -354,106 +371,128 @@ $(document).on('click', '.btn-add-event', function (e) {
                 confirmButtonText: '확인'
             })
             return false;
-        }
-    }
-
-    var formData = {
-        eventTitle: $("#eventTitle").val(),
-        eventLabel: $("#eventLabel").val(),
-        eventStartDate: startdate,
-        eventEndDate: enddate,
-        allDay: $(".allDay-switch").prop("checked") === true,
-        eventGuests: $("#eventGuests").val(),
-        eventLocation: $("#eventLocation").val(),
-        eventDescription: $("#eventDescription").val(),
-        tagList: JSON.stringify(tagify.value)
-    };
-
-    if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")) {
-        formData.vehicleSelect = $("#vehicle_select").val();
-    }
-
-    console.log('f', formData)
-
-    api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
-        Swal.fire({
-            title: 'Success',
-            text: '일정이 등록되었습니다!',
-            icon: 'success',
-            confirmButtonText: '확인'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                location.reload();
             }
-        });
-    });
+        }
 
-})
+        var formData = {
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: startdate,
+            eventEndDate: enddate,
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value),
+            employee_select : $('#employee_select').val()
+        };
 
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+            formData.vehicleSelect = $("#vehicle_select").val();
+        }
 
-$(document).on('click', '.btn-update-event', function (e) {
-    e.preventDefault();
+        console.log('f', formData)
 
-    eventData = {
-        updateEventId: updateEventId,
-        eventTitle: $("#eventTitle").val(),
-        eventLabel: $("#eventLabel").val(),
-        eventStartDate: $("#eventStartDate").val(),
-        eventEndDate: $("#eventEndDate").val(),
-        allDay: $(".allDay-switch").prop("checked") === true,
-        eventURL: $("#eventURL").val(),
-        eventGuests: $("#eventGuests").val(),
-        eventLocation: $("#eventLocation").val(),
-        eventDescription: $("#eventDescription").val(),
-        tagList: JSON.stringify(tagify.value)
-    };
-
-    if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")) {
-        eventData.vehicleSelect = $("#vehicle_select").val();
-    } else {
-        eventData.vehicleSelect = null
-    }
-
-    $.ajax({
-        url: "{% url 'get_eventDataAll' %}",
-        type: 'PATCH',
-        contentType: 'application/json',
-        data: JSON.stringify(eventData),
-        success: function () {
-            console.log('수정데이터', eventData);
-            Swal.fire({
-                title: 'Success!',
-                text: '일정이 수정되었습니다.',
+        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
+                Swal.fire({
+                title: 'Success',
+                text: '일정이 등록되었습니다!',
                 icon: 'success',
                 confirmButtonText: '확인'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    location.reload();
-                }
-            });
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+        });
+
+    })
+
+
+    $(document).on('click', '.btn-update-event', function (e) {
+        e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
         }
+
+        eventData = {
+            updateEventId: updateEventId,
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: $("#eventStartDate").val(),
+            eventEndDate: $("#eventEndDate").val(),
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventURL: $("#eventURL").val(),
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value),
+            employee_select : $('#employee_select').val()
+        };
+
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+            eventData.vehicleSelect = $("#vehicle_select").val();
+        } else {
+            eventData.vehicleSelect = null
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(eventData),
+            success: function () {
+                // console.log('수정데이터', eventData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 수정되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                });
+            }
+        });
+
     });
 
-});
 
-
-$(".btn-delete-event").click(function (e) {
-
-    var formData = {
-        eventId: updateEventId
-    }
-
-    $.ajax({
-        url: "{% url 'get_eventDataAll' %}",
-        type: 'DELETE',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
-        success: function () {
-            console.log('삭제 아이디', formData);
+    $(".btn-delete-event").click(function(e) {
+        e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
         }
+
+        var formData = {
+            eventId: updateEventId
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function () {
+                // console.log('삭제 아이디', formData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 삭제되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                });
+            }
+        });
+
     });
 
-});
 
 </script>
 
