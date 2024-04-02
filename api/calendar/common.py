@@ -114,6 +114,24 @@ class get_eventDataAll(View):
                 participant = Participant(event=event_add, cuser=user)
                 participant.save()
 
+                # event에 등록된 참석자도 연차,반차 등록될 수 있게
+                if event_type == 'Holiday' or event_type == 'Family':
+                    participant_event = EventMaster(
+                        url='',
+                        title=request.POST.get('eventTitle'),
+                        start_date=start_date,
+                        end_date=end_date,
+                        allDay=allDay,
+                        event_type=event_type,
+                        create_by_id=user_id,
+                        updated_by_id=user_id,
+                        description=request.POST.get('eventDescription'),
+                        location=request.POST.get('eventLocation'),
+                    )
+
+                    participant_event.save()
+                    Participant.objects.filter(event_id=event_add.id).delete()
+
             if vehicleCode:
                 event_add.business_pair = event_add.id
                 event_add.save()
