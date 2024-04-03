@@ -62,10 +62,8 @@ class HolidayCheckView(ListView):
             create_at__gt=self.now_employ_year_raw_sql,
             create_at__lte=self.next_employ_year_raw_sql,
         ).values(
-            'employee_id'
-        ).annotate(
-            adjust_sum=Sum('adjust_count')
-        ).values('adjust_sum')[:1]
+            'employee_id').annotate(
+            adjust_sum=Sum('adjust_count')).values('adjust_sum')[:1]
 
         result = (
             EventMaster.objects.annotate(
@@ -75,7 +73,8 @@ class HolidayCheckView(ListView):
                         workYear=OuterRef('user_workYear')
                     ).values('law_holiday')[:1]
                 ),
-                adjust_sum=Coalesce(Subquery(adjust_sum_subquery, output_field=IntegerField()), Value(0, output_field=IntegerField())),
+                adjust_sum=Coalesce(Subquery(adjust_sum_subquery, output_field=FloatField()),  # 추가연차
+                                    Value(0, output_field=FloatField())),
                 total_days=Case(
                     When(event_type='Holiday', then=Days('end_date', 'start_date') + Value(1.0)),
                     When(event_type='Family', then=Value(0.5)),
@@ -84,15 +83,14 @@ class HolidayCheckView(ListView):
                 ),
             )
             .annotate(
-                total_holiday=F('law_holiday') + F('adjust_sum'),
+                total_holiday=ExpressionWrapper(F('law_holiday') + F('adjust_sum'), output_field=FloatField()),  # 총연차
                 cumulative_total_days=Window(
                     expression=Sum('total_days'),
                     partition_by=F('create_by_id'),
                     order_by=F('id').asc(),
                     output_field=FloatField()
                 ),
-                residual_holiday=ExpressionWrapper(F('total_holiday') - F('cumulative_total_days'),
-                                                  output_field=FloatField())
+                residual_holiday=ExpressionWrapper(F('total_holiday') - F('cumulative_total_days'), output_field=FloatField())
             )
             .filter(
                 create_by__is_master=False,
