@@ -136,8 +136,8 @@ class HolidayCheckView(ListView):
         _, original_result = self.get_original_queryset()
         return original_result.filter(
             create_by_id=user_id,
-            create_at__gt=self.now_employ_year_raw_sql,
-            create_at__lte=self.next_employ_year_raw_sql,
+            start_date__gt=self.now_employ_year_raw_sql,
+            start_date__lte=self.next_employ_year_raw_sql,
         ).order_by('-id')[:1]
 
     def get_context_data(self, **kwargs):
