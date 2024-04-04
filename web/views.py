@@ -60,8 +60,12 @@ def calendar_page(request):
     events = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', ).filter(
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
+    type = request.GET.get('param', None)
+    employee_list = get_member_info(type)
+
     context = {
-        'events': events
+        'events': events,
+        'employee_list': employee_list['result']
     }
 
     return render(request, 'admins/index_calendar.html', context)
