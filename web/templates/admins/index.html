@@ -471,13 +471,13 @@
 
         if (!checkbox.checked) {
             if (startdate.length===10  || enddate.length===10){
-            Swal.fire({
-                title: 'Fail!',
-                text: '날짜를 클릭하여 시간을 선택해주세요!',
-                icon: 'error',
-                confirmButtonText: '확인'
-            })
-            return false;
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '날짜를 클릭하여 시간을 선택해주세요!',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+                return false;
             }
         }
 
@@ -496,6 +496,16 @@
 
         if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
             formData.vehicleSelect = $("#vehicle_select").val();
+        }
+
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
         }
 
         console.log('f', formData)
@@ -542,6 +552,16 @@
             eventData.vehicleSelect = $("#vehicle_select").val();
         } else {
             eventData.vehicleSelect = null
+        }
+
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
         }
 
         $.ajax({

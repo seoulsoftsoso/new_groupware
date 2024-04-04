@@ -391,6 +391,16 @@
             formData.vehicleSelect = $("#vehicle_select").val();
         }
 
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
         console.log('f', formData)
 
         api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
@@ -435,6 +445,16 @@
             eventData.vehicleSelect = $("#vehicle_select").val();
         } else {
             eventData.vehicleSelect = null
+        }
+
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
         }
 
         $.ajax({
