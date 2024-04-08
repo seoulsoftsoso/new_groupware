@@ -23,16 +23,33 @@
             <div class="col-12 row mb-3" style="padding-top: 30px; padding-left: 25px;">
                 <div class="col-md-6 col-lg-6 mb-3">
                     <div class="card" style="height: 100%">
-                        <strong class="card-header">💬 오늘의 이야기</strong>
+                        <div class="d-flex justify-content-between">
+                            <strong class="card-header">💬 오늘의 이야기</strong>
+                            <div class="card-header dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow"
+                                        data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="edit_item_func()">
+                                        <i class="bx bx-edit-alt me-1"></i> 편집</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                                <p>
-                                    이미 끝나버린 일을 후회하기보다는 하고 싶었던 일들을 하지 못한 것을 후회하라.
+                                <p id="editableQuote">
+                                    {{ today_about.content }}
                                 </p>
                                 <footer class="blockquote-footer" style="display:flex; justify-content: end">
-                                    <cite title="Source Title">탈무드</cite>
+                                    <cite title="Source Title" id="editableCite">{{ today_about.title }}</cite>
                                 </footer>
                             </blockquote>
+                        </div>
+                        <div class="card-body justify-content-end btn_div" style="display: none;">
+                            <button type="button" class="btn btn-primary" id="save_btn">저장</button>
+                            <button type="button" class="btn btn-danger" id="cancle_btn">취소</button>
                         </div>
                     </div>
                 </div>
@@ -620,7 +637,40 @@
 
     });
 
+    function edit_item_func() {
+        $('.btn_div').show();
 
+        document.getElementById('editableQuote').contentEditable = "true";
+        document.getElementById('editableCite').contentEditable = "true";
+
+        document.getElementById('editableQuote').focus();
+
+        $('#save_btn').click(function () {
+            var quoteText = document.getElementById('editableQuote').innerText;
+            var citeText = document.getElementById('editableCite').innerText;
+
+            $.ajax({
+                url: "{% url 'today_about' %}",
+                type: 'POST',
+                data: {
+                    title: citeText,
+                    content: quoteText,
+                },
+                success: function (response) {
+                    $('#editableQuote').text(quoteText);
+                    $('#editableCite').text(citeText);
+
+                    document.getElementById('editableQuote').contentEditable = "false";
+                    document.getElementById('editableCite').contentEditable = "false";
+                    $('.btn_div').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert("저장에 실패했습니다. 다시 시도해주세요.");
+                }
+            });
+        })
+    }
 </script>
 
 </html>

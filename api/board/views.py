@@ -13,7 +13,7 @@ from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, Co
 
 
 def amdin_board_page(request):
-    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK'])
+    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK', 'GTODAY'])
 
     context = {
         'codemaster': codemaster,
@@ -196,4 +196,26 @@ def image_upload(request):
             image_url = fs.url(filename)
             return JsonResponse({'imageUrl': image_url})
     return JsonResponse({'error': '이미지 업로드에 실패했습니다.'}, status=400)
+
+
+def today_about(request):
+    title = request.POST.get('title')  # 출처
+    content = request.POST.get('content')  # 내용
+
+    try:
+        boardcode = CodeMaster.objects.get(code='GTODAY')
+    except CodeMaster.DoesNotExist:
+        return JsonResponse({"error": "GTODAY 코드가 존재하지 않습니다."}, status=400)
+
+    board_add = BoardMaster(
+        title=title,
+        content=content,
+        created_by_id=request.user.id,
+        updated_by_id=request.user.id,
+        boardcode=boardcode
+    )
+
+    board_add.save()
+
+    return JsonResponse({"success": True}, status=200)
 
