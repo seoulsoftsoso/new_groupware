@@ -81,7 +81,7 @@ class CorporateMgmtCreateView(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             data = request.POST
-            print('data', data)
+            # print('data', data)
 
             event_mgm = get_object_or_404(EventMaster, id=data['eventId'])
 
@@ -91,7 +91,7 @@ class CorporateMgmtCreateView(View):
                     'oiling': data['oiling'] == 'true',
                     'oiling_cost': int(data['oiling_cost']),
                     'distance': int(data['distance']),
-                    'total_distance': int(data['distance']),
+                    'total_distance': int(data['total_distance']),
                     'maintenance': data['maintenance'],
                     'etc': data['etc'],
                 }

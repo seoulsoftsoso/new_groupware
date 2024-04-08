@@ -238,7 +238,7 @@
                         $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', true);
                     }
                 } else {
-                    $('#total_distance_input').val(fields.total_distance);
+                    $('#total_distance_input').val(fields.total_distance.toLocaleString());
                 }
                 $('#repair_input').val(fields.maintenance);
                 $('#etc_textarea').val(fields.etc);

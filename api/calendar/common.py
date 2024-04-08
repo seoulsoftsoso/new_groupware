@@ -89,7 +89,7 @@ class get_eventDataAll(View):
             # 작성자
             if employee_select:
                 created_by_id = employee_select
-                print(created_by_id)
+                # print(created_by_id)
 
             event_add = EventMaster(
                 url='',
