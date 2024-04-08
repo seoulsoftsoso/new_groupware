@@ -182,58 +182,113 @@
         document.querySelector('#content-input').value = content;
     });
 
-   $("#submitBtn").click(function(e) {
-    e.preventDefault();
 
-    var formdata = new FormData($("#textform")[0]);
-    formdata.append('title', $("#defaultFormControlInput").val());
-    formdata.append('content', JSON.stringify(quill.getContents()));
-    formdata.append('fixed_flag', $("input[name='fixed_flag']:checked").val());
+    function handlePaste(e) {
+        // console.log('붙여넣기 이벤트 발생');
+        var clipboardData = e.clipboardData;
+        if (clipboardData && clipboardData.items) {
+            // console.log('클립보드 데이터 감지:', clipboardData);
+            var items = clipboardData.items;
+            for (var i = 0; i < items.length; i++) {
+                // console.log('클립보드 아이템 타입:', items[i].type);
+                if (items[i].type.indexOf("image") !== -1) {
+                    var file = items[i].getAsFile();
+                    // console.log('업로드할 이미지 파일:', file);
 
-    var fileData = $("#dropzone-multi").get(0).dropzone.files;
+                    var formData = new FormData();
+                    formData.append('image', file);
 
-    for (var i = 0; i < fileData.length; i++) {
-        formdata.append('file', fileData[i]);
+                    $.ajax({
+                        url: '{% url "image_upload" %}',
+                        type: 'POST',
+                        headers: {
+                            "X-CSRFToken": getCookie('csrftoken'),
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            // console.log('이미지 업로드 성공:', response);
+                            var imageUrl = response.imageUrl;
+                            // console.log('서버로부터 받은 이미지 URL:', imageUrl);
+                            const range = quill.getSelection(true);
+                            quill.insertEmbed(range.index, 'image', imageUrl);
+                        },
+                        error: function () {
+                            console.error('이미지 업로드 실패');
+                        }
+                    });
+
+                    e.preventDefault();
+                }
+            }
+        }
     }
 
-       var iterator = formdata.entries();
-       var result = iterator.next();
-       while (!result.done) {
-           // console.log(result.value);
-           result = iterator.next();
-       }
+    quill.getModule('toolbar').addHandler('image', imageHandler);
 
-    $.ajax({
-      url: "{% url 'noticeWriteAdd' %}",
-      type: "POST",
-      xhrFields: {
-            withCredentials: true
-       },
-      data: formdata,
-      processData: false,
-      contentType: false,
-        success: function (response) {
-            Swal.fire({
-                title: 'Success!',
-                text: '작성글이 등록되었습니다.',
-                icon: 'success',
-                confirmButtonText: '확인'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{% url 'adminNotice' %}";
-                }
-            });
-        },
-        error: function (error) {
-            console.log(error);
-            Swal.fire({
-                title: 'Error!',
-                text: '관리자에게 문의 바랍니다.',
-                icon: 'error',
-                confirmButtonText: '확인'
-            })
-        }
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var content = JSON.stringify(quill.getContents());
+        // console.log('제출될 에디터 내용:', content);
+        document.querySelector('#content-input').value = content;
     });
-  });
+
+    document.querySelector('.ql-editor').addEventListener('paste', handlePaste);
+
+
+
+    $("#submitBtn").click(function (e) {
+        e.preventDefault();
+
+        var formdata = new FormData($("#textform")[0]);
+        formdata.append('title', $("#defaultFormControlInput").val());
+        formdata.append('content', JSON.stringify(quill.getContents()));
+        formdata.append('fixed_flag', $("input[name='fixed_flag']:checked").val());
+
+        var fileData = $("#dropzone-multi").get(0).dropzone.files;
+
+        for (var i = 0; i < fileData.length; i++) {
+            formdata.append('file', fileData[i]);
+        }
+
+        var iterator = formdata.entries();
+        var result = iterator.next();
+        while (!result.done) {
+            // console.log(result.value);
+            result = iterator.next();
+        }
+
+        $.ajax({
+            url: "{% url 'noticeWriteAdd' %}",
+            type: "POST",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: '작성글이 등록되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'adminNotice' %}";
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: '관리자에게 문의 바랍니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+            }
+        });
+    });
 </script>
 </html>
