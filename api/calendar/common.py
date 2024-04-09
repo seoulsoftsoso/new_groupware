@@ -158,7 +158,6 @@ class get_eventDataAll(View):
 
             tagList = json.loads(eventData.get('tagList', '[]'))
             if any(tag['value'] == str(created_by_id) for tag in tagList):
-                print('여기')
                 return JsonResponse({'error': '참석자란에 작성자는 등록될 수 없습니다.'}, status=400)
 
             Participant.objects.filter(event=event).delete()

@@ -302,7 +302,10 @@
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
 <script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
-
+<script type="text/javascript">
+    var request_isSuperuser = {{ request.user.is_superuser|lower }};
+    var request_userId = {{ request.user.id }};
+</script>
 <script>
 
     $(function (event) {
@@ -473,6 +476,17 @@
                      if (result.isConfirmed) {
                          location.reload();
                      }
+                });
+            },
+            error: function (xhr, status, error) {
+                var responseJson = JSON.parse(xhr.responseText);
+                var errorMessage = responseJson.error;
+
+                Swal.fire({
+                    title: '오류 발생!',
+                    text: '에러 메시지: ' + errorMessage,
+                    icon: 'error',
+                    confirmButtonText: '확인'
                 });
             }
         });

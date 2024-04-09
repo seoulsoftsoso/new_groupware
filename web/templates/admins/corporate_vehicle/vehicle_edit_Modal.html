@@ -151,6 +151,17 @@
                          location.reload();
                      }
                  });
+            },
+            error: function (xhr, status, error) {
+                var responseJson = JSON.parse(xhr.responseText);
+                var errorMessage = responseJson.error;
+
+                Swal.fire({
+                    title: '오류 발생!',
+                    text: '에러 메시지: ' + errorMessage,
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                });
             }
         });
 
