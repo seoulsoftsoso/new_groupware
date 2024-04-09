@@ -77,6 +77,9 @@ class get_eventDataAll(View):
             else:
                 tagList = []
 
+            if any(tag['value'] == str(created_by_id) for tag in tagList):
+                return JsonResponse({'error': '참석자란에 작성자는 등록될 수 없습니다.'}, status=400)
+
             # 법인차량
             vehicleCode = request.POST.get('vehicleSelect')
             selected_vehicle = None
@@ -110,6 +113,8 @@ class get_eventDataAll(View):
             # 참가자
             for tag in tagList:
                 user_id = tag['value']
+                print('userID :', user_id)
+                print('created_by_id :', created_by_id)
                 user = get_object_or_404(UserMaster, id=user_id)
                 participant = Participant(event=event_add, cuser=user)
                 participant.save()
@@ -130,7 +135,7 @@ class get_eventDataAll(View):
                     )
 
                     participant_event.save()
-                    Participant.objects.filter(event_id=event_add.id).delete()
+                    Participant.objects.filter(event_id=event_add.id).delete()  # 참석자란에 태그 안되게 delete
 
             if vehicleCode:
                 event_add.business_pair = event_add.id
@@ -152,6 +157,9 @@ class get_eventDataAll(View):
             created_by_id = request.user.id
 
             tagList = json.loads(eventData.get('tagList', '[]'))
+            if any(tag['value'] == str(created_by_id) for tag in tagList):
+                print('여기')
+                return JsonResponse({'error': '참석자란에 작성자는 등록될 수 없습니다.'}, status=400)
 
             Participant.objects.filter(event=event).delete()
 
@@ -195,7 +203,9 @@ class get_eventDataAll(View):
 
                 event.save()
 
-            return HttpResponse()
+                return JsonResponse({'message': 'success'})
+
+        return HttpResponse()
 
     def delete(self, request, *args, **kwargs):
         if request.method == "DELETE":

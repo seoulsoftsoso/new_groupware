@@ -561,11 +561,11 @@
             eventGuests: $("#eventGuests").val(),
             eventLocation: $("#eventLocation").val(),
             eventDescription: $("#eventDescription").val(),
-            tagList : JSON.stringify(tagify.value),
-            employee_select : $('#employee_select').val()
+            tagList: JSON.stringify(tagify.value),
+            employee_select: $('#employee_select').val()
         };
 
-        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")) {
             eventData.vehicleSelect = $("#vehicle_select").val();
         } else {
             eventData.vehicleSelect = null
@@ -589,14 +589,25 @@
             success: function () {
                 // console.log('수정데이터', eventData);
                 Swal.fire({
-                     title: 'Success!',
-                     text: '일정이 수정되었습니다.',
-                     icon: 'success',
-                     confirmButtonText: '확인'
-                 }).then((result) => {
-                     if (result.isConfirmed) {
-                         location.reload();
-                     }
+                    title: 'Success!',
+                    text: '일정이 수정되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                var responseJson = JSON.parse(xhr.responseText);
+                var errorMessage = responseJson.error;
+
+                Swal.fire({
+                    title: '오류 발생!',
+                    text: '에러 메시지: ' + errorMessage,
+                    icon: 'error',
+                    confirmButtonText: '확인'
                 });
             }
         });
