@@ -388,10 +388,8 @@
                 $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', false);
             }
             $('#oiling_check').prop('checked', false);
-            $('#distance_input').val('');
-            $('#total_distance_input').val('');
-            $('#repair_input').val('');
-            $('#etc_textarea').val('');
+            $('#distance_input, #total_distance_input, #oiling_cost, #repair_input, #etc_textarea').val('');
+            $('#amount_div, #distance_div').find(':input, small').hide();
         });
 
     });
