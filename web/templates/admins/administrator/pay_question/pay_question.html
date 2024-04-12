@@ -25,12 +25,13 @@
         <div class="layout-page" style="">
             {% include 'admins/index_header.html' %}
 
-            <div class="card" style="width: 97%; height: 100%; margin-left: 26px; margin-top: 30px;">
+            <div class="layout container-fluid align-items-center mt-4" style="height: 100%">
+                <div class="card invoice-preview-card">
 
                  <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column p-sm-3 p-0  mb-4" style="margin-bottom: -30px">
                     <div class="mb-xl-0 mb-4">
                         <div class="d-flex svg-illustration mb-3 gap-2">
-                            <strong style="font-size: x-large; font-family: Pretendard;">견적문의</strong>
+                            <strong style="font-size: x-large; margin-left: 20px; margin-top: 15px; font-family: Pretendard;">견적문의</strong>
                         </div>
                     </div>
                 </div>
@@ -65,7 +66,7 @@
                 <!--여기부터 작성-->
                 <div class="row justify-content-center mt-5">
                     <div class="card-datatable table-responsive col-11">
-                        <table class="dt-multilingual table border-top table table-hover" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
+                        <table class="dt-multilingual table border-top table table-hover mb-5" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
                             <thead>
                             <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
                                 <th style="font-size: medium; font-weight: bold">기업(기관)명</th>
@@ -94,6 +95,7 @@
 
             </div>
         {% include 'admins/index_footer.html' %}
+            </div>
         </div>
     </div>
 </div>
