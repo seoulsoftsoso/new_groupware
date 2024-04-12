@@ -1,14 +1,14 @@
 from datetime import date, datetime, timedelta
-
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.db.models import Count, Q, Case, When, IntegerField, F, Func
 from django.db.models.functions import TruncDate, Floor
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
-from api.form import SignUpForm, QuestionForm
+from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
     ProTask, ProMembers
 from api.views import *
@@ -120,21 +120,40 @@ def signup_page(request):
 
 
 def UserCreate(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)  # UserCreationForm 객체를 생성하도록 수정
-        if form.is_valid():
-            form.save()
-        else:
-            print(form.errors)
-            raise ValidationError('관리자에게 문의 바랍니다.')
+    print(request.POST)
 
-    return render(request, 'index.html')
+    email = request.POST.get('email')
+    allowed_domains = ['seoul-soft.com', 'solic.kr']
+    # 도메인 추출
+    email_domain = email.split('@')[-1]
+    if email_domain not in allowed_domains:
+        return JsonResponse(
+            {"success": False, "errors": "해당 도메인으로 가입할 수 없습니다. @seoul-soft.com 또는 @solic.kr 도메인을 사용해주세요."}, status=400)
+
+    password = request.POST.get('password')
+    clean_password = make_password(password)
+
+    useremailreceive = request.POST.get('useremailreceive') == 'on'
+
+    userMaster = UserMaster(
+        password=clean_password,
+        last_login=timezone.now(),
+        username=request.POST.get('username'),
+        user_id=request.POST.get('user_id'),
+        email=email,
+        useremailreceive=useremailreceive,
+        userintro=request.POST.get('userintro')
+    )
+
+    userMaster.save()
+
+    return JsonResponse({"success": 'true', "message": "회원가입이 완료되었습니다."}, status=200)
 
 
 @csrf_exempt
 def check_duplicate(request):
-    if request.method == "POST":
-        user_id = request.POST.get("user_id", None)
+    if request.method == "GET":
+        user_id = request.GET.get("user_id", None)
 
         id_check = UserMaster.objects.filter(user_id=user_id).count()
 

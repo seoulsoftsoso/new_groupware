@@ -34,9 +34,8 @@
                 </a>
             </p>
 
-             <form action="{% url 'UserCreate' %}" method="post" style="margin-top: 30px;">
-                 {% csrf_token %}
-                 {{ form }}
+            <form id="signup_form" style="margin-top: 30px;" onsubmit="return false;">
+                {% csrf_token %}
                 <div class="mb-3">
                     <label for="id_username" class="form-label">이름</label>
                     <input
@@ -48,25 +47,25 @@
                             autofocus required/>
                 </div>
 
-                 <div class="mb-3" style="display: flex; flex-direction: column;">
+                <div class="mb-3" style="display: flex; flex-direction: column;">
                     <label for="id_user_id" class="form-label">아이디</label>
                     <div style="display: flex;">
                         <input
-                            type="text"
-                            class="form-control"
-                            style="width: 295px;"
-                            id="id_user_id"
-                            name="user_id"
-                            placeholder="아이디를 입력해주세요."
-                            autofocus required/>
-                         <button type="button" id="check-duplicate" class="btn btn-label-warning"
-                                 >중복확인
-                         </button>
+                                type="text"
+                                class="form-control"
+                                style="width: 295px;"
+                                id="id_user_id"
+                                name="user_id"
+                                placeholder="아이디를 입력해주세요."
+                                autofocus required/>
+                        <button type="button" id="check-duplicate" class="btn btn-label-warning"
+                        >중복확인
+                        </button>
                     </div>
 
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="id_password1" class="form-label">비밀번호</label>
                     <input
                             type="password"
@@ -78,7 +77,7 @@
                             autofocus required/>
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="id_password2" class="form-label">비밀번호 확인</label>
                     <input
                             type="password"
@@ -89,10 +88,10 @@
                             minlength="8"
                             oninput="checkPasswordMatch()"
                             autofocus required/>
-                     <p id="password-match-message" style="color: red;"></p>
+                    <p id="password-match-message" style="color: red;"></p>
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="id_email" class="form-label">이메일</label>
                     <input
                             type="text"
@@ -103,20 +102,21 @@
                             required>
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="id_useremailreceive" class="form-label">이메일 수신 여부</label>
                     <label class="form-check-label chk_text" for="same-address"
-                                   style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.<input
-                                    type="checkbox" style="width: 13px; height: 13px; margin-left: 10px;"
-                                    name="useremailreceive" id="id_useremailreceive"></label>
+                           style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.<input
+                            type="checkbox" style="width: 13px; height: 13px; margin-left: 10px;"
+                            name="useremailreceive" id="id_useremailreceive"></label>
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="id_userintro" class="form-label">소개</label>
-                     <textarea class="form-control" id="id_userintro" name="userintro" placeholder="만나서 반갑습니다."></textarea>
+                    <textarea class="form-control" id="id_userintro" name="userintro"
+                              placeholder="만나서 반갑습니다."></textarea>
                 </div>
 
-                 <button class="btn btn-primary d-grid w-100" type="submit" id="signup_btn">회원가입</button>
+                <button class="btn btn-primary d-grid w-100" type="submit" id="signup_btn">회원가입</button>
             </form>
 
         </div>
@@ -163,23 +163,33 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $("#signup_btn").click(function (e) {
+        e.preventDefault();
         var isFormValid = validateForm();
 
-        var email = $("#id_email").val();
-        var allowedDomains = ["seoul-soft.com", "solic.kr"];
-        var emailDomain = email.substring(email.lastIndexOf("@") + 1);
-
-        if (allowedDomains.indexOf(emailDomain) === -1) {
-            alert("유효하지 않은 형식의 메일입니다.");
-            return false;
-        }
-
-        if (isFormValid) {
-            alert('회원가입이 완료되었습니다.');
-        } else {
+        if (isFormValid === false) {
             alert('필수 항목을 입력하세요.');
             e.preventDefault();
+            return false
         }
+
+        $.ajax({
+            url: "{% url 'UserCreate' %}",
+            method: "POST",
+            data: $("#signup_form").serialize(),
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (response) {
+                console.log(response);
+                if (response.success) {
+                    alert("회원가입이 완료되었습니다.");
+                    window.location.href = "/";
+                }
+            },
+            error: function (response) {
+                var errors = response.responseJSON.errors;
+                alert(errors);
+            }
+        })
+
     });
 
     function validateForm() {
