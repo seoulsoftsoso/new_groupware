@@ -188,6 +188,7 @@ urlpatterns = [
                   #path('project/tasksubadd/', taskmgmt.as_view(), name='TaskSubAdd'),
                   path('project/getsub/', getSubData.as_view(), name='getSubData'),
                   path('project/member_list_get', ProMemberListGet.as_view(), name="ProMemberListGet"),
+                  path('pjsetting_add/', pjsetting_add, name="pjsetting_add"),
 
 
                   # 주간업무보고

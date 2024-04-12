@@ -424,3 +424,36 @@ class ProTaskEdit(View):
                 print(e)
                 return JsonResponse({'error': 'fail'}, status=400)
 
+
+def pjsetting_add(request):
+
+    print(request.POST)
+    projectType = request.POST.get('projectType')
+
+    if projectType == 'pjtype':
+
+        latest_pro_code = CodeMaster.objects.filter(group_id=8).order_by('-id').first()
+
+        # code 자동 완성
+        if latest_pro_code:
+            latest_code = latest_pro_code.code
+            if latest_code[2:].isdigit():
+                new_code = 'PJ' + str(int(latest_code[2:]) + 1).zfill(4)
+            else:
+                new_code = 'PJ0001'
+        else:
+            new_code = 'PJ0001'
+
+        project_type_code = new_code
+
+        codeMaster = CodeMaster(
+            code=project_type_code,
+            name=request.POST.get('pjset_name'),
+            created_by_id=request.user.id,
+            group_id=8,
+            enterprise_id=1
+        )
+        codeMaster.save()
+
+    return JsonResponse({'success': True})
+

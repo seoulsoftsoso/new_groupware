@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.db import models
 from django.db.models import Count, Q, Case, When, IntegerField, F, Func
@@ -59,36 +59,6 @@ def admin_index_page(request):
     }
 
     return render(request, 'admins/index.html', context)
-
-
-# def admin_index_page(request):
-#     today = timezone.now()
-#
-#     events = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set', ).filter(
-#         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
-#
-#     fixed_notice = BoardMaster.objects.filter(fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
-#         reply_count=Count('reply_board')).order_by("-id").first()
-#     notice = BoardMaster.objects.filter(delete_flag="N", boardcode_id=9, fixed_flag=False).annotate(
-#         reply_count=Count('reply_board')).order_by("-id")[:3]
-#     fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N", fixed_flag=True).annotate(
-#         reply_count=Count('reply_board')).order_by("-id").first()
-#     board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
-#         reply_count=Count('reply_board')).order_by("-id")[:3]
-#
-#     type = request.GET.get('param', None)
-#     employee_list = get_member_info(type)
-#
-#     context = {
-#         'events': events,
-#         'fixed_notice': fixed_notice,
-#         'notice': notice,
-#         'fixed_board': fixed_board,
-#         'board': board,
-#         'employee_list': employee_list['result']
-#     }
-#
-#     return render(request, 'admins/index.html', context)
 
 
 def calendar_page(request):
@@ -281,7 +251,11 @@ def project_main_page(request):
         task_id__isnull=True, position='PE'
         ).select_related('member').values('id', 'promaster_id', 'member__username')
 
-    context = {'project': formatted_projects, 'userinfo': userinfo, 'userlist': userlist}
+    project_type_select = CodeMaster.objects.filter(group_id=8).values(
+        'id', 'code', 'name'
+    )
+
+    context = {'project': formatted_projects, 'userinfo': userinfo, 'userlist': userlist, 'project_type_select': project_type_select}
 
     return render(request, 'admins/project_mgmt/project_main.html', context)
 
