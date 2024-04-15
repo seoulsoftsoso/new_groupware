@@ -81,15 +81,17 @@ class CorporateMgmtCreateView(View):
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             data = request.POST
-            # print('data', data)
+            print('data', data)
 
             event_mgm = get_object_or_404(EventMaster, id=data['eventId'])
+
+            oiling_cost = int(data['oiling_cost']) if data['oiling_cost'] else 0
 
             CorporateMgmt.objects.update_or_create(
                 event_mgm=event_mgm,
                 defaults={
                     'oiling': data['oiling'] == 'true',
-                    'oiling_cost': int(data['oiling_cost']),
+                    'oiling_cost': oiling_cost,
                     'distance': int(data['distance']),
                     'total_distance': int(data['total_distance']),
                     'maintenance': data['maintenance'],

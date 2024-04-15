@@ -63,17 +63,6 @@
                        </div>
                     </div>
 
-                    <div class="row" id="distance_div">
-                        <div class="col mb-11 d-flex flex-row">
-                            <div class="col-3">
-                                <input class="form-control" type="number" id="distance_input" placeholder="주행거리" style="display:none;">
-                            </div>
-                            <div class="col-2 m-2">
-                                <small style="display: none">(단위: km)</small>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row" id="amount_div">
                         <div class="col mb-11 d-flex flex-row">
                             <div class="col-5">
@@ -85,11 +74,23 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col mb-11">
+                            <label for="nameBasic" class="form-label">*주행거리</label>
+                            <div class="col-md-11 mb-4">
+                                <input class="form-control" type="number" id="distance_input" placeholder="주행거리">
+                            </div>
+                            <div class="col-2 m-2">
+                                <small style="display: none">(단위: km)</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row" >
                         <div class="col mb-11">
                             <label for="nameBasic" class="form-label">*누적주행거리</label>
                             <div class="col-md-11 mb-4">
-                                <input class="form-control" id="total_distance_input"/>
+                                <input class="form-control" id="total_distance_input" placeholder="누적주행거리"/>
                             </div>
                         </div>
                     </div>
@@ -129,9 +130,9 @@
 
         $('#oiling_check').change(function () {
             if ($(this).is(':checked')) {
-                $('#amount_div, #distance_div').find(':input, small').show();
+                $('#amount_div').find(':input, small').show();
             } else {
-                $('#amount_div, #distance_div').find(':input, small').hide();
+                $('#amount_div').find(':input, small').hide();
             }
         });
 
@@ -139,13 +140,13 @@
 
     $('#usecheck_false').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', true);
+            $('#oiling_check, #oiling_cost, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', true);
         }
     });
 
     $('#usecheck_true').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#oiling_check, #oiling_cost, #distance_input, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', false);
+            $('#oiling_check, #oiling_cost, #total_distance_input, #repair_input, #etc_textarea').prop('disabled', false);
         }
     });
 
