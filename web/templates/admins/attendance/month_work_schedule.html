@@ -27,14 +27,13 @@
 
             <div class="layout container-fluid align-items-center mt-4">
                 <div class="card invoice-preview-card">
-                <form style="width: 100%; margin-top: 30px; display: flex; justify-content: end; padding-right: 40px;" method="get">
+                <form method="get">
                     {% csrf_token %}
-                    <div style="display: flex;">
-                        <div style="margin-top: 8px; margin-right: 10px; margin-left: 5px;"><font color="red">*</font>근무년월</div>
-                        <div style="margin-right: 10px;">
+                    <div class="row justify-content-end mt-4">
+                        <div class="col-md-1 mb-4">
                             <select class="form-control" style="margin-right: 10px;" id="YEAR" name="YEAR"></select>
                         </div>
-                        <div style="margin-right: 10px;">
+                        <div class="col-md-1 mb-4">
                             <select class="form-control" id="MONTH" name="MONTH">
                                 <option value='-1'>--</option>
                                 <option value='1' {% if "1" in standard_month and "-1" not in standard_month %}selected {% endif %}>1월</option>
@@ -52,7 +51,7 @@
                             </select>
                         </div>
 
-                        <div style="margin-right: 10px;">
+                        <div class="col-md-1 mb-4">
                             <select class="form-control" name="search-title">
                                 <option value="name" {% if 'name' in search_title %} selected {% endif %}>성명</option>
                                 <option value="number" {% if 'number' in search_title %} selected {% endif %}>사원번호</option>
@@ -60,12 +59,15 @@
                             </select>
                         </div>
 
-
-                        <input type="text" class="form-control" style="width: 150px; margin-right: 10px;"
-                               id="form-search"
-                               placeholder="Search" name="search-content"
-                               value="{{ search_content | default_if_none:'' }}">
-                        <button type='submit' class="btn btn-primary w-15 h-90">검색</button>
+                        <div class="col-md-1 mb-4">
+                            <input type="text" class="form-control"
+                                   id="form-search"
+                                   placeholder="Search" name="search-content"
+                                   value="{{ search_content | default_if_none:'' }}">
+                        </div>
+                        <div class="col-md-1 mb-4">
+                            <button type='submit' class="btn btn-primary w-15 h-90">검색</button>
+                        </div>
                     </div>
 
                 </form>

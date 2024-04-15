@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <meta charset="UTF-8">
-     {% include 'admins/admin_header.html' %}
+{% include 'admins/admin_header.html' %}
 
 {% comment %}<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/@form-validation/umd/styles/index.min.css' %}"/>{% endcomment %}
 
@@ -18,6 +18,29 @@
 <script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
 
 </head>
+<style>
+    .collapsed-sidebar {
+        flex: 0 0 10%;
+        max-width: 10%;
+    }
+
+    .expanded-main {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /* 기본적으로 숨겨진 상태로 설정 */
+    #sidebar.collapsed-sidebar .card,
+    #sidebar.collapsed-sidebar .btn {
+        display: none;
+    }
+
+    /* 토글되면 보이도록 설정 */
+    #sidebar .card,
+    #sidebar .btn {
+        display: block;
+    }
+</style>
 <body>
 
 <div class="layout-wrapper layout-content-navbar">
@@ -25,267 +48,285 @@
 
         {% include 'admins/index_sidemenu.html' %}
 
-         <div class="layout-page" style="">
+        <div class="layout-page" style="">
             {% include 'admins/index_header.html' %}
 
             <div class="content-wrapper">
 
                 <!-- Content -->
 
-          <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="alert alert-outline-primary alert-dismissible" role="alert">
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="alert alert-outline-primary alert-dismissible" role="alert">
 
-                <select class="form-select" id="projectSelect" style="width: 25%">
-                    <option>--프로젝트를 선택해주세요--</option>
-                    {% for pro in projectlist %}
-                        <option value={{ pro.id }}>[{{ pro.pjcode }}]{{ pro.pjname }}</option>
-                    {% endfor %}
-                </select>
-              </div>
-
-
-
-              <div class="row">
-                <!-- Customer-detail Sidebar -->
-                <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
-                  <!-- Customer-detail Card -->
-
-
-                  <!-- Address accordion -->
-
-                  <div class="card card-action mb-4">
-                    <div class="card-header align-items-center flex-wrap gap-3 py-4">
-                      <h5 class="card-action-title mb-0">{{ pjname.pjname }}</h5>
-                      <div class="card-action-element">
-                        <button class="btn btn-label-primary" id="add_protask_btn" style="font-family: Pretendard;" type="button" data-bs-toggle="modal" data-bs-target="#addNT">
-                          Task 등록
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <div class="accordion accordion-flush accordion-arrow-left" id="ecommerceBillingAccordionAddress">
-                        {% for item in task %}
-                        <div class="accordion-item" id="accordion">
-                          <div class="accordion-header d-flex justify-content-between align-items-center flex-wrap flex-sm-nowrap" id="headingHome{{ forloop.counter }}">
-                            <a class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}" aria-expanded="false" aria-controls="headingHome{{ forloop.counter }}" role="button">
-                              <span>
-                                <span class="d-flex gap-2 align-items-baseline">
-                                  <span class="h6 mb-0">{{ item.task_name }}</span>
-                                  <span class="badge bg-label-info">진행</span>
-                                </span>
-                                  <span class="badge bg-label-warning ms-auto">{{ item.task_remain }} Days left</span>
-                                {% comment %}<span class="mb-0 text-muted">{{ item.task_remain }} DAY LEFT.</span>{% endcomment %}
-                              </span>
-                            </a>
-                            <div class="d-flex gap-3 p-4 p-sm-0 pt-0 ms-1 ms-sm-0">
-                              <a href="javascript:void(0);"><i class="bx bx-pencil text-secondary fs-4"
-                                                               onclick="protask_pencil(
-                                                                       '{{ item.id }}', '{{ item.task_name }}', '{{ item.task_start }}', '{{ item.task_end }}'
-                                                                       )"></i></a>
-                              <a href="javascript:void(0);"><i class="bx bx-trash text-secondary fs-4" onclick="protask_trash('{{ item.id }}')"></i></a>
-                              <a href="javascript:void(0);" onclick="drawSubData({{ item.id }});" data-bs-toggle="collapse" data-bs-target="#taskitem{{ forloop.counter }}">
-                                  <i class="bx bx-zoom-in text-secondary fs-4"></i></a>
-
-                            </div>
-                          </div>
-                          <div id="taskitem{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#ecommerceBillingAccordionAddress" style="">
-                            <div class="accordion-body ps-4 ms-1">
-                              <h6 class="mb-1">종료예정일 : {{ item.task_end }}</h6>
-                              <p class="mb-1">참여 :
-                                  {% for list in userlist %}
-                                      {% if list.task_id == item.id %}
-                                        {{ list.member__username }}
-                                      {% endif %}
-                                  {% endfor %}
-
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {% endfor %}
-
-
-                      </div>
+                        <select class="form-select" id="projectSelect" style="width: 25%">
+                            <option>--프로젝트를 선택해주세요--</option>
+                            {% for pro in projectlist %}
+                                <option value={{ pro.id }}>[{{ pro.pjcode }}]{{ pro.pjname }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
 
-                </div>
-                  <!-- /Customer-detail Card -->
-
-                </div>
-                <!--/ Customer Sidebar -->
-
-                <!-- Customer Content -->
-                <div class="card col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
-                <div class="card-header align-items-center flex-wrap gap-3 py-4">
                     <div class="row">
-                    <div class="col-md-6">
-                      <button class="btn btn-label-primary" style="font-family: Pretendard;" type="button" data-bs-toggle="modal" data-bs-target="#">
-                          주간업무보고
-                        </button>
-                    </div>
-                    <div class="col-md-6 d-flex justify-content-end">
-                      <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
-                          진행
-                        </button>
-                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
-                          중지
-                        </button>
-                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
-                          보류
-                        </button>
-                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">
-                          완료
-                        </button>
-                    </div>
-                    </div>
-                    </div>
-                 <!-- table start -->
+                        <a href="#" id="toggle-sidebar" class="mb-3">
+                            <button type="button" class="btn rounded-pill btn-dark">
+                                <i class='bx bx-reflect-vertical'></i>확대/축소
+                            </button>
+                        </a>
+                        <!-- Customer-detail Sidebar -->
+                        <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0" id="sidebar">
+                            <!-- Customer-detail Card -->
 
-                    {% comment %}<div class="card mb-4">{% endcomment %}
-                    <table id="TaskSub" class="display table table-bordered" style="width:100%">
-        <thead>
-            <tr>
-                <th></th>
-                <th style="width: 20%">제목</th>
-                <th style="width: 25%">내용</th>
-                <th style="width: 8%">상태</th>
-                <th style="width: 10%">종료일</th>
-                <th style="width: 20%">이슈</th>
-                <th style="width: 20%">기타</th>
-            </tr>
-        </thead>
-                        <tbody>
+                            <!-- Address accordion -->
 
-                        </tbody>
-                    </table>
-                  </div>
+                            <div class="card card-action mb-4">
 
-              {% comment %}</div>{% endcomment %}
-                  <!-- table end -->
+                                <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                                    <h5 class="card-action-title mb-0">{{ pjname.pjname }}</h5>
+                                    <div class="card-action-element">
+                                        <button class="btn btn-label-primary" id="add_protask_btn"
+                                                style="font-family: Pretendard;" type="button" data-bs-toggle="modal" data-bs-target="#addNT">Task 등록</button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="accordion accordion-flush accordion-arrow-left"
+                                         id="ecommerceBillingAccordionAddress">
+                                        {% for item in task %}
+                                            <div class="accordion-item" id="accordion">
+                                                <div class="accordion-header d-flex justify-content-between align-items-center flex-wrap flex-sm-nowrap"
+                                                     id="headingHome{{ forloop.counter }}">
+                                                    <a class="accordion-button collapsed" data-bs-toggle="collapse"
+                                                       data-bs-target="#taskitem{{ forloop.counter }}"
+                                                       aria-expanded="false"
+                                                       aria-controls="headingHome{{ forloop.counter }}" role="button">
+                                                      <span>
+                                                        <span class="d-flex gap-2 align-items-baseline">
+                                                          <span class="h6 mb-0">{{ item.task_name }}</span>
+                                                          <span class="badge bg-label-info">진행</span>
+                                                        </span>
+                                                          <span class="badge bg-label-warning ms-auto">{{ item.task_remain }} Days left</span>
+                                                        {% comment %}<span class="mb-0 text-muted">{{ item.task_remain }} DAY LEFT.</span>{% endcomment %}
+                                                      </span>
+                                                    </a>
+                                                    <div class="d-flex gap-3 p-4 p-sm-0 pt-0 ms-1 ms-sm-0">
+                                                        <a href="javascript:void(0);"><i
+                                                                class="bx bx-pencil text-secondary fs-4"
+                                                                onclick="protask_pencil(
+                                                                        '{{ item.id }}', '{{ item.task_name }}', '{{ item.task_start }}', '{{ item.task_end }}'
+                                                                        )"></i></a>
+                                                        <a href="javascript:void(0);"><i
+                                                                class="bx bx-trash text-secondary fs-4"
+                                                                onclick="protask_trash('{{ item.id }}')"></i></a>
+                                                        <a href="javascript:void(0);"
+                                                           onclick="drawSubData({{ item.id }});"
+                                                           data-bs-toggle="collapse"
+                                                           data-bs-target="#taskitem{{ forloop.counter }}">
+                                                            <i class="bx bx-zoom-in text-secondary fs-4"></i></a>
 
+                                                    </div>
+                                                </div>
+                                                <div id="taskitem{{ forloop.counter }}"
+                                                     class="accordion-collapse collapse"
+                                                     data-bs-parent="#ecommerceBillingAccordionAddress" style="">
+                                                    <div class="accordion-body ps-4 ms-1">
+                                                        <h6 class="mb-1">종료예정일 : {{ item.task_end }}</h6>
+                                                        <p class="mb-1">참여 :
+                                                            {% for list in userlist %}
+                                                                {% if list.task_id == item.id %}
+                                                                    {{ list.member__username }}
+                                                                {% endif %}
+                                                            {% endfor %}
+
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- /Customer-detail Card -->
+
+                        </div>
+                        <!--/ Customer Sidebar -->
+
+                        <!-- Customer Content -->
+                        <div class="card col-xl-8 col-lg-7 col-md-7 order-0 order-md-1" id="main-content">
+                            <div class="card-header align-items-center flex-wrap gap-3 py-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-label-primary" style="font-family: Pretendard;"
+                                                type="button" data-bs-toggle="modal" data-bs-target="#">주간업무보고</button>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-end">
+                                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">진행</button>
+                                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">중지</button>
+                                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">보류</button>
+                                        <button class="btn btn-label-slack" style="font-family: Pretendard; margin-right: 5px" type="button">완료</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- table start -->
+
+                            {% comment %}<div class="card mb-4">{% endcomment %}
+                            <table id="TaskSub" class="display table table-bordered" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width: 20%">제목</th>
+                                    <th style="width: 25%">내용</th>
+                                    <th style="width: 8%">상태</th>
+                                    <th style="width: 10%">종료일</th>
+                                    <th style="width: 20%">이슈</th>
+                                    <th style="width: 20%">기타</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {% comment %}</div>{% endcomment %}
+                        <!-- table end -->
+
+                    </div>
+                    <!--/ Customer Content -->
                 </div>
-                <!--/ Customer Content -->
-              </div>
 
 
             </div>
 
-<!-- Modal Task -->
-<div class="modal fade" id="addNT" tabindex="-1" style="display: none;" aria-hidden="true">
+            <!-- Modal Task -->
+            <div class="modal fade" id="addNT" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
-                  <div class="modal-content p-3 p-md-5">
-                    <div class="modal-body">
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      <div class="text-center mb-4">
-                        <h3 class="address-title" id="addNT_title"></h3>
-                        <p class="address-subtitle" id="addNT_subtitle">새로운 Task를 등록하세요</p>
-                      </div>
-                      <form id="addNTForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
-                        {% csrf_token %}
-                        <div class="col-12 col-md-12 fv-plugins-icon-container">
-                          <label class="form-label" for="task_name">Task name</label>
-                          <input type="text" id="task_name" name="task_name" class="form-control " placeholder="Task 입력">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
+                    <div class="modal-content p-3 p-md-5">
+                        <div class="modal-body">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="text-center mb-4">
+                                <h3 class="address-title" id="addNT_title"></h3>
+                                <p class="address-subtitle" id="addNT_subtitle">새로운 Task를 등록하세요</p>
+                            </div>
+                            <form id="addNTForm"
+                                  class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework"
+                                  onsubmit="return false" novalidate="novalidate">
+                                {% csrf_token %}
+                                <div class="col-12 col-md-12 fv-plugins-icon-container">
+                                    <label class="form-label" for="task_name">Task name</label>
+                                    <input type="text" id="task_name" name="task_name" class="form-control "
+                                           placeholder="Task 입력">
+                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                </div>
 
-                        <div class="col-12">
-                          <label class="form-label" for="task_start">시작일</label>
-                            <input id="task_start" name="task_start" class="form-control datepicker_startDate">
+                                <div class="col-12">
+                                    <label class="form-label" for="task_start">시작일</label>
+                                    <input id="task_start" name="task_start" class="form-control datepicker_startDate">
+                                </div>
 
+                                <div class="col-12">
+                                    <label class="form-label" for="task_end">종료일</label>
+                                    <input id="task_end" name="task_end" class="form-control datepicker_endDate">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label" for="TagifyUserList">참석자</label>
+                                    <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+                                </div>
+
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_task">등록</button>
+                                    <button type="submit" class="btn btn-primary me-sm-3 me-1" id="edit_btn_modal_task" onclick="edit_protask_func()">수정</button>
+                                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                </div>
+                                <input type="hidden">
+                            </form>
                         </div>
-
-                        <div class="col-12">
-                          <label class="form-label" for="task_end">종료일</label>
-                            <input id="task_end" name="task_end" class="form-control datepicker_endDate">
-
-                        </div>
-
-                        <div class="col-12">
-                          <label class="form-label" for="TagifyUserList">참석자</label>
-                            <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
-
-                        </div>
-
-
-                        <div class="col-12 text-center">
-                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_task">등록</button>
-                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="edit_btn_modal_task" onclick="edit_protask_func()">수정</button>
-                          <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
-                            Cancel
-                          </button>
-                        </div>
-                      <input type="hidden">
-                      </form>
                     </div>
-                  </div>
                 </div>
-              </div>
-
-         <!-- Modal Task -->
-<div class="modal fade" id="addNTS" tabindex="-1" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
-                  <div class="modal-content p-3 p-md-5">
-                    <div class="modal-body">
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      <div class="text-center mb-4">
-                        <h3 class="address-title" id="taks_title_h3"></h3>
-                        <p class="address-subtitle"></p>
-                      </div>
-                      <form id="addNTSForm" class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework" onsubmit="return false" novalidate="novalidate">
-                        {% csrf_token %}
-                        <div class="col-12 col-md-6 fv-plugins-icon-container">
-                          <label class="form-label" for="sub_title">제목</label>
-                          <input type="text" id="sub_title" name="sub_title" class="form-control" placeholder="제목 입력">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
-
-                        <div class="col-12 col-md-6 fv-plugins-icon-container">
-                          <label class="form-label" for="sub_content">내용</label>
-                          <input type="text" id="sub_content" name="sub_content" class="form-control " placeholder="내용 입력">
-                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div></div>
-
-                        <div class="col-12 col-md-6 fv-plugins-icon-container">
-                          <label class="form-label" for="due_date">종료 예정일</label>
-                            <input id="due_date" name="due_date" class="form-control datepicker_startDate">
-
-                        </div>
-
-                        <div class="col-12">
-                          <label class="form-label" for="issue">이슈</label>
-                            <input id="issue" name="issue" type="text" class="form-control" placeholder="" value="">
-
-                        </div>
-
-                        <div class="col-12">
-                          <label class="form-label" for="sub_etc">기타</label>
-                            <input id="sub_etc" name="sub_etc" class="form-control"/>
-
-                        </div>
-
-
-                        <div class="col-12 text-center">
-                          <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_sub">등록</button>
-                          <button type="submit" style="display: none" class="btn btn-primary me-sm-3 me-1" id="edit_btn_modal_sub">수정</button>
-                          <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
-                            Cancel
-                          </button>
-                        </div>
-                      <input type="hidden">
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-<div>
-<input type="hidden" id="typehidden" value={{ pjname.id }}>
-</div>
-{% include 'admins/index_footer.html' %}
-{% include 'admins/admin_footer.html' %}
-<!-- / Footer -->
             </div>
-         </div> <!-- end of layout-page -->
-    </div> <!-- end of layout-container -->
+
+            <!-- Modal Task -->
+            <div class="modal fade" id="addNTS" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+                    <div class="modal-content p-3 p-md-5">
+                        <div class="modal-body">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="text-center mb-4">
+                                <h3 class="address-title" id="taks_title_h3"></h3>
+                                <p class="address-subtitle"></p>
+                            </div>
+                            <form id="addNTSForm"
+                                  class="row needs-validation g-3 fv-plugins-bootstrap5 fv-plugins-framework"
+                                  onsubmit="return false" novalidate="novalidate">
+                                {% csrf_token %}
+                                <div class="col-12 col-md-6 fv-plugins-icon-container">
+                                    <label class="form-label" for="sub_title">제목</label>
+                                    <input type="text" id="sub_title" name="sub_title" class="form-control"
+                                           placeholder="제목 입력">
+                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                </div>
+
+                                <div class="col-12 col-md-6 fv-plugins-icon-container">
+                                    <label class="form-label" for="sub_content">내용</label>
+                                    <input type="text" id="sub_content" name="sub_content" class="form-control "
+                                           placeholder="내용 입력">
+                                    <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                </div>
+
+                                <div class="col-12 col-md-6 fv-plugins-icon-container">
+                                    <label class="form-label" for="due_date">종료 예정일</label>
+                                    <input id="due_date" name="due_date" class="form-control datepicker_startDate">
+
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label" for="issue">이슈</label>
+                                    <input id="issue" name="issue" type="text" class="form-control" placeholder=""
+                                           value="">
+
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label" for="sub_etc">기타</label>
+                                    <input id="sub_etc" name="sub_etc" class="form-control"/>
+
+                                </div>
+
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary me-sm-3 me-1" id="add_btn_modal_sub">
+                                        등록
+                                    </button>
+                                    <button type="submit" style="display: none" class="btn btn-primary me-sm-3 me-1"
+                                            id="edit_btn_modal_sub">수정
+                                    </button>
+                                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <input type="hidden">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <input type="hidden" id="typehidden" value={{ pjname.id }}>
+            </div>
+            {% include 'admins/index_footer.html' %}
+            {% include 'admins/admin_footer.html' %}
+            <!-- / Footer -->
+        </div>
+    </div> <!-- end of layout-page -->
+</div> <!-- end of layout-container -->
 </div>
 
 
@@ -301,7 +342,7 @@
     var taginput = document.querySelector('input[name=TagifyUserList]');
     var tagify = new Tagify(taginput);
 
-     $(function () {
+    $(function () {
         $("#due_date").datepicker({format: 'yyyy-mm-dd'});
         $("#task_start").datepicker({format: 'yyyy-mm-dd'});
         $("#task_end").datepicker({format: 'yyyy-mm-dd'});
@@ -315,6 +356,27 @@
     }
 
     $(document).ready(function () {
+
+        $('#toggle-sidebar').click(function () {
+            var sidebar = $('#sidebar');
+            var mainContent = $('#main-content');
+
+            if (sidebar.length && mainContent.length) {
+                if (sidebar.hasClass('collapsed-sidebar')) {
+                    sidebar.removeClass('collapsed-sidebar');
+                    mainContent.removeClass('expanded-main');
+
+                    sidebar.addClass('col-xl-4');
+                    mainContent.addClass('col-xl-8');
+                } else {
+                    sidebar.addClass('collapsed-sidebar');
+                    mainContent.addClass('expanded-main');
+
+                    sidebar.removeClass('col-xl-4');
+                    mainContent.removeClass('col-xl-8');
+                }
+            }
+        });
 
         $('#projectSelect').change(function () {
             var param = $(this).val();
@@ -493,26 +555,25 @@
         //task_id 셋팅
         selected_task_id = taskId;
         let paramData = []
-        paramData.push({name:'taskid', value:taskId})
+        paramData.push({name: 'taskid', value: taskId})
         //get ajax 요청
-        if(selected_task_id != null){
+        if (selected_task_id != null) {
             api_gp("{% url 'getSubData' %}", "GET", paramData, (done) => {
                 let drawData = formatData(done.results);
 
 
-            maintable.rows().remove().draw();
+                maintable.rows().remove().draw();
 
-            maintable.rows.add(drawData).draw();
-            updateButtonStates();
+                maintable.rows.add(drawData).draw();
+                updateButtonStates();
 
             });
-        }else{
+        } else {
             alert('잘못된 task입니다.')
         }
 
         $('#accordion').addClass('active');
         //maintable.buttons( '.subaddClass' ).enable();
-
 
 
     }
@@ -542,7 +603,7 @@
                     $("#addNT").modal('hide');
                     window.location.reload()
                 },
-                error: function (res){
+                error: function (res) {
                     console.log('관리자에게 문의 바랍니다.')
                 }
             })
@@ -552,23 +613,23 @@
 
     function formatData(results) {
 
-          return results.map(result => [
+        return results.map(result => [
             null,
-              result.sub_title,
+            result.sub_title,
             result.sub_content,
             result.sub_status,
             result.due_date,
-              result.issue,
-              result.sub_etc,
-                  result.id
+            result.issue,
+            result.sub_etc,
+            result.id
 
-          ]);
-        }
+        ]);
+    }
 
     function btnTaskSubAction(type, selectedRowData) {
-        if(type === 'A'){
+        if (type === 'A') {
             $('#addNTS').modal('show');
-        }else if (type === 'E'){
+        } else if (type === 'E') {
             $('#sub_title').val(selectedRowData[1])
             $('#sub_content').val(selectedRowData[2])
 
@@ -584,30 +645,30 @@
         }
     }
 
-    $('#add_btn_modal_sub').click(function() {
+    $('#add_btn_modal_sub').click(function () {
 
-      let allData = $('#addNTSForm').serializeArray();
-      allData.push({name:'selected_task_id', value:selected_task_id})
-      allData.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
+        let allData = $('#addNTSForm').serializeArray();
+        allData.push({name: 'selected_task_id', value: selected_task_id})
+        allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
         console.log('여기인가?')
-      //유효성 검사 체크
-      let val_check = true;
+        //유효성 검사 체크
+        let val_check = true;
 
-      if (val_check){
-          $.ajax({
-              url: "{% url 'getSubData' %}",
-              type: "POST",
-              data: allData,
-              success: function (res) {
-                  alert('등록되었습니다.')
-                  $("#addNTS").modal('hide');
-                  drawSubData(selected_task_id)
-              }
-          })
-      }
+        if (val_check) {
+            $.ajax({
+                url: "{% url 'getSubData' %}",
+                type: "POST",
+                data: allData,
+                success: function (res) {
+                    alert('등록되었습니다.')
+                    $("#addNTS").modal('hide');
+                    drawSubData(selected_task_id)
+                }
+            })
+        }
     });
 
-    function protask_pencil(protask_id, task_name, task_start, task_end){
+    function protask_pencil(protask_id, task_name, task_start, task_end) {
         $('#edit_btn_modal_task').show();
         $('#add_btn_modal_task').hide();
         $("#addNT_title").html('Task 수정')
@@ -616,9 +677,9 @@
         global_protask_id = protask_id;
 
         $.ajax({
-            url:'{% url "ProMemberListGet" %}',
-            type:'get',
-            data:{
+            url: '{% url "ProMemberListGet" %}',
+            type: 'get',
+            data: {
                 pro_id: protask_id,
                 pro_type: 'pt_get',
                 promaster_id: selectedOption
@@ -649,27 +710,27 @@
         $.ajax({
             url: '{% url "ProTaskEdit" %}',
             type: 'POST',
-            data:{
+            data: {
                 type: 'del',
                 protask_id: protask_id
             },
-            headers: { "X-CSRFToken": '{{ csrf_token }}' },
-            success: function (res){
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (res) {
                 Swal.fire({
-                     title: 'Success!',
-                     text: '삭제 완료',
-                     icon: 'success',
-                     confirmButtonText: '확인'
-                 }).then((result) => {
-                     if (result.isConfirmed) {
-                         location.reload();
-                     }
-                 });
+                    title: 'Success!',
+                    text: '삭제 완료',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
             }
         })
     }
 
-    $('#add_protask_btn').click(function (){
+    $('#add_protask_btn').click(function () {
         $('#edit_btn_modal_task').hide();
         $('#add_btn_modal_task').show();
         $("#addNTForm").trigger("reset");
@@ -688,35 +749,35 @@
         // console.log(alldata)
 
         $.ajax({
-            url:'{% url "ProTaskEdit" %}',
-            type:'POST',
-            data:alldata,
+            url: '{% url "ProTaskEdit" %}',
+            type: 'POST',
+            data: alldata,
             success: function (response) {
                 Swal.fire({
-                     title: 'Success!',
-                     text: '수정 완료',
-                     icon: 'success',
-                     confirmButtonText: '확인'
-                 }).then((result) => {
-                     if (result.isConfirmed) {
-                         location.reload();
-                     }
-                 });
+                    title: 'Success!',
+                    text: '수정 완료',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
             }
         })
 
     }
 
-    $('button:contains("진행")').click(function() {
+    $('button:contains("진행")').click(function () {
         changeStatus_proTaskSub('P');
     });
-    $('button:contains("중지")').click(function() {
+    $('button:contains("중지")').click(function () {
         changeStatus_proTaskSub('R');
     });
-    $('button:contains("보류")').click(function() {
+    $('button:contains("보류")').click(function () {
         changeStatus_proTaskSub('H');
     });
-    $('button:contains("완료")').click(function() {
+    $('button:contains("완료")').click(function () {
         changeStatus_proTaskSub('F');
     });
 
@@ -729,7 +790,7 @@
         // console.log('rowdata : ', rows_array)
         let proTaskSub_id_list = []
 
-        for(let i=0; i < rows_array.length; i++){
+        for (let i = 0; i < rows_array.length; i++) {
             proTaskSub_id_list.push(rows_array[i][7])
         }
 
@@ -738,11 +799,11 @@
             type: 'POST',
             data: {
                 code: code,
-                proTaskSub_id_list : JSON.stringify(proTaskSub_id_list),
-                type : 'cng_status'
+                proTaskSub_id_list: JSON.stringify(proTaskSub_id_list),
+                type: 'cng_status'
             },
-            headers: { "X-CSRFToken": '{{ csrf_token }}' },
-            success: function(res){
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (res) {
                 drawSubData(selected_task_id)
             }
         })

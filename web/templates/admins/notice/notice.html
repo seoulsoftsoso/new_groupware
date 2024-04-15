@@ -4,35 +4,16 @@
     {% include 'admins/admin_header.html' %}
 
 <style>
-
-    @media (max-width: 767px) {
-        .table tbody tr {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .table thead {
-            display: none;
-        }
-
-        .table th,
-        .table td {
-            display: block;
-            text-align: left;
-            white-space: nowrap;
-            padding: 8px;
-        }
-
-        .table .hide-on-small-screen {
-            display: none;
-        }
-
-        .table .text-start {
-            text-align: start;
-        }
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
     }
+    {#   @media (max-width: 767px) {#}
+    {#    .col-md-3 {#}
+    {#        margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */#}
+    {#    }#}
+    {#}#}
 </style>
-
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -65,8 +46,8 @@
 
                     <hr class="my-0 mt-5">
 
-                    <div class="table-responsive" style="overflow-x: auto;">
-                        <table class="table border-top m-0">
+                    <div class="card-datatable table-responsive">
+                        <table class="dt-multilingual table border-top">
                             <thead>
                             <tr style="background-color: #fffbfb">
                                 <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>

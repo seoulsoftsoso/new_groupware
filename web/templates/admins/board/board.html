@@ -5,40 +5,51 @@
      {% include 'admins/admin_header.html' %}
 
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/jstree/jstree.css' %}" />
+{#<style>#}
+{#    .list-container {#}
+{#        line-height: 2.5;#}
+{#    }#}
+{##}
+{#    @media (max-width: 767px) {#}
+{#        /* 작은 화면에서는 테이블의 각 행을 블록 형태로 표시 */#}
+{#        .table tbody tr {#}
+{#            display: block;#}
+{#            margin-bottom: 10px;#}
+{#        }#}
+{##}
+{#        /* 작은 화면에서는 테이블의 헤더 숨김 */#}
+{#        .table thead {#}
+{#            display: none;#}
+{#        }#}
+{##}
+{#        /* 작은 화면에서는 테이블의 각 셀 스타일 조정 */#}
+{#        .table th,#}
+{#        .table td {#}
+{#            display: block;#}
+{#            text-align: left;#}
+{#            white-space: nowrap;#}
+{#            padding: 8px;#}
+{#        }#}
+{##}
+{#        /* 작은 화면에서는 숨겨야 할 열을 숨김 */#}
+{#        .table .hide-on-small-screen {#}
+{#            display: none;#}
+{#        }#}
+{##}
+{#        /* 작은 화면에서는 특정 셀에 작은 폰트 크기 적용 */#}
+{#        .table .date-column {#}
+{#            font-size: small;#}
+{#        }#}
+{#    }#}
+{#</style>#}
 <style>
-    .list-container {
-        line-height: 2.5;
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
     }
-
-    @media (max-width: 767px) {
-        /* 작은 화면에서는 테이블의 각 행을 블록 형태로 표시 */
-        .table tbody tr {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        /* 작은 화면에서는 테이블의 헤더 숨김 */
-        .table thead {
-            display: none;
-        }
-
-        /* 작은 화면에서는 테이블의 각 셀 스타일 조정 */
-        .table th,
-        .table td {
-            display: block;
-            text-align: left;
-            white-space: nowrap;
-            padding: 8px;
-        }
-
-        /* 작은 화면에서는 숨겨야 할 열을 숨김 */
-        .table .hide-on-small-screen {
-            display: none;
-        }
-
-        /* 작은 화면에서는 특정 셀에 작은 폰트 크기 적용 */
-        .table .date-column {
-            font-size: small;
+       @media (max-width: 767px) {
+        .col-md-3 {
+            margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
         }
     }
 </style>
@@ -140,8 +151,8 @@
                                             <strong style="font-size: large"
                                                     id="group_name">{{ boardcode_name }}</strong>
                                         </div>
-                                        <div class="table-container" style="margin-top: 30px; overflow-x: auto;">
-                                            <table id="boardTable" class="table table-hover">
+                                        <div class="card-datatable table-responsive" style="margin-top: 30px; overflow-x: auto;">
+                                            <table id="boardTable" class="dt-multilingual table border-top">
                                                 <thead>
                                                 <tr style="background-color: #fffbfb">
                                                     <th class="hide-on-small-screen" style="font-size: medium; font-weight: bold; text-align: center; width: 10%">번호</th>
