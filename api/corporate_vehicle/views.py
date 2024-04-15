@@ -85,7 +85,12 @@ class CorporateMgmtCreateView(View):
 
             event_mgm = get_object_or_404(EventMaster, id=data['eventId'])
 
-            oiling_cost = int(data['oiling_cost']) if data['oiling_cost'] else 0
+            if data.get('oiling') == 'true':
+                oiling_cost = int(data['oiling_cost']) if data['oiling_cost'] else 0
+            else:
+                oiling_cost = 0
+
+            total_distance = int(data['total_distance'].replace(',', ''))
 
             CorporateMgmt.objects.update_or_create(
                 event_mgm=event_mgm,
@@ -93,7 +98,7 @@ class CorporateMgmtCreateView(View):
                     'oiling': data['oiling'] == 'true',
                     'oiling_cost': oiling_cost,
                     'distance': int(data['distance']),
-                    'total_distance': int(data['total_distance']),
+                    'total_distance': total_distance,
                     'maintenance': data['maintenance'],
                     'etc': data['etc'],
                 }
