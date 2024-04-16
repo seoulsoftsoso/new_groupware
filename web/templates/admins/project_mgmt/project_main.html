@@ -311,18 +311,35 @@
 
     }
 
-    function delProject(proid){
-        let alldata = []
-        alldata.push({name:'proid', value: proid});
-        alldata.push({name:'type', value: 'D'});
-        alldata.push({name:'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
+    function delProject(proid) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "삭제 하시겠습니까?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            customClass: {
+                confirmButton: 'btn btn-primary me-3',
+                cancelButton: 'btn btn-label-secondary'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                let alldata = []
+                alldata.push({name: 'proid', value: proid});
+                alldata.push({name: 'type', value: 'D'});
+                alldata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'});
 
 
-        api_gp("{% url 'ProjectEdit' %}", "POST", alldata, (data) => {
-                if (data.message==='success'){
-                    location.reload() ;
-                }
-        });
+                api_gp("{% url 'ProjectEdit' %}", "POST", alldata, (data) => {
+                    if (data.message === 'success') {
+                        location.reload();
+                    }
+                });
+            }
+
+        })
+
     }
 
     function project_main_edit_btn(id, pjcode, pjname, start_date, end_date, pj_type, pj_customer, pj_note) {

@@ -454,35 +454,49 @@
                             text: '삭제',
                             className: 'subdelClass',
                             action: function (e, dt, node, config) {
-                                let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
-                                // console.log(allSelectedRowsData)
-                                let selected_list = []
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: "삭제 하시겠습니까?",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: '확인',
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary me-3',
+                                        cancelButton: 'btn btn-label-secondary'
+                                    },
+                                    buttonsStyling: false
+                                }).then(function (result) {
+                                    if (result.value) {
+                                        let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                        // console.log(allSelectedRowsData)
+                                        let selected_list = []
 
-                                // 각 행에 대한 로직 추가
-                                for (let i = 0; i < allSelectedRowsData.length; i++) {
+                                        // 각 행에 대한 로직 추가
+                                        for (let i = 0; i < allSelectedRowsData.length; i++) {
 
-                                    selected_list.push(allSelectedRowsData[i][7]);
+                                            selected_list.push(allSelectedRowsData[i][7]);
 
-                                }
-                                // console.log(selected_list)
-
-                                $.ajax({
-                                    url: "{% url 'GetSubDataEdit' %}",
-                                    type: "POST",
-                                    contentType: "application/json",
-                                    data: JSON.stringify(selected_list),
-                                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
-                                    success: function (res) {
-                                        Swal.fire({
-                                            title: 'Success!',
-                                            text: '삭제 완료',
-                                            icon: 'success',
-                                            confirmButtonText: '확인'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                location.reload();
+                                        }
+                                        // console.log(selected_list)
+                                        $.ajax({
+                                            url: "{% url 'GetSubDataEdit' %}",
+                                            type: "POST",
+                                            contentType: "application/json",
+                                            data: JSON.stringify(selected_list),
+                                            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                                            success: function (res) {
+                                                Swal.fire({
+                                                    title: 'Success!',
+                                                    text: '삭제 완료',
+                                                    icon: 'success',
+                                                    confirmButtonText: '확인'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        location.reload();
+                                                    }
+                                                });
                                             }
-                                        });
+                                        })
                                     }
                                 })
 
@@ -707,25 +721,40 @@
     }
 
     function protask_trash(protask_id) {
-        $.ajax({
-            url: '{% url "ProTaskEdit" %}',
-            type: 'POST',
-            data: {
-                type: 'del',
-                protask_id: protask_id
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "삭제 하시겠습니까?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            customClass: {
+                confirmButton: 'btn btn-primary me-3',
+                cancelButton: 'btn btn-label-secondary'
             },
-            headers: {"X-CSRFToken": '{{ csrf_token }}'},
-            success: function (res) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: '삭제 완료',
-                    icon: 'success',
-                    confirmButtonText: '확인'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                $.ajax({
+                    url: '{% url "ProTaskEdit" %}',
+                    type: 'POST',
+                    data: {
+                        type: 'del',
+                        protask_id: protask_id
+                    },
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                    success: function (res) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: '삭제 완료',
+                            icon: 'success',
+                            confirmButtonText: '확인'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
                     }
-                });
+                })
             }
         })
     }

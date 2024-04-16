@@ -3,9 +3,24 @@
 <meta charset="UTF-8">
 {% include 'admins/admin_header.html' %}
 <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/bs-stepper/bs-stepper.css' %}"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
 </head>
 <body>
-
+<style>
+#weekly_table, #weekly_table th, #weekly_table td {
+    color: #3b3b3b; /* 원하는 색상 코드로 변경 */
+}
+</style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
 
@@ -37,19 +52,6 @@
                                 <option data-select2-id="2" value=""></option>
                             </select>
                         </div>
-                        <div class="col-md-3 mb-4">
-                            <select id="employee_select"
-                                    class="select2 form-select form-select-lg select2-hidden-accessible"
-                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                    aria-hidden="true">
-                                <option data-select2-id="2">------직원을 선택해주세요------</option>
-                                {% for obj in employee_list %}
-                                    <option data-select2-id="2" value="{{ obj.id }}">
-                                        {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
                         <div class="col-md-1 mb-4">
                             <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색</button>
                         </div>
@@ -62,9 +64,8 @@
                         <div class="col-12 mb-4">
 
                             <div class="bs-stepper wizard-vertical vertical mt-2">
-                                <div class="col-md-3 bs-stepper-header">
-                                    <div class="mb-3 select2-primary">
-
+                                <div class="col-md-2 bs-stepper-header">
+                                    <div class="mb-5 select2-primary">
                                         <div class="d-flex justify-content-end mt-2">
                                             <button type="button" class="btn btn-outline-dark" id="create_new_step">새로만들기</button>
                                         </div>
@@ -102,76 +103,29 @@
                                             </button>
                                         </div>
                                     </div>
-
-
                                 </div>
+
+
                                 <div class="bs-stepper-content">
-                                    <form onSubmit="return false">
+
                                         <!-- Account Details -->
                                         <div id="account-details-1" class="content">
-                                            <div class="content-header mb-3">
-                                                <h6 class="mb-0">Account Details</h6>
-                                                <small>Enter Your Account Details.</small>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="username-vertical">유저이름</label>
-                                                    <input type="text" id="username-vertical"
-                                                           class="form-control"
-                                                           placeholder="johndoe"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label" for="email-vertical">Email</label>
-                                                    <input
-                                                            type="email"
-                                                            id="email-vertical"
-                                                            class="form-control"
-                                                            placeholder="john.doe@email.com"
-                                                            aria-label="john.doe"/>
-                                                </div>
-                                                <div class="col-sm-6 form-password-toggle">
-                                                    <label class="form-label"
-                                                           for="password-vertical">Password</label>
-                                                    <div class="input-group input-group-merge">
-                                                        <input
-                                                                type="password"
-                                                                id="password-vertical"
-                                                                class="form-control"
-                                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                                aria-describedby="password2-vertical"/>
-                                                        <span class="input-group-text cursor-pointer"
-                                                              id="password2-vertical"
-                                                        ><i class="bx bx-hide"></i
-                                                        ></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 form-password-toggle">
-                                                    <label class="form-label" for="confirm-password-vertical">Confirm
-                                                        Password</label>
-                                                    <div class="input-group input-group-merge">
-                                                        <input
-                                                                type="password"
-                                                                id="confirm-password-vertical"
-                                                                class="form-control"
-                                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                                aria-describedby="confirm-password-vertical2"/>
-                                                        <span class="input-group-text cursor-pointer"
-                                                              id="confirm-password-vertical2"
-                                                        ><i class="bx bx-hide"></i
-                                                        ></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 d-flex justify-content-between">
-                                                    <button class="btn btn-label-secondary btn-prev" disabled>
-                                                        <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                    </button>
-                                                    <button class="btn btn-primary btn-next">
-                                                        <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
-                                                        <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                                    </button>
-                                                </div>
+                                            <div class="card-datatable table-responsive mt-5" style="overflow-x: auto;">
+                                                <table id="weekly_table" class="dt-multilingual table border-top">
+                                                    <thead>
+                                                    <tr style="color: #3b3b3b">
+                                                        <th style="font-weight: bold; text-align: center; width: 6%">번호</th>
+                                                        <th style="font-weight: bold; text-align: center; width: 45%">업무내용</th>
+                                                        <th style="font-weight: bold; width: 11%;">소요기간 및 시간</th>
+                                                        <th style="font-weight: bold; text-align: center; width: 8%;">달성도</th>
+                                                        <th style="font-weight: bold; text-align: center;">이슈</th>
+                                                        <th style="font-weight: bold; text-align: center;">비고</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                         <!-- Personal Info -->
@@ -287,7 +241,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+
                                 </div>
 
 
@@ -319,16 +273,24 @@
 <script src="{% static 'sneat/assets/js/form-wizard-numbered.js' %}"></script>
 <script src="{% static 'sneat/assets/js/form-wizard-validation.js' %}"></script>
 <script>
-$(document).ready(function() {
-    var yearSelect = $('#year_select');
-    var currentYear = new Date().getFullYear();
+    let main_table = null;
 
-    for (var year = currentYear - 10; year <= currentYear + 10; year++) {
-        var isSelected = (year === currentYear) ? 'selected' : '';
-        yearSelect.append(`<option value="${year}" ${isSelected}>${year}</option>`);
-    }
+    $(document).ready(function() {
+        var yearSelect = $('#year_select');
+        var currentYear = new Date().getFullYear();
 
-    yearSelect.select2();
-});
+        for (var year = currentYear - 10; year <= currentYear + 10; year++) {
+            var isSelected = (year === currentYear) ? 'selected' : '';
+            yearSelect.append(`<option value="${year}" ${isSelected}>${year}</option>`);
+        }
+
+        yearSelect.select2();
+
+        main_table = new DataTable('#weekly_table', {
+            responsive: true,
+            destroy: true,
+        });
+
+    });
 </script>
 </html>
