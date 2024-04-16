@@ -25,7 +25,7 @@
                 <div class="col-md-6 col-lg-6 mb-3">
                     <div class="card" style="height: 100%">
                         <div class="d-flex justify-content-between">
-                            <strong class="card-header">💬 오늘의 이야기</strong>
+                            <h5 class="card-header">💬 오늘의 이야기</h5>
                             <div class="card-header dropdown">
                                 <button type="button"
                                         class="btn p-0 dropdown-toggle hide-arrow"
@@ -40,9 +40,9 @@
                         </div>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                                <p id="editableQuote">
+                                <h6 id="editableQuote">
                                     {{ today_about.content }}
-                                </p>
+                                </h6>
                                 <footer class="blockquote-footer" style="display:flex; justify-content: end">
                                     <cite title="Source Title" id="editableCite">{{ today_about.title }}</cite>
                                 </footer>
@@ -56,30 +56,30 @@
                 </div>
                 <div class="col-md-6 col-lg-6 mb-3">
                     <div class="card" style="height: 100%;">
-                            <div class="card-body" style="padding: 20px; border-bottom: lightgrey 1px solid;">
-                                <strong style="margin-right: 10px;">⭕ 오늘 연차 : </strong>
+                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">⭕ 오늘 연차 : </span>
                                 {% for event in events %}
                                     {% if event.event_type == "Holiday" %}
-                                        <strong>{{ event.create_by }}</strong>{% if not forloop.last %},{% endif %}
+                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body" style="padding: 20px; border-bottom: lightgrey 1px solid;">
-                                <strong style="margin-right: 10px;">💼 오늘 출장 : </strong>
+                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">💼 오늘 출장 : </span>
                                 {% for event in events %}
                                     {% if event.event_type == "Business" %}
-                                        <strong>{{ event.create_by }}</strong>,
+                                        <span>{{ event.create_by }}</span>,
                                         {% for participant in event.participant_set.all %}
-                                            <strong>{{ participant.cuser }}</strong>{% if not forloop.last %},{% endif %}
+                                            <span>{{ participant.cuser }}</span>{% if not forloop.last %},{% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body" style="padding: 20px;">
-                                <strong style="margin-right: 10px;">🚗 법인차량 사용 : </strong>
+                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🚗 법인차량 사용 : </span>
                                 {% for obj in events %}
                                     {% if obj.vehicle %}
-                                        <strong>{{ obj.vehicle }}({{ obj.create_by }})</strong>{% if not forloop.last %},{% endif %}
+                                        <span>{{ obj.vehicle }}({{ obj.create_by }})</span>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -91,8 +91,8 @@
             <div class="col-12 row " style="padding-left: 25px;">
                 <div class="col-md-6 col-lg-2 mb-3">
                     <div class="card" style="height: 100%;">
-                        <strong class="card-header">📝 나의 결재</strong>
-                        <div class="card-body">
+                        <h5 class="card-header">📝 나의 결재</h5>
+                        <div class="card-body" style="padding-top: 30px;">
                             <blockquote class="blockquote mb-0">
                                 <h6>미결재 문서 : 10건</h6>
                                 <hr>
@@ -103,18 +103,18 @@
                 </div>
                 <div class="col-md-6 col-lg-5 mb-3">
                     <div class="card" style="height: 100%;">
-                        <strong class="card-header">📢 공지사항 최신글</strong>
+                        <h5 class="card-header">📢 공지사항 최신글</h5>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
                                 {% if fixed_notice %}
                                     <a href="{% url 'noticeDetail' fixed_notice.id %}">
-                                        <span style="color: red;">* {{ fixed_notice.title }}</span>
-                                    </a><br/>
+                                        <h6 style="color: red;">* {{ fixed_notice.title }}</h6>
+                                    </a>
                                 {% endif %}
                                 {% for obj in notice %}
                                     <a href="{% url 'noticeDetail' obj.id %}">
-                                        <span style="color: #697a8d">* {{ obj.title }}</span>
-                                    </a><br/>
+                                        <h6 style="color: #697a8d">* {{ obj.title }}</h6>
+                                    </a>
                                 {% endfor %}
                             </blockquote>
                         </div>
@@ -122,17 +122,17 @@
                 </div>
                 <div class="col-md-6 col-lg-5 mb-3">
                     <div class="card" style="height: 100%;">
-                        <strong class="card-header">📢 전사게시판 최신글</strong>
+                        <h5 class="card-header">📢 전사게시판 최신글</h5>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
                                 {% if fixed_board %}
                                     <a href="{% url 'boardDetail' fixed_board.id  %}">
-                                        <span style="color: red">* {{ fixed_board.title }}</span><br/>
+                                        <h6 style="color: red">* {{ fixed_board.title }}</h6>
                                     </a>
                                 {% endif %}
                                 {% for obj in board %}
                                     <a href="{% url 'boardDetail' obj.id  %}">
-                                        <span style="color: #697a8d">* {{ obj.title }}</span><br/>
+                                        <h6 style="color: #697a8d">* {{ obj.title }}</h6>
                                     </a>
                                 {% endfor %}
                             </blockquote>
