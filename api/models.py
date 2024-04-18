@@ -182,7 +182,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     userintro = models.TextField(blank=True, null=True)
     signature_file_path = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='전자서명')
     research_num = models.CharField(max_length=15, null=True, verbose_name='과학기술인번호')
-    place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work', verbose_name='근무지')
+    place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
+                                      verbose_name='근무지')
 
     # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
@@ -421,7 +422,7 @@ class ProTaskSub(Model):
     sub_title = models.CharField(max_length=256, null=False, verbose_name='제목')
     sub_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
     sub_status = models.CharField(max_length=1, default='S', null=False,
-                                   verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
+                                  verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
     due_date = models.DateTimeField(null=True, verbose_name='완료예정일')
     sub_finish_date = models.DateTimeField(null=True, verbose_name='실제완료일')
     difficulty = models.CharField(max_length=1, null=False, default='B', verbose_name='난이도')  # 상:T, 중:M, 하:B
@@ -434,3 +435,71 @@ class ProTaskSub(Model):
                                    verbose_name='최초작성자')  # 최초작성자
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, related_name='protasksubUpdated_by',
                                    verbose_name='최종작성자')  # 최종작성자
+
+
+class Weekly(Model):
+    week_cnt = models.IntegerField(null=False, verbose_name='주차')
+    week_name = models.CharField(max_length=32, null=False, verbose_name='제목')
+    report_flag = models.CharField(max_length=1, default='N', verbose_name='제출여부')  # N:미제출, Y:제출
+    owner = models.ForeignKey('UserMaster', models.CASCADE, null=False, related_name='weekly_owner', verbose_name='담당자')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='생성일')
+
+
+class WeeklyMember(Model):
+    r_date = models.DateField(null=False, verbose_name='작성일')
+    division = models.ForeignKey('CodeMaster', models.CASCADE, null=False, verbose_name='분류', related_name='wm_division')
+    p_name = models.CharField(max_length=64, null=True, verbose_name='프로젝트명')
+    t_name = models.CharField(max_length=64, null=True, verbose_name='태스크명')
+    perform = models.TextField(null=True, verbose_name='실행항목')
+    outcomde = models.CharField(max_length=32, null=True, verbose_name='결과항목')  # 선정대기중/개발중 등
+    w_status = models.CharField(max_length=32, null=True, verbose_name='진행상태')  # 대기, 보류, 진행, 완료 등
+    w_start = models.DateField(null=False, verbose_name='시작일')
+    w_close = models.DateField(null=False, verbose_name='종료일')
+    required_date = models.IntegerField(null=False, verbose_name='소요일')
+    w_note = models.TextField(null=True, verbose_name='참고사항')
+    charge = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='담당PM', related_name='wm_charge')
+    weekly_no = models.ForeignKey('Weekly', models.CASCADE, null=False, verbose_name='주차', related_name='wm_weekly')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='wm_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='wm_updatedby')  # 최종작성자
+
+
+class WeeklyMaster(Model):
+    p_working = models.CharField(max_length=256, null=True, verbose_name='사업진행중')
+    p_finish = models.CharField(max_length=256, null=True, verbose_name='사업완료')
+    p_stay = models.CharField(max_length=256, null=True, verbose_name='사업대기')
+    p_fail = models.CharField(max_length=256, null=True, verbose_name='사업실패')
+    p_etc = models.CharField(max_length=256, null=True, verbose_name='기타')
+    weekly_no = models.ForeignKey('Weekly', models.CASCADE, null=False, verbose_name='주차', related_name='weeklym_weekly')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='weeklym_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='weeklym_updatedby')  # 최종작성자
+
+
+class WeeklySub(Model):
+    r_date = models.DateField(null=False, verbose_name='작성일')
+    r_man = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='보고하는 사람', related_name='ws_rman')
+    p_name = models.CharField(max_length=64, null=True, verbose_name='프로젝트명')
+    t_name = models.CharField(max_length=64, null=True, verbose_name='태스크명')
+    perform = models.TextField(null=True, verbose_name='실행항목')
+    outcomde = models.CharField(max_length=32, null=True, verbose_name='결과항목')  # 선정대기중/개발중 등
+    w_status = models.CharField(max_length=32, null=True, verbose_name='진행상태')  # 대기, 보류, 진행, 완료 등
+    w_start = models.DateField(null=False, verbose_name='시작일')
+    w_close = models.DateField(null=False, verbose_name='종료일')
+    required_date = models.IntegerField(null=False, verbose_name='소요일')
+    w_note = models.TextField(null=True, verbose_name='참고사항')
+    charge = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='담당PM', related_name='ws_charge')
+    weekly = models.ForeignKey('WeeklyMaster', models.CASCADE, null=False, verbose_name='상위', related_name='ws_weekly')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='ws_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='ws_updatedby')  # 최종작성자
+
+
+
+
