@@ -184,8 +184,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     research_num = models.CharField(max_length=15, null=True, verbose_name='과학기술인번호')
     place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
                                       verbose_name='근무지')
+    report_auth = models.CharField(max_length=1, null=True, verbose_name='주간업무보고권한설정') #M : 피보고자(팀장), E: 보고자(팀원), C: CEO
 
-    # snd_auth = models.CharField(default='00', max_length=128, verbose_name='2차인증')  # 스마트름뱅이 요청
 
     def __str__(self):
         return self.username
