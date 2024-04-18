@@ -1,0 +1,38 @@
+{% load static %}
+<!-- Modal -->
+<form id="pe_report_form">
+    {% csrf_token %}
+    <div class="modal fade" id="pe_report_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">주간보고 팝업</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="detail_task_result" class="form-label">* 담당 PM</label>
+                        <select class="form-control" id="task_status" name="task_status">
+                            <option value="">PM 리스트</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="approval_btn">확인</button>
+                    <button type="submit" class="btn btn-primary" style="display: none" id="approval_edit_btn">수정</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+

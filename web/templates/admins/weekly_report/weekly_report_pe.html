@@ -178,6 +178,7 @@
                 </div>
                 <!-- Content wrapper -->
                 {% include "admins/weekly_report/weekly_report_add_modal.html" %}
+                {% include "admins/weekly_report/pe_report_modal.html" %}
 
             </div>
         </div>
@@ -251,7 +252,7 @@
                                 className: 'btn btn-label-secondary',
                                 action: function (e, dt, node, config) {
                                     // 주간보고 버튼 클릭 시 작업
-                                    alert('주간보고 버튼 클릭!');
+                                    $("#pe_report_modal").modal('show')
                                 }
                             }
                         ],

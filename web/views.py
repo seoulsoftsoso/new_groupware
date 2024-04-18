@@ -346,12 +346,12 @@ def weekly_report_main_page(request):
         'employee_list': employee_list['result']
     }
 
-    return render(request, 'admins/weekly_report/weekly_report_main.html', context)
+    return render(request, 'admins/weekly_report/weekly_report_pe.html', context)
 
 
 def weekly_report_mgmt_page(request):
     context = {}
-    return render(request, 'admins/weekly_report/weekly_report_mgmt.html', context)
+    return render(request, 'admins/weekly_report/weekly_report_pm.html', context)
 
 
 def holiday_info_page(request):

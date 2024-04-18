@@ -40,7 +40,47 @@
                         <input type="text" class="form-control" id="work_content" placeholder="업무내용을 입력해주세요." required>
                     </div>
 
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="detail_task_result" class="form-label">* 세부태스크 / 결과항목</label>
+                        <input type="text" class="form-control" id="detail_task_result" placeholder="결과내용을 입력해주세요." required>
+                    </div>
 
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="detail_task_result" class="form-label">* 진행상태</label>
+                        <select class="form-control" id="task_status" name="task_status">
+                            <option value="ing">진행</option>
+                            <option value="stop">중지</option>
+                            <option value="holding">보류</option>
+                            <option value="success">완료</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="task_start_date" class="form-label">* 시작일</label>
+                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="task_start_date" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="task_end_date" class="form-label">* 종료일</label>
+                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="task_end_date" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="detail_task_result" class="form-label">* 소요일</label>
+                        <input type="number" class="form-control" id="detail_task_result" placeholder="소요일을 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="notied_point" class="form-label">* 참고사항</label>
+                        <input type="number" class="form-control" id="notied_point" placeholder="참고사항을 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="detail_task_result" class="form-label">* 담당 PM</label>
+                        <select class="form-control" id="task_status" name="task_status">
+                            <option value="">PM 리스트</option>
+                        </select>
+                    </div>
 
                 </div>
 
@@ -57,7 +97,7 @@
 </form>
 <script>
     $(function () {
-        $("#write_day").flatpickr({
+        $("#write_day, #task_start_date, #task_end_date").flatpickr({
             dateFormat: 'Y-m-d',
             enableTime: false
         });
