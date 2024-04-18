@@ -368,7 +368,7 @@
                     columnDefs: [],
                     createdRow: function (row, data, dataIndex) {
                         if (data.fixed_flag === true) {
-                            $(row).find('td').css('color', 'red');
+                            $(row).find('td').css('color', '#EE0000');
                         }
                     }
                 });
@@ -380,43 +380,6 @@
             }
         });
     }
-
-
-
-
-        {#$(document).ready(function () {#}
-        {#    var table = $('#boardTable').DataTable({#}
-        {#        "processing": true,#}
-        {#        "serverSide": true,#}
-        {#        "ajax": {#}
-        {#            "url": "/admins/board/data/", // 데이터를 불러올 서버의 URL을 지정합니다. 필요에 따라 수정해주세요.#}
-        {#            "type": "GET",#}
-        {#            "data": function (d) {#}
-        {#                // 필요한 경우, 여기에 추가 데이터를 전송할 수 있습니다.#}
-        {#            }#}
-        {#        },#}
-        {#        "columns": [#}
-        {#            {"data": "index"}, // 순번, 서버에서 계산된 값을 사용하거나 클라이언트 측에서 처리#}
-        {#            {"data": "title"},#}
-        {#            {"data": "created_by"},#}
-        {#            {#}
-        {#                "data": "updated_at", "render": function (data, type, row) {#}
-        {#                    // 날짜 형식을 변환합니다. 예시로만 제공되며, 실제 프로젝트에 맞게 조정해주세요.#}
-        {#                    return moment(data).format('YYYY-MM-DD HH:mm:ss');#}
-        {#                }#}
-        {#            },#}
-        {#            {"data": "click_cnt"},#}
-        {#            {"data": "reply_count"}#}
-        {#        ]#}
-        {#    });#}
-        {##}
-        {#    // 이벤트 리스너를 사용하여 행 클릭 시의 동작을 정의할 수 있습니다.#}
-        {#    $('#boardTable tbody').on('click', 'tr', function () {#}
-        {#        var data = table.row(this).data();#}
-        {#        window.location.href = `board/detail/${data.id}`;#}
-        {#    });#}
-        {##}
-        {#})#}
 
 
 

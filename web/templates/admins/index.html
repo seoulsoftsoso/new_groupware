@@ -108,7 +108,7 @@
                             <blockquote class="blockquote mb-0">
                                 {% if fixed_notice %}
                                     <a href="{% url 'noticeDetail' fixed_notice.id %}">
-                                        <h6 style="color: red;">* {{ fixed_notice.title }}</h6>
+                                        <h6 style="color: #EE0000;">* {{ fixed_notice.title }}</h6>
                                     </a>
                                 {% endif %}
                                 {% for obj in notice %}
@@ -127,7 +127,7 @@
                             <blockquote class="blockquote mb-0">
                                 {% if fixed_board %}
                                     <a href="{% url 'boardDetail' fixed_board.id  %}">
-                                        <h6 style="color: red">* {{ fixed_board.title }}</h6>
+                                        <h6 style="color: #EE0000">* {{ fixed_board.title }}</h6>
                                     </a>
                                 {% endif %}
                                 {% for obj in board %}
@@ -154,7 +154,7 @@
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                       <div class="d-grid">
                         <button
-                          class="btn btn-outline-primary"
+                          class="btn btn-outline-primary btn-toggle-sidebar"
                           style="width: 255px; margin-left: -5px;"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#addEventSidebar"
