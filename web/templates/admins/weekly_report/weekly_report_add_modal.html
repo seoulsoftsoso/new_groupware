@@ -1,0 +1,60 @@
+{% load static %}
+<!-- Modal -->
+<form id="weekly_report_add_form">
+    {% csrf_token %}
+    <div class="modal fade" id="weekly_report_add_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">주간업무보고 등록</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="write_day" class="form-label">* 작성일</label>
+                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="write_day" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="work_category" class="form-label">* 분류</label>
+                        <input type="text" class="form-control" id="work_category" placeholder="카테고리를 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                       <label for="projectlist" class="form-label">* 프로젝트</label>
+                       <input type="text" class="form-control" id="projectlist" placeholder="프로젝트를 입력해주세요." required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="report_task" class="form-label">* TASK</label>
+                        <input type="text" class="form-control" id="report_task" placeholder="TASK를 입력해주세요." required>
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="approval_btn">확인</button>
+                    <button type="submit" class="btn btn-primary" style="display: none" id="approval_edit_btn">수정</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        $("#write_day").flatpickr({
+            dateFormat: 'Y-m-d',
+            enableTime: false
+        });
+    });
+</script>
