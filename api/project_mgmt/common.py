@@ -266,6 +266,7 @@ class getSubData(View):
     def get(self, request, *args, **kwargs):
 
         taskId = request.GET.get('taskid')
+        print('taskId', taskId)
         tasksub = ProTaskSub.objects.filter(task_parent=taskId, delete_flag='N').values(
             'id', 'sub_etc', 'sub_content', 'sub_title', 'sub_status', 'due_date', 'issue'
         ).order_by('-id')

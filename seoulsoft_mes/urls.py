@@ -54,6 +54,7 @@ from api.holiday.views import *
 from api.administrator.approval_views import *
 from api.administrator.pqy_question_views import *
 from api.administrator.user_setting_views import *
+from api.weekly_report.views import *
 
 from web.views import *
 
@@ -194,6 +195,7 @@ urlpatterns = [
                   # 주간업무보고
                   path('admins/weekly_report_main', weekly_report_main_page, name="weeklyReportMain"),
                   path('admins/weekly_report_mgmt', weekly_report_mgmt_page, name="weeklyReportMgmt"),
+                  path('admins/all_proejct_info', AllProjectInfo.as_view(), name="AllProjectInfo"),
 
 
                   # 휴가관리

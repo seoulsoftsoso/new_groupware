@@ -59,7 +59,7 @@
                     <div class="alert alert-outline-primary alert-dismissible" role="alert">
 
                         <select class="form-select" id="projectSelect" style="width: 25%">
-                            <option>--프로젝트를 선택해주세요--</option>
+                            <option value="" disabled selected>--프로젝트를 선택해주세요--</option>
                             {% for pro in projectlist %}
                                 <option value={{ pro.id }}>[{{ pro.pjcode }}]{{ pro.pjname }}</option>
                             {% endfor %}

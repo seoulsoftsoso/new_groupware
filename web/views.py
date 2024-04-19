@@ -245,14 +245,8 @@ def organization_page(request):
     return render(request, 'admins/organization.html', context)
 
 
-def project_main_page(request):
-    userid = request.user.id
-    userinfo = UserMaster.objects.filter(id=userid).annotate(
-        cnt=Count('member__id', filter=models.Q(member__task_id__isnull=True))
-    ).select_related('department_position').values(
-        'department_position__name', 'cnt', 'id', 'username').first()
-
-    project = ProMaster.objects.filter(delete_flag='N') \
+def get_project_data(userid):
+    project_data = ProMaster.objects.filter(delete_flag='N') \
         .select_related('pj_master', 'pj_type') \
         .values('id', 'pjcode', 'pjname', 'start_date', 'end_date', 'pj_customer', 'pj_note',
                 'pj_master__username', 'pj_type__name') \
@@ -260,11 +254,23 @@ def project_main_page(request):
         .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
 
     formatted_projects = []
-    for project in project:
+    for project in project_data:
         formatted_project = project
         formatted_project['start_date'] = project['start_date'].strftime('%Y-%m-%d')
         formatted_project['end_date'] = project['end_date'].strftime('%Y-%m-%d')
         formatted_projects.append(formatted_project)
+
+    return formatted_projects
+
+
+def project_main_page(request):
+    userid = request.user.id
+    userinfo = UserMaster.objects.filter(id=userid).annotate(
+        cnt=Count('member__id', filter=models.Q(member__task_id__isnull=True))
+    ).select_related('department_position').values(
+        'department_position__name', 'cnt', 'id', 'username').first()
+
+    projects = get_project_data(userid)
 
     userlist = ProMembers.objects.filter(
         task_id__isnull=True, position='PE'
@@ -274,7 +280,7 @@ def project_main_page(request):
         'id', 'code', 'name'
     )
 
-    context = {'project': formatted_projects, 'userinfo': userinfo, 'userlist': userlist, 'project_type_select': project_type_select}
+    context = {'project': projects, 'userinfo': userinfo, 'userlist': userlist, 'project_type_select': project_type_select}
 
     return render(request, 'admins/project_mgmt/project_main.html', context)
 
@@ -307,8 +313,6 @@ def task_mgmt_page(request):
         #project_name = task.first()['pro_parent__pjname']
         project_name = get_object_or_404(ProMaster, pk=pro, delete_flag='N')
 
-        print('pro : ', pro)
-
     userlist = ProMembers.objects.filter(
         promaster_id=pro,
         task_id__isnull=False
@@ -320,30 +324,27 @@ def task_mgmt_page(request):
     )
 
     userid = request.user.id
-    project = ProMaster.objects.filter(delete_flag='N') \
-        .select_related('pj_master', 'pj_type') \
-        .values('id', 'pjcode', 'pjname', 'start_date', 'end_date', 'pj_customer', 'pj_note',
-                'pj_master__username', 'pj_type__name') \
-        .distinct() \
-        .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
+    project = get_project_data(userid)
 
     context = {
         'task': formatted_projects,
         'userlist': userlist,
         'pjname': project_name,
-        'projectlist':project
+        'projectlist': project
     }
-    print(context)
 
     return render(request, 'admins/project_mgmt/task_mgmt.html', context)
 
 
 def weekly_report_main_page(request):
+    userid = request.user.id
     type = request.GET.get('param', None)
     employee_list = get_member_info(type)
+    projects = get_project_data(userid)
 
     context = {
-        'employee_list': employee_list['result']
+        'employee_list': employee_list['result'],
+        'projects': projects
     }
 
     return render(request, 'admins/weekly_report/weekly_report_pe.html', context)

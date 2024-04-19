@@ -29,6 +29,10 @@
         max-height: 320px;
         overflow-y: auto;
     }
+
+    .dt-column-order {
+        display: none;
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -102,7 +106,10 @@
                                                 class="select2 form-select form-select-lg select2-hidden-accessible"
                                                 data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
                                                 aria-hidden="true">
-                                            <option data-select2-id="2" value="">--프로젝트를 선택해주세요.--</option>
+                                            <option data-select2-id="2" value="" disabled selected>--프로젝트를 선택해주세요.--</option>
+                                            {% for obj in projects %}
+                                                <option data-select2-id="2" value="{{ obj.id }}">{{ obj.pjname }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="col-md-1 mt-4 me-4">
@@ -115,12 +122,11 @@
                                         <table id="project_table" class="dt-multilingual table border-top">
                                             <thead>
                                             <tr style="font-weight: bold; text-align: center; color: #3b3b3b">
-                                                <th style="width: 7%">선택</th>
+                                                <th style="width: 4%"></th>
                                                 <th style="width: 10%">TASK</th>
                                                 <th style="width: 12%">제목</th>
                                                 <th style="width: 25%;">내용</th>
                                                 <th style="width: 6%;">상태</th>
-                                                <th style="width: 10%;">시작일</th>
                                                 <th style="width: 10%;">종료일</th>
                                                 <th style="width: 10%;">참고사항</th>
                                                 <th style="width: 10%;">기타</th>
@@ -152,15 +158,26 @@
                                         <th style="font-weight: bold; text-align: center; width: 10%;">TASK</th>
                                         <th style="font-weight: bold; text-align: center; width: 16%;">실행항목</th>
                                         <th style="font-weight: bold; text-align: center; width: 6%;">진행상태</th>
-                                        <th style="font-weight: bold; text-align: center; width: 6%;">시작일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 6%;">종료일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">시작일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">종료일</th>
                                         <th style="font-weight: bold; text-align: center; width: 6%;">소요일</th>
                                         <th style="font-weight: bold; text-align: center; width: 16%;">참고사항</th>
                                         <th style="font-weight: bold; text-align: center; width: 7%;">담당PM</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-
+{#                                        <td></td>#}
+{#                                        <td><small>2024-04-19</small></td>#}
+{#                                        <td>개발</td>#}
+{#                                        <td>로봇 MES 프로그램 개발</td>#}
+{#                                        <td>레이아웃 및 디자인</td>#}
+{#                                        <td>메인페이지 레이아웃 및 디자인</td>#}
+{#                                        <td>진행중</td>#}
+{#                                        <td><small>2024-04-15</small></td>#}
+{#                                        <td><small>2024-04-19</small></td>#}
+{#                                        <td>5일</td>#}
+{#                                        <td>모바일 버전 웹 페이지 반응형 웹 추가해야 됨.</td>#}
+{#                                        <td>오영재</td>#}
                                     </tbody>
                                 </table>
                             </div>
@@ -234,6 +251,51 @@
         project_table = new DataTable('#project_table', {
             responsive: true,
             destroy: true,
+            columnDefs: [
+                {
+                    orderable: false,
+                    render: DataTable.render.select(),
+                    targets: 0
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
+
+                        return data;
+                    }
+                }, {
+                    targets: 5,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }
+            ],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            "rowCallback": function (row, data) {
+                $(row).on('click', function () {
+
+
+                });
+            }
         });
 
         weekly_report_table = new DataTable('#weekly_report_table', {
@@ -287,6 +349,47 @@
 
     });
 
+    $("#projectlist").change(function () {
+        var param = $(this).val();
 
+        $.ajax({
+            url:"{% url 'AllProjectInfo' %}",
+            type:"GET",
+            data:{
+                param: param
+            },
+            success: function (res) {
+                console.log('Data before formatting:', res.data);
+                let drawData = formatData(res.data);
+                project_table.rows().remove().draw();
+                project_table.rows.add(drawData).draw();
+            }
+        })
+    })
+
+    function formatData(results) {
+        console.log('여기', results);
+        let formattedResults = [];
+
+        // 각 결과에 대해 반복
+        results.forEach(result => {
+            // 각 sub_task에 대해 반복
+            result.sub_tasks.forEach(sub_task => {
+                formattedResults.push([
+                    null,
+                    result.task_name,
+                    sub_task.sub_title,
+                    sub_task.sub_content,
+                    sub_task.sub_status,
+                    sub_task.sub_due_date,
+                    sub_task.sub_issue,
+                    sub_task.sub_ect,
+                    result.task_id
+                ]);
+            });
+        });
+
+        return formattedResults;
+    }
 </script>
 </html>
