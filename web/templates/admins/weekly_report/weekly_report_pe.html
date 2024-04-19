@@ -35,7 +35,7 @@
 
         {% include 'admins/index_sidemenu.html' %}
 
-        <div class="layout-page" style="">
+        <div class="layout-page" id="layout_page">
             {% include 'admins/index_header.html' %}
 
             <!-- Content wrapper -->
@@ -47,8 +47,7 @@
                     <div class="mb-3">
                         <div class="row justify-content-between align-items-center">
                             <div class="col-auto mt-4">
-                                <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i
-                                        class='bx bx-reflect-vertical'></i>확대/축소
+                                <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i class='bx bx-search'></i>확대/축소
                                 </button>
                             </div>
                             <div class="col-auto">
@@ -137,7 +136,7 @@
                         </div>
                     </div>
 
-                    <div class="container-fluid flex-grow-1 container-p-y mt-4">
+                    <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
                         <div class="card">
                             <div class="card-body">
                                 <h4>3월 4주차 주간업무보고</h4>
@@ -146,19 +145,18 @@
                                 <table id="weekly_report_table" class="dt-multilingual table border-top">
                                     <thead>
                                     <tr style="color: #3b3b3b">
-                                        <th style="font-weight: bold; text-align: center; width: 6%">선택</th>
+                                        <th></th>
                                         <th style="font-weight: bold; text-align: center; width: 8%">작성일</th>
                                         <th style="font-weight: bold; text-align: center; width: 8%">분류</th>
                                         <th style="font-weight: bold; width: 10%;">프로젝트</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">TASK</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">실행항목</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">세부TASK/결과항목</th>
+                                        <th style="font-weight: bold; text-align: center; width: 10%;">TASK</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">실행항목</th>
                                         <th style="font-weight: bold; text-align: center; width: 6%;">진행상태</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">시작일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">종료일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%;">소요일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 10%;">참고사항</th>
-                                        <th style="font-weight: bold; text-align: center; width: 10%;">담당PM</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">시작일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">종료일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">소요일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">참고사항</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">담당PM</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -191,16 +189,35 @@
     let weekly_report_table = null;
 
     $(document).ready(function () {
+        // 확대, 축소 기능
         $("#toggleButton").click(function () {
+            $("#layout-menu").toggle();
             $(".invoice-actions").toggle();
-            var secondDiv = $(".project_table_container");
-            if (secondDiv.hasClass("col-xl-9 col-md-8")) {
-                secondDiv.attr('class', 'col-xl-12 project_table_container');
+            $("#layout-navbar").toggle();
+
+            var project_table_div = $(".project_table_container");
+            if (project_table_div.hasClass("col-xl-9") || project_table_div.hasClass("col-md-8")) {
+                project_table_div.removeClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4').addClass('col-xl-12');
             } else {
-                secondDiv.attr('class', 'col-xl-9 col-md-8 col-12 mb-md-0 mb-4 project_table_container');
+                project_table_div.removeClass('col-xl-12').addClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4');
+            }
+
+            var layout_page = $("#layout_page");
+            if (layout_page.hasClass("layout-page")) {
+                layout_page.removeClass("layout-page").addClass("layout-container");
+            } else {
+                layout_page.removeClass("layout-container").addClass("layout-page");
+            }
+
+            var weekly_table = $("#weekly_table_container");
+            if (weekly_table.hasClass("container-fluid")) {
+                weekly_table.removeClass('container-fluid flex-grow-1 container-p-y').addClass('col-xl-12');
+            } else {
+                weekly_table.removeClass('col-xl-12').addClass('container-fluid flex-grow-1 container-p-y');
             }
         });
 
+        // 필터 year 생성
         var yearSelect = $('#year_select');
         var currentYear = new Date().getFullYear();
 
@@ -212,58 +229,62 @@
         yearSelect.select2();
         $('#projectlist').select2();
 
-        $(document).ready(function () {
-            project_table = new DataTable('#project_table', {
-                responsive: true,
-                destroy: true,
-            });
 
-            weekly_report_table = new DataTable('#weekly_report_table', {
-                responsive: true,
-                destroy: true,
-                layout: {
-                    topStart: {
-                        buttons: [
-                            {
-                                text: '등록',
-                                className: 'btn btn-label-secondary',
-                                action: function (e, dt, node, config) {
-                                    $("#weekly_report_add_modal").modal('show')
-                                }
-                            },
-                            {
-                                text: '수정',
-                                className: 'btn btn-label-secondary',
-                                action: function (e, dt, node, config) {
-                                    // 수정 버튼 클릭 시 작업
-                                    alert('수정 버튼 클릭!');
-                                }
-                            },
-                            {
-                                text: '삭제',
-                                className: 'btn btn-label-secondary',
-                                action: function (e, dt, node, config) {
-                                    // 삭제 버튼 클릭 시 작업
-                                    alert('삭제 버튼 클릭!');
-                                }
-                            },
-                            {
-                                text: '주간보고',
-                                className: 'btn btn-label-secondary',
-                                action: function (e, dt, node, config) {
-                                    // 주간보고 버튼 클릭 시 작업
-                                    $("#pe_report_modal").modal('show')
-                                }
-                            }
-                        ],
-                    }
-                }
-
-
-
-
-            });
+        // DataTables
+        project_table = new DataTable('#project_table', {
+            responsive: true,
+            destroy: true,
         });
+
+        weekly_report_table = new DataTable('#weekly_report_table', {
+            responsive: true,
+            destroy: true,
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: '등록',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                $("#weekly_report_add_modal").modal('show')
+                            }
+                        },
+                        {
+                            text: '수정',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                // 수정 버튼 클릭 시 작업
+                                alert('수정 버튼 클릭!');
+                            }
+                        },
+                        {
+                            text: '삭제',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                // 삭제 버튼 클릭 시 작업
+                                alert('삭제 버튼 클릭!');
+                            }
+                        },
+                        {
+                            text: '주간보고',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                // 주간보고 버튼 클릭 시 작업
+                                $("#pe_report_modal").modal('show')
+                            }
+                        }
+                    ],
+                }
+            },
+            columnDefs: [{
+                orderable: false,
+                render: DataTable.render.select(),
+                targets: 0
+            }]
+
+
+        });
+
     });
 
 
