@@ -36,21 +36,21 @@ def last_attendance(request):
                 if datetime.now().time() < init_time:  # 오전 6시 이전
                     last_attendance.offworkTime = datetime.now().replace(second=0, microsecond=0)
                     CalculationDayAttendance(last_attendance)
-                    cal_workTime_check(last_attendance)
+                    # cal_workTime_check(last_attendance)
                     last_attendance.save()
                 else:
                     last_attendance.is_offwork = True
                     t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
                     last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
                     CalculationDayAttendance(last_attendance)
-                    cal_workTime_check(last_attendance)
+                    # cal_workTime_check(last_attendance)
                     last_attendance.save()
             else:
                 last_attendance.is_offwork = True
                 t_time = last_attendance.date.strftime('%Y-%m-%d') + ' 18:30:00'
                 last_attendance.offworkTime = datetime.strptime(t_time, '%Y-%m-%d %H:%M:%S')
                 CalculationDayAttendance(last_attendance)
-                cal_workTime_check(last_attendance)
+                # cal_workTime_check(last_attendance)
                 last_attendance.save()
 
         # 주간 근무 시간 계산 로직
@@ -153,7 +153,7 @@ def check_out(request):
             last_attendance.is_offwork = True
             last_attendance.offWorkCheck = True
             CalculationDayAttendance(last_attendance)
-            cal_workTime_check(last_attendance)
+            # cal_workTime_check(last_attendance)
             last_attendance.save()
 
     return HttpResponse()
@@ -301,7 +301,7 @@ class work_history_search(ListView):
         )
         attendance_queryset = UserMaster.objects.select_related('department_position').prefetch_related(
             event_prefetch, attendance_prefetch, ago_attendance_prefetch
-        ).filter(is_active=True, is_staff=True, is_master=False).order_by('job_position_id', 'id')
+        ).filter(is_active=True, is_staff=True, is_master=False).exclude(job_position=1).order_by('job_position_id', 'id')
 
         # for user in attendance_queryset:
         #     if user.attendance_rec:
