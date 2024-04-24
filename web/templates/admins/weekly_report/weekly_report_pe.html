@@ -33,6 +33,20 @@
     .dt-column-order {
         display: none;
     }
+
+    #weekly_report_table th,
+    #weekly_report_table td {
+        text-align: center;
+    }
+
+    #project_table th,
+    #project_table td {
+        text-align: center;
+    }
+
+    table.dataTable thead > tr > th.dt-orderable-asc, table.dataTable thead > tr > th.dt-orderable-desc {
+        padding-right: 10px;
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -78,9 +92,15 @@
                         <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                             <div class="card">
                                 <div class="card-body weekly_list">
-                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 4주차
-                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
-                                    </button>
+                                    {% for obj in weekly_list %}
+                                        {% if obj.owner == request.user.id %}
+                                            <button class="btn btn-outline-dark d-grid w-100 mb-3" id="{{ obj.id }}" onclick="weeklyBtn_click(
+                                                '{{ obj.id }}', '{{ obj.week_name }}'
+                                            )">{{ obj.week_name }}
+                                                <small class="text-light fw-medium">{{ obj.monday_date|date:'Y-m-d' }} ~ {{ obj.friday_date|date:'Y-m-d' }}</small>
+                                            </button>
+                                        {% endif %}
+                                    {% endfor %}
                                     <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 3주차
                                         <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
                                     </button>
@@ -113,7 +133,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-1 mt-4 me-4">
-                                        <button type="button" class="btn btn-outline-dark" id="">이동</button>
+                                        <button type="button" class="btn btn-outline-dark" onclick="move_weekly_table_btn()">이동</button>
                                     </div>
                                 </div>
                                 <div id="account-details-1" class="content">
@@ -122,7 +142,7 @@
                                         <table id="project_table" class="dt-multilingual table border-top">
                                             <thead>
                                             <tr style="font-weight: bold; text-align: center; color: #3b3b3b">
-                                                <th style="width: 4%"></th>
+                                                <th style=" width: 5%;"><input type="checkbox" id="pro_check_all" style="margin-top: 5px;"></th>
                                                 <th style="width: 10%">TASK</th>
                                                 <th style="width: 12%">제목</th>
                                                 <th style="width: 25%;">내용</th>
@@ -145,13 +165,13 @@
                     <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
                         <div class="card">
                             <div class="card-body">
-                                <h4>3월 4주차 주간업무보고</h4>
+                                <h4 id="week_name_h4"></h4>
                             </div>
                             <div class="card-body card-datatable table-responsive mt-2" style="overflow-x: auto;">
                                 <table id="weekly_report_table" class="dt-multilingual table border-top">
                                     <thead>
                                     <tr style="color: #3b3b3b">
-                                        <th></th>
+                                        <th><input type="checkbox" id="check_all" style="margin-top: 5px;"></th>
                                         <th style="font-weight: bold; text-align: center; width: 8%">작성일</th>
                                         <th style="font-weight: bold; text-align: center; width: 8%">분류</th>
                                         <th style="font-weight: bold; width: 10%;">프로젝트</th>
@@ -166,18 +186,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-{#                                        <td></td>#}
-{#                                        <td><small>2024-04-19</small></td>#}
-{#                                        <td>개발</td>#}
-{#                                        <td>로봇 MES 프로그램 개발</td>#}
-{#                                        <td>레이아웃 및 디자인</td>#}
-{#                                        <td>메인페이지 레이아웃 및 디자인</td>#}
-{#                                        <td>진행중</td>#}
-{#                                        <td><small>2024-04-15</small></td>#}
-{#                                        <td><small>2024-04-19</small></td>#}
-{#                                        <td>5일</td>#}
-{#                                        <td>모바일 버전 웹 페이지 반응형 웹 추가해야 됨.</td>#}
-{#                                        <td>오영재</td>#}
+
                                     </tbody>
                                 </table>
                             </div>
@@ -204,8 +213,13 @@
 <script>
     let project_table = null;
     let weekly_report_table = null;
+    var w_year = today.getFullYear().toString().slice(-2);
+    var w_today = w_year + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    var isWeekSelected = false;
+    let weekSelected_id = null;
 
     $(document).ready(function () {
+
         // 확대, 축소 기능
         $("#toggleButton").click(function () {
             $("#layout-menu").toggle();
@@ -240,14 +254,14 @@
 
         for (var year = currentYear - 10; year <= currentYear + 10; year++) {
             var isSelected = (year === currentYear) ? 'selected' : '';
-            yearSelect.append(`<option value="${year}" ${isSelected}>${year}</option>`);
+            yearSelect.append(`<option value="${year}" ${isSelected}>${year}년</option>`);
         }
         // 초기화를 해줘야 option이 출력 됨.
         yearSelect.select2();
         $('#projectlist').select2();
 
 
-        // DataTables
+        // DataTables (Project, Task 테이블)
         project_table = new DataTable('#project_table', {
             responsive: true,
             destroy: true,
@@ -289,6 +303,9 @@
                 style: 'multi',
                 selector: 'td:first-child'
             },
+            language: {
+                emptyTable: "프로젝트를 선택해주세요."
+            },
             order: [[1, 'asc']],
             "rowCallback": function (row, data) {
                 $(row).on('click', function () {
@@ -298,6 +315,7 @@
             }
         });
 
+        // DataTables (업무 보고 테이블)
         weekly_report_table = new DataTable('#weekly_report_table', {
             responsive: true,
             destroy: true,
@@ -308,46 +326,151 @@
                             text: '등록',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
-                                $("#weekly_report_add_modal").modal('show')
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    $("#weekly_report_add_modal").modal('show')
+                                }
                             }
                         },
                         {
                             text: '수정',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
-                                // 수정 버튼 클릭 시 작업
-                                alert('수정 버튼 클릭!');
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    let subtask_id = dt.row({selected: true}).data()[12];
+                                    weekly_report_edit(subtask_id)
+                                }
                             }
                         },
                         {
                             text: '삭제',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
-                                // 삭제 버튼 클릭 시 작업
-                                alert('삭제 버튼 클릭!');
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    // 삭제 버튼 클릭 시 작업
+                                    alert('삭제 버튼 클릭!');
+                                }
                             }
                         },
                         {
                             text: '주간보고',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
-                                // 주간보고 버튼 클릭 시 작업
-                                $("#pe_report_modal").modal('show')
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    // 주간보고 버튼 클릭 시 작업
+                                    $("#pe_report_modal").modal('show')
+                                }
                             }
                         }
                     ],
                 }
             },
-            columnDefs: [{
-                orderable: false,
-                render: DataTable.render.select(),
-                targets: 0
-            }]
+            columnDefs: [
+                {
+                    orderable: false,
+                    render: DataTable.render.select(),
+                    targets: 0
+                },
+                {
+                    targets: 6,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
 
+                        return data;
+                    }
+                },
+                {
+                    targets: 7,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                },
+                {
+                    targets: 8,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            language: {
+                emptyTable: "왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요."
+            }
 
         });
 
+        weekly_report_table.on('select deselect draw', function () {
+            updateButtonStatus();
+        });
+
+        updateButtonStatus();
+
+        // 전체 선택
+        $('#check_all').on('click', function () {
+            if (this.checked) {
+                weekly_report_table.rows().select();
+            } else {
+                weekly_report_table.rows().deselect();
+            }
+        });
+        // 전체 선택
+        $('#pro_check_all').on('click', function () {
+            if (this.checked) {
+                project_table.rows().select();
+            } else {
+                project_table.rows().deselect();
+            }
+        });
+
+        // 행 체크 해제 시 전체 선택 업데이트
+        weekly_report_table.on('select deselect', function () {
+            var totalRows = weekly_report_table.rows().count();
+            var selectedRows = weekly_report_table.rows({selected: true}).count();
+            $('#check_all').prop('checked', totalRows === selectedRows);
+        });
+        project_table.on('select deselect', function () {
+            var totalRows = project_table.rows().count();
+            var selectedRows = project_table.rows({selected: true}).count();
+            $('#pro_check_all').prop('checked', totalRows === selectedRows);
+        });
+
+
     });
+
+    // 버튼 활성화
+    function updateButtonStatus() {
+        let selectedRows = weekly_report_table.rows({selected: true}).count();
+
+        weekly_report_table.button(0).enable(selectedRows < 1); // 등록
+        weekly_report_table.button(1).enable(selectedRows === 1); // 수정
+        weekly_report_table.button(2).enable(selectedRows > 0); // 삭제
+        weekly_report_table.button(3).enable(selectedRows > 0); // 주간보고
+    }
 
     $("#projectlist").change(function () {
         var param = $(this).val();
@@ -359,7 +482,6 @@
                 param: param
             },
             success: function (res) {
-                console.log('Data before formatting:', res.data);
                 let drawData = formatData(res.data);
                 project_table.rows().remove().draw();
                 project_table.rows.add(drawData).draw();
@@ -367,13 +489,12 @@
         })
     })
 
-    function formatData(results) {
-        console.log('여기', results);
+    function formatData(results) { // project select 후 project_table 랜더링
+        console.log('formatData', results);
         let formattedResults = [];
 
-        // 각 결과에 대해 반복
         results.forEach(result => {
-            // 각 sub_task에 대해 반복
+            // 각 sub_task에 대해 반복 (rowData)
             result.sub_tasks.forEach(sub_task => {
                 formattedResults.push([
                     null,
@@ -384,12 +505,90 @@
                     sub_task.sub_due_date,
                     sub_task.sub_issue,
                     sub_task.sub_ect,
-                    result.task_id
+                    sub_task.sub_task_id,
+                    result.task_id,
+                    result.task_parent,
+                    sub_task.sub_start_date,
+                    sub_task.duration_days,
                 ]);
             });
         });
 
         return formattedResults;
     }
+
+    // 주차 목록 버튼 클릭
+    function weeklyBtn_click(obj_id, obj_week_name) {
+        isWeekSelected = true;
+        weekSelected_id = obj_id
+
+        $("#week_name_h4").html(obj_week_name + ' 업무보고')
+
+        $.ajax({
+            url:"",
+            type:"GET",
+            data:obj_id,
+            success: function (res) {
+
+            }
+        })
+    }
+
+    // 이동 버튼 눌렀을 때
+    function move_weekly_table_btn() {
+        if (!isWeekSelected) {
+            alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+            return false;
+        } else {
+            var selectedData = project_table.rows('.selected').data();
+            var weeklyTableData = weekly_report_table.rows().data(); // weekly_report_table의 모든 행 데이터
+
+            for (var i = 0; i < selectedData.length; i++) {
+                var rowData = selectedData[i];
+                var tasksubId = rowData[8]; // Tasksub_id
+                var isDuplicate = false;
+
+                // 중복 체크
+                for (var j = 0; j < weeklyTableData.length; j++) {
+                    var existingRowData = weeklyTableData[j];
+                    if (tasksubId === existingRowData[12]) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (isDuplicate) {
+                    alert('중복된 데이터입니다.');
+                    return false;
+                }
+
+                console.log('rowData', rowData)
+
+                var newRowData = [
+                    '', // 체크박스
+                    w_today, // 작성일
+                    '', // 분류
+                    rowData[10], // 프로젝트
+                    rowData[1], // TASK
+                    rowData[3], // 실행항목
+                    rowData[4], // 진행상태
+                    rowData[11], // 시작일
+                    rowData[5], // 종료일
+                    rowData[12] + '일', // 소요일
+                    rowData[6], // 참고사항
+                    '', // 담당PM
+                    rowData[8], // Tasksub_id
+                ];
+                console.log('newRowData', newRowData)
+
+                weekly_report_table.row.add(newRowData).draw();
+                updateButtonStatus(); // 버튼 활성화
+            }
+            $('#project_table input[type="checkbox"]').prop('checked', false); // css 체크 해제
+            project_table.rows('.selected').deselect(); // 실제 데이터 체크 해제
+        }
+    }
+
+
 </script>
 </html>

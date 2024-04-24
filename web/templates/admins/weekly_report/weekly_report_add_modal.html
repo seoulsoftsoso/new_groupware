@@ -26,8 +26,13 @@
                     </div>
 
                     <div class="col-md-12 col-12 mb-3">
-                       <label for="projectlist" class="form-label">* 프로젝트</label>
-                       <input type="text" class="form-control" id="projectlist" placeholder="프로젝트를 입력해주세요." required>
+                       <label for="project_name" class="form-label">* 프로젝트</label>
+                        <select class="form-control" id="project_name" name="project_name">
+                            {% for obj in projects %}
+                                <option class="form-control" value="{{ obj.id }}">{{ obj.pjname }}</option>
+                            {% endfor %}
+                        </select>
+                       <!--<input type="text" class="form-control" id="project_name" placeholder="프로젝트를 입력해주세요." required>-->
                     </div>
 
                     <div class="col-md-12 col-12 mb-3">
@@ -43,10 +48,10 @@
                     <div class="col-md-12 col-12 mb-3">
                         <label for="detail_task_result" class="form-label">* 진행 상태</label>
                         <select class="form-control" id="task_status" name="task_status">
-                            <option value="ing">진행</option>
-                            <option value="stop">중지</option>
-                            <option value="holding">보류</option>
-                            <option value="success">완료</option>
+                            <option value="P">진행</option>
+                            <option value="R">중지</option>
+                            <option value="H">보류</option>
+                            <option value="F">완료</option>
                         </select>
                     </div>
 
@@ -62,26 +67,24 @@
 
                     <div class="col-md-12 col-12 mb-3">
                         <label for="detail_task_result" class="form-label">* 소요일</label>
-                        <input type="number" class="form-control" id="detail_task_result" placeholder="소요일을 입력해주세요." required>
+                        <input type="number" class="form-control" id="duration_days" placeholder="소요일을 입력해주세요." required>
                     </div>
 
                     <div class="col-md-12 col-12 mb-3">
                         <label for="notied_point" class="form-label">* 참고 사항</label>
-                        <input type="number" class="form-control" id="notied_point" placeholder="참고사항을 입력해주세요." required>
+                        <input type="text" class="form-control" id="notied_point" placeholder="참고사항을 입력해주세요." required>
                     </div>
 
-                    <div class="col-md-12 col-12 mb-3">
+                    <div class="col-md-12 col-12 mb-3" style="display: none">
                         <label for="detail_task_result" class="form-label">* 담당 PM</label>
-                        <select class="form-control" id="task_status" name="task_status">
-                            <option value="">PM 리스트</option>
-                        </select>
+                        <input class="form-control" id="pm_name" name="pm_name">
                     </div>
 
                 </div>
 
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="approval_btn">확인</button>
+                    <button type="submit" class="btn btn-primary" id="submit_add_btn">확인</button>
                     <button type="submit" class="btn btn-primary" style="display: none" id="approval_edit_btn">수정</button>
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                 </div>
@@ -97,4 +100,42 @@
             enableTime: false
         });
     });
+
+    $("#submit_add_btn").click(function (e) {
+        e.preventDefault();
+
+        var write_day = $('#write_day').val();
+        var work_category = $('#work_category').val();
+        var project_name = $('#project_name').val();
+        var report_task = $('#report_task').val();
+        var work_content = $('#work_content').val();
+        var task_status = $('#task_status option:selected').text();
+        var task_start_date = $('#task_start_date').val();
+        var task_end_date = $('#task_end_date').val();
+        var duration_days = $('#duration_days').val();
+        var notied_point = $('#notied_point').val();
+        var pm_name = $('#pm_name').val('');
+
+        weekly_report_table.row.add([
+            '',
+            write_day,
+            work_category,
+            project_name,
+            report_task,
+            work_content,
+            task_status,
+            task_start_date,
+            task_end_date,
+            duration_days + '일',
+            notied_point,
+            pm_name
+        ]).draw(false);
+
+        $('#weekly_report_add_modal').modal('hide');
+        $('#weekly_report_add_form')[0].reset();
+    });
+
+    function weekly_report_edit(subtask_id) {
+
+    }
 </script>

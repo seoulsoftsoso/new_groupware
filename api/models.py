@@ -423,6 +423,7 @@ class ProTaskSub(Model):
     sub_content = models.CharField(max_length=256, null=False, verbose_name='세부내용')
     sub_status = models.CharField(max_length=1, default='S', null=False,
                                   verbose_name='진행상태')  # 대기:S, 진행:P, 보류:H, 재검토:R, 완료:F
+    sub_start_date = models.DateTimeField(null=True, verbose_name='TaskSub시작일')
     due_date = models.DateTimeField(null=True, verbose_name='완료예정일')
     sub_finish_date = models.DateTimeField(null=True, verbose_name='실제완료일')
     difficulty = models.CharField(max_length=1, null=False, default='B', verbose_name='난이도')  # 상:T, 중:M, 하:B

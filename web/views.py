@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from django.contrib.auth.hashers import make_password
 from django.db import models
-from django.db.models import Count, Q, Case, When, IntegerField, F, Func
+from django.db.models import Count, Q, Case, When, IntegerField, F, Func, CharField
 from django.db.models.functions import TruncDate, Floor
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
-    ProTask, ProMembers
+    ProTask, ProMembers, Weekly
 from api.views import *
 
 
@@ -18,6 +18,16 @@ class DateDiff(Func):
     function = 'DATEDIFF'
     template = "%(function)s(%(expressions)s)"
     output_field = IntegerField()
+
+
+class MondayDate(Func):
+    function = 'DATE_ADD'
+    template = "%(function)s(%(expressions)s, INTERVAL -WEEKDAY(%(expressions)s) DAY)"
+
+
+class FridayDate(Func):
+    function = 'DATE_ADD'
+    template = "%(function)s(%(expressions)s, INTERVAL (4-WEEKDAY(%(expressions)s)) DAY)"
 
 
 def index(request):
@@ -342,9 +352,17 @@ def weekly_report_main_page(request):
     employee_list = get_member_info(type)
     projects = get_project_data(userid)
 
+    weekly_list = Weekly.objects.all().annotate(
+        monday_date=MondayDate('create_at', output_field=CharField()),
+        friday_date=FridayDate('create_at', output_field=CharField())
+    ).values(
+        'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
+    )
+
     context = {
         'employee_list': employee_list['result'],
-        'projects': projects
+        'projects': projects,
+        'weekly_list': weekly_list
     }
 
     return render(request, 'admins/weekly_report/weekly_report_pe.html', context)
