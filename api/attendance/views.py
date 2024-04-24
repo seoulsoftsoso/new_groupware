@@ -335,7 +335,7 @@ class work_history_search(ListView):
         context['yesterday'] = self.yesterday.date()
         context['search_to'] = self.search_to
         context['attendance_queryset'] = context['object_list']
-        context['codemaster'] = CodeMaster.objects.filter(group_id=1)
+        context['codemaster'] = CodeMaster.objects.filter(group_id=1).exclude(code="DCEO")
         context['eventmaster'] = EventMaster.objects.all()
         return context
 
