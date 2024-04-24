@@ -181,28 +181,41 @@
                 </li>
             </ul>
         </li>
-
+        {% if request.user.is_superuser %}
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class='bx bx-task'></i>
                 <div class="text-truncate" style="margin-left: 10px;" data-i18n="주간업무보고">주간업무보고</div>
             </a>
+            {% if request.user.report_auth == 'E' or request.user.is_superuser %}
             <ul class="menu-sub">
                 <li class="menu-item">
                     <a href="{% url 'weeklyReportMain' %}" class="menu-link">
-                        <div class="text-truncate" data-i18n="업무보고">업무보고</div>
+                        <div class="text-truncate" data-i18n="업무보고 (PE)">업무보고 (PE)</div>
                     </a>
                 </li>
             </ul>
+            {% endif %}
+            {% if request.user.report_auth == 'M' or request.user.is_superuser %}
             <ul class="menu-sub">
                 <li class="menu-item">
                     <a href="{% url 'weeklyReportMgmt' %}" class="menu-link">
-                        <div class="text-truncate" data-i18n="업무보고(관리자)">업무보고(관리자)</div>
+                        <div class="text-truncate" data-i18n="업무보고 (PM)">업무보고 (PM)</div>
                     </a>
                 </li>
             </ul>
+            {% endif %}
+            {% if request.user.is_superuser %}
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <div class="text-truncate" data-i18n="업무보고 (CEO)">업무보고 (CEO)</div>
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
         </li>
-
+        {% endif %}
         <li class="menu-item">
             <a href="{% url 'calendarPage' %}" class="menu-link normal-menu">
                 <i class='bx bx-calendar'></i>
