@@ -359,10 +359,13 @@ def weekly_report_main_page(request):
         'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
     )
 
+    pro_type = CodeMaster.objects.filter(group__code="PROTYPE")
+
     context = {
         'employee_list': employee_list['result'],
         'projects': projects,
-        'weekly_list': weekly_list
+        'weekly_list': weekly_list,
+        'pro_type': pro_type
     }
 
     return render(request, 'admins/weekly_report/weekly_report_pe.html', context)

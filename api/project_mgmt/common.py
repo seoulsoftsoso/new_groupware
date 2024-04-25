@@ -154,9 +154,7 @@ class ProMemberListGet(View):
     def get(self, request, *args, **kwargs):
         pro_type = request.GET.get('pro_type')
         pro_id = request.GET.get('pro_id')
-        print(pro_id)
         promaster_id = request.GET.get('promaster_id')
-        print(promaster_id)
 
         if pro_type == 'pt_get':
             result = ProMembers.objects.filter(promaster_id=promaster_id, task_id=pro_id)
@@ -266,7 +264,6 @@ class getSubData(View):
     def get(self, request, *args, **kwargs):
 
         taskId = request.GET.get('taskid')
-        print('taskId', taskId)
         tasksub = ProTaskSub.objects.filter(task_parent=taskId, delete_flag='N').values(
             'id', 'sub_etc', 'sub_content', 'sub_title', 'sub_status', 'due_date', 'issue'
         ).order_by('-id')

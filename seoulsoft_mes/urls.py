@@ -196,6 +196,7 @@ urlpatterns = [
                   path('admins/weekly_report_main', weekly_report_main_page, name="weeklyReportMain"),
                   path('admins/weekly_report_mgmt', weekly_report_mgmt_page, name="weeklyReportMgmt"),
                   path('admins/all_proejct_info', AllProjectInfo.as_view(), name="AllProjectInfo"),
+                  path('admins/weekly_tasksub_add', WeeklyTaskSubView.as_view(), name="WeeklyTaskSubView"),
 
 
                   # 휴가관리

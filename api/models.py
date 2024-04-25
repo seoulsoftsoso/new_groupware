@@ -458,7 +458,7 @@ class WeeklyMember(Model):
     w_close = models.DateField(null=False, verbose_name='종료일')
     required_date = models.IntegerField(null=False, verbose_name='소요일')
     w_note = models.TextField(null=True, verbose_name='참고사항')
-    charge = models.ForeignKey('UserMaster', models.CASCADE, null=False, verbose_name='담당PM', related_name='wm_charge')
+    charge = models.ForeignKey('UserMaster', models.CASCADE, null=True, verbose_name='담당PM', related_name='wm_charge')
     weekly_no = models.ForeignKey('Weekly', models.CASCADE, null=False, verbose_name='주차', related_name='wm_weekly')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')

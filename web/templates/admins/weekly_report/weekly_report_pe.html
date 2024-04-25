@@ -101,18 +101,18 @@
                                             </button>
                                         {% endif %}
                                     {% endfor %}
-                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 3주차
-                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
-                                    </button>
-                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 2주차
-                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
-                                    </button>
-                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 1주차
-                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
-                                    </button>
-                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">2월 4주차
-                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>
-                                    </button>
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 3주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 2주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 1주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">2월 4주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
                                 </div>
                             </div>
                         </div>
@@ -338,12 +338,16 @@
                             text: '수정',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
+                                $("#submit_edit_btn").show()
+                                $("#submit_add_btn").hide()
+
                                 if (!isWeekSelected) {
                                     alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
                                     return false;
                                 } else {
-                                    let subtask_id = dt.row({selected: true}).data()[12];
-                                    weekly_report_edit(subtask_id)
+                                    let subtask_data = dt.row({selected: true}).data();
+                                    weekly_report_edit_modal(subtask_data)
+
                                 }
                             }
                         },
@@ -517,6 +521,33 @@
         return formattedResults;
     }
 
+    function week_formatData(results) {
+        let formattedResults = [];
+
+        results.forEach(result => {
+            let row = [
+                '',
+                result.r_date,
+                result.division_name,
+                result.p_name,
+                result.t_name,
+                result.perform,
+                result.w_status,
+                result.w_start,
+                result.w_close,
+                result.required_date + '일',
+                result.w_note,
+                result.charge,
+                result.id,
+                result.division
+            ];
+
+            formattedResults.push(row)
+        })
+
+        return formattedResults;
+    }
+
     // 주차 목록 버튼 클릭
     function weeklyBtn_click(obj_id, obj_week_name) {
         isWeekSelected = true;
@@ -525,10 +556,16 @@
         $("#week_name_h4").html(obj_week_name + ' 업무보고')
 
         $.ajax({
-            url:"",
+            url:"{% url 'WeeklyTaskSubView' %}",
             type:"GET",
-            data:obj_id,
+            data:{
+                week_id: obj_id
+            },
             success: function (res) {
+                console.log('res', res.data )
+                let drawData = week_formatData(res.data);
+                weekly_report_table.rows().remove().draw();
+                weekly_report_table.rows.add(drawData).draw();
 
             }
         })
@@ -586,9 +623,28 @@
             }
             $('#project_table input[type="checkbox"]').prop('checked', false); // css 체크 해제
             project_table.rows('.selected').deselect(); // 실제 데이터 체크 해제
+
         }
     }
 
+    // DataTable 랜더링
+    function darwData(weekSelected_id) {
+        isWeekSelected = true;
 
+        $.ajax({
+            url: "{% url 'WeeklyTaskSubView' %}",
+            type: "GET",
+            data: {
+                week_id: weekSelected_id
+            },
+            success: function (res) {
+                console.log('res', res.data)
+                let drawData = week_formatData(res.data);
+                weekly_report_table.rows().remove().draw();
+                weekly_report_table.rows.add(drawData).draw();
+
+            }
+        })
+    }
 </script>
 </html>
