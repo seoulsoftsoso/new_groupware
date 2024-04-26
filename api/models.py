@@ -448,7 +448,7 @@ class Weekly(Model):
 
 class WeeklyMember(Model):
     r_date = models.DateField(null=False, verbose_name='작성일')
-    division = models.ForeignKey('CodeMaster', models.CASCADE, null=False, verbose_name='분류', related_name='wm_division')
+    division = models.ForeignKey('CodeMaster', models.CASCADE, null=True, verbose_name='분류', related_name='wm_division')
     p_name = models.CharField(max_length=64, null=True, verbose_name='프로젝트명')
     t_name = models.CharField(max_length=64, null=True, verbose_name='태스크명')
     perform = models.TextField(null=True, verbose_name='실행항목')
