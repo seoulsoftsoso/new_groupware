@@ -63,7 +63,7 @@ class AllProjectInfo(View):
         return JsonResponse({'data': result})
 
 
-class WeeklyTaskSubView(View):
+class WeeklyTaskSubView_PE(View):
     def get(self, request, *args, **kwargs):
         week_id = request.GET.get('week_id')
         result = WeeklyMember.objects.filter(weekly_no_id=week_id, delete_flag='N').annotate(
@@ -184,3 +184,16 @@ def do_report_pe(request):
     WeeklyMember.objects.filter(id__in=task_ids).update(charge_id=pm_id)
 
     return JsonResponse({"success": True})
+
+
+class WeeklyTaskSubView_PM(View):
+    def get(self, request, *args, **kwargs):
+        week_id = request.GET.get('week_id')
+        result = WeeklyMember.objects.filter(weekly_no_id=week_id, delete_flag='N').annotate(
+            division_name=F('division__name')
+        ).values(
+            'id', 'r_date', 'p_name', 't_name', 'perform', 'w_status', 'w_start', 'w_close', 'required_date', 'w_note',
+            'create_at', 'created_by', 'charge', 'charge__username', 'division', 'division_name', 'weekly_no'
+        )
+        return JsonResponse({'data': list(result)})
+

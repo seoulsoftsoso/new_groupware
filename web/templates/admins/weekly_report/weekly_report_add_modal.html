@@ -115,7 +115,7 @@
         formdata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
         $.ajax({
-            url: "{% url 'WeeklyTaskSubView' %}",
+            url: "{% url 'WeeklyTaskSubView_PE' %}",
             type: "POST",
             data: formdata,
             success: function (res) {
@@ -166,7 +166,7 @@
             // console.log('수정', formdata)
 
             $.ajax({
-                url: "{% url 'WeeklyTaskSubView' %}",
+                url: "{% url 'WeeklyTaskSubView_PE' %}",
                 type: "POST",
                 data: formdata,
                 headers: {"X-CSRFToken": '{{ csrf_token }}'},

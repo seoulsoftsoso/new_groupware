@@ -692,7 +692,7 @@
         isWeekSelected = true;
 
         $.ajax({
-            url: "{% url 'WeeklyTaskSubView' %}",
+            url: "{% url 'WeeklyTaskSubView_PE' %}",
             type: "GET",
             data: {
                 week_id: weekSelected_id
