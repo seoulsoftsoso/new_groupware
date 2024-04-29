@@ -346,7 +346,7 @@ def task_mgmt_page(request):
     return render(request, 'admins/project_mgmt/task_mgmt.html', context)
 
 
-def weekly_report_main_page(request):
+def weekly_report_main_page(request):  # 주간업무보고 PE
     userid = request.user.id
     type = request.GET.get('param', None)
     projects = get_project_data(userid)
@@ -371,7 +371,26 @@ def weekly_report_main_page(request):
     return render(request, 'admins/weekly_report/weekly_report_pe.html', context)
 
 
-def weekly_report_mgmt_page(request):
+def weekly_report_mgmt_page(request):  # 주간업무보고 PM
+    userid = request.user.id
+    type = request.GET.get('param', None)
+    projects = get_project_data(userid)
+
+    weekly_list = Weekly.objects.all().annotate(
+        monday_date=MondayDate('create_at', output_field=CharField()),
+        friday_date=FridayDate('create_at', output_field=CharField())
+    ).values(
+        'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
+    )
+
+    context = {
+        'projects': projects,
+        'weekly_list': weekly_list,
+    }
+    return render(request, 'admins/weekly_report/weekly_report_pm.html', context)
+
+
+def weekly_report_ceo_page(request):  # 주간업무보고 CEO
     context = {}
     return render(request, 'admins/weekly_report/weekly_report_pm.html', context)
 

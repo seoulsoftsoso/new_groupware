@@ -37,11 +37,13 @@
     #weekly_report_table th,
     #weekly_report_table td {
         text-align: center;
+        color: #5E6D7D;
     }
 
     #project_table th,
     #project_table td {
         text-align: center;
+        color: #5E6D7D;
     }
 
     table.dataTable thead > tr > th.dt-orderable-asc, table.dataTable thead > tr > th.dt-orderable-desc {
@@ -606,21 +608,8 @@
         weekSelected_id = obj_id
 
         $("#week_name_h4").html(obj_week_name + ' 업무보고')
+        darwData(weekSelected_id)
 
-        $.ajax({
-            url:"{% url 'WeeklyTaskSubView' %}",
-            type:"GET",
-            data:{
-                week_id: obj_id
-            },
-            success: function (res) {
-                // console.log('res', res.data )
-                let drawData = week_formatData(res.data);
-                weekly_report_table.rows().remove().draw();
-                weekly_report_table.rows.add(drawData).draw();
-
-            }
-        })
     }
 
     // 이동 버튼 눌렀을 때
@@ -649,7 +638,7 @@
 
                 if (isDuplicate) {
                     alert('중복된 데이터입니다: ' + tasksubId);
-                    continue; // 중복된 데이터는 건너뛰고 다음 데이터 처리
+                    continue;
                 }
 
                 // 서버로 보낼 데이터 배열에 추가
@@ -667,9 +656,6 @@
                     weekly_no: weekSelected_id,
                 });
 
-                // DataTable에 데이터 추가
-                var newRowData = [null, today, '', rowData[10], rowData[1], rowData[3], rowData[4], rowData[11], rowData[5], rowData[12] + '일', rowData[6], '', rowData[8]];
-                weekly_report_table.row.add(newRowData).draw(false);
             }
 
             if (dataToSend.length > 0) {
@@ -684,6 +670,7 @@
                     success: function (response) {
                         console.log('서버로부터의 응답:', response);
                         updateButtonStatus();
+                        darwData(weekSelected_id)
                     },
                     error: function (xhr, status, error) {
                         console.error('데이터 전송 실패:', error);
@@ -696,6 +683,7 @@
             // 선택 해제
             $('#project_table input[type="checkbox"]').prop('checked', false);
             project_table.rows('.selected').deselect();
+
         }
     }
 

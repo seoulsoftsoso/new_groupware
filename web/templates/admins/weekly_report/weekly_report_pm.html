@@ -17,16 +17,45 @@
 </head>
 <body>
 <style>
-#weekly_table, #weekly_table th, #weekly_table td {
-    color: #3b3b3b; /* 원하는 색상 코드로 변경 */
-}
+    #weekly_table, #weekly_table th, #weekly_table td {
+        color: #3b3b3b; /* 원하는 색상 코드로 변경 */
+    }
+
+    .collapsed {
+        display: none;
+    }
+
+    .weekly_list {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .dt-column-order {
+        display: none;
+    }
+
+    #weekly_report_table th,
+    #weekly_report_table td {
+        text-align: center;
+        color: #5E6D7D;
+    }
+
+    #project_table th,
+    #project_table td {
+        text-align: center;
+        color: #5E6D7D;
+    }
+
+    table.dataTable thead > tr > th.dt-orderable-asc, table.dataTable thead > tr > th.dt-orderable-desc {
+        padding-right: 10px;
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
 
         {% include 'admins/index_sidemenu.html' %}
 
-        <div class="layout-page" style="">
+        <div class="layout-page" id="layout_page">
             {% include 'admins/index_header.html' %}
 
             <!-- Content wrapper -->
@@ -35,275 +64,470 @@
 
                 <div class="container-fluid flex-grow-1 container-p-y">
 
-                    <div class="row justify-content-end mt-4">
-                        <div class="col-md-2 mb-4">
-                            <select id="year_select"
-                                    class="select2 form-select form-select-lg select2-hidden-accessible"
-                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                    aria-hidden="true">
-                                <option data-select2-id="2" value=""></option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-4">
-                            <select id="month_select"
-                                    class="select2 form-select form-select-lg select2-hidden-accessible"
-                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                    aria-hidden="true">
-                                <option data-select2-id="2" value=""></option>
-                            </select>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <select id="employee_select"
-                                    class="select2 form-select form-select-lg select2-hidden-accessible"
-                                    data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                    aria-hidden="true">
-                                <option data-select2-id="2">------직원을 선택해주세요------</option>
-                                {% for obj in employee_list %}
-                                    <option data-select2-id="2" value="{{ obj.id }}">
-                                        {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-1 mb-4">
-                            <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색</button>
-                        </div>
-                    </div>
-
-
-                    <!-- Default -->
-                    <div class="row mt-4">
-                        <!-- Vertical Wizard -->
-                        <div class="col-12 mb-4">
-
-                            <div class="bs-stepper wizard-vertical vertical mt-2">
-                                <div class="col-md-2 bs-stepper-header">
-                                    <div class="mb-5 select2-primary">
-                                        <div class="d-flex justify-content-end mt-2">
-                                            <button type="button" class="btn btn-outline-dark" id="create_new_step">새로만들기</button>
-                                        </div>
+                    <div class="mb-3">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-auto mt-4">
+                                <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i class='bx bx-search'></i>확대/축소
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <div class="row">
+                                    <div class="col-auto mt-4">
+                                        <select id="year_select"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option data-select2-id="2" value=""></option>
+                                        </select>
                                     </div>
-
-
-                                    <div id="steps_container">
-                                        <div class="step" data-target="#account-details-1">
-                                            <button type="button" class="step-trigger">
-                                                <span class="bs-stepper-circle">3</span>
-                                                <span class="bs-stepper-label mt-1">
-                                                <span class="bs-stepper-title">3월 4주차</span>
-                                                <span class="bs-stepper-subtitle">2024-03-18 ~ 2024-03-22</span>
-                                            </span>
-                                            </button>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="step" data-target="#personal-info-1">
-                                            <button type="button" class="step-trigger">
-                                                <span class="bs-stepper-circle">2</span>
-                                                <span class="bs-stepper-label mt-1">
-                                                <span class="bs-stepper-title">3월 3주차</span>
-                                                <span class="bs-stepper-subtitle">2024-03-11 ~ 2024-03-15</span>
-                                            </span>
-                                            </button>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="step" data-target="#social-links-1">
-                                            <button type="button" class="step-trigger">
-                                                <span class="bs-stepper-circle">1</span>
-                                                <span class="bs-stepper-label mt-1">
-                                                <span class="bs-stepper-title">3월 2주차</span>
-                                                <span class="bs-stepper-subtitle">2024-03-04 ~ 2024-03-08</span>
-                                            </span>
-                                            </button>
-                                        </div>
+                                    <div class="col-auto mt-4">
+                                        <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색</button>
                                     </div>
                                 </div>
-
-
-                                <div class="bs-stepper-content">
-
-                                        <!-- Account Details -->
-                                        <div id="account-details-1" class="content">
-                                            <div class="card-datatable table-responsive mt-5" style="overflow-x: auto;">
-                                                <table id="weekly_table" class="dt-multilingual table border-top">
-                                                    <thead>
-                                                    <tr style="color: #3b3b3b">
-                                                        <th style="font-weight: bold; text-align: center; width: 6%">번호</th>
-                                                        <th style="font-weight: bold; text-align: center; width: 45%">업무내용</th>
-                                                        <th style="font-weight: bold; width: 11%;">소요기간 및 시간</th>
-                                                        <th style="font-weight: bold; text-align: center; width: 8%;">달성도</th>
-                                                        <th style="font-weight: bold; text-align: center;">이슈</th>
-                                                        <th style="font-weight: bold; text-align: center;">비고</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!-- Personal Info -->
-                                        <div id="personal-info-1" class="content">
-                                            <div class="content-header mb-3">
-                                                <h6 class="mb-0">Personal Info</h6>
-                                                <small>Enter Your Personal Info.</small>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="col-sm-6">
-                                                    <label class="form-label" for="first-name-vertical">First
-                                                        Name</label>
-                                                    <input type="text" id="first-name-vertical"
-                                                           class="form-control"
-                                                           placeholder="John"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label" for="last-name-vertical">Last
-                                                        Name</label>
-                                                    <input type="text" id="last-name-vertical"
-                                                           class="form-control"
-                                                           placeholder="Doe"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="country-vertical">Country</label>
-                                                    <select class="select2" id="country-vertical">
-                                                        <option label=" "></option>
-                                                        <option>UK</option>
-                                                        <option>USA</option>
-                                                        <option>Spain</option>
-                                                        <option>France</option>
-                                                        <option>Italy</option>
-                                                        <option>Australia</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="language-vertical">Language</label>
-                                                    <select
-                                                            class="selectpicker w-auto"
-                                                            id="language-vertical"
-                                                            data-style="btn-transparent"
-                                                            data-icon-base="bx"
-                                                            data-tick-icon="bx-check text-white"
-                                                            multiple>
-                                                        <option>English</option>
-                                                        <option>French</option>
-                                                        <option>Spanish</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12 d-flex justify-content-between">
-                                                    <button class="btn btn-primary btn-prev">
-                                                        <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                    </button>
-                                                    <button class="btn btn-primary btn-next">
-                                                        <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
-                                                        <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Social Links -->
-                                        <div id="social-links-1" class="content">
-                                            <div class="content-header mb-3">
-                                                <h6 class="mb-0">Social Links</h6>
-                                                <small>Enter Your Social Links.</small>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="twitter-vertical">Twitter</label>
-                                                    <input
-                                                            type="text"
-                                                            id="twitter-vertical"
-                                                            class="form-control"
-                                                            placeholder="https://twitter.com/abc"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="facebook-vertical">Facebook</label>
-                                                    <input
-                                                            type="text"
-                                                            id="facebook-vertical"
-                                                            class="form-control"
-                                                            placeholder="https://facebook.com/abc"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="google-vertical">Google+</label>
-                                                    <input
-                                                            type="text"
-                                                            id="google-vertical"
-                                                            class="form-control"
-                                                            placeholder="https://plus.google.com/abc"/>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <label class="form-label"
-                                                           for="linkedin-vertical">LinkedIn</label>
-                                                    <input
-                                                            type="text"
-                                                            id="linkedin-vertical"
-                                                            class="form-control"
-                                                            placeholder="https://linkedin.com/abc"/>
-                                                </div>
-                                                <div class="col-12 d-flex justify-content-between">
-                                                    <button class="btn btn-primary btn-prev">
-                                                        <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                        <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                    </button>
-                                                    <button class="btn btn-success btn-submit">Submit</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                </div>
-
-
                             </div>
                         </div>
-                        <!-- /Vertical Wizard -->
                     </div>
 
 
+                    <div class="row invoice-preview mt-5">
+                        <!-- Invoice -->
+                        <div class="col-xl-3 col-md-4 col-12 invoice-actions">
+                            <div class="card">
+                                <div class="card-body weekly_list">
+                                    {% for obj in weekly_list %}
+                                        {% if obj.owner == request.user.id %}
+                                            <button class="btn btn-outline-dark d-grid w-100 mb-3" id="{{ obj.id }}" onclick="weeklyBtn_click(
+                                                '{{ obj.id }}', '{{ obj.week_name }}'
+                                            )">{{ obj.week_name }}
+                                                <small class="text-light fw-medium">{{ obj.monday_date|date:'Y-m-d' }} ~ {{ obj.friday_date|date:'Y-m-d' }}</small>
+                                            </button>
+                                        {% endif %}
+                                    {% endfor %}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 3주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 2주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 1주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">2월 4주차#}
+{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
+{#                                    </button>#}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4 project_table_container">
+                            <div class="card invoice-preview-card">
+                                <div class="row justify-content-between mt-1">
+                                    <div class="col-md-3 mt-4 ps-4">
+                                        <select id="projectlist"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option data-select2-id="2" value="" disabled selected>--프로젝트를 선택해주세요.--</option>
+                                            {% for obj in projects %}
+                                                <option data-select2-id="2" value="{{ obj.id }}">{{ obj.pjname }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mt-4 me-4">
+                                        <button type="button" class="btn btn-outline-dark" onclick="move_weekly_table_btn()">이동</button>
+                                    </div>
+                                </div>
+                                <div id="account-details-1" class="content">
+                                    <div class="card-body card-datatable table-responsive mt-5"
+                                         style="overflow-x: auto;">
+                                        <table id="project_table" class="dt-multilingual table border-top">
+                                            <thead>
+                                            <tr style="font-weight: bold; text-align: center; color: #3b3b3b">
+                                                <th style=" width: 5%;"><input type="checkbox" id="pro_check_all" style="margin-top: 5px;"></th>
+                                                <th style="width: 10%">TASK</th>
+                                                <th style="width: 12%">제목</th>
+                                                <th style="width: 25%;">내용</th>
+                                                <th style="width: 6%;">상태</th>
+                                                <th style="width: 10%;">종료일</th>
+                                                <th style="width: 10%;">참고사항</th>
+                                                <th style="width: 10%;">기타</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 id="week_name_h4"></h4>
+                            </div>
+                            <div class="card-body card-datatable table-responsive mt-2" style="overflow-x: auto;">
+                                <table id="weekly_report_table" class="dt-multilingual table border-top">
+                                    <thead>
+                                    <tr style="color: #3b3b3b">
+                                        <th><input type="checkbox" id="check_all" style="margin-top: 5px;"></th>
+                                        <th style="font-weight: bold; text-align: center; width: 8%">작성일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 8%">분류</th>
+                                        <th style="font-weight: bold; width: 10%;">프로젝트</th>
+                                        <th style="font-weight: bold; text-align: center; width: 10%;">TASK</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">실행항목</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">진행상태</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">시작일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">종료일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">소요일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">참고사항</th>
+                                        <th style="font-weight: bold; text-align: center; width: 7%;">담당PM</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Content -->
+
+                    <!-- Footer -->
+                    {% include 'admins/index_footer.html' %}
+                    <!-- / Footer -->
+
+                    <div class="content-backdrop fade"></div>
                 </div>
-                <!-- / Content -->
+                <!-- Content wrapper -->
+                {% include "admins/weekly_report/weekly_report_add_modal.html" %}
+                {% include "admins/weekly_report/pe_report_modal.html" %}
 
-                <!-- Footer -->
-                {% include 'admins/index_footer.html' %}
-                <!-- / Footer -->
-
-                <div class="content-backdrop fade"></div>
             </div>
-            <!-- Content wrapper -->
-
-
         </div>
     </div>
 </div>
-
 </body>
 {% include 'admins/admin_footer.html' %}
-<script src="{% static 'sneat/assets/vendor/libs/bs-stepper/bs-stepper.js' %}"></script>
-<script src="{% static 'sneat/assets/js/form-wizard-numbered.js' %}"></script>
-<script src="{% static 'sneat/assets/js/form-wizard-validation.js' %}"></script>
 <script>
-    let main_table = null;
+    let project_table = null;
+    let weekly_report_table = null;
+    var w_year = today.getFullYear().toString().slice(-2);
+    var isWeekSelected = false;
+    let weekSelected_id = null;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
+
+        // 확대, 축소 기능
+        $("#toggleButton").click(function () {
+            $("#layout-menu").toggle();
+            $(".invoice-actions").toggle();
+            $("#layout-navbar").toggle();
+
+            var project_table_div = $(".project_table_container");
+            if (project_table_div.hasClass("col-xl-9") || project_table_div.hasClass("col-md-8")) {
+                project_table_div.removeClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4').addClass('col-xl-12');
+            } else {
+                project_table_div.removeClass('col-xl-12').addClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4');
+            }
+
+            var layout_page = $("#layout_page");
+            if (layout_page.hasClass("layout-page")) {
+                layout_page.removeClass("layout-page").addClass("layout-container");
+            } else {
+                layout_page.removeClass("layout-container").addClass("layout-page");
+            }
+
+            var weekly_table = $("#weekly_table_container");
+            if (weekly_table.hasClass("container-fluid")) {
+                weekly_table.removeClass('container-fluid flex-grow-1 container-p-y').addClass('col-xl-12');
+            } else {
+                weekly_table.removeClass('col-xl-12').addClass('container-fluid flex-grow-1 container-p-y');
+            }
+        });
+
+        // 필터 year 생성
         var yearSelect = $('#year_select');
         var currentYear = new Date().getFullYear();
 
         for (var year = currentYear - 10; year <= currentYear + 10; year++) {
             var isSelected = (year === currentYear) ? 'selected' : '';
-            yearSelect.append(`<option value="${year}" ${isSelected}>${year}</option>`);
+            yearSelect.append(`<option value="${year}" ${isSelected}>${year}년</option>`);
         }
-
+        // 초기화를 해줘야 option이 출력 됨.
         yearSelect.select2();
+        $('#projectlist').select2();
 
-        main_table = new DataTable('#weekly_table', {
+
+        // DataTables (Project, Task 테이블)
+        project_table = new DataTable('#project_table', {
             responsive: true,
             destroy: true,
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 0,
+                    className: 'select-checkbox'
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
+
+                        return data;
+                    }
+                }, {
+                    targets: 5,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }
+            ],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            language: {
+                emptyTable: "프로젝트를 선택해주세요."
+            },
+            order: [[1, 'asc']],
+            "rowCallback": function (row, data) {
+                $(row).on('click', function () {
+
+
+                });
+            }
         });
 
+        // DataTables (업무 보고 테이블)
+        weekly_report_table = new DataTable('#weekly_report_table', {
+            responsive: true,
+            destroy: true,
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: '등록',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    $("#submit_edit_btn").hide()
+                                    $("#submit_add_btn").show()
+                                    $("#weekly_report_add_form").trigger("reset");
+                                    $("#weekly_report_add_modal").modal('show')
+                                }
+                            }
+                        },
+                        {
+                            text: '수정',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                $("#submit_edit_btn").show()
+                                $("#submit_add_btn").hide()
+
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    let subtask_data = dt.row({selected: true}).data();
+                                    weekly_report_edit_modal(subtask_data)
+
+                                }
+                            }
+                        },
+                        {
+                            text: '삭제',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "삭제 하시겠습니까?",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: '확인',
+                                        customClass: {
+                                            confirmButton: 'btn btn-primary me-3',
+                                            cancelButton: 'btn btn-label-secondary'
+                                        },
+                                        buttonsStyling: false
+                                    }).then(function (result) {
+                                        if (result.value) {
+                                            let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                            // console.log(allSelectedRowsData)
+                                            let selected_list = []
+
+                                            // 각 행에 대한 로직 추가
+                                            for (let i = 0; i < allSelectedRowsData.length; i++) {
+
+                                                selected_list.push(allSelectedRowsData[i][12]);
+
+                                            }
+                                            // console.log(selected_list)
+                                            $.ajax({
+                                                url: "{% url 'WeeklyTaskSub_delete' %}",
+                                                type: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify({type: 'D', ids: selected_list}),
+                                                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                                                success: function (res) {
+                                                    Swal.fire({
+                                                        title: 'Success!',
+                                                        text: '삭제 완료',
+                                                        icon: 'success',
+                                                        confirmButtonText: '확인'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            darwData(weekSelected_id)
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            }
+                        },
+                        {
+                            text: '주간보고-CEO',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    //$("#pe_report_modal").modal('show')
+                                    let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                    do_report(allSelectedRowsData)
+                                }
+                            }
+                        }
+                    ],
+                }
+            },
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 0,
+                    className: 'select-checkbox'
+                },
+                {
+                    targets: 1,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                },
+                {
+                    targets: 6,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
+
+                        return data;
+                    }
+                },
+                {
+                    targets: 7,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                },
+                {
+                    targets: 8,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            language: {
+                emptyTable: "왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요."
+            }
+
+        });
+
+        weekly_report_table.on('select deselect draw', function () {
+            updateButtonStatus();
+        });
+
+        updateButtonStatus();
+
+        // 전체 선택
+        $('#check_all').on('click', function () {
+            if (this.checked) {
+                weekly_report_table.rows({page: 'current'}).select();
+            } else {
+                weekly_report_table.rows({page: 'current'}).deselect();
+            }
+        });
+        // 전체 선택
+        $('#pro_check_all').on('click', function () {
+            if (this.checked) {
+                project_table.rows({page: 'current'}).select();
+            } else {
+                project_table.rows({page: 'current'}).deselect();
+            }
+        });
+
+        // 행 체크 해제 시 전체 선택 업데이트
+        weekly_report_table.on('select deselect', function () {
+            var totalRows = weekly_report_table.rows({ page: 'current' }).count();
+            var selectedRows = weekly_report_table.rows({ page: 'current', selected: true }).count();
+            $('#check_all').prop('checked', totalRows === selectedRows);
+        });
+        project_table.on('select deselect', function () {
+            var totalRows = project_table.rows({ page: 'current' }).count();
+            var selectedRows = project_table.rows({ page: 'current', selected: true }).count();
+            $('#pro_check_all').prop('checked', totalRows === selectedRows);
+        });
+
+
     });
+
+    // 버튼 활성화
+    function updateButtonStatus() {
+        let selectedRows = weekly_report_table.rows({selected: true}).count();
+
+        weekly_report_table.button(0).enable(selectedRows < 1); // 등록
+        weekly_report_table.button(1).enable(selectedRows === 1); // 수정
+        weekly_report_table.button(2).enable(selectedRows > 0); // 삭제
+        weekly_report_table.button(3).enable(selectedRows > 0); // 주간보고-CEO
+    }
+
+
 </script>
 </html>

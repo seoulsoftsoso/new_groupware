@@ -177,7 +177,9 @@ def WeeklyTaskSub_delete(request):
 def do_report_pe(request):
     data = json.loads(request.body)
     task_ids = data.get('ids', [])
+    print('task_ids', task_ids)
     pm_id = data.get('pm_id')
+    print('pm_id', pm_id)
 
     WeeklyMember.objects.filter(id__in=task_ids).update(charge_id=pm_id)
 

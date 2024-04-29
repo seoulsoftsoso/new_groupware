@@ -114,18 +114,6 @@
         formdata.push({name: 'weekly_no', value: weekSelected_id})
         formdata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
-        var write_day = today;
-        var work_category = $('#division').val();
-        var project_name = $('#p_name').val();
-        var report_task = $('#t_name').val();
-        var work_content = $('#perform').val();
-        var task_status = $('#w_status').text();
-        var task_start_date = $('#w_start').val();
-        var task_end_date = $('#w_close').val();
-        var duration_days = $('#required_date').val();
-        var notied_point = $('#w_note').val();
-        var pm_name = $('#charge').val();
-
         $.ajax({
             url: "{% url 'WeeklyTaskSubView' %}",
             type: "POST",
