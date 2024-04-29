@@ -154,7 +154,7 @@
     });
 
     function weekly_report_edit_modal(subtask_data) {
-        console.log('subtask_data', subtask_data)
+        // console.log('subtask_data', subtask_data)
         $("#charge_div").hide()
         if(subtask_data[14] !== null){
             $("#charge_div").show()
@@ -188,7 +188,7 @@
             formdata.push({name: 'weekly_no', value: weekSelected_id});
             let subtask_id = subtask_data[12];
             formdata.push({name: 'subtask_id', value: subtask_id});
-            console.log('수정', formdata)
+            // console.log('수정', formdata)
 
             $.ajax({
                 url: "{% url 'WeeklyTaskSubView' %}",

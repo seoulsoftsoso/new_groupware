@@ -44,12 +44,12 @@
         for (let i = 0; i < allSelectedRowsData.length; i++) {
             selected_list.push(allSelectedRowsData[i][12]);
         }
-        console.log(selected_list)
+        // console.log(selected_list)
         $("#pe_report_modal").modal('show')
 
         $("#do_report_btn").click(function (e) {
             let pm_id = $("#pm_select").val()
-            console.log(pm_id)
+            // bconsole.log(pm_id)
             e.preventDefault()
 
             $.ajax({

@@ -79,8 +79,6 @@ class WeeklyTaskSubView(View):
         now = make_aware(datetime.now())
         today_date = now.date()
 
-        print('request', request.POST)
-
         if type == 'A':
             w_member = WeeklyMember.objects.create(
                 r_date=today_date,
@@ -128,7 +126,7 @@ class WeeklyTaskSubView(View):
 class WeeklySubPost(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        print('data', data)
+        # print('data', data)
         data_list = data.get('dataToSend')
 
         for item in data_list:
@@ -159,7 +157,6 @@ def WeeklyTaskSub_delete(request):
 
         try:
             task_id = json.loads(request.body).get('ids')
-            print('task_id', task_id)
 
             for obj_id in task_id:
                 try:

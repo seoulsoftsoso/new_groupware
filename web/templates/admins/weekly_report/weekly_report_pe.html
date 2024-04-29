@@ -544,7 +544,7 @@
     })
 
     function formatData(results) { // project select 후 project_table 랜더링
-        console.log('formatData', results);
+        // console.log('formatData', results);
         let formattedResults = [];
 
         results.forEach(result => {
@@ -614,7 +614,7 @@
                 week_id: obj_id
             },
             success: function (res) {
-                console.log('res', res.data )
+                // console.log('res', res.data )
                 let drawData = week_formatData(res.data);
                 weekly_report_table.rows().remove().draw();
                 weekly_report_table.rows.add(drawData).draw();
@@ -673,7 +673,7 @@
             }
 
             if (dataToSend.length > 0) {
-                console.log('dataToSend', dataToSend)
+                // console.log('dataToSend', dataToSend)
                 $.ajax({
                     url: "{% url 'WeeklySubPost' %}",
                     type: "POST",
@@ -710,7 +710,7 @@
                 week_id: weekSelected_id
             },
             success: function (res) {
-                console.log('res', res.data)
+                // console.log('res', res.data)
                 let drawData = week_formatData(res.data);
                 weekly_report_table.rows().remove().draw();
                 weekly_report_table.rows.add(drawData).draw();
