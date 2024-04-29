@@ -15,10 +15,10 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="col-md-12 col-12 mb-3">
-                        <label for="r_date" class="form-label">* 작성일</label>
-                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="r_date" name="r_date" required>
-                    </div>
+{#                    <div class="col-md-12 col-12 mb-3">#}
+{#                        <label for="r_date" class="form-label">* 작성일</label>#}
+{#                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="r_date" name="r_date" required>#}
+{#                    </div>#}
 
                     <div class="col-md-12 col-12 mb-3">
                         <label for="division" class="form-label">* 분류</label>
@@ -74,9 +74,15 @@
                         <input type="text" class="form-control" id="w_note" name="w_note" placeholder="참고사항을 입력해주세요." required>
                     </div>
 
-                    <div class="col-md-12 col-12 mb-3" style="display: none">
+                    <div class="col-md-12 col-12 mb-3" id="charge_div" style="display: none">
                         <label for="charge" class="form-label">* 담당 PM</label>
-                        <input class="form-control" id="charge" name="charge">
+                        <select class="form-control" id="charge" name="charge">
+                            <option data-select2-id="2" value="" disabled selected>--담당PM을 선택해주세요.--</option>
+                            {% for obj in pm_list %}
+                                <option value={{ obj.id }}>{{ obj.username }}</option>
+                            {% endfor %}
+                        </select>
+{#                        <input class="form-control" id="charge" name="charge">#}
                     </div>
 
                 </div>
@@ -108,7 +114,7 @@
         formdata.push({name: 'weekly_no', value: weekSelected_id})
         formdata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
-        var write_day = $('#r_date').val();
+        var write_day = today;
         var work_category = $('#division').val();
         var project_name = $('#p_name').val();
         var report_task = $('#t_name').val();
@@ -149,26 +155,36 @@
 
     function weekly_report_edit_modal(subtask_data) {
         console.log('subtask_data', subtask_data)
-        $("#weekly_report_add_modal").modal('show')
+        $("#charge_div").hide()
+        if(subtask_data[14] !== null){
+            $("#charge_div").show()
+        }
 
-        $("#r_date").val(subtask_data[1]);
+        moment.locale('ko');
+        $("#weekly_report_add_modal").modal('show')
+        //$("#r_date").val(today);
         $("#division").val(subtask_data[13]);
         $("#p_name").val(subtask_data[3]);
         $("#t_name").val(subtask_data[4]);
         $("#perform").val(subtask_data[5]);
         $("#w_status").val(subtask_data[6]);
-        $("#w_start").val(subtask_data[7]);
-        $("#w_close").val(subtask_data[8]);
+        let format_w_start = moment(subtask_data[7]).format('YYYY-MM-DD');
+        $("#w_start").val(format_w_start);
+        let format_w_close = moment(subtask_data[8]).format('YYYY-MM-DD');
+        $("#w_close").val(format_w_close);
         let requiredDays = parseInt(subtask_data[9].replace('일', ''), 10);
         $("#required_date").val(requiredDays);
         $("#w_note").val(subtask_data[10]);
-        $("#charge").val(subtask_data[11]);
+        $("#charge").val(subtask_data[14]);
 
-        $("#submit_edit_btn").click(function (e) {
+        $("#submit_edit_btn").off('click').click(function (e) {
             e.preventDefault();
+            moment.locale('ko');
+            let format_today = moment(today).format('YYYY-MM-DD');
 
             let formdata = $("#weekly_report_add_form").serializeArray()
             formdata.push({name: 'type', value: 'E'});
+            formdata.push({name: 'r_date', value: format_today});
             formdata.push({name: 'weekly_no', value: weekSelected_id});
             let subtask_id = subtask_data[12];
             formdata.push({name: 'subtask_id', value: subtask_id});

@@ -282,8 +282,14 @@
                                 </div>
 
                                 <div class="col-12 col-md-6 fv-plugins-icon-container">
+                                    <label class="form-label" for="sub_start_date">시작일</label>
+                                    <input id="sub_start_date" name="sub_start_date" class="form-control datepicker_startDate" autocomplete="off">
+
+                                </div>
+
+                                <div class="col-12 col-md-6 fv-plugins-icon-container">
                                     <label class="form-label" for="due_date">종료 예정일</label>
-                                    <input id="due_date" name="due_date" class="form-control datepicker_startDate">
+                                    <input id="due_date" name="due_date" class="form-control datepicker_startDate" autocomplete="off">
 
                                 </div>
 
@@ -345,7 +351,7 @@
     var tagify = new Tagify(taginput);
 
     $(function () {
-        $("#due_date").datepicker({format: 'yyyy-mm-dd'});
+        $("#due_date, #sub_start_date").datepicker({format: 'yyyy-mm-dd'});
         $("#task_start").datepicker({format: 'yyyy-mm-dd'});
         $("#task_end").datepicker({format: 'yyyy-mm-dd'});
     });

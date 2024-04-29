@@ -49,6 +49,8 @@ def event_type(events, search_to):
                 return "연차"
             elif event_type == "Family":
                 return "반차"
+            elif event_type == "Personal":
+                return "자리비움"
     return None
 
 @register.filter
@@ -65,5 +67,7 @@ def attendance_css_class(value):
         return "late-color"
     elif value == "결근":
         return "absence-color"
+    elif value == "자리비움":
+        return "personal-color"
     else:
         return ""

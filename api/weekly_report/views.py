@@ -1,6 +1,12 @@
+import json
+from datetime import datetime
+
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from api.models import ProMaster, ProTask, ProTaskSub, WeeklyMember
 from django.db.models import Prefetch, ExpressionWrapper, F, fields
 
@@ -63,7 +69,7 @@ class WeeklyTaskSubView(View):
             division_name=F('division__name')
         ).values(
             'id', 'r_date', 'p_name', 't_name', 'perform', 'w_status', 'w_start', 'w_close', 'required_date', 'w_note',
-            'create_at', 'created_by', 'charge', 'division', 'division_name', 'weekly_no'
+            'create_at', 'created_by', 'charge', 'charge__username', 'division', 'division_name', 'weekly_no'
         )
         return JsonResponse({'data': list(result)})
 
@@ -91,8 +97,6 @@ class WeeklyTaskSubView(View):
             return JsonResponse({'message': 'success'})
 
         elif type == 'E':
-            formdata = request.POST
-            print('수정', formdata)
 
             week_id = request.POST.get('subtask_id')
             w_member = WeeklyMember.objects.get(id=week_id)
@@ -116,5 +120,64 @@ class WeeklyTaskSubView(View):
         return JsonResponse({'message': 'success'})
 
 
+class WeeklySubPost(View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        print('data', data)
+        data_list = data.get('dataToSend')
+
+        for item in data_list:
+            r_date = datetime.strptime(item['r_date'], "%Y-%m-%dT%H:%M:%S.%fZ").date()
+            w_start = datetime.strptime(item['w_start'], "%Y-%m-%dT%H:%M:%S").date()
+            w_close = datetime.strptime(item['w_close'], "%Y-%m-%dT%H:%M:%S").date()
+
+            WeeklyMember.objects.create(
+                r_date=r_date,
+                w_start=w_start,
+                w_close=w_close,
+                p_name=item['p_name'],
+                t_name=item['t_name'],
+                perform=item['perform'],
+                w_status=item['w_status'],
+                required_date=item['required_date'],
+                w_note=item['w_note'],
+                weekly_no_id=item['weekly_no'],
+            )
+
+        return JsonResponse({"success": True})
 
 
+def WeeklyTaskSub_delete(request):
+    data = json.loads(request.body)
+
+    if data.get('type') == 'D':
+
+        try:
+            task_id = json.loads(request.body).get('ids')
+            print('task_id', task_id)
+
+            for obj_id in task_id:
+                try:
+                    w_member = WeeklyMember.objects.get(id=obj_id)
+
+                    w_member.delete_flag = 'Y'
+                    w_member.save()
+                except ProTaskSub.DoesNotExist:
+                    pass
+
+            return JsonResponse({'del': True})
+        except json.JSONDecodeError:
+
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    return JsonResponse({"success": True})
+
+
+def do_report_pe(request):
+    data = json.loads(request.body)
+    task_ids = data.get('ids', [])
+    pm_id = data.get('pm_id')
+
+    WeeklyMember.objects.filter(id__in=task_ids).update(charge_id=pm_id)
+
+    return JsonResponse({"success": True})

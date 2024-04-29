@@ -17,8 +17,11 @@
 
                     <div class="col-md-12 col-12 mb-3">
                         <label for="detail_task_result" class="form-label">* 담당 PM</label>
-                        <select class="form-control" id="task_status" name="task_status">
-                            <option value="">PM 리스트</option>
+                        <select class="form-control" id="pm_select" name="pm_select">
+                            <option data-select2-id="2" value="" disabled selected>--담당PM을 선택해주세요.--</option>
+                            {% for obj in pm_list %}
+                                <option value={{ obj.id }}>{{ obj.username }}</option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -26,8 +29,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="approval_btn">확인</button>
-                    <button type="submit" class="btn btn-primary" style="display: none" id="approval_edit_btn">수정</button>
+                    <button type="submit" class="btn btn-primary" id="do_report_btn">확인</button>
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                 </div>
 
@@ -35,4 +37,34 @@
         </div>
     </div>
 </form>
+<script>
+    function do_report(allSelectedRowsData) {
+        let selected_list = []
+
+        for (let i = 0; i < allSelectedRowsData.length; i++) {
+            selected_list.push(allSelectedRowsData[i][12]);
+        }
+        console.log(selected_list)
+        $("#pe_report_modal").modal('show')
+
+        $("#do_report_btn").click(function (e) {
+            let pm_id = $("#pm_select").val()
+            console.log(pm_id)
+            e.preventDefault()
+
+            $.ajax({
+                url: "{% url 'do_report_pe' %}",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ids: selected_list, pm_id: pm_id}),
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (res) {
+                    alert('보고 완료')
+                    $("#pe_report_modal").modal('hide');
+                    darwData(weekSelected_id)
+                }
+            })
+        })
+    }
+</script>
 

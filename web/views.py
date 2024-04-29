@@ -349,7 +349,6 @@ def task_mgmt_page(request):
 def weekly_report_main_page(request):
     userid = request.user.id
     type = request.GET.get('param', None)
-    employee_list = get_member_info(type)
     projects = get_project_data(userid)
 
     weekly_list = Weekly.objects.all().annotate(
@@ -359,13 +358,14 @@ def weekly_report_main_page(request):
         'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
     )
 
-    pro_type = CodeMaster.objects.filter(group__code="PROTYPE")
+    pro_types = CodeMaster.objects.filter(group__code="WTYPE")
+    pm_list = UserMaster.objects.filter(report_auth="M")
 
     context = {
-        'employee_list': employee_list['result'],
         'projects': projects,
         'weekly_list': weekly_list,
-        'pro_type': pro_type
+        'pro_type': pro_types,
+        'pm_list': pm_list
     }
 
     return render(request, 'admins/weekly_report/weekly_report_pe.html', context)

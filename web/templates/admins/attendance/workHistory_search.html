@@ -26,6 +26,10 @@
     .event-type-half-refresh td {
         color: purple;
     }
+
+    .personal-color td {
+        color: #ce8483;
+    }
 </style>
 <body>
 <div class="layout-wrapper layout-content-navbar">
@@ -58,6 +62,7 @@
                             <font color="blue" style="margin-left: 20px;">■</font> : 출장
                             <font color="#228b22" style="margin-left: 20px;">■</font> : 연차
                             <font color="purple" style="margin-left: 20px;">■</font> : 반차
+                            <font color="#ce8483" style="margin-left: 20px;">■</font> : 자리비움
                         </p>
                     </div>
                 </div>
@@ -88,7 +93,7 @@
                                                             {% with obj_aq.attendance_rec.0 as attendance_rec %}
 
                                                                 {% if attendance_rec.date|date:"Y-m-d" == search_to %} <!--검색날짜에 출근기록이 있다면(출장,반차)-->
-                                                                    {% if event_type == '반차' or event_type == '출장' %}
+                                                                    {% if event_type == '반차' or event_type == '출장' or event_type == '자리비움' %}
                                                                         <tr class="{{ event_type|attendance_css_class }}">
                                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                             {% if attendance_rec.attendanceTime %}
@@ -113,7 +118,7 @@
                                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">연차</medium></td>
                                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium"></medium></td>
                                                                         </tr>
-                                                                    {% elif event_type == '반차' or event_type == '출장' %}
+                                                                    {% elif event_type == '반차' or event_type == '출장' or event_type == '자리비움' %}
                                                                         <tr class="{{ event_type|attendance_css_class }}">
                                                                             <td><h6 class="mb-0 text-truncate">{{ obj_aq.username }}</h6></td>
                                                                             <td style="padding-left: 5px; padding-right: 0px; width: 80px"><medium class="fw-medium">N/A</medium></td>

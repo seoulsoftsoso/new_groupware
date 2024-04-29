@@ -275,6 +275,7 @@ class getSubData(View):
         subtitle = requset.POST.get('sub_title')
         subcontent = requset.POST.get('sub_content')
         duedate = requset.POST.get('due_date')
+        sub_start_date = requset.POST.get('sub_start_date')
         issue = requset.POST.get('issue')
         subetc = requset.POST.get('sub_etc')
         taskparent = requset.POST.get('selected_task_id')
@@ -288,7 +289,8 @@ class getSubData(View):
                 due_date=duedate,
                 issue=issue,
                 sub_etc=subetc,
-                task_parent=taskIns
+                task_parent=taskIns,
+                sub_start_date=sub_start_date,
             )
 
         except Exception as e:
@@ -316,6 +318,7 @@ class GetSubDataEdit(View):
                 pro_task_sub.sub_title = data.get('sub_title')
                 pro_task_sub.sub_content = data.get('sub_content')
                 pro_task_sub.due_date = data.get('due_date')
+                pro_task_sub.sub_start_date = data.get('sub_start_date')
                 pro_task_sub.issue = data.get('issue')
                 pro_task_sub.sub_etc = data.get('sub_etc')
                 pro_task_sub.update_at = timezone.now()
