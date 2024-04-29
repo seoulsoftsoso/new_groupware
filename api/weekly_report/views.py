@@ -100,11 +100,10 @@ class WeeklyTaskSubView(View):
             return JsonResponse({'message': 'success'})
 
         elif type == 'E':
-
             week_id = request.POST.get('subtask_id')
             w_member = WeeklyMember.objects.get(id=week_id)
 
-            w_member.r_date = request.POST.get('r_date')
+            w_member.r_date = today_date
             w_member.division_id = request.POST.get('division')
             w_member.p_name = request.POST.get('p_name')
             w_member.t_name = request.POST.get('t_name')
