@@ -329,6 +329,8 @@
                                     alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
                                     return false;
                                 } else {
+                                    $("#submit_edit_btn").hide()
+                                    $("#submit_add_btn").show()
                                     $("#weekly_report_add_form").trigger("reset");
                                     $("#weekly_report_add_modal").modal('show')
                                 }

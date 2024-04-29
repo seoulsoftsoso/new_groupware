@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
+from django.utils.timezone import make_aware
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -75,10 +76,14 @@ class WeeklyTaskSubView(View):
 
     def post(self, request, *args, **kwargs):
         type = request.POST.get('type')
+        now = make_aware(datetime.now())
+        today_date = now.date()
+
+        print('request', request.POST)
 
         if type == 'A':
             w_member = WeeklyMember.objects.create(
-                r_date=request.POST.get('r_date'),
+                r_date=today_date,
                 division_id=request.POST.get('division'),
                 p_name=request.POST.get('p_name'),
                 t_name=request.POST.get('t_name'),
