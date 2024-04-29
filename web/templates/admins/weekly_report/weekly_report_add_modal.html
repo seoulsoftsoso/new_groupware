@@ -132,20 +132,7 @@
             data: formdata,
             success: function (res) {
                 console.log(res)
-                weekly_report_table.row.add([
-                    '',
-                    write_day,
-                    work_category,
-                    project_name,
-                    report_task,
-                    work_content,
-                    task_status,
-                    task_start_date,
-                    task_end_date,
-                    duration_days + '일',
-                    notied_point,
-                    pm_name
-                ]).draw(false);
+                darwData(weekSelected_id)
             }
         })
 
