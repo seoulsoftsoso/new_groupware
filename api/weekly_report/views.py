@@ -183,7 +183,7 @@ def do_report_pe(request):
     pe_weekly = Weekly.objects.get(id=weekSelected_id)
     pm_weekly = Weekly.objects.get(week_cnt=pe_weekly.week_cnt, owner_id=pm_id)
     high_weeklymaster_id = WeeklyMaster.objects.get(weekly_no_id=pm_weekly)
-    print('high_weeklymaster_id', high_weeklymaster_id.id)
+    # print('high_weeklymaster_id', high_weeklymaster_id.id)
 
     WeeklyMember.objects.filter(id__in=task_ids).update(charge_id=pm_id)
 

@@ -71,7 +71,7 @@ class WeeklyTaskSubView_PM(View):
 class WeeklySubPost_PM(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        print('data', data)
+        # print('data', data)
         data_list = data.get('dataToSend')
 
         for item in data_list:
@@ -80,7 +80,7 @@ class WeeklySubPost_PM(View):
             w_close = datetime.strptime(item['w_close'], "%Y-%m-%dT%H:%M:%S").date()
             weekly_no = item['weekly_no']
             weekly_master = WeeklyMaster.objects.get(weekly_no_id=weekly_no)
-            print('weekly_master', weekly_master.id)
+            # print('weekly_master', weekly_master.id)
 
             WeeklySub.objects.create(
                 r_date=r_date,
@@ -106,7 +106,7 @@ def WeeklyTaskSub_pm_delete(request):
 
         try:
             task_id = json.loads(request.body).get('ids')
-            print('task_id', task_id)
+            # print('task_id', task_id)
 
             for obj_id in task_id:
                 try:
@@ -127,7 +127,7 @@ def WeeklyTaskSub_pm_delete(request):
 
 def pm_do_report_pe(request):
     data = request.POST
-    print('data', data.get('p_working'))
+    # print('data', data.get('p_working'))
 
     weekly_id = data.get('weekly_no')
     Weekly.objects.filter(id=weekly_id).update(report_flag='Y')

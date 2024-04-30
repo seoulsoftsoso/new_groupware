@@ -60,14 +60,14 @@
         for (let i = 0; i < allSelectedRowsData.length; i++) {
             selected_list.push(allSelectedRowsData[i][11]);
         }
-        console.log(selected_list)
+        //console.log(selected_list)
         $("#pm_report_modal").modal('show')
 
         $("#pm_report_btn").click(function (e) {
             e.preventDefault()
             let formdata = $("#pm_report_form").serializeArray()
             formdata.push({name: 'weekly_no', value: weekSelected_id})
-            console.log(formdata)
+            //console.log(formdata)
 
             $.ajax({
                 url: "{% url 'pm_do_report_pe' %}",

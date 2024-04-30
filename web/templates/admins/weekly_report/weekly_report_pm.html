@@ -365,7 +365,7 @@
                                     }).then(function (result) {
                                         if (result.value) {
                                             let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
-                                            console.log(allSelectedRowsData)
+                                            //console.log(allSelectedRowsData)
                                             let selected_list = []
 
                                             // 각 행에 대한 로직 추가
@@ -374,7 +374,7 @@
                                                 selected_list.push(allSelectedRowsData[i][11]);
 
                                             }
-                                            console.log(selected_list)
+                                            //console.log(selected_list)
                                             $.ajax({
                                                 url: "{% url 'WeeklyTaskSub_pm_delete' %}",
                                                 type: "POST",
@@ -534,7 +534,7 @@
     })
 
     function formatData(results) { // project select 후 project_table 랜더링
-        console.log('formatData', results);
+        //console.log('formatData', results);
         let formattedResults = [];
 
         results.forEach(result => {
@@ -611,7 +611,7 @@
 
             for (var i = 0; i < selectedData.length; i++) {
                 var rowData = selectedData[i];
-                console.log('rowData', rowData)
+                //console.log('rowData', rowData)
                 var tasksubId = 'P' + rowData[8];
                 var isDuplicate = false;
 
@@ -646,7 +646,7 @@
             }
 
             if (dataToSend.length > 0) {
-                console.log('dataToSend', dataToSend)
+                //console.log('dataToSend', dataToSend)
                 $.ajax({
                     url: "{% url 'WeeklySubPost_PM' %}",
                     type: "POST",
@@ -685,7 +685,7 @@
                 week_id: weekSelected_id
             },
             success: function (res) {
-                console.log('res', res.data)
+                //console.log('res', res.data)
                 let drawData = week_formatData(res.data);
                 weekly_report_table.rows().remove().draw();
                 weekly_report_table.rows.add(drawData).draw();
