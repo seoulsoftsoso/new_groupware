@@ -1,0 +1,86 @@
+{% load static %}
+<!-- Modal -->
+<form id="pm_report_form">
+    {% csrf_token %}
+    <div class="modal fade" id="pm_report_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">주간보고 팝업</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="p_working" class="form-label">* 사업 진행 중</label>
+                        <input type="text" class="form-control" id="p_working" name="p_working" placeholder="" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="p_finish" class="form-label">* 사업 완료</label>
+                        <input type="text" class="form-control" id="p_finish" name="p_finish" placeholder="" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="p_stay" class="form-label">* 사업 대기</label>
+                        <input type="text" class="form-control" id="p_stay" name="p_stay" placeholder="" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="p_fail" class="form-label">* 사업 실패</label>
+                        <input type="text" class="form-control" id="p_fail" name="p_fail" placeholder="" required>
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="p_etc" class="form-label">* 기타</label>
+                        <input type="text" class="form-control" id="p_etc" name="p_etc" placeholder="" required>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="pm_report_btn">확인</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function pm_do_report(allSelectedRowsData) {
+        $("#pm_report_form").trigger("reset");
+        let selected_list = []
+
+        for (let i = 0; i < allSelectedRowsData.length; i++) {
+            selected_list.push(allSelectedRowsData[i][11]);
+        }
+        console.log(selected_list)
+        $("#pm_report_modal").modal('show')
+
+        $("#pm_report_btn").click(function (e) {
+            e.preventDefault()
+            let formdata = $("#pm_report_form").serializeArray()
+            formdata.push({name: 'weekly_no', value: weekSelected_id})
+            console.log(formdata)
+
+            $.ajax({
+                url: "{% url 'pm_do_report_pe' %}",
+                type: "POST",
+                data: formdata,
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (res) {
+                    alert('보고 완료')
+                    $("#pm_report_modal").modal('hide');
+                    darwData(weekSelected_id)
+                }
+            })
+        })
+    }
+</script>
+

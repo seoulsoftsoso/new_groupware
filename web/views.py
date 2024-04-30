@@ -356,12 +356,13 @@ def weekly_report_main_page(request):  # 주간업무보고 PE
         friday_date=FridayDate('create_at', output_field=CharField())
     ).values(
         'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
-    )
+    ).order_by('-id')
 
     pro_types = CodeMaster.objects.filter(group__code="WTYPE")
     pm_list = UserMaster.objects.filter(report_auth="M")
 
     context = {
+        'is_pe_page': True,
         'projects': projects,
         'weekly_list': weekly_list,
         'pro_type': pro_types,
@@ -381,11 +382,15 @@ def weekly_report_mgmt_page(request):  # 주간업무보고 PM
         friday_date=FridayDate('create_at', output_field=CharField())
     ).values(
         'id', 'week_cnt', 'week_name', 'report_flag', 'create_at', 'owner', 'monday_date', 'friday_date'
-    )
+    ).order_by('-id')
+
+    pro_types = CodeMaster.objects.filter(group__code="WTYPE")
 
     context = {
+        'is_pe_page': False,
         'projects': projects,
         'weekly_list': weekly_list,
+        'pro_type': pro_types,
     }
     return render(request, 'admins/weekly_report/weekly_report_pm.html', context)
 

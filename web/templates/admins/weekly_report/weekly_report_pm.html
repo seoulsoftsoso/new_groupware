@@ -103,18 +103,6 @@
                                             </button>
                                         {% endif %}
                                     {% endfor %}
-{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 3주차#}
-{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
-{#                                    </button>#}
-{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 2주차#}
-{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
-{#                                    </button>#}
-{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">3월 1주차#}
-{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
-{#                                    </button>#}
-{#                                    <button class="btn btn-outline-dark d-grid w-100 mb-3">2월 4주차#}
-{#                                        <small class="text-light fw-medium">2024-03-18 ~ 2024-03-22</small>#}
-{#                                    </button>#}
                                 </div>
                             </div>
                         </div>
@@ -173,18 +161,18 @@
                                 <table id="weekly_report_table" class="dt-multilingual table border-top">
                                     <thead>
                                     <tr style="color: #3b3b3b">
-                                        <th><input type="checkbox" id="check_all" style="margin-top: 5px;"></th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%">작성일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 8%">분류</th>
+                                        <th style="width: 1%"><input type="checkbox" id="check_all" style="margin-top: 5px;"></th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%">작성일</th>
                                         <th style="font-weight: bold; width: 10%;">프로젝트</th>
                                         <th style="font-weight: bold; text-align: center; width: 10%;">TASK</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">담당자</th>
                                         <th style="font-weight: bold; text-align: center; width: 16%;">실행항목</th>
-                                        <th style="font-weight: bold; text-align: center; width: 6%;">진행상태</th>
-                                        <th style="font-weight: bold; text-align: center; width: 7%;">시작일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 7%;">종료일</th>
-                                        <th style="font-weight: bold; text-align: center; width: 6%;">소요일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 5%;">진행상태</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%;">시작일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%;">종료일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 5%;">소요일</th>
                                         <th style="font-weight: bold; text-align: center; width: 16%;">참고사항</th>
-                                        <th style="font-weight: bold; text-align: center; width: 7%;">담당PM</th>
+{#                                        <th style="font-weight: bold; text-align: center; width: 7%;">담당PM</th>#}
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -203,8 +191,8 @@
                     <div class="content-backdrop fade"></div>
                 </div>
                 <!-- Content wrapper -->
-                {% include "admins/weekly_report/weekly_report_add_modal.html" %}
-                {% include "admins/weekly_report/pe_report_modal.html" %}
+                {% include "admins/weekly_report/weekly_report_pm_add_modal.html" %}
+                {% include "admins/weekly_report/pm_report_modal.html" %}
 
             </div>
         </div>
@@ -331,10 +319,10 @@
                                     alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
                                     return false;
                                 } else {
-                                    $("#submit_edit_btn").hide()
-                                    $("#submit_add_btn").show()
-                                    $("#weekly_report_add_form").trigger("reset");
-                                    $("#weekly_report_add_modal").modal('show')
+                                    $("#pm_edit_btn").hide()
+                                    $("#pm_add_btn").show()
+                                    $("#pm_report_add_form").trigger("reset");
+                                    $("#weekly_report_add_pm_modal").modal('show')
                                 }
                             }
                         },
@@ -342,15 +330,15 @@
                             text: '수정',
                             className: 'btn btn-label-secondary',
                             action: function (e, dt, node, config) {
-                                $("#submit_edit_btn").show()
-                                $("#submit_add_btn").hide()
+                                $("#pm_edit_btn").show()
+                                $("#pm_add_btn").hide()
 
                                 if (!isWeekSelected) {
                                     alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
                                     return false;
                                 } else {
                                     let subtask_data = dt.row({selected: true}).data();
-                                    weekly_report_edit_modal(subtask_data)
+                                    pm_report_edit_modal(subtask_data)
 
                                 }
                             }
@@ -377,18 +365,18 @@
                                     }).then(function (result) {
                                         if (result.value) {
                                             let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
-                                            // console.log(allSelectedRowsData)
+                                            console.log(allSelectedRowsData)
                                             let selected_list = []
 
                                             // 각 행에 대한 로직 추가
                                             for (let i = 0; i < allSelectedRowsData.length; i++) {
 
-                                                selected_list.push(allSelectedRowsData[i][12]);
+                                                selected_list.push(allSelectedRowsData[i][11]);
 
                                             }
-                                            // console.log(selected_list)
+                                            console.log(selected_list)
                                             $.ajax({
-                                                url: "{% url 'WeeklyTaskSub_delete' %}",
+                                                url: "{% url 'WeeklyTaskSub_pm_delete' %}",
                                                 type: "POST",
                                                 contentType: "application/json",
                                                 data: JSON.stringify({type: 'D', ids: selected_list}),
@@ -421,7 +409,7 @@
                                 } else {
                                     //$("#pe_report_modal").modal('show')
                                     let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
-                                    do_report(allSelectedRowsData)
+                                    pm_do_report(allSelectedRowsData)
                                 }
                             }
                         }
@@ -525,9 +513,185 @@
         weekly_report_table.button(0).enable(selectedRows < 1); // 등록
         weekly_report_table.button(1).enable(selectedRows === 1); // 수정
         weekly_report_table.button(2).enable(selectedRows > 0); // 삭제
-        weekly_report_table.button(3).enable(selectedRows > 0); // 주간보고-CEO
+        //weekly_report_table.button(3).enable(selectedRows > 0); // 주간보고
     }
 
+    $("#projectlist").change(function () {
+        var param = $(this).val();
 
+        $.ajax({
+            url:"{% url 'AllProjectInfo' %}",
+            type:"GET",
+            data:{
+                param: param
+            },
+            success: function (res) {
+                let drawData = formatData(res.data);
+                project_table.rows().remove().draw();
+                project_table.rows.add(drawData).draw();
+            }
+        })
+    })
+
+    function formatData(results) { // project select 후 project_table 랜더링
+        console.log('formatData', results);
+        let formattedResults = [];
+
+        results.forEach(result => {
+            // 각 sub_task에 대해 반복 (rowData)
+            result.sub_tasks.forEach(sub_task => {
+
+                formattedResults.push([
+                    null,
+                    result.task_name,
+                    sub_task.sub_title,
+                    sub_task.sub_content,
+                    sub_task.sub_status,
+                    sub_task.sub_due_date,
+                    sub_task.sub_issue,
+                    sub_task.sub_ect,
+                    sub_task.sub_task_id,
+                    result.task_id,
+                    result.task_parent,
+                    sub_task.sub_start_date,
+                    sub_task.duration_days,
+                ]);
+            });
+        });
+
+        return formattedResults;
+    }
+
+    function week_formatData(results) {
+        let formattedResults = [];
+
+        results.forEach(result => {
+            let row = [
+                null,
+                result.r_date,
+                result.p_name,
+                result.t_name,
+                result.r_man__username,
+                result.perform,
+                result.w_status,
+                result.w_start,
+                result.w_close,
+                result.required_date + '일',
+                result.w_note,
+                //result.charge__username,
+                result.id,
+                result.charge
+            ];
+
+            formattedResults.push(row)
+        })
+
+        return formattedResults;
+    }
+
+    // 주차 목록 버튼 클릭
+    function weeklyBtn_click(obj_id, obj_week_name) {
+        isWeekSelected = true;
+        weekSelected_id = obj_id
+
+        $("#week_name_h4").html(obj_week_name + ' 업무보고')
+        darwData(weekSelected_id)
+
+    }
+
+    // 이동 버튼 눌렀을 때
+    function move_weekly_table_btn() {
+        if (!isWeekSelected) {
+            alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+            return false;
+        } else {
+            var selectedData = project_table.rows('.selected').data();
+            var weeklyTableData = weekly_report_table.rows().data();
+            var dataToSend = []; // 서버로 보낼 데이터를 담을 배열
+
+            for (var i = 0; i < selectedData.length; i++) {
+                var rowData = selectedData[i];
+                console.log('rowData', rowData)
+                var tasksubId = 'P' + rowData[8];
+                var isDuplicate = false;
+
+                // 중복 체크
+                for (var j = 0; j < weeklyTableData.length; j++) {
+                    if (tasksubId === weeklyTableData[j][12]) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (isDuplicate) {
+                    alert('중복된 데이터입니다: ' + tasksubId);
+                    continue;
+                }
+
+                // 서버로 보낼 데이터 배열에 추가
+                dataToSend.push({
+                    r_date: today,
+                    p_name: rowData[10],
+                    t_name: rowData[1],
+                    perform: rowData[3],
+                    w_status: rowData[4],
+                    w_start: rowData[11],
+                    w_close: rowData[5],
+                    required_date: rowData[12],
+                    w_note: rowData[6],
+                    // division: selectedOptionValue,
+                    weekly_no: weekSelected_id,
+                });
+
+            }
+
+            if (dataToSend.length > 0) {
+                console.log('dataToSend', dataToSend)
+                $.ajax({
+                    url: "{% url 'WeeklySubPost_PM' %}",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({dataToSend: dataToSend}),
+                    dataType: "json",
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                    success: function (response) {
+                        console.log('서버로부터의 응답:', response);
+                        updateButtonStatus();
+                        darwData(weekSelected_id)
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('데이터 전송 실패:', error);
+                    }
+                });
+            } else {
+                console.log('전송할 데이터가 없습니다.');
+            }
+
+            // 선택 해제
+            $('#project_table input[type="checkbox"]').prop('checked', false);
+            project_table.rows('.selected').deselect();
+
+        }
+    }
+
+    // DataTable 랜더링
+    function darwData(weekSelected_id) {
+        isWeekSelected = true;
+
+        $.ajax({
+            url: "{% url 'WeeklyTaskSubView_PM' %}",
+            type: "GET",
+            data: {
+                week_id: weekSelected_id
+            },
+            success: function (res) {
+                console.log('res', res.data)
+                let drawData = week_formatData(res.data);
+                weekly_report_table.rows().remove().draw();
+                weekly_report_table.rows.add(drawData).draw();
+
+            }
+        })
+    }
 </script>
 </html>

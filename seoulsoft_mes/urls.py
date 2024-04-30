@@ -55,7 +55,7 @@ from api.administrator.approval_views import *
 from api.administrator.pqy_question_views import *
 from api.administrator.user_setting_views import *
 from api.weekly_report.views import *
-
+from api.weekly_report.views_pm import *
 from web.views import *
 
 from django.conf import settings
@@ -199,8 +199,11 @@ urlpatterns = [
                   path('admins/weekly_tasksub_add', WeeklyTaskSubView_PE.as_view(), name="WeeklyTaskSubView_PE"),
                   path('admins/weekly_tasksub_add_pm', WeeklyTaskSubView_PM.as_view(), name="WeeklyTaskSubView_PM"),
                   path('admins/weekly_sub_post', WeeklySubPost.as_view(), name="WeeklySubPost"),
+                  path('admins/weekly_sub_post_pm', WeeklySubPost_PM.as_view(), name="WeeklySubPost_PM"),
                   path('admins/weekly_task_sub_delete', WeeklyTaskSub_delete, name="WeeklyTaskSub_delete"),
+                  path('admins/weekly_task_pm_sub_delete', WeeklyTaskSub_pm_delete, name="WeeklyTaskSub_pm_delete"),
                   path('admins/do_report_pe', do_report_pe, name="do_report_pe"),
+                  path('admins/pm_do_report_pe', pm_do_report_pe, name="pm_do_report_pe"),
 
 
                   # 휴가관리

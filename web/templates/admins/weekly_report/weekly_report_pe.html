@@ -17,6 +17,8 @@
 </head>
 <body>
 <style>
+
+
     #weekly_table, #weekly_table th, #weekly_table td {
         color: #3b3b3b; /* 원하는 색상 코드로 변경 */
     }
@@ -424,7 +426,7 @@
                                     do_report(allSelectedRowsData)
                                 }
                             }
-                        }
+                        },
                     ],
                 }
             },
@@ -702,7 +704,7 @@
                 let drawData = week_formatData(res.data);
                 weekly_report_table.rows().remove().draw();
                 weekly_report_table.rows.add(drawData).draw();
-
+                 $('#check_all').prop('checked', false);
             }
         })
     }

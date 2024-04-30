@@ -1,8 +1,8 @@
 {% load static %}
 <!-- Modal -->
-<form id="weekly_report_add_form">
+<form id="pm_report_add_form">
     {% csrf_token %}
-    <div class="modal fade" id="weekly_report_add_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="weekly_report_add_pm_modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -19,15 +19,6 @@
 {#                        <label for="r_date" class="form-label">* 작성일</label>#}
 {#                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="r_date" name="r_date" required>#}
 {#                    </div>#}
-
-                    <div class="col-md-12 col-12 mb-3">
-                        <label for="division" class="form-label">* 분류</label>
-                         <select class="form-control" id="division" name="division">
-                             {% for obj in pro_type %}
-                                <option value="{{ obj.id }}">{{ obj.name }}</option>
-                             {% endfor %}
-                         </select>
-                    </div>
 
                     <div class="col-md-12 col-12 mb-3">
                        <label for="p_name" class="form-label">* 프로젝트</label>
@@ -74,25 +65,12 @@
                         <input type="text" class="form-control" id="w_note" name="w_note" placeholder="참고사항을 입력해주세요." required>
                     </div>
 
-{#                    {% if is_pe_page %}#}
-{#                    <div class="col-md-12 col-12 mb-3" id="charge_div" style="display: none">#}
-{#                        <label for="charge" class="form-label">* 담당 PM</label>#}
-{#                        <select class="form-control" id="charge" name="charge">#}
-{#                            <option data-select2-id="2" value="" disabled selected>--담당PM을 선택해주세요.--</option>#}
-{#                            {% for obj in pm_list %}#}
-{#                                <option value={{ obj.id }}>{{ obj.username }}</option>#}
-{#                            {% endfor %}#}
-{#                        </select>#}
-{#                        <input class="form-control" id="charge" name="charge">#}
-{#                    </div>#}
-{#                    {% endif %}#}
-
                 </div>
 
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="submit_add_btn">확인</button>
-                    <button type="submit" class="btn btn-primary" style="display: none" id="submit_edit_btn">수정</button>
+                    <button type="submit" class="btn btn-primary" id="pm_add_btn">확인</button>
+                    <button type="submit" class="btn btn-primary" style="display: none" id="pm_edit_btn">수정</button>
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
                 </div>
 
@@ -108,16 +86,16 @@
         });
     });
 
-    $("#submit_add_btn").click(function (e) {
+    $("#pm_add_btn").click(function (e) {
         e.preventDefault();
 
-        let formdata = $("#weekly_report_add_form").serializeArray()
+        let formdata = $("#pm_report_add_form").serializeArray()
         formdata.push({name: 'type', value: 'A'})
         formdata.push({name: 'weekly_no', value: weekSelected_id})
         formdata.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
 
         $.ajax({
-            url: "{% url 'WeeklyTaskSubView_PE' %}",
+            url: "{% url 'WeeklyTaskSubView_PM' %}",
             type: "POST",
             data: formdata,
             success: function (res) {
@@ -126,23 +104,22 @@
             }
         })
 
-        $('#weekly_report_add_modal').modal('hide');
-        $('#weekly_report_add_form')[0].reset();
+        $('#weekly_report_add_pm_modal').modal('hide');
+        $('#pm_report_add_form')[0].reset();
     });
 
-    function weekly_report_edit_modal(subtask_data) {
-        // console.log('subtask_data', subtask_data)
+    function pm_report_edit_modal(subtask_data) {
+        console.log('subtask_data', subtask_data)
         //$("#charge_div").hide()
         //if(subtask_data[14] !== null){
         //  $("#charge_div").show()
         //}
 
         moment.locale('ko');
-        $("#weekly_report_add_modal").modal('show')
+        $("#weekly_report_add_pm_modal").modal('show')
         //$("#r_date").val(today);
-        $("#division").val(subtask_data[13]);
-        $("#p_name").val(subtask_data[3]);
-        $("#t_name").val(subtask_data[4]);
+        $("#p_name").val(subtask_data[2]);
+        $("#t_name").val(subtask_data[3]);
         $("#perform").val(subtask_data[5]);
         $("#w_status").val(subtask_data[6]);
         let format_w_start = moment(subtask_data[7]).format('YYYY-MM-DD');
@@ -154,28 +131,28 @@
         $("#w_note").val(subtask_data[10]);
         $("#charge").val(subtask_data[14]);
 
-        $("#submit_edit_btn").off('click').click(function (e) {
+        $("#pm_edit_btn").off('click').click(function (e) {
             e.preventDefault();
             moment.locale('ko');
             let format_today = moment(today).format('YYYY-MM-DD');
 
-            let formdata = $("#weekly_report_add_form").serializeArray()
+            let formdata = $("#pm_report_add_form").serializeArray()
             formdata.push({name: 'type', value: 'E'});
             formdata.push({name: 'r_date', value: format_today});
             formdata.push({name: 'weekly_no', value: weekSelected_id});
-            let subtask_id = subtask_data[12];
+            let subtask_id = subtask_data[11];
             formdata.push({name: 'subtask_id', value: subtask_id});
             // console.log('수정', formdata)
 
             $.ajax({
-                url: "{% url 'WeeklyTaskSubView_PE' %}",
+                url: "{% url 'WeeklyTaskSubView_PM' %}",
                 type: "POST",
                 data: formdata,
                 headers: {"X-CSRFToken": '{{ csrf_token }}'},
                 success: function (res) {
                     console.log(res)
                     alert('수정이 완료되었습니다.');
-                    $("#weekly_report_add_modal").modal('hide');
+                    $("#weekly_report_add_pm_modal").modal('hide');
                     darwData(weekSelected_id)
                 }
             })

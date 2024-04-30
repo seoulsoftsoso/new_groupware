@@ -8,7 +8,7 @@ from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from api.models import ProMaster, ProTask, ProTaskSub, WeeklyMember
+from api.models import ProMaster, ProTask, ProTaskSub, WeeklyMember, WeeklySub, WeeklyMaster, Weekly
 from django.db.models import Prefetch, ExpressionWrapper, F, fields
 
 
@@ -177,23 +177,36 @@ def WeeklyTaskSub_delete(request):
 def do_report_pe(request):
     data = json.loads(request.body)
     task_ids = data.get('ids', [])
-    print('task_ids', task_ids)
     pm_id = data.get('pm_id')
-    print('pm_id', pm_id)
+
+    weekSelected_id = data.get('weekSelected_id', [])
+    pe_weekly = Weekly.objects.get(id=weekSelected_id)
+    pm_weekly = Weekly.objects.get(week_cnt=pe_weekly.week_cnt, owner_id=pm_id)
+    high_weeklymaster_id = WeeklyMaster.objects.get(weekly_no_id=pm_weekly)
+    print('high_weeklymaster_id', high_weeklymaster_id.id)
 
     WeeklyMember.objects.filter(id__in=task_ids).update(charge_id=pm_id)
+
+    for task_id in task_ids:
+        weekly_member = WeeklyMember.objects.get(id=task_id)
+
+        WeeklySub.objects.create(
+            r_date=weekly_member.r_date,
+            r_man_id=request.user.id,
+            p_name=weekly_member.p_name,
+            t_name=weekly_member.t_name,
+            perform=weekly_member.perform,
+            w_status=weekly_member.w_status,
+            w_start=weekly_member.w_start,
+            w_close=weekly_member.w_close,
+            required_date=weekly_member.required_date,
+            w_note=weekly_member.w_note,
+            charge_id=pm_id,
+            weekly_id=high_weeklymaster_id.id,  # 상위 WeeklyMaster id
+            created_by_id=request.user.id,
+        )
 
     return JsonResponse({"success": True})
 
 
-class WeeklyTaskSubView_PM(View):
-    def get(self, request, *args, **kwargs):
-        week_id = request.GET.get('week_id')
-        result = WeeklyMember.objects.filter(weekly_no_id=week_id, delete_flag='N').annotate(
-            division_name=F('division__name')
-        ).values(
-            'id', 'r_date', 'p_name', 't_name', 'perform', 'w_status', 'w_start', 'w_close', 'required_date', 'w_note',
-            'create_at', 'created_by', 'charge', 'charge__username', 'division', 'division_name', 'weekly_no'
-        )
-        return JsonResponse({'data': list(result)})
 

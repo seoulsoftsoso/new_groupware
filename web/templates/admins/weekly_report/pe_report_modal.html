@@ -49,17 +49,23 @@
 
         $("#do_report_btn").click(function (e) {
             let pm_id = $("#pm_select").val()
-            // bconsole.log(pm_id)
+            // console.log(pm_id)
             e.preventDefault()
 
             $.ajax({
                 url: "{% url 'do_report_pe' %}",
                 type: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ids: selected_list, pm_id: pm_id}),
+                data: JSON.stringify({
+                    type: 'A',
+                    ids: selected_list,
+                    pm_id: pm_id,
+                    weekSelected_id: weekSelected_id
+                }),
                 headers: {"X-CSRFToken": '{{ csrf_token }}'},
                 success: function (res) {
                     alert('보고 완료')
+                    pm_id = null;
                     $("#pe_report_modal").modal('hide');
                     darwData(weekSelected_id)
                 }
