@@ -56,6 +56,7 @@ from api.administrator.pqy_question_views import *
 from api.administrator.user_setting_views import *
 from api.weekly_report.views import *
 from api.weekly_report.views_pm import *
+from api.weekly_report.views_ceo import *
 from web.views import *
 
 from django.conf import settings
@@ -195,6 +196,7 @@ urlpatterns = [
                   # 주간업무보고
                   path('admins/weekly_report_main', weekly_report_main_page, name="weeklyReportMain"),
                   path('admins/weekly_report_mgmt', weekly_report_mgmt_page, name="weeklyReportMgmt"),
+                  path('admins/weekly_report_ceo', weekly_report_ceo_page, name="weeklyReportCEO"),
                   path('admins/all_proejct_info', AllProjectInfo.as_view(), name="AllProjectInfo"),
                   path('admins/weekly_tasksub_add', WeeklyTaskSubView_PE.as_view(), name="WeeklyTaskSubView_PE"),
                   path('admins/weekly_tasksub_add_pm', WeeklyTaskSubView_PM.as_view(), name="WeeklyTaskSubView_PM"),
@@ -204,6 +206,8 @@ urlpatterns = [
                   path('admins/weekly_task_pm_sub_delete', WeeklyTaskSub_pm_delete, name="WeeklyTaskSub_pm_delete"),
                   path('admins/do_report_pe', do_report_pe, name="do_report_pe"),
                   path('admins/pm_do_report_pe', pm_do_report_pe, name="pm_do_report_pe"),
+                  path('admins/pm_select', PmSelect.as_view(), name="PmSelect"),
+                  path('admins/ceo_get_weekly_report', GetWeeklyMaster_CEO.as_view(), name="GetWeeklyMaster_CEO"),
 
 
                   # 휴가관리

@@ -1,10 +1,596 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+<link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/bs-stepper/bs-stepper.css' %}"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.0/css/select.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/dataTables.select.js"></script>
+<script src="https://cdn.datatables.net/select/2.0.0/js/select.dataTables.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
 </head>
 <body>
+<style>
+    #weekly_master_table, #weekly_master_table th, #weekly_master_table td {
+        color: #5E6D7D;
+    }
 
+    .collapsed {
+        display: none;
+    }
+
+    .weekly_list {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .dt-column-order {
+        display: none;
+    }
+
+    #weekly_report_table th,
+    #weekly_report_table td {
+        text-align: center;
+        color: #5E6D7D;
+    }
+
+    table.dataTable thead > tr > th.dt-orderable-asc, table.dataTable thead > tr > th.dt-orderable-desc {
+        padding-right: 10px;
+    }
+    .select2-selection__clear{
+        display: none
+    }
+</style>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <div class="layout-page" id="layout_page">
+            {% include 'admins/index_header.html' %}
+
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+
+                <div class="container-fluid flex-grow-1 container-p-y">
+                    <div class="mb-3">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-auto mt-4">
+                                <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i
+                                        class='bx bx-search'></i>확대/축소
+                                </button>
+                            </div>
+                            <div class="col-xl-8">
+                                <div class="row">
+                                    <div class="col-xl-3 mt-4">
+                                        <select id="pm_select"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true" onchange="pm_select()">
+                                            <option data-select2-id="2" value="" disabled selected>--담당PM을 선택해주세요.--</option>
+                                            {% for obj in pm_list %}
+                                                <option value="{{ obj.id }}">{{ obj.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-xl-4 mt-4">
+                                        <select id="weekly_select"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true">
+                                            <option data-select2-id="2" value="" disabled selected>--월, 주차를 선택해주세요.--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto mt-4">
+                                        <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row invoice-preview mt-5">
+                        <!-- WeeklyMaster -->
+
+                        <div class="container-fluid flex-grow-1 container-p-y mt-4 project_table_container">
+                            <div class="card invoice-preview-card">
+                                <div id="account-details-1" class="content">
+                                    <!-- Headings -->
+                                    <div class="row">
+                                        <!-- Inline text elements -->
+                                        <div class="col">
+
+                                            <h5 class="card-header" id="pm_info">검색을 통해 조회해주세요.</h5>
+                                            <div class="card-body">
+                                                <table class="table table-borderless" id="weekly_master_table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="align-middle" style="width: 15%;">
+                                                            <small class="text-light fw-medium">진행중인 사업</small>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <p class="mb-0">-</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="align-middle">
+                                                            <small class="text-light fw-medium">완료된 사업</small>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <p class="mb-0">-</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="align-middle">
+                                                            <small class="text-light fw-medium">대기중인 사업</small>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <p class="mb-0">-</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="align-middle">
+                                                            <small class="text-light fw-medium">실패한 사업</small>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <p class="mb-0">-</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="align-middle">
+                                                            <small class="text-light fw-medium">기타 사항</small>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <p class="mb-0">-</p>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 id="week_name_h4"></h4>
+                            </div>
+                            <div class="card-body card-datatable table-responsive mt-2" style="overflow-x: auto;">
+                                <table id="weekly_report_table" class="dt-multilingual table border-top">
+                                    <thead>
+                                    <tr style="color: #3b3b3b">
+                                        <th style="width: 1%"><input type="checkbox" id="check_all" style="margin-top: 5px;"></th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%">작성일</th>
+                                        <th style="font-weight: bold; width: 10%;">프로젝트</th>
+                                        <th style="font-weight: bold; text-align: center; width: 10%;">TASK</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6%;">담당자</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">실행항목</th>
+                                        <th style="font-weight: bold; text-align: center; width: 5%;">진행상태</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%;">시작일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 6.5%;">종료일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 5%;">소요일</th>
+                                        <th style="font-weight: bold; text-align: center; width: 16%;">참고사항</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Content -->
+
+                    <!-- Footer -->
+                    {% include 'admins/index_footer.html' %}
+                    <!-- / Footer -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
+                {% include "admins/weekly_report/weekly_report_pm_add_modal.html" %}
+                {% include "admins/weekly_report/pm_report_modal.html" %}
+
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+{% include 'admins/admin_footer.html' %}
+<script>
+    let project_table = null;
+    let weekly_report_table = null;
+    var w_year = today.getFullYear().toString().slice(-2);
+    var isWeekSelected = false;
+    let weekSelected_id = null;
+
+    $(document).ready(function () {
+
+        // 확대, 축소 기능
+        $("#toggleButton").click(function () {
+            $("#layout-menu").toggle();
+            $(".invoice-actions").toggle();
+            $("#layout-navbar").toggle();
+
+            var project_table_div = $(".project_table_container");
+            if (project_table_div.hasClass("col-xl-9") || project_table_div.hasClass("col-md-8")) {
+                project_table_div.removeClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4').addClass('col-xl-12');
+            } else {
+                project_table_div.removeClass('col-xl-12').addClass('col-xl-9 col-md-8 col-12 mb-md-0 mb-4');
+            }
+
+            var layout_page = $("#layout_page");
+            if (layout_page.hasClass("layout-page")) {
+                layout_page.removeClass("layout-page").addClass("layout-container");
+            } else {
+                layout_page.removeClass("layout-container").addClass("layout-page");
+            }
+
+            var weekly_table = $("#weekly_table_container");
+            if (weekly_table.hasClass("container-fluid")) {
+                weekly_table.removeClass('container-fluid flex-grow-1 container-p-y').addClass('col-xl-12');
+            } else {
+                weekly_table.removeClass('col-xl-12').addClass('container-fluid flex-grow-1 container-p-y');
+            }
+        });
+        // 초기화를 해줘야 option이 출력 됨.
+        $('#year_select').select2();
+        $('#weekly_select').select2();
+        $('#pm_select').select2();
+
+
+        // DataTables (Project, Task 테이블)
+
+
+        // DataTables (업무 보고 테이블)
+        weekly_report_table = new DataTable('#weekly_report_table', {
+            responsive: true,
+            destroy: true,
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: '등록',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    $("#pm_edit_btn").hide()
+                                    $("#pm_add_btn").show()
+                                    $("#pm_report_add_form").trigger("reset");
+                                    $("#weekly_report_add_pm_modal").modal('show')
+                                }
+                            }
+                        },
+                        {
+                            text: '수정',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                $("#pm_edit_btn").show()
+                                $("#pm_add_btn").hide()
+
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    let subtask_data = dt.row({selected: true}).data();
+                                    pm_report_edit_modal(subtask_data)
+
+                                }
+                            }
+                        },
+                        {
+                            text: '삭제',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "삭제 하시겠습니까?",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: '확인',
+                                        customClass: {
+                                            confirmButton: 'btn btn-primary me-3',
+                                            cancelButton: 'btn btn-label-secondary'
+                                        },
+                                        buttonsStyling: false
+                                    }).then(function (result) {
+                                        if (result.value) {
+                                            let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                            //console.log(allSelectedRowsData)
+                                            let selected_list = []
+
+                                            // 각 행에 대한 로직 추가
+                                            for (let i = 0; i < allSelectedRowsData.length; i++) {
+
+                                                selected_list.push(allSelectedRowsData[i][11]);
+
+                                            }
+                                            //console.log(selected_list)
+                                            $.ajax({
+                                                url: "{% url 'WeeklyTaskSub_pm_delete' %}",
+                                                type: "POST",
+                                                contentType: "application/json",
+                                                data: JSON.stringify({type: 'D', ids: selected_list}),
+                                                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                                                success: function (res) {
+                                                    Swal.fire({
+                                                        title: 'Success!',
+                                                        text: '삭제 완료',
+                                                        icon: 'success',
+                                                        confirmButtonText: '확인'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            darwData(weekSelected_id)
+                                                        }
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            }
+                        },
+                        {
+                            text: '주간보고-CEO',
+                            className: 'btn btn-label-secondary',
+                            action: function (e, dt, node, config) {
+                                if (!isWeekSelected) {
+                                    alert('왼쪽 상단 주차 목록에서 버튼을 클릭 해주세요.');
+                                    return false;
+                                } else {
+                                    //$("#pe_report_modal").modal('show')
+                                    let allSelectedRowsData = dt.rows({selected: true}).data().toArray();
+                                    pm_do_report(allSelectedRowsData)
+                                }
+                            }
+                        }
+                    ],
+                }
+            },
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 0,
+                    className: 'select-checkbox'
+                },
+                {
+                    targets: 1,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                },
+                {
+                    targets: 6,
+                    render: function (data, type, row, meta) {
+                        switch (data) {
+                            case 'S' :
+                                data = '<span class="badge rounded-pill bg-secondary">대기</span>';
+                                break;
+                            case 'P' :
+                                data = '<span class="badge rounded-pill bg-info">진행</span>';
+                                break;
+                            case 'H' :
+                                data = '<span class="badge rounded-pill bg-warning">보류</span>';
+                                break;
+                            case 'R' :
+                                data = '<span class="badge rounded-pill bg-danger">재검토</span>';
+                                break;
+                            default:
+                                data = '<span class="badge rounded-pill bg-success">완료</span>';
+                                break
+                        }
+
+                        return data;
+                    }
+                },
+                {
+                    targets: 7,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                },
+                {
+                    targets: 8,
+                    render: DataTable.render.datetime('YY-MM-DD')
+                }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            language: {
+                emptyTable: "담당PM과 월별 주차를 선택하고 검색버튼을 눌러주세요."
+            }
+
+        });
+
+        weekly_report_table.on('select deselect draw', function () {
+            updateButtonStatus();
+        });
+
+        updateButtonStatus();
+
+        // 전체 선택
+        $('#check_all').on('click', function () {
+            if (this.checked) {
+                weekly_report_table.rows({page: 'current'}).select();
+            } else {
+                weekly_report_table.rows({page: 'current'}).deselect();
+            }
+        });
+
+        // 행 체크 해제 시 전체 선택 업데이트
+        weekly_report_table.on('select deselect', function () {
+            var totalRows = weekly_report_table.rows({ page: 'current' }).count();
+            var selectedRows = weekly_report_table.rows({ page: 'current', selected: true }).count();
+            $('#check_all').prop('checked', totalRows === selectedRows);
+        });
+
+    });
+
+    function pm_select() {
+        var selectBox = document.getElementById("pm_select");
+        var pm_id = selectBox.options[selectBox.selectedIndex].value;
+
+        $.ajax({
+            url: "{% url 'PmSelect' %}",
+            type: "GET",
+            data: {
+                pm_id: pm_id
+            },
+            success: function (res) {
+                var weeklySelect = $('#weekly_select');
+                weeklySelect.empty();
+
+                weeklySelect.append($('<option>', {
+                    value: "",
+                    text: "--월, 주차를 선택해주세요.--",
+                    disabled: true,
+                    selected: true
+                }));
+
+                res.data.forEach(function (item) {
+                    weeklySelect.append($('<option>', {
+                        value: item.id,
+                        text: item.week_name,
+                    }));
+                });
+
+                weeklySelect.on('change', function() {
+                    weekSelected_id = this.value;
+                });
+            }
+        })
+    }
+
+    $("#employee_search_btn").click(function () {
+        console.log("선택된 주차의 ID:", weekSelected_id);
+        darwData(weekSelected_id)
+    })
+
+    // 버튼 활성화
+    function updateButtonStatus() {
+        let selectedRows = weekly_report_table.rows({selected: true}).count();
+
+        weekly_report_table.button(0).enable(selectedRows < 1); // 등록
+        weekly_report_table.button(1).enable(selectedRows === 1); // 수정
+        weekly_report_table.button(2).enable(selectedRows > 0); // 삭제
+        //weekly_report_table.button(3).enable(selectedRows > 0); // 주간보고
+    }
+
+    function week_formatData(results) {
+        let formattedResults = [];
+
+        results.forEach(result => {
+            let row = [
+                null,
+                result.r_date,
+                result.p_name,
+                result.t_name,
+                result.r_man__username,
+                result.perform,
+                result.w_status,
+                result.w_start,
+                result.w_close,
+                result.required_date + '일',
+                result.w_note,
+                //result.charge__username,
+                result.id,
+                result.charge
+            ];
+
+            formattedResults.push(row)
+        })
+
+        return formattedResults;
+    }
+
+    // DataTable 랜더링
+    function darwData(weekSelected_id) {
+        isWeekSelected = true;
+
+        $.ajax({
+            url: "{% url 'WeeklyTaskSubView_PM' %}",
+            type: "GET",
+            data: {
+                week_id: weekSelected_id
+            },
+            success: function (res) {
+                console.log(res)
+                if (!res.data || res.data.length === 0) {
+                    weekly_report_table.clear().draw();
+                    weekly_report_table.settings()[0].oLanguage.sEmptyTable = '등록된 주간보고가 없습니다.';
+                    weekly_report_table.draw();
+                } else {
+                    let drawData = week_formatData(res.data);
+                    w_master_drawData(weekSelected_id)
+                    weekly_report_table.rows().remove().draw();
+                    weekly_report_table.rows.add(drawData).draw();
+                }
+            }
+        })
+    }
+
+    function w_master_drawData(weekSelected_id) {
+        $.ajax({
+            url: "{% url 'GetWeeklyMaster_CEO' %}",
+            type: "GET",
+            data: {
+                week_id: weekSelected_id
+            },
+            success: function (res) {
+                console.log(res)
+                var htmlContent = '';
+
+                res.data.forEach(function (item) {
+                    htmlContent += '<tr><td class="align-middle" style="width: 15%;">' +
+                        '<small class="text-light fw-medium">진행중인 사업</small></td>' +
+                        '<td class="py-3"><p class="mb-0">' + item.p_working + '</p></td></tr>';
+
+                    htmlContent += '<tr><td class="align-middle">' +
+                        '<small class="text-light fw-medium">완료된 사업</small></td>' +
+                        '<td class="py-3"><p class="mb-0">' + item.p_finish + '</p></td></tr>';
+
+                    htmlContent += '<tr><td class="align-middle">' +
+                        '<small class="text-light fw-medium">대기중인 사업</small></td>' +
+                        '<td class="py-3"><p class="mb-0">' + item.p_stay + '</p></td></tr>';
+
+                    htmlContent += '<tr><td class="align-middle">' +
+                        '<small class="text-light fw-medium">실패한 사업</small></td>' +
+                        '<td class="py-3"><p class="mb-0">' + item.p_fail + '</p></td></tr>';
+
+                    htmlContent += '<tr><td class="align-middle">' +
+                        '<small class="text-light fw-medium">기타 사항</small></td>' +
+                        '<td class="py-3"><p class="mb-0">' + item.p_etc + '</p></td></tr>';
+                });
+
+                document.getElementById('weekly_master_table').getElementsByTagName('tbody')[0].innerHTML = htmlContent;
+                var item = res.data[0];
+                $("#pm_info").text(
+                    item.weekly_no__owner__department_position__name + " " +
+                    item.weekly_no__owner__username + " " +
+                    item.weekly_no__owner__job_position__name
+                );
+            }
+        })
+    }
+</script>
 </html>

@@ -396,8 +396,19 @@ def weekly_report_mgmt_page(request):  # 주간업무보고 PM
 
 
 def weekly_report_ceo_page(request):  # 주간업무보고 CEO
-    context = {}
-    return render(request, 'admins/weekly_report/weekly_report_pm.html', context)
+    current_year = datetime.now().year
+    year_range = range(current_year - 10, current_year + 11)
+
+    pm_list = UserMaster.objects.filter(report_auth="M", is_staff=True)
+    weekly_list = Weekly.objects.all()
+
+    context = {
+        'current_year': current_year,
+        'year_range': year_range,
+        'weekly_list': weekly_list,
+        'pm_list': pm_list,
+    }
+    return render(request, 'admins/weekly_report/weekly_report_ceo.html', context)
 
 
 def holiday_info_page(request):
