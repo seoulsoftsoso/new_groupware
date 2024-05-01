@@ -36,7 +36,7 @@ class GetWeeklyMaster_CEO(View):
     def get(self, request, *args, **kwargs):
         weekly_id = request.GET.get('week_id')
 
-        result = WeeklyMaster.objects.filter(weekly_no_id=weekly_id).values(
+        result = WeeklyMaster.objects.filter(weekly_no_id=weekly_id, delete_flag='N', weekly_no__report_flag='Y').values(
             'id', 'p_working', 'p_finish', 'p_stay', 'p_fail', 'p_etc', 'delete_flag', 'create_at', 'created_by_id',
             'weekly_no_id', 'weekly_no__owner__username', 'weekly_no__owner__department_position__name',
             'weekly_no__owner__job_position__name'

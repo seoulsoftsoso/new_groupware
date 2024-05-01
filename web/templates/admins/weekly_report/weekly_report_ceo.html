@@ -219,6 +219,7 @@
     var w_year = today.getFullYear().toString().slice(-2);
     var isWeekSelected = false;
     let weekSelected_id = null;
+    let res_drawData = [];
 
     $(document).ready(function () {
 
@@ -540,10 +541,10 @@
                     weekly_report_table.settings()[0].oLanguage.sEmptyTable = '등록된 주간보고가 없습니다.';
                     weekly_report_table.draw();
                 } else {
-                    let drawData = week_formatData(res.data);
                     w_master_drawData(weekSelected_id)
+                    res_drawData = week_formatData(res.data);
                     weekly_report_table.rows().remove().draw();
-                    weekly_report_table.rows.add(drawData).draw();
+                    //weekly_report_table.rows.add(res_drawData).draw();
                 }
             }
         })
@@ -558,37 +559,51 @@
             },
             success: function (res) {
                 console.log(res)
-                var htmlContent = '';
+                if (!res.data || res.data.length === 0) {
+                    // 데이터가 없을 때, weekly_master_table에 메시지를 표시합니다.
+                    var weeklyMasterTableBody = document.getElementById('weekly_master_table').getElementsByTagName('tbody')[0];
+                    weeklyMasterTableBody.innerHTML = '<tr><td colspan="2" class="text-center">등록된 주간보고가 없습니다.</td></tr>';  // 모든 열을 abbr할 단 하나의 열이 있다고 가정합니다.
 
-                res.data.forEach(function (item) {
-                    htmlContent += '<tr><td class="align-middle" style="width: 15%;">' +
-                        '<small class="text-light fw-medium">진행중인 사업</small></td>' +
-                        '<td class="py-3"><p class="mb-0">' + item.p_working + '</p></td></tr>';
+                    // 같은 상태를 weekly_report_table에도 표시합니다.
+                    weekly_report_table.clear().draw();
+                    weekly_report_table.settings()[0].oLanguage.sEmptyTable = '등록된 주간보고가 없습니다.';
+                    weekly_report_table.draw();
+                    res_drawData = [];
+                } else {
+                    var htmlContent = '';
 
-                    htmlContent += '<tr><td class="align-middle">' +
-                        '<small class="text-light fw-medium">완료된 사업</small></td>' +
-                        '<td class="py-3"><p class="mb-0">' + item.p_finish + '</p></td></tr>';
+                    res.data.forEach(function (item) {
+                        htmlContent += '<tr><td class="align-middle" style="width: 15%;">' +
+                            '<small class="text-light fw-medium">진행중인 사업</small></td>' +
+                            '<td class="py-3"><p class="mb-0">' + item.p_working + '</p></td></tr>';
 
-                    htmlContent += '<tr><td class="align-middle">' +
-                        '<small class="text-light fw-medium">대기중인 사업</small></td>' +
-                        '<td class="py-3"><p class="mb-0">' + item.p_stay + '</p></td></tr>';
+                        htmlContent += '<tr><td class="align-middle">' +
+                            '<small class="text-light fw-medium">완료된 사업</small></td>' +
+                            '<td class="py-3"><p class="mb-0">' + item.p_finish + '</p></td></tr>';
 
-                    htmlContent += '<tr><td class="align-middle">' +
-                        '<small class="text-light fw-medium">실패한 사업</small></td>' +
-                        '<td class="py-3"><p class="mb-0">' + item.p_fail + '</p></td></tr>';
+                        htmlContent += '<tr><td class="align-middle">' +
+                            '<small class="text-light fw-medium">대기중인 사업</small></td>' +
+                            '<td class="py-3"><p class="mb-0">' + item.p_stay + '</p></td></tr>';
 
-                    htmlContent += '<tr><td class="align-middle">' +
-                        '<small class="text-light fw-medium">기타 사항</small></td>' +
-                        '<td class="py-3"><p class="mb-0">' + item.p_etc + '</p></td></tr>';
-                });
+                        htmlContent += '<tr><td class="align-middle">' +
+                            '<small class="text-light fw-medium">실패한 사업</small></td>' +
+                            '<td class="py-3"><p class="mb-0">' + item.p_fail + '</p></td></tr>';
 
-                document.getElementById('weekly_master_table').getElementsByTagName('tbody')[0].innerHTML = htmlContent;
-                var item = res.data[0];
-                $("#pm_info").text(
-                    item.weekly_no__owner__department_position__name + " " +
-                    item.weekly_no__owner__username + " " +
-                    item.weekly_no__owner__job_position__name
-                );
+                        htmlContent += '<tr><td class="align-middle">' +
+                            '<small class="text-light fw-medium">기타 사항</small></td>' +
+                            '<td class="py-3"><p class="mb-0">' + item.p_etc + '</p></td></tr>';
+                    });
+
+                    document.getElementById('weekly_master_table').getElementsByTagName('tbody')[0].innerHTML = htmlContent;
+                    var item = res.data[0];
+                    $("#pm_info").text(
+                        item.weekly_no__owner__department_position__name + " " +
+                        item.weekly_no__owner__username + " " +
+                        item.weekly_no__owner__job_position__name
+                    );
+           
+                    weekly_report_table.rows.add(res_drawData).draw(); // report_flag가 N일때 drawData도 랜더링 막기 위함.
+                }
             }
         })
     }
