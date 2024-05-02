@@ -502,5 +502,16 @@ class WeeklySub(Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='ws_updatedby')  # 최종작성자
 
 
+class GradeMaster(Model):
+    grade_score = models.FloatField(null=False, verbose_name='평가 점수')
+    grade_opinion = models.TextField(null=True, verbose_name='평가 의견')
+    weekly_sub = models.ForeignKey('WeeklySub', models.CASCADE, null=False, verbose_name='상위 Sub', related_name='sub_no')
+    delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='gd_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='gd_updatedby')  # 최종작성자
+
+
 
 

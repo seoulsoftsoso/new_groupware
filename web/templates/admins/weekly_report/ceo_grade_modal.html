@@ -1,0 +1,101 @@
+{% load static %}
+<!-- Modal -->
+<form id="ceo_grade_form">
+    {% csrf_token %}
+    <div class="modal fade" id="ceo_grade_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1" style="font-family: Pretendard;">평가하기</h5>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="grade_score" class="form-label">* 평가점수</label>
+                        <input type="number" class="form-control" id="grade_score" name="grade_score" placeholder="" required min="0" max="10">
+                    </div>
+
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="grade_opinion" class="form-label">* 평가의견</label>
+                        <textarea type="text" class="form-control" id="grade_opinion" name="grade_opinion" placeholder="" required></textarea>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="ceo_grade_btn">확인</button>
+                    <button type="submit" class="btn btn-primary" id="edit_grade_btn" style="display: none">수정</button>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function do_grade(sub_id) {
+        $("#ceo_grade_form").trigger("reset");
+        $("#edit_grade_btn").hide()
+        $("#ceo_grade_btn").show()
+        $("#ceo_grade_modal").modal('show')
+        console.log(sub_id)
+
+        $("#ceo_grade_btn").off('click').click(function (e) {
+            e.preventDefault()
+
+            let formdata = $("#ceo_grade_form").serializeArray()
+            formdata.push({name:'sub_id', value:sub_id})
+            formdata.push({name:'type', value:'A'})
+
+            $.ajax({
+                url:"{% url 'CeoGrade' %}",
+                type:"POST",
+                data: formdata,
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (res) {
+                    alert('평가가 완료되었습니다.')
+                    $("#ceo_grade_modal").modal('hide')
+                    darwData(weekSelected_id)
+                }
+            })
+        })
+
+    }
+
+    function edit_grade(subtask_data) {
+        console.log('subtask_data', subtask_data)
+        $("#edit_grade_btn").show()
+        $("#ceo_grade_btn").hide()
+
+        $("#grade_score").val(subtask_data[12])
+        $("#grade_opinion").val(subtask_data[11])
+        $("#ceo_grade_modal").modal('show')
+
+        $("#edit_grade_btn").click(function (e) {
+            e.preventDefault()
+
+            let formdata = $("#ceo_grade_form").serializeArray()
+            formdata.push({name:'sub_id', value:subtask_data[13]})
+            formdata.push({name:'type', value:'E'})
+
+            $.ajax({
+                url:"{% url 'CeoGrade' %}",
+                type:"POST",
+                data: formdata,
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success : function (res) {
+                    alert('평가가 수정되었습니다.')
+                    $("#ceo_grade_modal").modal('hide')
+                    darwData(weekSelected_id)
+                }
+            })
+        })
+
+    }
+</script>

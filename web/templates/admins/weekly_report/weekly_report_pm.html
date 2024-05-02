@@ -17,10 +17,6 @@
 </head>
 <body>
 <style>
-    #weekly_table, #weekly_table th, #weekly_table td {
-        color: #3b3b3b; /* 원하는 색상 코드로 변경 */
-    }
-
     .collapsed {
         display: none;
     }
@@ -49,6 +45,10 @@
     table.dataTable thead > tr > th.dt-orderable-asc, table.dataTable thead > tr > th.dt-orderable-desc {
         padding-right: 10px;
     }
+
+    .select2-selection__clear {
+        display: none
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -70,9 +70,9 @@
                                 <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i class='bx bx-search'></i>확대/축소
                                 </button>
                             </div>
-                            <div class="col-auto">
-                                <div class="row">
-                                    <div class="col-auto mt-4">
+                            <div class="col-xl-8">
+                                <div class="row justify-content-end">
+                                    <div class="col-xl-2 mt-4">
                                         <select id="year_select"
                                                 class="select2 form-select form-select-lg select2-hidden-accessible"
                                                 data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"

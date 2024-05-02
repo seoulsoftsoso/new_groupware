@@ -199,7 +199,8 @@ urlpatterns = [
                   path('admins/weekly_report_ceo', weekly_report_ceo_page, name="weeklyReportCEO"),
                   path('admins/all_proejct_info', AllProjectInfo.as_view(), name="AllProjectInfo"),
                   path('admins/weekly_tasksub_add', WeeklyTaskSubView_PE.as_view(), name="WeeklyTaskSubView_PE"),
-                  path('admins/weekly_tasksub_add_pm', WeeklyTaskSubView_PM.as_view(), name="WeeklyTaskSubView_PM"),
+                  path('admins/weekly_tasksub_pm', WeeklyTaskSubView_PM.as_view(), name="WeeklyTaskSubView_PM"),
+                  path('admins/weekly_tasksub_ceo', WeeklyTaskSubView_CEO.as_view(), name="WeeklyTaskSubView_CEO"),
                   path('admins/weekly_sub_post', WeeklySubPost.as_view(), name="WeeklySubPost"),
                   path('admins/weekly_sub_post_pm', WeeklySubPost_PM.as_view(), name="WeeklySubPost_PM"),
                   path('admins/weekly_task_sub_delete', WeeklyTaskSub_delete, name="WeeklyTaskSub_delete"),
@@ -208,6 +209,7 @@ urlpatterns = [
                   path('admins/pm_do_report_pe', pm_do_report_pe, name="pm_do_report_pe"),
                   path('admins/pm_select', PmSelect.as_view(), name="PmSelect"),
                   path('admins/ceo_get_weekly_report', GetWeeklyMaster_CEO.as_view(), name="GetWeeklyMaster_CEO"),
+                  path('admins/ceo_grade', CeoGrade.as_view(), name="CeoGrade"),
 
 
                   # 휴가관리
