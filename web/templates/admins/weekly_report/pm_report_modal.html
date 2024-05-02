@@ -63,11 +63,17 @@
         //console.log(selected_list)
         $("#pm_report_modal").modal('show')
 
-        $("#pm_report_btn").click(function (e) {
-            e.preventDefault()
-            let formdata = $("#pm_report_form").serializeArray()
-            formdata.push({name: 'weekly_no', value: weekSelected_id})
-            //console.log(formdata)
+        $("#pm_report_btn").off('click').click(function (e) {
+            e.preventDefault();
+
+            let form = $("#pm_report_form")[0];
+            if (form.checkValidity() === false) {
+                form.reportValidity();
+                return;
+            }
+
+            let formdata = $("#pm_report_form").serializeArray();
+            formdata.push({name: 'weekly_no', value: weekSelected_id});
 
             $.ajax({
                 url: "{% url 'pm_do_report_pe' %}",
@@ -75,12 +81,12 @@
                 data: formdata,
                 headers: {"X-CSRFToken": '{{ csrf_token }}'},
                 success: function (res) {
-                    alert('보고 완료')
+                    alert('보고 완료');
                     $("#pm_report_modal").modal('hide');
-                    darwData(weekSelected_id)
+                    darwData(weekSelected_id);
                 }
-            })
-        })
+            });
+        });
     }
 </script>
 
