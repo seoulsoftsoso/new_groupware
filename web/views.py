@@ -259,7 +259,7 @@ def get_project_data(userid):
     project_data = ProMaster.objects.filter(delete_flag='N') \
         .select_related('pj_master', 'pj_type') \
         .values('id', 'pjcode', 'pjname', 'start_date', 'end_date', 'pj_customer', 'pj_note',
-                'pj_master__username', 'pj_type__name') \
+                'pj_master__username', 'pj_type__name', 'created_by_id') \
         .distinct() \
         .filter(Q(pj_master_id=userid) | Q(promaster__member_id=userid))
 

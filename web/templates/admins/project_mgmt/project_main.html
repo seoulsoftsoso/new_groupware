@@ -69,17 +69,19 @@
               <div class="progress mb-4" style="height: 8px">
                 <div class="progress-bar w-20" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
               </div>{% endcomment %}
-              <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
-                  <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50"
-                     onclick="project_main_edit_btn('{{ item.id }}', '{{ item.pjcode }}', '{{ item.pjname }}',
-                             '{{ item.start_date }}', '{{ item.end_date }}', '{{ item.pj_type }}', '{{ item.pj_customer }}',
-                             '{{ item.pj_note }}')">
-                      <i class="bx bx-edit align-middle me-2"></i><span>수정하기</span>
-                  </a>
-                <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="delProject({{ item.id }})">
-                  <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
-                </a>
-              </div>
+                  {% if request.user.is_superuser or item.created_by_id == request.user.id %}
+                  <div class="d-flex flex-column flex-md-row gap-2 text-nowrap pe-xl-3 pe-xxl-0">
+                      <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center w-50"
+                         onclick="project_main_edit_btn('{{ item.id }}', '{{ item.pjcode }}', '{{ item.pjname }}',
+                                 '{{ item.start_date }}', '{{ item.end_date }}', '{{ item.pj_type }}', '{{ item.pj_customer }}',
+                                 '{{ item.pj_note }}')">
+                          <i class="bx bx-edit align-middle me-2"></i><span>수정하기</span>
+                      </a>
+                        <a class="app-academy-md-50 btn btn-label-primary d-flex align-items-center w-50" onclick="delProject({{ item.id }})">
+                          <span class="me-2">삭제하기</span><i class="bx bx-receipt lh-1 scaleX-n1-rtl"></i>
+                        </a>
+                  </div>
+                  {% endif %}
             </div>
           </div>
         </div>
