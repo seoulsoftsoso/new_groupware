@@ -49,6 +49,10 @@
     .select2-selection__clear {
         display: none
     }
+
+    #weekly_report_table tbody tr {
+        cursor: pointer;
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -737,5 +741,15 @@
             }
         })
     }
+
+    $('#weekly_report_table tbody').on('click', 'tr', function () {
+        let data = weekly_report_table.row(this).data();
+        if (!data) {
+            return;
+        }
+        $("#submit_edit_btn").show();
+        $("#submit_add_btn").hide();
+        weekly_report_edit_modal(data);
+    });
 </script>
 </html>
