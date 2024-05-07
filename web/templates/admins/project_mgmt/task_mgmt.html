@@ -399,6 +399,7 @@
                             text: '등록',
                             className: 'subaddClass',
                             action: function (e, dt, node, config) {
+                                $("#addNTSForm").trigger("reset")
                                 $('#add_btn_modal_sub').show()
                                 $('#edit_btn_modal_sub').hide()
                                 $('#taks_title_h3').text('세부내용 등록')
@@ -417,6 +418,7 @@
                             action: function (e, dt, node, config) {
                                 let selectedRowData = dt.row({selected: true}).data();
                                 // console.log(selectedRowData);
+                                $("#addNTSForm").trigger("reset")
                                 $('#add_btn_modal_sub').hide();
                                 $('#edit_btn_modal_sub').show();
                                 $('#taks_title_h3').text('세부내용 수정');
@@ -672,7 +674,7 @@
         let allData = $('#addNTSForm').serializeArray();
         allData.push({name: 'selected_task_id', value: selected_task_id})
         allData.push({name: 'csrfmiddlewaretoken', value: '{{ csrf_token }}'})
-        console.log('여기인가?')
+
         //유효성 검사 체크
         let val_check = true;
 
