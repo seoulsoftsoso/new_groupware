@@ -8,7 +8,11 @@
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
 
 </head>
-
+<style>
+    .flatpickr-calendar {
+        box-shadow: 0 0 0 0 !important;
+    }
+</style>
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -28,7 +32,7 @@
               <div class="card app-calendar-wrapper">
                 <div class="row g-0">
                   <!-- Calendar Sidebar -->
-                  <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" >
+                  <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" style="width: 18%">
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                       <div class="d-grid">
                         <button
