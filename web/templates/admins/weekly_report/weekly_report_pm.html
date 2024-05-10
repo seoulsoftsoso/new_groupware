@@ -22,7 +22,7 @@
     }
 
     .weekly_list {
-        max-height: 320px;
+        max-height: 360px;
         overflow-y: auto;
     }
 
@@ -49,6 +49,10 @@
     .select2-selection__clear {
         display: none
     }
+
+    #weekly_report_table tbody tr {
+      cursor: pointer;
+    }
 </style>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -64,15 +68,15 @@
 
                 <div class="container-fluid flex-grow-1 container-p-y">
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <div class="row justify-content-between align-items-center">
-                            <div class="col-auto mt-4">
+                            <div class="col-auto">
                                 <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i class='bx bx-search'></i>확대/축소
                                 </button>
                             </div>
                             <div class="col-xl-8">
                                 <div class="row justify-content-end">
-                                    <div class="col-xl-2 mt-4">
+                                    <div class="col-xl-2">
                                         <select id="year_select"
                                                 class="select2 form-select form-select-lg select2-hidden-accessible"
                                                 data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
@@ -80,7 +84,7 @@
                                             <option data-select2-id="2" value=""></option>
                                         </select>
                                     </div>
-                                    <div class="col-auto mt-4">
+                                    <div class="col-auto">
                                         <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색</button>
                                     </div>
                                 </div>
@@ -89,7 +93,7 @@
                     </div>
 
 
-                    <div class="row invoice-preview mt-5">
+                    <div class="row invoice-preview">
                         <!-- Invoice -->
                         <div class="col-xl-3 col-md-4 col-12 invoice-actions">
                             <div class="card">
@@ -152,7 +156,7 @@
                         </div>
                     </div>
 
-                    <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
+                    <div class="flex-grow-1 container-p-y" id="weekly_table_container" style="width: 100%">
                         <div class="card">
                             <div class="card-body">
                                 <h4 id="week_name_h4"></h4>
@@ -231,9 +235,9 @@
 
             var weekly_table = $("#weekly_table_container");
             if (weekly_table.hasClass("container-fluid")) {
-                weekly_table.removeClass('container-fluid flex-grow-1 container-p-y').addClass('col-xl-12');
+                weekly_table.removeClass('container-fluid flex-grow-1 container-p-y').addClass('flex-grow-1 container-p-y');
             } else {
-                weekly_table.removeClass('col-xl-12').addClass('container-fluid flex-grow-1 container-p-y');
+                weekly_table.removeClass('col-xl-12').addClass('flex-grow-1 container-p-y');
             }
         });
 
@@ -286,6 +290,26 @@
                 }, {
                     targets: 5,
                     render: DataTable.render.datetime('YY-MM-DD')
+                }, {
+                    targets: [1, 2, 6, 7],
+                    render: function(data, type, row, meta) {
+                        if (type === 'display' && data.length > 10) {
+                            // 오버뷰
+                            return '<span title="' + data + '">' + data.substr(0, 10) + '...</span>';
+                        } else {
+                            return data;
+                        }
+                    }
+                }, {
+                    targets: [3],
+                    render: function(data, type, row, meta) {
+                        if (type === 'display' && data.length > 20) {
+                            // 오버뷰
+                            return '<span title="' + data + '">' + data.substr(0, 20) + '...</span>';
+                        } else {
+                            return data;
+                        }
+                    }
                 }
             ],
             select: {
@@ -457,7 +481,18 @@
                 {
                     targets: 8,
                     render: DataTable.render.datetime('YY-MM-DD')
-                }],
+                },{
+                    targets: [2, 3, 5, 9],
+                    render: function(data, type, row, meta) {
+                        if (type === 'display' && data.length > 10) {
+                            // 오버뷰
+                            return '<span title="' + data + '">' + data.substr(0, 10) + '...</span>';
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+                ],
             select: {
                 style: 'multi',
                 selector: 'td:first-child'
@@ -693,5 +728,15 @@
             }
         })
     }
+
+    $('#weekly_report_table tbody').on('click', 'tr', function () {
+        let data = weekly_report_table.row(this).data();
+        if (!data) {
+            return;
+        }
+        $("#pm_edit_btn").show();
+        $("#pm_add_btn").hide();
+        pm_report_edit_modal(data);
+    });
 </script>
 </html>

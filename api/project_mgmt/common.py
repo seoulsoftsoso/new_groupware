@@ -265,7 +265,7 @@ class getSubData(View):
 
         taskId = request.GET.get('taskid')
         tasksub = ProTaskSub.objects.filter(task_parent=taskId, delete_flag='N').values(
-            'id', 'sub_etc', 'sub_content', 'sub_title', 'sub_status', 'due_date', 'issue'
+            'id', 'sub_etc', 'sub_content', 'sub_title', 'sub_status', 'due_date', 'issue', 'sub_start_date'
         ).order_by('-id')
         context = {'results': list(tasksub)}
         return JsonResponse(context, safe=False)

@@ -417,7 +417,7 @@
                             className: 'subeditClass',
                             action: function (e, dt, node, config) {
                                 let selectedRowData = dt.row({selected: true}).data();
-                                // console.log(selectedRowData);
+                                console.log(selectedRowData);
                                 $("#addNTSForm").trigger("reset")
                                 $('#add_btn_modal_sub').hide();
                                 $('#edit_btn_modal_sub').show();
@@ -645,8 +645,8 @@
             result.due_date,
             result.issue,
             result.sub_etc,
-            result.id
-
+            result.id,
+            result.sub_start_date
         ]);
     }
 
@@ -661,6 +661,8 @@
             moment.locale('ko');
             let formattedDate = moment(selectedRowData[4]).format('YYYY-MM-DD');
             $('#due_date').val(formattedDate);
+            let start_formattedDate = moment(selectedRowData[8]).format('YYYY-MM-DD');
+            $('#sub_start_date').val(start_formattedDate);
 
             $('#issue').val(selectedRowData[5])
             $('#sub_etc').val(selectedRowData[6])
