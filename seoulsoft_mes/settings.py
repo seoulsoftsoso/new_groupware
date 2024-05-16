@@ -130,8 +130,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'groupware',
-        'USER': 'root',
-        'PASSWORD': 'hong11',
+        'USER': 'cluster',
+        'PASSWORD': 'Cluster1105!@',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -211,8 +211,8 @@ LOGGING = {
     'loggers': {
         'django.db.backends': {
             'level': 'DEBUG',
-            'handlers': ['console']  # console에서 sql 쿼리문 확인
-            # 'handlers': ['file']
+            # 'handlers': ['console']  # console에서 sql 쿼리문 확인
+            'handlers': ['file']
         }
         # 'django.request': {
         #     'level': 'DEBUG',
@@ -229,9 +229,9 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 
 # url
-MEDIA_URL = 'http://127.0.0.1:8000/data/'
+# MEDIA_URL = 'http://127.0.0.1:8000/data/'
 # MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
-# MEDIA_URL = 'http://www.seoulsoft.kr/data/'
+MEDIA_URL = 'http://www.seoulsoft.kr/data/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 
 # Token
