@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from django.contrib.auth.hashers import make_password
 from django.db import models
-from django.db.models import Count, Q, Case, When, IntegerField, F, Func, CharField
+from django.db.models import Count, Q, Case, When, IntegerField, F, Func, CharField, Value, BooleanField
 from django.db.models.functions import TruncDate, Floor
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -41,13 +41,28 @@ def admin_index_page(request):
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
     # 공지사항
-    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N", fixed_flag=True).annotate(reply_count=Count('reply_board')).order_by("-id")[:4]
+    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").annotate(
+        is_fixed=Case(
+            When(fixed_flag=True, then=Value(True)),
+            default=Value(False),
+            output_field=BooleanField()
+        ),
+        reply_count=Count('reply_board')
+    ).order_by('-is_fixed', '-id')[:4]
 
     # fixed_notice = next((n for n in notices if n.fixed_flag), None)
     # notice = [n for n in notices if not n.fixed_flag][:3]
 
     # 전사게시판
-    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N", fixed_flag=True).annotate(reply_count=Count('reply_board')).order_by("-id")[:4]
+    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
+        is_fixed=Case(
+            When(fixed_flag=True, then=Value(True)),
+            default=Value(False),
+            output_field=BooleanField()
+        ),
+        reply_count=Count('reply_board')
+    ).order_by('-is_fixed', '-id')[:4]
+    print('fixed_board', fixed_board)
 
     # fixed_board = next((b for b in boards if b.fixed_flag), None)
     # board = [b for b in boards if not b.fixed_flag][:3]
