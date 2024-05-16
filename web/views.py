@@ -41,31 +41,10 @@ def admin_index_page(request):
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
     # 공지사항
-    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").annotate(
-        is_fixed=Case(
-            When(fixed_flag=True, then=Value(True)),
-            default=Value(False),
-            output_field=BooleanField()
-        ),
-        reply_count=Count('reply_board')
-    ).order_by('-is_fixed', '-id')[:4]
-
-    # fixed_notice = next((n for n in notices if n.fixed_flag), None)
-    # notice = [n for n in notices if not n.fixed_flag][:3]
+    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").order_by('-id')[:4]
 
     # 전사게시판
-    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(
-        is_fixed=Case(
-            When(fixed_flag=True, then=Value(True)),
-            default=Value(False),
-            output_field=BooleanField()
-        ),
-        reply_count=Count('reply_board')
-    ).order_by('-is_fixed', '-id')[:4]
-    print('fixed_board', fixed_board)
-
-    # fixed_board = next((b for b in boards if b.fixed_flag), None)
-    # board = [b for b in boards if not b.fixed_flag][:3]
+    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").order_by('-id')[:4]
 
     # 오늘의 이야기
     today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()

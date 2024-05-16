@@ -111,11 +111,7 @@
                             <blockquote class="blockquote mb-0">
                                 {% for obj in fixed_notice %}
                                     <a href="{% url 'noticeDetail' obj.id %}">
-                                        {% if obj.fixed_flag %}
-                                            <h6 style="color: #EE0000">* {{ obj.title }}</h6>
-                                        {% else %}
-                                            <h6>* {{ obj.title }}</h6>
-                                        {% endif %}
+                                        <h6>* {{ obj.title }}</h6>
                                     </a>
                                 {% endfor %}
                             </blockquote>
@@ -129,11 +125,7 @@
                             <blockquote class="blockquote mb-0">
                                {% for obj in fixed_board %}
                                     <a href="{% url 'boardDetail' obj.id  %}">
-                                        {% if obj.fixed_flag %}
-                                            <h6 style="color: #EE0000">* {{ obj.title }}</h6>
-                                        {% else %}
-                                            <h6>* {{ obj.title }}</h6>
-                                        {% endif %}
+                                        <h6>* {{ obj.title }}</h6>
                                     </a>
                                 {% endfor %}
                             </blockquote>
