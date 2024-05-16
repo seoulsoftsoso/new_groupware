@@ -138,7 +138,8 @@ def download_File(request, file_id):
     file_wrapper = FileWrapper(response.raw)
     response = HttpResponse(file_wrapper, content_type=content_type)
     # 파일 이름
-    response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(quote(file_name))
+    # response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(quote(file_name))
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
     return response
 
