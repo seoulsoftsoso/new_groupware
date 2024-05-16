@@ -41,19 +41,19 @@ def admin_index_page(request):
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
 
     # 공지사항
-    notices = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").annotate(reply_count=Count('reply_board')).order_by("-id")
+    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N", fixed_flag=True).annotate(reply_count=Count('reply_board')).order_by("-id")[:4]
 
-    fixed_notice = next((n for n in notices if n.fixed_flag), None)
-    notice = [n for n in notices if not n.fixed_flag][:3]
+    # fixed_notice = next((n for n in notices if n.fixed_flag), None)
+    # notice = [n for n in notices if not n.fixed_flag][:3]
 
     # 전사게시판
-    boards = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").annotate(reply_count=Count('reply_board')).order_by("-id")
+    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N", fixed_flag=True).annotate(reply_count=Count('reply_board')).order_by("-id")[:4]
 
-    fixed_board = next((b for b in boards if b.fixed_flag), None)
-    board = [b for b in boards if not b.fixed_flag][:3]
+    # fixed_board = next((b for b in boards if b.fixed_flag), None)
+    # board = [b for b in boards if not b.fixed_flag][:3]
 
     # 오늘의 이야기
-    today_about = BoardMaster.objects.filter(boardcode__code="GTODAY", delete_flag='N').last()
+    today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()
 
     type = request.GET.get('param', None)
     employee_list = get_member_info(type)
@@ -61,9 +61,7 @@ def admin_index_page(request):
     context = {
         'events': events,
         'fixed_notice': fixed_notice,
-        'notice': notice,
         'fixed_board': fixed_board,
-        'board': board,
         'employee_list': employee_list['result'],
         'today_about': today_about
     }

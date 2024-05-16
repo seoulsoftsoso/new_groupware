@@ -88,7 +88,7 @@ class CodeMaster(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.code:
-            latest_object = CodeMaster.objects.order_by('-id').first()
+            latest_object = CodeMaster.objects.filter(group_id=3).order_by('-id').first()
 
             if latest_object:
                 latest_code = latest_object.code

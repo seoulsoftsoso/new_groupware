@@ -27,7 +27,7 @@ class admin_notice_page(ListView):
         context['result'] = context['object_list']
         context['fixed_notice'] = BoardMaster.objects.filter(
             fixed_flag=True, delete_flag="N", boardcode_id=9).annotate(
-            reply_count=Count('reply_board')).order_by("-id")[:2]
+            reply_count=Count('reply_board')).order_by("-id")[:4]
         return context
 
 

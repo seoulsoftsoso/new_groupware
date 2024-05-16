@@ -60,16 +60,16 @@
                 <!-- Content -->
 
                 <div class="container-fluid flex-grow-1 container-p-y">
-                    <div class="mb-3">
+                    <div class="mb-1">
                         <div class="row justify-content-between align-items-center">
-                            <div class="col-auto mt-4">
+                            <div class="col-auto">
                                 <button type="button" class="btn rounded-pill btn-dark" id="toggleButton"><i
                                         class='bx bx-search'></i>확대/축소
                                 </button>
                             </div>
                             <div class="col-xl-8">
                                 <div class="row justify-content-end">
-                                    <div class="col-xl-3 mt-4">
+                                    <div class="col-xl-3">
                                         <select id="pm_select"
                                                 class="select2 form-select form-select-lg select2-hidden-accessible"
                                                 data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
@@ -80,7 +80,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-xl-4 mt-4">
+                                    <div class="col-xl-4">
                                         <select id="weekly_select"
                                                 class="select2 form-select form-select-lg select2-hidden-accessible"
                                                 data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
@@ -88,7 +88,7 @@
                                             <option data-select2-id="2" value="" disabled selected>--월, 주차를 선택해주세요.--</option>
                                         </select>
                                     </div>
-                                    <div class="col-auto mt-4">
+                                    <div class="col-auto">
                                         <button type="button" class="btn btn-outline-dark" id="employee_search_btn">검색
                                         </button>
                                     </div>
@@ -98,10 +98,10 @@
                     </div>
 
 
-                    <div class="row invoice-preview mt-5">
+                    <div class="row invoice-preview">
                         <!-- WeeklyMaster -->
 
-                        <div class="container-fluid flex-grow-1 container-p-y mt-4 project_table_container">
+                        <div class="flex-grow-1 container-p-y mt-1 project_table_container">
                             <div class="card invoice-preview-card">
                                 <div id="account-details-1" class="content">
                                     <!-- Headings -->
@@ -166,7 +166,7 @@
                     </div>
 
 
-                    <div class="container-fluid flex-grow-1 container-p-y mt-4" id="weekly_table_container">
+                    <div class="flex-grow-1 container-p" id="weekly_table_container">
                         <div class="card">
                             <div class="card-body">
                                 <h4 id="week_name_h4"></h4>
@@ -328,7 +328,18 @@
                 {
                     targets: 8,
                     render: DataTable.render.datetime('YY-MM-DD')
-                }],
+                },{
+                    targets: [2, 3, 5, 10],
+                    render: function(data, type, row, meta) {
+                        if (type === 'display' && data.length > 10) {
+                            // 오버뷰
+                            return '<span title="' + data + '">' + data.substr(0, 10) + '...</span>';
+                        } else {
+                            return data;
+                        }
+                    }
+                }
+                ],
             select: {
                 style: 'multi',
                 selector: 'td:first-child'
@@ -520,7 +531,7 @@
                         item.weekly_no__owner__username + " " +
                         item.weekly_no__owner__job_position__name
                     );
-           
+
                     weekly_report_table.rows.add(res_drawData).draw(); // report_flag가 N일때 drawData도 랜더링 막기 위함.
                 }
             }

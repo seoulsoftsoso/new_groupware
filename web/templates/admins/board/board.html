@@ -332,7 +332,7 @@
 
                 let fixedPosts = response.boardmaster.filter(post => post.fixed_flag).sort((a, b) => {
                     return new Date(b.created_at) - new Date(a.created_at);
-                }).slice(0, 2);
+                }).slice(0, 4);
                 let regularPosts = response.boardmaster.filter(post => !post.fixed_flag);
                 let combinedPosts = fixedPosts.concat(regularPosts);
 

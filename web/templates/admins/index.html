@@ -109,14 +109,9 @@
                         <h5 class="card-header">📢 공지사항 최신글</h5>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                                {% if fixed_notice %}
-                                    <a href="{% url 'noticeDetail' fixed_notice.id %}">
-                                        <h6 style="color: #EE0000;">* {{ fixed_notice.title }}</h6>
-                                    </a>
-                                {% endif %}
-                                {% for obj in notice %}
+                                {% for obj in fixed_notice %}
                                     <a href="{% url 'noticeDetail' obj.id %}">
-                                        <h6 style="color: #697a8d">* {{ obj.title }}</h6>
+                                        <h6 style="color: #EE0000;">* {{ obj.title }}</h6>
                                     </a>
                                 {% endfor %}
                             </blockquote>
@@ -128,14 +123,9 @@
                         <h5 class="card-header">📢 전사게시판 최신글</h5>
                         <div class="card-body">
                             <blockquote class="blockquote mb-0">
-                                {% if fixed_board %}
-                                    <a href="{% url 'boardDetail' fixed_board.id  %}">
-                                        <h6 style="color: #EE0000">* {{ fixed_board.title }}</h6>
-                                    </a>
-                                {% endif %}
-                                {% for obj in board %}
+                                {% for obj in fixed_board %}
                                     <a href="{% url 'boardDetail' obj.id  %}">
-                                        <h6 style="color: #697a8d">* {{ obj.title }}</h6>
+                                        <h6 style="color: #EE0000">* {{ obj.title }}</h6>
                                     </a>
                                 {% endfor %}
                             </blockquote>

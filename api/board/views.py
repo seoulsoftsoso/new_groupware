@@ -13,7 +13,7 @@ from api.models import BoardMaster, ReplyMaster, UserMaster, FileBoardMaster, Co
 
 
 def amdin_board_page(request):
-    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK', 'GTODAY'])
+    codemaster = CodeMaster.objects.filter(group=3).exclude(code__in=['NOTICE', 'ASK', 'G02'])
 
     context = {
         'codemaster': codemaster,
@@ -138,6 +138,7 @@ def admin_boardwrite_edit(request, board_id):
 
 def admin_boardGroup_add(request):
     if request.method == "POST":
+        print(request.POST)
         code = request.POST.get('board_group_code')
         name = request.POST.get('board_group_name')
         group = GroupCodeMaster.objects.get(id=3)
@@ -203,9 +204,9 @@ def today_about(request):
     content = request.POST.get('content')  # 내용
 
     try:
-        boardcode = CodeMaster.objects.get(code='GTODAY')
+        boardcode = CodeMaster.objects.get(code='G02')
     except CodeMaster.DoesNotExist:
-        return JsonResponse({"error": "GTODAY 코드가 존재하지 않습니다."}, status=400)
+        return JsonResponse({"error": "G02 코드가 존재하지 않습니다."}, status=400)
 
     board_add = BoardMaster(
         title=title,
