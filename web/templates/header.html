@@ -34,13 +34,7 @@
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=dxGxubaN3QcjV5OPEYjC"></script>
     -->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3ec4e4ae0adbe97712d1274f5920055f"></script>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/default.css' %}">
-    <link rel="stylesheet" href="{% static 'css/content.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/font/linecon.css' %}">
-    <link rel="stylesheet" href="{% static 'css/vector-icons/vector-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/font/steadysets.css' %}">
+
     <!-- fullpage.css -->
     <link rel="stylesheet" type="text/css" href="{% static 'fullpage/fullpage.css' %}">
     <script type="text/javascript" charset="utf-8" src="{% static 'js/default.js' %}"></script>
@@ -59,6 +53,16 @@
     <script src="{% static 'js/api_adapter.js' %}" type="text/javascript"></script>
 
     <title>{% block title %}서울소프트{% endblock %}</title>
-</head>
 
-<body>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+<style>
+    @font-face {
+        font-family: 'Pretendard';
+        src: url("{% static 'admin/fonts/Pretendard-Regular.woff' %}") format('woff');
+    }
+
+    body, html {
+        font-family: Pretendard;
+    }
+</style>
+</head>

@@ -1,265 +1,342 @@
 {% load static %}
-
 {% include 'header.html' %}
-
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <!--menu 로드-->
+<style>
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    .custom_btn > button {
+        background-color: rgba(239, 239, 239, 1);
+        color: rgba(137, 137, 137, 1);
+        border: 0;
+        border-radius: 21px;
+    }
+
+    .custom_btn > button:hover {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:active {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:focus {
+        box-shadow: 0 0 0 0;
+    }
+
+</style>
 {% include 'menu.html' %}
-<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_metaverse.css' %}">
+<body class="menu_ibt">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgba(248, 248, 248, 1)">
 
-  <div class="main_img">
-    <img src="{% static 'admin/img/메타버스 배경이미지.png' %}" alt="메타버스 배경">
-    <!-- <h1>VR/AR</h1>        -->
-  </div>
-
-  <div id="senter_menu">
-    <ul class="senter_button">
-        <li>VR/AR</li>
-    </ul>
-  </div>
-
-
-  <!-- 메타버스 영역 -->
-
-  <div class="container vr_allbox">
-    <div class="text-center vr_tit">
-        <h6 class="visually-hidden">Virtual Reality</h6>
-        <h1 class="display-5 fw-bold">VR</h1>
-        <p>“인공 현실감”이나 “가상 현실”로 번역되며, <br>컴퓨터 등을 사용한 실제와 유사한 인공적인 기술을 뜻합니다.</p>
-    </div>
-
-    <h2 class="text-center">적용분야</h2>
-
-    <div class="vr_cardbox" data-aos="fade-down">
-        <div class="vr_cardbox1">
-            <div class="card mb-3 vr_card1" style="max-width: 540px; border: none;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="{% static 'admin/img/vr_제조.png' %}" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h4 class="card-title">제조</h4>
-                      <p class="card-text">제품 테스트, 조립, 수리, 모니터링 분야<br> 활용이 가능합니다.</p>
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center" style="margin-bottom: 5%; position: relative;">
+                    <img src="{% static 'renewal/image/ibt/ibt_main.png' %}" style="width: 1903px;">
+                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
+                        <h1 style="font-weight: 800">I.B.T(바이오융합)</h1><br/>
+                        <h2>스마트팜 Button Platform을 통한</h2>
+                        <h2>농업과 바이오산업의 혁신 선도</h2>
                     </div>
-                  </div>
                 </div>
-            </div>
-            <div class="card mb-3 vr_card2" style="max-width: 540px; border: none;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="{% static 'admin/img/vr_교육.png' %}" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h4 class="card-title">교육</h4>
-                      <p class="card-text">의료용 실습, 화재 현장, 군사 훈련 등<br> 참여가 가능합니다.</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div class="vr_cardbox2">
-            <div class="card mb-3 vr_card3" style="max-width: 540px; border: none;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="{% static 'admin/img/vr_서비스.png' %}" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body vr_card3_p">
-                      <h4 class="card-title">서비스</h4>
-                      <p class="card-text">길찾기, 교통,  고객서비스, 전자상거래 등<br> 활용이 가능합니다.</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="card mb-3 vr_card4" style="max-width: 540px; border: none;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="{% static 'admin/img/vr_의료.png' %}" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h4 class="card-title">의료</h4>
-                      <p class="card-text">환자 간병인 교육, 장애인 및 환자 보조기기 등<br> 활용이 가능합니다.</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <h1 class="text-center vr_skil_tit" style="color: #012D3A; font-weight: bold;">VR 주요 기능</h1>
-
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3 erp_contents" data-aos="fade-up">
-        <div class="col">
-          <div class="card shadow-sm border vr_box">
-            <img src="{% static 'admin/img/vr_가상체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-            <h3>가상체험</h3>
-            <div class="card-body text-center">
-                <p>가상의 공간에서 공간적, <br>시간적체험이 가능합니다.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-            <div class="card shadow-sm border vr_box">
-              <img src="{% static 'admin/img/vr_오감체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                <h3>오감체험</h3>
-              <div class="card-body text-center">
-                <p>실제와 유사한 특정 환경 속에서<br>오감 체험이 가능합니다.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card shadow-sm vr_box border">
-              <img src="{% static 'admin/img/vr_상호작용.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                <h3>상호작용</h3>
-              <div class="card-body text-center">
-                <p>실제하는 디바이스를 이용해<br>실시간 조작, 명령이 가능합니다.</p>
-              </div>
-            </div>
-          </div>
-    </div>
-  </div>
-
-
-  <!-- AR 컨텐츠 영역 -->
-
-
-
-  <div style="background: rgba(242, 246, 250, 0.5); padding-bottom: 100px;">
-    <div class="container ar_allbox">
-        <div class="text-center ar_tit">
-            <h6 class="visually-hidden">Augmented Reality</h6>
-            <h1 class="display-5 fw-bold">AR</h1>
-            <p>가상현실의 한 분야로 현실세계에 가상 물체를 겹쳐<br>보여주는 컴퓨터 그래픽 기술을 뜻합니다.</p>
-        </div>
-
-        <h2 class="text-center">적용분야</h2>
-
-        <div class="ar_cardbox" data-aos="fade-down">
-            <div class="ar_cardbox1">
-                <div class="card mb-3 ar_card1" style="max-width: 540px; border: none;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img src="{% static 'admin/img/ar_서비스.png' %}" class="img-fluid rounded-start" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h4 class="card-title">서비스</h4>
-                          <p class="card-text">길찾기, 교통, 고객서비스, 전자상거래 등<br> 활용이 가능합니다.</p>
+                <div class="card-body" style="padding: 0 6.5% 0 6.5%;">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <h3><b style="font-size: 38px;font-weight: 800">I.B.T(바이오융합)</b></h3><br/><br/>
+                            <h3 style="font-size: 32px;font-weight: 400;">수익보장형 스마트팜 Button으로 6차 농업 융복합 실현.</h3>
+                            <h3 style="font-size: 32px;font-weight: 400">지능형 시스템과 바이오융합 기술 결합으로 혁신을 선도합니다.</h3>
                         </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="card mb-3 ar_card2" style="max-width: 540px; border: none;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img src="{% static 'admin/img/ar_교육.png' %}" class="img-fluid rounded-start" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h4 class="card-title">교육</h4>
-                          <p class="card-text">의료용 실습, 화재 현장, 군사 훈련 등<br> 참여가 가능합니다.</p>
+                        <div class="col-xl-6">
+                            <div class="d-flex justify-content-center" style="padding-top: 10%">
+                                <img src="{% static 'renewal/image/ibt/button_logo.png' %}">
+                            </div>
+                            <div class="d-flex justify-content-end" style="padding-top: 10%">
+                                <a href="#"><img src="{% static 'renewal/image/ibt/button_q_btn.png' %}"></a>
+                            </div>
                         </div>
-                      </div>
                     </div>
                 </div>
-            </div>
-            <div class="ar_cardbox2">
-                <div class="card mb-3 ar_card3" style="max-width: 540px; border: none;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img src="{% static 'admin/img/ar_엔터테인먼트.png' %}" class="img-fluid rounded-start" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body ar_card3_p">
-                          <h4 class="card-title">인테리어</h4>
-                          <p class="card-text">원하는 제품을 원하는 장소에 배치하여<br> 인테리어 확인이 가능합니다.</p>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="card mb-3 ar_card4" style="max-width: 540px; border: none;">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img src="{% static 'admin/img/ar_쇼핑.png' %}" class="img-fluid rounded-start" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h4 class="card-title">쇼핑</h4>
-                          <p class="card-text">쇼핑을 하면서 착용하지 않고도 어울리는지<br> 간편하게 확인이 가능합니다.</p>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <h1 class="text-center ar_skil_tit" style="color: #012D3A; font-weight: bold;">AR 주요 기능</h1>
+                <div class="card-body" style="background-color: rgba(234, 234, 115, 1); margin: 5% 7% 5% 7%; height: 30vh;">
+                    <div class="row justify-content-center">
+                        <div class="" style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/button_e_1.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 7%; left: 9%; color: white;">
+                                <span style="font-size: 22px;line-height: 26px;">원격</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">자동제어</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">모니터링</span>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/button_e_2.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 7%; left: 9%; color: white;">
+                                <span style="font-size: 22px;line-height: 26px;">Button</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">Platform</span><br/>
+                                <span style="font-size: 20px">Data 수집 및 분석</span>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/button_e_3.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 7%; left: 9%; color: white;">
+                                <span style="font-size: 22px;line-height: 26px;">기능성</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">원료개발</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">BIO / R&D</span>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/button_e_4.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 7%; left: 9%; color: white;">
+                                <span style="font-size: 22px;line-height: 26px;">고부가가치</span><br/>
+                                <span style="font-size: 22px;line-height: 26px;">기능성 제품</span><br/>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/button_e_5.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 7%; left: 9%; color: white;">
+                                <span style="font-size: 22px">유통 • 판매</span><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3 erp_contents" data-aos="fade-up">
-            <div class="col">
-              <div class="card shadow-sm border ar_box">
-                <img src="{% static 'admin/img/ar_증간현실체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                <h3>증강현실체험</h3>
-                <div class="card-body text-center">
-                    <p>현실기반의 가상대상<br> 결합 체험이 가능합니다.</p>
+                <div class="row" style="margin: 8% 7% 0 7%;">
+                    <div class="card-body" style="width: 50%;">
+                        <div class="card-body col-xl-12 white-background row justify-content-center">
+                            <div class="col-xl-5 mt-4">
+                                <img src="{% static 'renewal/image/ibt/saw_wheel.png' %}">
+                            </div>
+                            <div class="col-xl-6 mt-5 mb-5">
+                                <p style="font-size: 24px;"><b>클러스터형 스마트팜</b></p>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">최신 기술 및 데이터 분석을 통한 지속 가능성</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">농장 간의 지식 공유를 통한 생산성 향상</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">자원 사용 최적화를 통한 환경 친화적 농업 실현</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">농업 지역의 경제적인 다양성 증가</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="width: 50%;">
+                        <div class="card-body col-xl-12 white-background row justify-content-center">
+                            <div class="col-xl-5 mt-4">
+                                <img src="{% static 'renewal/image/ibt/phone.png' %}">
+                            </div>
+                            <div class="col-xl-6 mt-5 mb-5">
+                                <p style="font-size: 24px;"><b>손쉬운 농작물 관리</b></p>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">전용 APP 을 활용한 원격관리와 환경제어</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">CCTV 를 통한 24시간 다각도 실시간 모니터링</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">자동제어로 간편한 관리 및 균일한 품질 보장</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">실시간 알림 제공을 통한 위험요소 감소</h6>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <div class="row" style="margin: 1% 7% 8% 7%;">
+                    <div class="card-body" style="width: 50%;">
+                        <div class="card-body col-xl-12 white-background row justify-content-center">
+                            <div class="col-xl-5 mt-4">
+                                <img src="{% static 'renewal/image/ibt/thumb_up.png' %}">
+                            </div>
+                            <div class="col-xl-6 mt-5 mb-5">
+                                <p style="font-size: 24px;"><b>안정적인 생산환경 제공</b></p>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">생산성 극대화 및 수익 증대</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">예측 가능한 생산 일정을 통한 생산량 최적화</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">농작물 생산의 신뢰성 향상을 통한 브랜드 가치 상승</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">품질 관리를 통한 시장 경쟁력 상승</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="width: 50%;">
+                        <div class="card-body col-xl-12 white-background row justify-content-center">
+                            <div class="col-xl-5 mt-4">
+                                <img src="{% static 'renewal/image/ibt/four-leaf-clover.png' %}">
+                            </div>
+                            <div class="col-xl-6 mt-5 mb-5">
+                                <p style="font-size: 24px;"><b>농작물 활용 기능성 원료 개발</b></p>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">안정성과 품질이 보장된 원료</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">다양한 품종의 고부가 가치 작물 확보</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">지속 가능한 농업 및 자원 활용 촉진</h6>
+                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}" style="margin-right: 4%">새로운 제품과 기술 개발을 통한 산업 구조 혁신</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body row justify-content-center">
+                    <div style="margin: auto">
+                        <span style="font-size: 42px"><b>모바일 원격관리 자동제어 기능으로</b></span><br/>
+                        <span style="font-size: 42px"><b>진입장벽 없는 스마트팜을 경험해보세요</b></span>
+                        <p class="mt-4" style="color: rgba(137, 137, 137, 1);font-size: 16px;">*디바이스 운영 체계에 따라 상이할 수 있음</p>
+                    </div>
+                    <div style="margin: auto">
+                        <img src="{% static 'renewal/image/ibt/phone2.png' %}">
+                    </div>
+                </div>
+
+                <div class="card-body row justify-content-center" style="margin-top: 5%;">
+                    <div style="padding: 15% 0 0 6%;">
+                        <span style="font-size: 42px"><b>영농일지를 통해 농작물의 성장과정을 추적</b></span><br/>
+                        <span style="font-size: 42px"><b>품질 및 생산성을 향상시켜보세요</b></span>
+                    </div>
+                    <div style="margin: auto">
+                        <img src="{% static 'renewal/image/ibt/phone3.png' %}">
+                    </div>
+                </div>
+
+                <div class="card-body" style="margin: 5% 7% 8% 7%;">
+                    <div class="row justify-content-between">
+                        <div>
+                            <span style="font-size: 38px;"><b>Smart Farm</b></span><br/>
+                            <span style="font-size: 28px;">다원화된 수익기반형 사업모델</span>
+                        </div>
+                        <div>
+{#                            <img src="{% static 'renewal/image/ibt/Component 1.png' %}">#}
+                            <div class="btn-group custom_btn mt-5" role="group" aria-label="Basic outlined example">
+                                <button type="button" class="btn btn_by left" data-img-src="{% static 'renewal/image/ibt/사업모델.png' %}">수익공유 상생협력형</button>
+                                <button type="button" class="btn btn_by middle" data-img-src="{% static 'renewal/image/ibt/구독형.png' %}">구독형</button>
+                                <button type="button" class="btn btn_by right" data-img-src="{% static 'renewal/image/ibt/창업형.png' %}">창업형</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5 row justify-content-center">
+                        <img id="bussiness_model" src="{% static 'renewal/image/ibt/사업모델.png' %}" width="90%">
+                    </div>
+                </div>
+
+                <div class="card-body" style="margin: 5% 7% 8% 7%;">
+                    <div class="row">
+                        <div>
+                            <span style="font-size: 38px;"><b>R&D</b></span><br/>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="card-body" style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/randd1.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 42%; left: 30%; color: white;">
+                                <span style="font-size: 30px;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500">질병 연관성 연구</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/randd2.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 42%; left: 30%; color: white;">
+                                <span style="font-size: 30px;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500">기능성 식품 개발</span>
+                            </div>
+                        </div>
+                        <div class="card-body" style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/randd3.png' %}">
+                            <div class="sub_overlay" style="position: absolute; top: 42%; left: 28%; color: white;">
+                                <span style="font-size: 30px;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500">기능성 화장품 개발</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="position: relative;">
+                    <img src="{% static 'renewal/image/ibt/ibt_main2.png' %}" style="width: 1903px">
+                    <div class="sub_overlay" style="position: absolute; top: 10%; left: 9%; color: white;">
+                        <p style="font-size: 38px"><b>기능성 식품</b></p>
+                        <span style="font-size: 34px;line-height: 42px;">식품첨가물 등 맞춤형 소재 개발로</span><br/>
+                        <p style="font-size: 34px;line-height: 42px;">OEM / ODM 방식을 구축하고 있습니다.</p><br/>
+                        <span style="font-size: 24px">스마트팜 Button에서 재배한 참송이버섯을</span><br/>
+                        <p style="font-size: 24px">천연조미료로 가공하여 고부가 가치를 이끌어 내고 있습니다.</p><br/>
+                        <a href="#"><img src="{% static 'renewal/image/ibt/more_btn.png' %}" style="width: 60%"></a>
+                    </div>
+                    <div class="sub_overlay row" style="position: absolute; bottom: 7%; left: 9%; color: white;">
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/card.png' %}">
+                            <div class="sub_overlay"
+                                 style="position: absolute; top: 10%; left: 9%; color: rgba(62, 58, 57, 1);">
+                                <span style="font-size: 22px"><b>스마트팜 Button</b></span><br/>
+                                <span style="font-size: 22px"><b>소개서 다운로드</b></span>
+                            </div>
+                            <div class="sub_overlay"
+                                 style="position: absolute; bottom: 19%; left: 9%; color: rgba(137, 137, 137, 1);">
+                                <a href="#"><span style="font-size: 18px;text-decoration-line: underline;">바로가기</span></a>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/card.png' %}">
+                            <div class="sub_overlay"
+                                 style="position: absolute; top: 10%; left: 9%; color: rgba(62, 58, 57, 1);">
+                                <span style="font-size: 22px"><b>스마트팜 Button</b></span><br/>
+                                <span style="font-size: 22px"><b>구축 문의하기</b></span>
+                            </div>
+                            <div class="sub_overlay"
+                                 style="position: absolute; bottom: 19%; left: 9%; color: rgba(137, 137, 137, 1);">
+                                <a href="#"><span style="font-size: 18px;text-decoration-line: underline;">바로가기</span></a>
+                            </div>
+                        </div>
+                        <div style="position: relative;">
+                            <img src="{% static 'renewal/image/ibt/card.png' %}">
+                            <div class="sub_overlay"
+                                 style="position: absolute; top: 10%; left: 9%; color: rgba(62, 58, 57, 1);">
+                                <span style="font-size: 22px"><b>더 많은 활용방안이</b></span><br/>
+                                <span style="font-size: 22px"><b>궁금하다면?</b></span>
+                            </div>
+                            <div class="sub_overlay"
+                                 style="position: absolute; bottom: 19%; left: 9%; color: rgba(137, 137, 137, 1);">
+                                <a href="#"><span style="font-size: 18px;text-decoration-line: underline;">BLOG 바로가기</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="col">
-                <div class="card shadow-sm border ar_box">
-                  <img src="{% static 'admin/img/ar_선택적 가상체험.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                    <h3>선택적 가상체험</h3>
-                  <div class="card-body text-center">
-                    <p>추가되는 정보만 가상체험이 가능합니다.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="card shadow-sm ar_box border">
-                  <img src="{% static 'admin/img/ar_실시간 적용.png' %}" class="bd-placeholder-img rounded-circle" width="50" height="50" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                    <h3>실시간 적용</h3>
-                  <div class="card-body text-center">
-                    <p>스마트폰, 태블릿 PC, 안경 등의 기기를<br> 통해 실시간 부가정보 적용이 가능합니다.</p>
-                  </div>
-                </div>
-              </div>
         </div>
     </div>
-  </div>
-
-  <div class="container">
-
-  <h1 class="text-center" style="color: #012D3A; font-weight: bold; margin-top: 150px;">VR/AR 도입문의</h1>
-
-  <div class="row viewmore_btn">
-    <a href="/menu/0106/">
-        <button class="viewmore con1_viewmore" style="cursor: pointer; margin-left: 0px; position: inherit;"><span class="btn_text">Viewmore</span></button>
-    </a>
-  </div>
-  </div>
-
-
-
-
-<div class="slide_wrapper" style="display: none">
-  <ul class="slides">
-      <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
-      <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
-  </ul>
-  
 </div>
-
-<p class="controls">
-  <span class="prev"></span>
-  <span class="next"></span>
-</p>
-
-<!--footer 로드-->
 {% include 'footer.html' %}
+</body>
+<script>
+     $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+            console.log("현재 스크롤 위치: " + scroll + "px");
+            if (scroll >= 950) { // 852px 스크롤을 지났을 때
+                $(".navbar").addClass("white-background");
+                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+                $(".menu_li > a").css("color", "#000");
+            } else {
+                $(".navbar").removeClass("white-background");
+            }
+     })
+
+     $(document).ready(function() {
+         $('.left').addClass('btn_selected').css({
+             'background-color': 'rgba(234, 234, 115, 1)',
+             'color': 'black',
+             'box-shadow': '0 0 0 0',
+         });
+
+         $('.btn_by').click(function () {
+             $('.btn_by').css({
+                 'background-color': '',
+                 'color': '',
+                 'box-shadow': '0 0 0 0',
+             }).removeClass('btn_selected');
+
+             $(this).css({
+                 'background-color': 'rgba(234, 234, 115, 1)',
+                 'color': 'black',
+                 'box-shadow': '0 0 0 0',
+             }).addClass('btn_selected');
+
+             var imgSrc = $(this).data('img-src');
+             $('#bussiness_model').attr('src', imgSrc);
+
+         })
+     })
+
+
+
+</script>
+</html>

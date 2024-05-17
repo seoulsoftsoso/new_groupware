@@ -1,13 +1,100 @@
+{% load static %}
+<style>
+    .text-truncate {
+        font-size: 16px; font-weight: 500;
+    }
+</style>
+<footer class="footer" style="background-color: rgba(237, 237, 237, 1)">
+    <div class="container-fluid pt-5">
+        <div class="col-xl-12 col-md-8 col-12 mb-md-0 mb-4">
+            <div class="d-flex justify-content-center">
+                <p>우리의 공간에서 쉬어보세요!</p>
+            </div>
+            <div class="d-flex justify-content-center">
+                <img src="{% static 'renewal/image/mini_logo.png' %}">
+            </div>
+        </div>
+
+        <div class="container-fluid d-flex justify-content-between" style="padding-top: 5%;">
+            <div class="row col-xl-6 col-md-8 col-12 mb-md-0 mb-4 ft_menu">
+
+                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+                    <li class="menu-item">
+                        <div class="text-truncate" data-i18n="기업정보">기업정보</div>
+                        <ul class="menu-sub mt-4">
+                            <li class="menu-item">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="회사소개서">회사소개서</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+
+                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+                    <li class="menu-item">
+                        <div class="text-truncate" data-i18n="서비스">서비스</div>
+                        <ul class="menu-sub mt-4">
+                            <li class="menu-item">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="MES">MES</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="모빌리티">모빌리티</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="I.B.T">I.B.T</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+
+                <div class="col-xl-3 col-md-8 col-12 mb-md-0 mb-4">
+                    <li class="menu-item">
+                        <div class="text-truncate" data-i18n="약관">약관</div>
+                        <ul class="menu-sub mt-4">
+                            <li class="menu-item">
+                                <a href="{% url 'term_page' %}" class="menu-link">
+                                    <div class="text-truncate" data-i18n="개인정보 수집 이용 동의">개인정보 수집 이용 동의</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+
+                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+                    <li class="menu-item">
+                        <div class="text-truncate" style="margin-left: 10px;" data-i18n="그룹웨어"><a href="/admins/index">그룹웨어</a></div>
+                    </li>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <a href="#"><img src="{% static 'renewal/image/footer_insta.png' %}"></a>
+                    <a href="#"><img src="{% static 'renewal/image/footer_facebook.png' %}"></a>
+                    <a href="#"><img src="{% static 'renewal/image/footer_blog.png' %}"></a>
+                    <div class="text-sm-end d-none d-sm-block mt-3">
+                        <span>(주) 서울소프트</span><br/>
+                        <span>대표 : 노병진</span> <span>사업자등록번호: 134-87-18556</span><br/>
+                        <span>주소 : 충청북도 충주시 중앙로 80(네오메디클리닉)</span><br/>
+                        <span>TEL : 02-6052-1192</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 mt-5">
+            <div class="text-sm-end d-none d-sm-block" style="color: rgba(152, 152, 152, 1)">
+                2024. Seoul-Soft. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+</footer>
+
 <script>
-  // {#// window reuse function#}
-  // {#function checkWindow(url) {#}
-  // {#  var playerUrl = url;#}
-  // {#  var popupPlayer= window.open('', playerUrl, '');#}
-  // {#  if(popupPlayer.location.href === 'about:blank' ){#}
-  // {#      popupPlayer.location = playerUrl ;#}
-  // {#   } else {#}
-  // {#      console.log('this page already exist');#}
-  // {#  }#}
-  // {#  popupPlayer.focus();#}
-  // {# }#}
 </script>

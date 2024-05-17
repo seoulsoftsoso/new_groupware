@@ -2,7 +2,7 @@
 /******************************************************************************************************************************************************************
     메인 CSS
 ******************************************************************************************************************************************************************/
-body { position: static;  width: 100%; font-size: 13px;  font-family: 'Noto Sans KR', sans-serif, '나눔고딕', NanumGothic, '돋움', Dotum, '맑은 고딕', Malgun Gothic, '굴림', Gulim, Helvetica; font-weight: normal; font-style: normal; }
+body { position: static;  width: 100%; font-size: 13px;  font-family: 'Pretendard', sans-serif; font-weight: normal; font-style: normal; }
 
 .row {
   margin: 0;

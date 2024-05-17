@@ -1,0 +1,22 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<!--menu 로드-->
+{% include 'menu.html' %}
+<body class="menu_term">
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page mb-5" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center" style="margin-bottom: 5%;">
+                    <img src="{% static 'renewal/image/term_text.png' %}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

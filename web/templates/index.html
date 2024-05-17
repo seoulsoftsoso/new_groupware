@@ -1,359 +1,303 @@
 {% load static %}
-
 {% include 'header.html' %}
+<style>
+    .layout-container {
+        width: 100%; /* 또는 특정 너비 */
+        overflow: hidden; /* 컨테이너 밖으로 내용이 넘치는 것을 방지 */
+    }
 
+    .flex-grow-1 {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* 또는 비디오 높이에 맞게 조정 */
+    }
+
+    video {
+        width: 100%; /* 비디오 너비를 부모 컨테이너에 맞춤 */
+        height: auto; /* 비디오의 높이를 자동으로 조절하여 비율 유지 */
+        max-width: 100%; /* 비디오의 최대 너비 제한 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1; /* 비디오를 배경으로 설정 */
+    }
+
+    .text-overlay {
+        position: absolute;
+        top: 45%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        color: white;
+        text-align: center;
+        font-size: 60px;
+    }
+
+    .new-text-overlay {
+        position: absolute;
+        top: 180%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        color: white;
+        text-align: center;
+        font-size: 40px;
+    }
+
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important;
+    }
+
+    .bottom_img > img {
+        width: 90%;
+    }
+
+    .scroll-section {
+        height: 200vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    /* 스크롤에 따라 나타나고 사라지는 효과 */
+    .fadeIn {
+        opacity: 1 !important;
+        transition: opacity 2s ease-in-out; /* 2초 동안 서서히 나타나는 효과 */
+    }
+
+    .fadeOut {
+        opacity: 0 !important;
+        transition: opacity 2s ease-in-out;
+    }
+
+    /* 기본 상태에서는 아래쪽에 위치하고 보이지 않도록 설정 */
+    .service_div {
+        top: 0;
+        opacity: 0;
+        transform: translateY(600px);
+        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
+    }
+
+    /* 스크롤 위치에 따라 추가될 클래스 */
+    .service_div.show {
+        opacity: 1; /* 서서히 나타나도록 */
+        transform: translateY(0); /* 원래 위치로 이동 */
+    }
+
+    .mms_div {
+        top: -10%;
+        opacity: 0;
+        transform: translateY(600px);
+        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
+    }
+
+    /* 스크롤 위치에 따라 추가될 클래스 */
+    .mms_div.show {
+        opacity: 1; /* 서서히 나타나도록 */
+        transform: translateY(0); /* 원래 위치로 이동 */
+    }
+
+    .ibt_div {
+        top: -10%;
+        opacity: 0;
+        transform: translateY(600px);
+        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
+    }
+
+    /* 스크롤 위치에 따라 추가될 클래스 */
+    .ibt_div.show {
+        opacity: 1; /* 서서히 나타나도록 */
+        transform: translateY(0); /* 원래 위치로 이동 */
+    }
+
+    .mes_div {
+        top: -10%;
+        opacity: 0;
+        transform: translateY(600px);
+        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
+    }
+
+    /* 스크롤 위치에 따라 추가될 클래스 */
+    .mes_div.show {
+        opacity: 1; /* 서서히 나타나도록 */
+        transform: translateY(0); /* 원래 위치로 이동 */
+    }
+</style>
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <!--menu 로드-->
 {% include 'menu.html' %}
-<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<body class="menu_main">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper">
+                <!-- Content -->
+                <div class="flex-grow-1 container-p-y">
+                    <video src="{% static 'renewal/video/main_video.mov' %}" autoplay muted loop></video>
+{#                    <img class="video_gif" src="{% static 'renewal/video/AdobeStock_772450072.gif' %}">#}
+                    <div class="text-overlay d-flex d-md-block justify-content-center" id="textOverlay">
+                        <span id="oldText1"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">어려운 것을 쉽게 바꾸는 것</b></span><br/>
+                        <span id="oldText2"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">편안함을 넘어 단순함이 되다</b></span>
+                    </div>
+                </div>
 
-<!--팝업-->
-<!-- <div id="popup">
-    {% for p in popup %}
-    <div id="{{p.id}}" style="position: absolute; z-index: 999; top:{{p.y}}px; left: {{p.x}}px; background: #999999; ">
+                <div class="scroll-section">
+                     <div class="new-text-overlay justify-content-center" style="display: none;">
+                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">기업 전체의 자원을 효율적으로 사용하는 라이프 스타일 맞춤형 서비스</b></span><br/>
+                        <span style="margin-top: -5px;"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">누구나 구축할 수 있는 지속 가능한 미래,</b></span><br/>
+                         <br/>
+                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">서울소프트와 함께합니다.</b></span>
+                    </div>
+                </div>
 
-        {% if p.isnewwindow == 1 %}
-        <a href="{{p.link}}" target="_blank">
-            {% else %}
-            <a href="{{p.link}}">
-                {% endif %}
 
-                <img src="{{ p.image.url }}" style=" width: {{p.width}}px; height: {{p.height}}px;" alt="{{p.title}}">
-            </a>
+                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);height: 80vh">
+                    <div class="col-xl-10 row justify-content-center service_div" style="display: none">
+                        <span>
+                            <b style="font-size: 80px;color: rgba(181, 182, 182, 1)">Service</b>
+                        </span>
+                    </div>
+                </div>
 
-            <div style="width:{{p.width}}px; height: 30px;">
-                <label>
-                    <input type="checkbox" id="{{p.id}}check">24시간 동안 열지 않음
-                </label>
+                <!-- MMS -->
+                <div class="container-fluid row flex-grow-1 container-p-y mms_div" style="background-color: rgba(251, 251, 251, 1); display: none">
+                    <div class="col-xl-10 row">
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0">
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">이동 자산 운영 End to End</h3>
+                            <h2 style="color: #FF7A00; font-size: 60px; font-weight: 600">MMS</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">시너지를 극대화하는</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">Core Platform</h2>
+                            <a href="#"><img src="{% static 'renewal/image/main/mms_btn.png' %}"></a>
+                        </div>
+                        <div class="col-xl-6 col-md-8 col-12">
+                            <img src="{% static 'renewal/image/main/mms_img.jpg' %}" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/mms_bottom2.png' %}" style="width: 1200px; height: auto">
+                    </div>
+                </div>
 
-                <button class="popupclosebutton" style="height=30px;">닫기</button>
+                <!-- IBT -->
+                <div class="container-fluid row flex-grow-1 container-p-y ibt_div" style="background-color: rgba(251, 251, 251, 1); display: none">
+                    <div class="col-xl-10 row">
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0">
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 300;">Smart Farm을 활용한 순환 모델 구축</h3>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 45px; font-weight: 600">I.B.T(Intergrative Bio Technology)</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">수익 보장형 스마트팜</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">바이오 융합 생태계 조성</h2>
+                            <a href="#"><img src="{% static 'renewal/image/main/ibt_btn.png' %}"></a>
+                        </div>
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0">
+                            <img src="{% static 'renewal/image/main/ibt_img.png' %}" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/ibt_bottom2.png' %}" style="width: 1200px; height: auto">
+                    </div>
+                </div>
+
+                <div class="container-fluid row flex-grow-1 container-p-y mes_div" style="background-color: rgba(251, 251, 251, 1); display: none">
+                    <div class="col-xl-10 row">
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0 mb-4">
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">Cloud 기반 통합 생산관리</h3>
+                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 60px; font-weight: 600">MES</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">생산효율 55% 극대화 및</h2>
+                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">불량률 18% 감소</h2>
+                            <a href="#"><img src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
+                        </div>
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0 mb-4">
+                            <img src="{% static 'renewal/image/main/mes_img.png' %}" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/mes_bottom2.png' %}" style="width: 1200px; height: auto">
+                    </div>
+                </div>
+
+
             </div>
-        </a>
+        </div>
     </div>
-    {% endfor %}
-</div> -->
-
-<!--contents 영역-->
-<div id="body">
-        <div class="section">
-
-                <!-- 슬라이드 영역 -->
-
-        <div class="swiper" style="width: 100%; height: 49.3vw;">
-
-            <!-- Additional required wrapper -->
-
-            <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-                <div class="text_wrap">
-                    <h1>Various Skills</h1>
-                    <p>SW 개발, IT 컨설팅, VR 콘텐츠 제작 등 다양한 솔루션 사업을 진행하고 있는 서울소프트</p>
-                </div>
-                <img src="{% static 'admin/img/메인이미지.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
-            </div>
-            <div class="swiper-slide">
-                <div class="text_wrap">
-                    <h1>Talent with Creative Thinking</h1>
-                    <p>창의적인 사고를 가진 인재를 원하는 서울소프트</p>
-                </div>
-                <img src="{% static 'admin/img//메인페이지 이미지/메인페이지_슬라이드2.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
-                </div>
-            <div class="swiper-slide">
-                <div class="text_wrap">
-                    <h1>Customer's Point of View</h1>
-                    <p>고객의 입장을 먼저 생각하는 서울소프트</p>
-                </div>
-                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_슬라이드3.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
-            </div>
-            <div class="swiper-slide">
-                <div class="text_wrap">
-                    <h1>Our Efforts</h1>
-                    <p>더 큰 세상을 만들어 나가도록 노력하겠습니다.</p>
-                </div>
-                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_슬라이드4.png' %}" alt="메인슬라이드" style="width: 100%; height: 49.3vw;">
-            </div>
-            </div>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
-
-            <!-- If we need navigation buttons -->
-            <div class="swiper-button-prev le"></div>
-            <div class="swiper-button-next ri"></div>
-
-            <!-- If we need scrollbar -->
-
-        </div>
-            <!-- <div class="slide" data-anchor="slide1" style="background: url('/static/img/main_img/bg_1_1.png') no-repeat; background-size: auto 100%">
-                <div style="color: white" class="text-center">
-                    <h1>교통·물류·제조 혁신의 중심에서</h1>
-                    <h1 class="mb-5">시간과 공간의 새로운 가치를 창출하는 서울소프트</h1>
-                    <h5>서울소프트는 새로운 가치를 창출하기 위해 끊임없이 노력하고 있습니다.</h5>
-                </div>
-            </div>
-            <div class="slide" data-anchor="slide2" style="background: url('/static/img/main_img/bg_1_2.png') no-repeat; background-size: auto 100%">
-                <div style="color: white" class="text-center">
-                    <h1>깨어있는 의식으로 융합하고 협업을 통해</h1>
-                    <h1 class="mb-5">혁신하며 변화의 중심에서 창조하는 서울소프트</h1>
-                    <h5>서울소프트는 수년간의 노력과 시행착오를 통해 성장했습니다.</h5>
-                </div>
-            </div>
-            <div class="slide" data-anchor="slide3" style="background: url('/static/img/main_img/bg_1_3.png') no-repeat; background-size: auto 100%">
-                <div style="color: white" class="text-center">
-                    <h1 class="">합리적이고 효율적인 솔루션을 통한</h1>
-                    <h1 class="mb-5">고객 맞춤형 시스템을 제공하는 서울소프트</h1>
-                    <h5>서울소프트는 고객의 경쟁력 강화에 도움을 드립니다.</h5>
-                </div>
-            </div> -->
-<!--            <div class="fp-slidesNav fp-bottom">-->
-<!--                <ul>-->
-<!--                    <li>-->
-<!--                        <a href="#"><span class="fp-sr-only">fullPage</span><span></span></a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a href="#"><span class="fp-sr-only">Open</span><span></span></a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a href="#"><span class="fp-sr-only">Easy</span><span></span></a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-        </div>
-
-        <div class="section">
-
-            <!-- 운송ERP -->
-
-            <div class="about" data-aos="fade-down-right" data-aos-anchor-placement="top-center">
-                <div class="container-fluid row mb-2 py-5 px-5 erpcontainer">
-                        <div class="col-md-6">
-                            <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
-                            <div class="col-auto d-none d-lg-block erp_img">
-                                <div class="screen">
-                                    <div class="top">Stransit ERP</div>
-                                    <img src="{% static 'admin/img/메인페이지 이미지/bus_img.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"></img>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="bus_tit1">
-
-                            <h6>STRANSIT ERP</h6>
-                            <h1 class="featurette-heading">운송ERP</h1>
-                        <div class="bus_iconbox">
-                            <div class="erp1">
-                                <img src="{% static 'admin/img/메인페이지 이미지/bus1.svg' %}" alt="버스_icon" class="bus_icon">
-                                <p>버스ERP</p>
-                            </div>
-
-                            <div class="erp1">
-                                <img src="{% static 'admin/img/메인페이지 이미지/freight_icon.svg' %}" alt="화물_icon" class="bus_icon">
-                                <p>화물ERP</p>
-                            </div>
-
-                            <div class="erp1">
-                                <img src="{% static 'admin/img/메인페이지 이미지/taxi_icon.svg' %}" alt="택시_icon" class="bus_icon">
-                                <p>택시ERP</p>
-                            </div>
-                        </div>
-
-                            <p class="bus_lead">운수업체의 모든 업무를 유기적으로 관리 및 처리할 수 있는<br>운송업체 특화 ERP 솔루션입니다.</p>
-                            <a href="/menu/0101/">
-                                <button class="viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
-                            </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            <!-- 스마트공방 -->
-
-            <div class="about smart_about" data-aos="fade-up-right" data-aos-anchor-placement="top-center">
-                <div class="container-fluid row mb-2 py-5 px-5 smart_box">
-
-                        <div class="col-md-6 smart_textbox">
-                            <div class="smart_tit">
-                                    <h6>SMART SOLUTION MES</h6>
-                                    <h1 class="featurette-heading">스마트솔루션MES</h1>
-                                <div class="smarticonbox">
-                                    <div class="smart_icon">
-                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트공방 아이콘.svg' %}" alt="스마트공방" class="smart_icon1">
-                                        <p class="smart_p1">스마트공방</p>
-                                    </div>
-
-                                    <div class="smart_icon">
-                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트팩토리 아이콘.svg' %}" alt="스마트팩토리" class="smart_icon1">
-                                        <p class="smart_p2">스마트팩토리</p>
-                                    </div>
-
-                                    <div class="smart_icon">
-                                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트해썹 아이콘.svg' %}" alt="스마트해썹" class="smart_icon1">
-                                        <p class="smart_p3">스마트해썹</p>
-                                    </div>
-
-                                </div>
-                                    <p class="smart_lead">정부지원사업 스마트공방과 스마트팩토리의 업무 전반관리를<br>도와주는 MES 솔루션입니다.</p>
-                                    <a href="/menu/0102/">
-                                        <button class="smart_viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
-                                    </a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
-                            <div class="col-auto d-none d-lg-block smart_img">
-                                <div class="screen">
-                                <div class="top">Smart Factory</div>
-                                <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_스마트공방 이미지.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" alt="스마트공방이미지"></img>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 메타버스 -->
-
-            <div class="about meta_about" data-aos="fade-up-right" data-aos-anchor-placement="top-center">
-            <div class="container-fluid row mb-2 py-5 px-5">
-                <div class="col-md-6">
-                    <div class="row g-0 overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
-                    <div class="col-auto d-none d-lg-block meta_img">
-                        <div class="screen">
-                        <div class="top">MetaVerse</div>
-                        <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스 이미지.png' %}" class="bd-placeholder-img" width="750" height="590" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false" alt="메타버스이미지"></img>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="metaverse_tit1">
-                    <h6>Virtual Reality/Augmented Reality</h6>
-                    <h1 class="featurette-heading">메타버스</h1>
-
-                        <div class="metaverse_icon">
-                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_VR 아이콘.svg' %}" alt="vr" class="metaverse_icon1">
-                            <p class="meta_p1">VR</p>
-                        </div>
-
-                        <div class="metaverse_icon">
-                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_AR 아이콘.svg' %}" alt="ar" class="metaverse_icon1">
-                            <p class="meta_p2">AR</p>
-                        </div>
-
-                        <div class="metaverse_icon">
-                            <img src="{% static 'admin/img/메인페이지 이미지/메인페이지_메타버스_AI 아이콘.svg' %}" alt="ai" class="metaverse_icon1">
-                            <p class="meta_p3">AI</p>
-                        </div>
-
-                        <p class="metaverse_lead">가상현실과 현실세계의 경계에서 서로 교류가 가능한<br>컴퓨터 그래픽 기술을 통해 구현합니다.</p>
-                        <a href="/menu/0103/">
-                            <button class="viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-            <!-- 메인 페이지 구축실적 -->
-
-        <div class="con1box">
-            <div class="container buildslide">
-                <h1 class="text-center con1_tit">[ 구축실적 ]</h1>
-                <div class="text-center con1_text">
-                    <h6>서울소프트의 지원사업 구축실적을 확인할 수 있습니다.</h6>
-                </div>
-                <span class="prev_arrow"><i class="fa-solid fa-angle-left"></i></span>
-                <span class="next_arrow"><i class="fa-solid fa-angle-right"></i></span>
-                <div class="for_slick_slider multiple-items">
-                    <div class="items">
-                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 위치기반 배차관리.svg' %}" alt="위치기반 배차관리" class="img-fluid">
-                    <div class="overlay"></div>
-                    </div>
-                    <div class="items">
-                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 시내버스 통합관리.svg' %}" alt="시내버스 통합관리" class="img-fluid">
-                    <div class="overlay"></div>
-                    </div>
-                    <div class="items">
-                    <img src="{% static 'admin/img/구축실적_슬라이드_ERP 최적배차관리.svg' %}" alt="최적배차관리" class="img-fluid">
-                    <div class="overlay"></div>
-                    </div>
-                    <div class="items">
-                        <img src="{% static 'admin/img/구축실적_슬라이드_ICT연계 간이형 웹기반 생산관리시스템.svg' %}" alt="ICT연계 간이형 웹기반 생산관리시스템" class="img-fluid">
-                        <div class="overlay"></div>
-                    </div>
-                    <div class="items">
-                        <img src="{% static 'admin/img/구축실적_슬라이드_공정설비시스템.svg' %}" alt="공정설비시스템" class="img-fluid">
-                        <div class="overlay"></div>
-                    </div>
-                    <div class="items">
-                        <img src="{% static 'admin/img/구축실적_슬라이드_자동관리 모니터링 시스템.svg' %}" alt="자동관리 모니터링 시스템" class="img-fluid">
-                        <div class="overlay"></div>
-                    </div>
-                </div>
-
-                <div class="container-fluid container col-lg-12">
-                    <div class="row viewmore_btn">
-                        <a href="/menu/0104">
-                            <button class="viewmore con1_viewmore" style="cursor: pointer;"><span class="btn_text">Viewmore</span></button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    <!-- /END THE FEATURETTES -->
-
-
-
-
-        </div>
-        <div class="section">
-
-
-
-        </div>
-        {% include 'footer.html' %}
-        <div class="slide_wrapper">
-            <ul class="slides">
-                <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
-                <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
-            </ul>
-
-        </div>
-        <p class="controls">
-            <span class="prev"></span>
-            <span class="next"></span>
-        </p>
-
-
-        <!-- <div class="section fp-auto-height">
-            <section id="banner" class="mb-4">
-                <div class="slides-wrapper col-lg-9 col-md-10 col-12">
-                    <ol class="slides">
-                        <li><a href=""><img src="{% static 'img/banner-01.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-02-1.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-03-1.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-04-1.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-05-1.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-06-1.png' %}" alt=""></a></li>
-                        <li><a href=""><img src="{% static 'img/banner-07-1.png' %}" alt=""></a></li>
-                    </ol>
-                </div>
-            </section>
-
-        </div>
-        <p class="controls">
-            <span class="prev"></span>
-            <span class="next"></span>
-        </p> -->
-
-    <script>
-
-    </script>
-
 </div>
+{% include 'footer.html' %}
+</body>
+<script>
+    $(document).ready(function () {
+        const video = document.querySelector("video");
+        const videoHeight = 2000; // 비디오를 고정할 높이
+
+
+        $(window).scroll(function () {
+            if (window.scrollY < videoHeight) {
+                video.style.position = 'fixed';
+                video.style.top = '0';
+            } else {
+                video.style.position = 'absolute';
+                video.style.top = videoHeight + 'px';
+            }
+
+            if ($(window).scrollTop() >= 900) {
+                $('.new-text-overlay').show()
+                $('.new-text-overlay').addClass('fadeIn').removeClass('fadeOut');
+            } else {
+                $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+            }
+        });
+
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+            console.log("현재 스크롤 위치: " + scroll + "px");
+            if (scroll >= 2750) { // 852px 스크롤을 지났을 때
+                $(".navbar").addClass("white-background");
+                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+                $(".menu_li > a").css("color", "#000");
+
+            } else {
+                $(".navbar").removeClass("white-background");
+                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
+                $(".menu_li > a").css("color", "#fff");
+
+            }
+
+            if (scroll >= 2400) {
+                $('.service_div').show()
+                $('.service_div').addClass('show');
+            } else {
+                $('.service_div').removeClass('show');
+            }
+
+            if (scroll >= 2700) {
+                $('.mms_div').show()
+                $('.mms_div').addClass('show');
+            } else {
+                $('.mms_div').removeClass('show');
+            }
+
+            if (scroll >= 3600) {
+                $('.ibt_div').show()
+                $('.ibt_div').addClass('show');
+            } else {
+                $('.ibt_div').removeClass('show');
+            }
+
+            if (scroll >= 4700) {
+                $('.mes_div').show()
+                $('.mes_div').addClass('show');
+            } else {
+                $('.mes_div').removeClass('show');
+            }
+        });
+    });
+</script>
+</html>

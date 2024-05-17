@@ -1,361 +1,57 @@
 {% load static %}
-<!-- <div class="w-100 h-100 position-fixed d-none" style="background: rgba(0, 0, 0, 0.44); z-index: 6;" id="collapsed-topmenu-shadow"></div> -->
-<!-- <link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}"> -->
-<!-- <section id="header_top"> -->
-    <style>
-        a:hover{
-            color: #fff;
-        }
-    </style>
     <link rel="stylesheet" href="{% static 'css/default.css' %}">
 
-
-    <nav class="navber navbar-expand-lg">
-
-        <div class="main_logo">
-            <a href="/"><img src="{% static 'admin/img/seoul-soft_logo.svg' %}" alt="main_logo" width="180px"></a>
+    <nav class="navbar navbar-expand-lg justify-content-between d-flex fixed-top" style="height: 8%;">
+        <div class="main_logo" style="padding-left: 5%;">
+            <a href="/"><img src="{% static 'renewal/image/logo_B.png' %}" alt="main_logo" style="width: 50%"></a>
         </div>
 
-    
-        <ul class="menu nav nav-pills">
+        <div class="pr-5">
+            <ul class="menu nav nav-pills">
+                <li class="menu_li">
+                    <a href="/menu/0102/" class="menu_li_a">기업정보</a>
+                    <ul class="submenu">
+                        <li><a href="/menu/0102/">회사소개</a></li>
+                        <li><a href="/menu/010202/">BROCHURE</a></li>
+                    </ul>
+                </li>
 
-            <li>
-                <a href="menu/0101/">ERP</a>
-                <ul class="submenu">
-                    <li><a href="menu/0101/">운송ERP</a></li>
-                </ul>
-            </li>
+                <li class="menu_li">
+                    <a href="/menu/0103/" class="menu_li_a">서비스</a>
+                    <ul class="submenu">
+                        <li><a href="#">MES</a></li>
+                        <li><a href="/menu/0102/">MOBILITY</a></li>
+                        <li><a href="/menu/0103/">I.B.T</a></li>
+                    </ul>
+                </li>
 
-            <li>
-                <a href="/menu/0102/">MES</a>
-                <ul class="submenu">
-                    <li><a href="/menu/0102/">MES</a></li>
-                    <li><a href="/menu/010202/">요금제</a></li>
-                </ul>
-              </li>
-
-              <li>
-                <a href="/menu/0103/">VR/AR</a>
-                <ul class="submenu">
-                    <li><a href="/menu/0103/">VR/AR</a></li>
-                </ul>
-            </li>
-
-            <li>
-                <a href="/menu/0104/">구축실적</a>
-                <ul class="submenu">
-                    <li><a href="/menu/0104/">운송ERP</a></li>
-                    <li><a href="/menu/010402/">MES</a></li>
-                </ul>
-            </li>
-
-            <li>
-                <a href="/menu/0105/">회사소개</a>   
-                <ul class="submenu">
-                    <li><a href="/menu/0105/">개요</a></li>
-                    <li><a href="/menu/010502/">연혁</a></li>
-                </ul>
-            </li>
-
-
-            <li>
-                <a href="/menu/0106/">문의하기</a>
-                <ul class="submenu">
-                    <li><a href="/menu/0106/">문의하기</a></li>
-                    <li><a href="/menu/010602/">오시는길</a></li>
-                </ul>
-            </li>
-
-        </ul>
-
-
-
-        <div id="aside" class="col d-flex justify-content-center px-0">
-            <div class="aside-box col d-flex justify-content-center my-auto px-0">
-                <ul>
-                    {% if request.user.is_active %}
-                        {% if request.user.is_staff %}
-                            <li><a href="/admins/index/"><span>그룹웨어</span></a></li>
-                        {% endif %}
-                        <li><a href=""><span class="user">{{ request.user.username }}</span></a></li>
-                        <li><a href="{% url 'logout' %}" id="logout"><span>로그아웃</span></a></li>
-{#                        <li><a href=""><span>ADAS/AVM</span></a></li>#}
-                    {% else %}
-                        <li><a href="/signup/"><span>회원가입</span></a></li>
-                        <li><a href="/login/"><span>로그인</span></a></li>
-                    {% endif %}
-                </ul>
-            </div>
+                <li class="menu_li">
+                    <a href="/menu/0104/" class="menu_li_a">스토리</a>
+                    <ul class="submenu">
+                        <li><a href="/menu/0104/">운송ERP</a></li>
+                        <li><a href="/menu/010402/">MES</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        
 
-        <a href="#" class="nav_popup"><img src="{% static 'admin/img/popup.svg' %}" alt="popup"></a>
+        <div style="padding-right: 3%;">
+            <ul class="menu nav nav-pills contact-us">
+                <li class="menu_li">
+                    <a href="/menu/0106/" class="menu_li_a">Contact Us</a>
+                    <ul class="submenu">
+                        <li><a href="/menu/0106/">문의하기</a></li>
+                        <li><a href="/menu/010602/">오시는길</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
 
     </nav>
 
-    <!-- 모바일 전용 메뉴 -->
-    <!-- <div id="topmenu_mb">
-        <div class="menu-box">
-            <div class="md1 row">
-                <div class="col-2 d-flex justify-content-start">
-                    <button class="btn btn-dark p-0 mh-100" id="sidebarToggle_open">
-                        <h2 class="display-4">&equiv;</h2>
-                    </button>
-                </div>
 
-                <div class="col-8 d-flex justify-content-center align-items-center px-0">
-                    <li class="ml logo"><a class="mla w-100 h-100 mt-3" href="/"><span>서울 소프트</span></a></li>
-                </div>
-
-                <div class="col-2 d-flex">
-                </div>
-            </div>
-        </div>
-        <div id="menu-list_mb" class="col-6 px-0" style="display: none;">
-            <div id="list-header" class="d-flex justify-content-between align-items-center p-3">
-                <h2 class="mb-0" style="color: white;">MENU</h2>
-                <div>
-                    <button class="btn btn-dark p-0 mh-100" id="sidebarToggle_close">
-                        <h1 class="display-4">&times;</h1>
-                    </button>
-                </div>
-            </div>
-            <div class="accordion" id="accordionExample">
-              <div class="">
-                <div class="card-header collapsed bg-white" id="headingOne"  data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    <div class="row justify-content-between">
-                        <div class="col-8 d-flex align-items-center px-0">
-                            <h2 class="mb-0">회사소개</h2>
-                        </div>
-                        <div class="col-4 px-0 d-flex justify-content-end">
-                            <h2 class="display-4">&plus;</h2>
-                        </div>
-                    </div>
-                </div>
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                  <div class="card-body bg-light">
-                      <a href="/menu/0101"><div>
-                          <h3>CEO 인사말</h3>
-                      </div></a>
-                      <a href="/menu/0102"><div>
-                          <h3>회사연혁</h3>
-                      </div></a>
-                      <a href="/menu/0104"><div>
-                          <h3>조직도</h3>
-                      </div></a>
-                        <a href="/menu/0107"><div>
-                          <h3>인재채용</h3>
-                      </div></a>
-                      <a href="/menu/0106"><div>
-                          <h3>오시는 길</h3>
-                      </div></a>
-                  </div>
-                </div>
-              </div>
-              <div class="">
-                <div class="card-header bg-white" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <div class="row justify-content-between">
-                        <div class="col-8 d-flex align-items-center px-0">
-                            <h2 class="mb-0">사업소개</h2>
-                        </div>
-                        <div class="col-4 px-0 d-flex justify-content-end">
-                            <h2 class="display-4">&plus;</h2>
-                        </div>
-                    </div>
-                </div>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                  <div class="card-body bg-light">
-                       <a href="/menu/0207"><div>
-                          <h3>비즈니스 모델</h3>
-                      </div></a>
-                      <a href="/menu/0201"><div>
-                          <h3>Q-ERP</h3>
-                      </div></a>
-                      <a href="/menu/0202"><div>
-                          <h3>플랫폼</h3>
-                      </div></a>
-                      <a href="/menu/0203"><div>
-                          <h3>ADAS</h3>
-                      </div></a>
-                      <a href="/menu/0204"><div>
-                          <h3>AVM</h3>
-                      </div></a>
-                      <a href="/menu/0208"><div>
-                          <h3>UVC 살균조명</h3>
-                      </div></a>
-                      <a href="/menu/0206"><div>
-                          <h3>스마트 팩토리</h3>
-                      </div></a>
-                      <a href="/menu/0209"><div>
-                          <h3>스마트 공방</h3>
-                      </div></a>
-                  </div>
-                </div>
-              </div>
-              <div class="">
-                <div class="card-header bg-white" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    <div class="row justify-content-between">
-                        <div class="col-8 d-flex align-items-center px-0">
-                            <h2 class="mb-0">고객지원</h2>
-                        </div>
-                        <div class="col-4 px-0 d-flex justify-content-end">
-                            <h2 class="display-4">&plus;</h2>
-                        </div>
-                    </div>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                  <div class="card-body bg-light">
-                      <a href="/board/order/3"><div>
-                          <h3>온라인 문의</h3>
-                      </div></a>
-                      <a href="/board/general/4"><div>
-                          <h3>FAQ</h3>
-                      </div></a>
-                       <a href="/board/general/9"><div>
-                          <h3>다운로드</h3>
-                      </div></a>
-                  </div>
-                </div>
-              </div>
-              <div class="">
-                <div class="card-header bg-white" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                    <div class="row justify-content-between">
-                        <div class="col-8 d-flex align-items-center px-0">
-                            <h2 class="mb-0">게시판</h2>
-                        </div>
-                        <div class="col-4 px-0 d-flex justify-content-end">
-                            <h2 class="display-4">&plus;</h2>
-                        </div>
-                    </div>
-                </div>
-                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
-                  <div class="card-body bg-light">
-                      <a href="/board/general/1"><div>
-                          <h3>공지사항</h3>
-                      </div></a>
-                      <a href="/board/webzine/6"><div>
-                          <h3>보도자료</h3>
-                      </div></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-start p-3">
-                <div class="pr-4">
-                    <a class="d-flex" href="https://www.facebook.com/seoulsoftco">
-                        <img width="60px" height="60px" class="align-self-center" alt="facebook" src="{% static 'img/i_facebook_alt.png' %}"/>
-                    </a>
-                </div>
-
-                <div>
-                    <a class="d-flex" href="https://blog.naver.com/seoul-soft">
-                        <img width="60px" height="60px"  class="align-self-center" alt="facebook" src="{% static 'img/i_blog_alt.png' %}"/>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </div> -->
-
-<!-- </section> -->
-<!-- <div id="header_img">
-    {% if board.boardname or menucode1 %}
-    <div>
-        {% if board.boardname == '온라인 문의' or board.boardname == 'FAQ' or board.boardname == '다운로드' %}
-        <div id="customer_bg">
-            <div class="imgtext">
-                <span>고객지원</span>
-                <br/>
-                <p>서울소프트는 고객들의 소리에 귀 기울이고 있습니다.</p>
-            </div>
-        </div>
-        {% elif board.boardname == '공지사항' or board.boardname == '보도자료' %}
-        <div id="news_bg">
-            <div class="imgtext">
-                <span>게시판</span>
-                <br/>
-                <p>서울소프트의 새로운 소식을 전합니다.</p>
-            </div>
-        </div>
-        {% elif menucode1 == '01' %}
-        <div id="company_bg">
-            <div class="imgtext">
-                <span>회사 소개<br/></span>
-                <br/>
-                <p>끊임없이 노력하는 서울 소프트를 소개합니다.</p>
-            </div>
-        </div>
-        {% elif menucode1 == '02' %}
-        <div id="business_bg">
-            <div class="imgtext">
-                <span>사업 소개</span>
-                <br/>
-                <p>서울소프트는 멈추지 않고 끊임없이 발전합니다.<br/>
-                    교통·물류·제조 분야의 혁신적인 스마트 솔루션을 제안드립니다.
-                </p>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
-</div> -->
-<a href="#" id="topBtn"><i class="fa-solid fa-circle-arrow-up"></i></a>    
-<script
-  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<a href="#" id="topBtn"><i class="fa-solid fa-circle-arrow-up"></i></a>
 <script>
-    $(document).ready(function () {
-        var width = window.outerWidth;
-        if ( width > 768 ) {
-            $('#topmenu').show();
-            $('#topmenu_mb').hide();
-
-        } else {
-            $('#topmenu').hide();
-            $('#topmenu_mb').show();
-        }
-    });
-    $(window).resize(function () {
-        var width = window.outerWidth;
-        if ( width > 768 ) {
-            $('#topmenu').show();
-            $('#topmenu_mb').hide();
-        } else {
-            $('#topmenu').hide();
-            $('#topmenu_mb').show();
-        }
-    });
-    $('#topmenu').hover(
-        function () {
-            $('#menu-list').removeClass('d-none');
-            $('#collapsed-topmenu-shadow').removeClass('d-none');
-        },
-        function () {
-            $('#menu-list').addClass('d-none');
-            $('#collapsed-topmenu-shadow').addClass('d-none');
-        }
-    );
-    $('#sidebarToggle_open').on('click', function () {
-        $('#menu-list_mb').show('slide', { 'direction': 'left', 'easing': 'easeInOutCubic', }, 650);
-        $('#collapsed-topmenu-shadow')
-            .removeClass('d-none')
-            .on('click', function () {
-            $('#sidebarToggle_close').trigger('click');
-        });
-    })
-
-    $('#sidebarToggle_close').on('click', function () {
-        $('#menu-list_mb').hide('slide', { 'direction': 'left', 'easing': 'easeInOutCubic', }, 650);
-        $('#collapsed-topmenu-shadow').addClass('d-none');
-    });
-
-    $("#logout").click(function () {
-        flush_token();
-        window.location.href = "/logout/";
-    });
-
     function flush_token() {
         document.cookie = 'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -368,7 +64,4 @@
         document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
-
-
-
 </script>

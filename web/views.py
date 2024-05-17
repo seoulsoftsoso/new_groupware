@@ -34,6 +34,10 @@ def index(request):
     return render(request, 'index.html', {})
 
 
+def term_page(request):
+    return render(request, 'term.html', {})
+
+
 def admin_index_page(request):
     today = timezone.now()
 

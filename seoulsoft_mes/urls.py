@@ -242,6 +242,7 @@ urlpatterns = [
                   #메인페이지
                   path('menu/<str:menu_num>/', SubView, name='sub'),
                   path('submit_question/', submit_question, name='submit_question'),
+                  path('term/', term_page, name='term_page'),
 
                   path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll')
 
