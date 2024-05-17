@@ -150,6 +150,9 @@ ul li a::after {
   color: #000; /* 검은색 */
 }
 
+
+
+
 /* ibt 페이지 스타일 */
 .menu_ibt .navbar {
   background: transparent; /* 흰색 */
@@ -173,6 +176,35 @@ ul li a::after {
     font-size: 42px;
 }
 
+.relative_div {
+    position: relative;
+}
+
+.img_card2 {
+    position: absolute; top: 7%; left: 9%; color: white;
+}
+
+.img_card2 span {
+    font-size: 22px; line-height: 26px;
+}
+
+.ex4_div p {
+    font-size: 24px;
+}
+
+.ex4_div img {
+    margin-right: 4%
+}
+
+.rnd_div {
+    position: absolute; top: 42%; left: 30%; color: white;
+}
+
+.rnd_div span {
+    font-size: 30px;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500
+}
+
+
 
 /* mms 페이지 스타일 */
 .menu_mms .menu_li_a {
@@ -184,10 +216,6 @@ ul li a::after {
 }
 
 /* mms_dashboard */
-.dash_board_div {
-    position: relative;
-}
-
 .dash_board_div2 {
     position: absolute;
     top: 35%;
@@ -213,10 +241,6 @@ ul li a::after {
 }
 
 /* mms_q%a */
-.talk_div {
-    position: relative;
-}
-
 .q_div {
     position: absolute; top: 40%; left: 11%;
 }
@@ -235,10 +259,6 @@ ul li a::after {
 
 .tab_div span {
    font-weight: 400; font-size: 28px;
-}
-
-.down_div1 {
-    position: relative;
 }
 
 .down_div2 {
