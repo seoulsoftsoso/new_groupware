@@ -7,34 +7,19 @@
         background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
     }
 
-    .custom_btn > button {
-        background-color: rgba(239, 239, 239, 1);
-        color: rgba(137, 137, 137, 1);
-        border: 0;
-        border-radius: 21px;
-    }
+.slide-container {
+    overflow: hidden;
+}
 
-    .custom_btn > button:hover {
-        background-color: rgba(234, 234, 115, 1);
-        color: black;
-    }
+.slide-image-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
 
-    .custom_btn > button:active {
-        background-color: rgba(234, 234, 115, 1);
-        color: black;
-    }
-
-    .custom_btn > button:focus {
-        box-shadow: 0 0 0 0;
-    }
-
-    #slideImage {
-        transition: opacity 0.5s ease-in-out;
-    }
-
-    .hidden {
-        opacity: 0;
-    }
+.slide-image {
+    width: 31%;
+    margin-right: 3%;
+}
 
 </style>
 {% include 'menu.html' %}
@@ -71,7 +56,7 @@
                         </div>
                         <div class="col-xl-6">
                             <div class="mt-5">
-                                <img src="{% static 'renewal/image/mes/mes_monitor.png' %}" style="width: 100%;">
+                                <img src="{% static 'renewal/image/mes/monitorx2.png' %}" width="100%;">
                             </div>
                         </div>
                     </div>
@@ -165,21 +150,27 @@
                 </div>
 
 
-
                 <div class="card-body" style="margin: 5% 7% 8% 7%;">
                     <div class="mb-5">
-                        <span style="font-size: 38px;"><b>MES 주요 기능</b></span><br/>
+                        <span style="font-size: 38px;"><b>MES 주요 기능</b></span><br />
                     </div>
                     <div class="row pt-5">
                         <div class="d-flex justify-content-between">
                             <div style="margin: auto">
-                                <button class="button-reset" id="prevBtn"><img src="{% static 'renewal/image/mes/mes_left.png' %}"></button>
+                                <button class="button-reset" id="prevBtn"><img src="{% static 'renewal/image/mes/mes_left.png' %}" width="80%;"></button>
                             </div>
-                            <div class="row justify-content-center">
-                                <img id="slideImage" src="{% static 'renewal/image/mes/mes_slide1.png' %}" style="width: 80%;">
+                            <div class="slide-container" style="width: 80%; overflow: hidden; position: relative;">
+                                <div class="slide-image-wrapper" style="display: flex; transition: transform 0.5s ease-in-out;" id="slider">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide1.png' %}">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide2.png' %}">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide3.png' %}">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide4.png' %}">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide5.png' %}">
+                                    <img class="slide-image" src="{% static 'renewal/image/mes/slide6.png' %}">
+                                </div>
                             </div>
                             <div style="margin: auto">
-                                <button class="button-reset" id="nextBtn"><img src="{% static 'renewal/image/mes/mes_right.png' %}"></button>
+                                <button class="button-reset" id="nextBtn"><img src="{% static 'renewal/image/mes/mes_right.png' %}" width="80%;"></button>
                             </div>
                         </div>
                     </div>
@@ -216,7 +207,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body row mt-4">
+                        <div class="card-body row mt-4" style="padding: 5% 0 5% 0;">
                             <div class="sub_overlay row" style="color: white;">
                                 <div class="relative_div">
                                     <img src="{% static 'renewal/image/ibt/card.png' %}">
@@ -257,19 +248,19 @@
                 </div>
 
                 <div class="content-wrapper" style="background: linear-gradient(87.04deg, #F6F6F6 0.08%, #D8D8D8 99.92%);">
-                    <div class="row justify-content-center pt-5">
+                    <div class="row justify-content-center" style="padding-top: 5%;">
                         <p style="font-size: 38px;"><b>MES 정부지원사업 확인하기</b></p>
                     </div>
-                    <div class="row justify-content-center pt-5 pb-5">
+                    <div class="row justify-content-center" style="padding: 5% 0 7% 0;">
                         <div class="card-body col-xl-3 white-background mr-5" style="border-radius: 12px;height: 250px;width: 500px;padding-top: 3%;">
                             <a href="#"><h3><b>스마트공방</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
-                            <span style="font-size: 28px;line-height: 33px;">상시근로자수 10인 미만의 제조업</span><br/>
-                            <span style="font-size: 28px;line-height: 33px;">소공인 수작업 위주의 생산 현장 개선</span>
+                            <span style="font-size: 28px;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
+                            <span style="font-size: 28px;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
                         </div>
                         <div class="card-body col-xl-3 white-background" style="border-radius: 12px;height: 250px;width: 500px;padding-top: 3%;">
                             <a href="#"><h3><b>스마트팩토리</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
-                            <span style="font-size: 28px;line-height: 33px;">상시근로자수 10인 미만의 제조업</span><br/>
-                            <span style="font-size: 28px;line-height: 33px;">소공인 수작업 위주의 생산 현장 개선</span>
+                            <span style="font-size: 28px;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
+                            <span style="font-size: 28px;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
                         </div>
                     </div>
                 </div>
@@ -281,46 +272,48 @@
 {% include 'footer.html' %}
 </body>
 <script>
-     $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
-            // console.log("현재 스크롤 위치: " + scroll + "px");
-            if (scroll >= 950) { // 852px 스크롤을 지났을 때
-                $(".navbar").addClass("white-background");
-                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
-                $(".menu_li > a").css("color", "#000");
-            } else {
-                $(".navbar").removeClass("white-background");
-                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
-                $(".menu_li > a").css("color", "white");
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+        // console.log("현재 스크롤 위치: " + scroll + "px");
+        if (scroll >= 950) { // 852px 스크롤을 지났을 때
+            $(".navbar").addClass("white-background");
+            $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+            $(".menu_li > a").css("color", "#000");
+        } else {
+            $(".navbar").removeClass("white-background");
+            $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
+            $(".menu_li > a").css("color", "white");
+        }
+    })
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.slide-image');
+        const totalImages = images.length;
+        const visibleImages = 3;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slider = document.getElementById('slider');
+
+        nextBtn.addEventListener('click', function () {
+            if (currentIndex < totalImages - visibleImages) {
+                currentIndex++;
+                updateSliderPosition();
             }
-     })
+        });
 
-     $(document).ready(function () {
-         var images = [
-             "{% static 'renewal/image/mes/mes_slide1.png' %}",
-             "{% static 'renewal/image/mes/mes_slide2.png' %}"
-         ];
-         var currentIndex = 0;
+        prevBtn.addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSliderPosition();
+            }
+        });
 
-         function showImage(index) {
-             $('#slideImage').addClass('hidden');
-             setTimeout(function () {
-                 $('#slideImage').attr('src', images[index]);
-                 $('#slideImage').removeClass('hidden');
-             }, 500);
-         }
-
-         $('#prevBtn').click(function () {
-             currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
-             showImage(currentIndex);
-         });
-
-         $('#nextBtn').click(function () {
-             currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
-             showImage(currentIndex);
-         });
-     });
-
+        function updateSliderPosition() {
+            const offset = -(100 / visibleImages) * currentIndex;
+            slider.style.transform = `translateX(${offset}%)`;
+        }
+    });
 
 </script>
 </html>
