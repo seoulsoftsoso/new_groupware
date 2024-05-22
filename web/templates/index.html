@@ -26,13 +26,13 @@
 
     .text-overlay {
         position: absolute;
-        top: 45%;
+        top: 50%;
         left: 0;
         right: 0;
         bottom: 0;
         color: white;
         text-align: center;
-        font-size: 60px;
+        font-size: 42px;
     }
 
     .new-text-overlay {
@@ -44,15 +44,11 @@
         opacity: 0;
         color: white;
         text-align: center;
-        font-size: 40px;
+        font-size: 34px;
     }
 
     .white-background {
         background-color: rgba(255, 255, 255, 1) !important;
-    }
-
-    .bottom_img > img {
-        width: 90%;
     }
 
     .scroll-section {
@@ -74,58 +70,7 @@
         transition: opacity 2s ease-in-out;
     }
 
-    /* 기본 상태에서는 아래쪽에 위치하고 보이지 않도록 설정 */
-    .service_div {
-        top: 0;
-        opacity: 0;
-        transform: translateY(600px);
-        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
-    }
 
-    /* 스크롤 위치에 따라 추가될 클래스 */
-    .service_div.show {
-        opacity: 1; /* 서서히 나타나도록 */
-        transform: translateY(0); /* 원래 위치로 이동 */
-    }
-
-    .mms_div {
-        top: -10%;
-        opacity: 0;
-        transform: translateY(600px);
-        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
-    }
-
-    /* 스크롤 위치에 따라 추가될 클래스 */
-    .mms_div.show {
-        opacity: 1; /* 서서히 나타나도록 */
-        transform: translateY(0); /* 원래 위치로 이동 */
-    }
-
-    .ibt_div {
-        top: -10%;
-        opacity: 0;
-        transform: translateY(600px);
-        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
-    }
-
-    /* 스크롤 위치에 따라 추가될 클래스 */
-    .ibt_div.show {
-        opacity: 1; /* 서서히 나타나도록 */
-        transform: translateY(0); /* 원래 위치로 이동 */
-    }
-
-    .mes_div {
-        top: -10%;
-        opacity: 0;
-        transform: translateY(600px);
-        transition: all 1s ease-out; /* 부드러운 애니메이션 효과 */
-    }
-
-    /* 스크롤 위치에 따라 추가될 클래스 */
-    .mes_div.show {
-        opacity: 1; /* 서서히 나타나도록 */
-        transform: translateY(0); /* 원래 위치로 이동 */
-    }
 </style>
 <link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <!--menu 로드-->
@@ -148,6 +93,7 @@
                 <div class="scroll-section">
                      <div class="new-text-overlay justify-content-center" style="display: none;">
                         <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">기업 전체의 자원을 효율적으로 사용하는 라이프 스타일 맞춤형 서비스</b></span><br/>
+                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">라이프 스타일 맞춤형 서비스</b></span><br/>
                         <span style="margin-top: -5px;"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">누구나 구축할 수 있는 지속 가능한 미래,</b></span><br/>
                          <br/>
                         <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">서울소프트와 함께합니다.</b></span>
@@ -155,73 +101,74 @@
                 </div>
 
 
-                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);height: 80vh">
-                    <div class="col-xl-10 row justify-content-center service_div" style="display: none">
+                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);height: 45vh">
+                    <div class="col-xl-10 row justify-content-center service_div">
                         <span>
-                            <b style="font-size: 80px;color: rgba(181, 182, 182, 1)">Service</b>
+                            <b style="font-size: 6vh;color: rgba(181, 182, 182, 1)">Service</b>
                         </span>
                     </div>
                 </div>
 
                 <!-- MMS -->
-                <div class="container-fluid row flex-grow-1 container-p-y mms_div" style="background-color: rgba(251, 251, 251, 1); display: none">
-                    <div class="col-xl-10 row">
+                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);">
+                    <div class="col-xl-9 row">
                         <div class="col-xl-6 col-md-8 col-12 mb-md-0">
                             <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">이동 자산 운영 End to End</h3>
-                            <h2 style="color: #FF7A00; font-size: 60px; font-weight: 600">MMS</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">시너지를 극대화하는</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">Core Platform</h2>
-                            <a href="#"><img src="{% static 'renewal/image/main/mms_btn.png' %}"></a>
+                            <h2 style="color: #FF7A00; font-size: 6vh; font-weight: 600">MMS</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">시너지를 극대화하는</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">Core Platform</h2>
+                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/mms_btn.png' %}" width="17%;"></a>
                         </div>
-                        <div class="col-xl-6 col-md-8 col-12">
+                        <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
                             <img src="{% static 'renewal/image/main/mms_img.jpg' %}" style="width: 100%">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
-                        <img src="{% static 'renewal/image/main/mms_bottom2.png' %}" style="width: 1200px; height: auto">
+                    <div class="col-xl-8 d-flex justify-content-center" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/mms_bottom2.png' %}" width="100%">
                     </div>
                 </div>
 
                 <!-- IBT -->
-                <div class="container-fluid row flex-grow-1 container-p-y ibt_div" style="background-color: rgba(251, 251, 251, 1); display: none">
-                    <div class="col-xl-10 row">
+                <div class="container-fluid row flex-grow-1 container-p-y ibt_div" style="background-color: rgba(251, 251, 251, 1);">
+                    <div class="col-xl-9 row">
                         <div class="col-xl-6 col-md-8 col-12 mb-md-0">
                             <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 300;">Smart Farm을 활용한 순환 모델 구축</h3>
-                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 45px; font-weight: 600">I.B.T(Intergrative Bio Technology)</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">수익 보장형 스마트팜</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">바이오 융합 생태계 조성</h2>
-                            <a href="#"><img src="{% static 'renewal/image/main/ibt_btn.png' %}"></a>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 6vh; font-weight: 600">I.B.T</h2>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 5vh; font-weight: 600">(Intergrative Bio Technology)</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">수익 보장형 스마트팜</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">바이오 융합 생태계 조성</h2>
+                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/ibt_btn.png' %}" width="17%"></a>
                         </div>
-                        <div class="col-xl-6 col-md-8 col-12 mb-md-0">
+                        <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
                             <img src="{% static 'renewal/image/main/ibt_img.png' %}" style="width: 100%">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
-                        <img src="{% static 'renewal/image/main/ibt_bottom2.png' %}" style="width: 1200px; height: auto">
+                    <div class="col-xl-8 d-flex justify-content-center" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/ibt_bottom2.png' %}" width="100%">
                     </div>
                 </div>
 
-                <div class="container-fluid row flex-grow-1 container-p-y mes_div" style="background-color: rgba(251, 251, 251, 1); display: none">
-                    <div class="col-xl-10 row">
-                        <div class="col-xl-6 col-md-8 col-12 mb-md-0 mb-4">
+                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);">
+                    <div class="col-xl-9 row">
+                        <div class="col-xl-6 col-md-8 col-12 mb-md-0">
                             <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">Cloud 기반 통합 생산관리</h3>
-                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 60px; font-weight: 600">MES</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 200px;">
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">생산효율 55% 극대화 및</h2>
-                            <h2 style="color: #000;font-size: 40px;font-weight: 600;">불량률 18% 감소</h2>
-                            <a href="#"><img src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
+                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 6vh; font-weight: 600">MES</h2>
+                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">생산효율 55% 극대화 및</h2>
+                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">불량률 18% 감소</h2>
+                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
                         </div>
-                        <div class="col-xl-6 col-md-8 col-12 mb-md-0 mb-4">
+                        <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
                             <img src="{% static 'renewal/image/main/mes_img.png' %}" style="width: 100%">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center bottom_img" style="margin-top: -10%;">
-                        <img src="{% static 'renewal/image/main/mes_bottom2.png' %}" style="width: 1200px; height: auto">
+                    <div class="col-xl-8 d-flex justify-content-center" style="margin-top: -10%;">
+                        <img src="{% static 'renewal/image/main/mes_bottom2.png' %}" width="100%">
                     </div>
                 </div>
 
@@ -236,7 +183,6 @@
     $(document).ready(function () {
         const video = document.querySelector("video");
         const videoHeight = 2000; // 비디오를 고정할 높이
-
 
         $(window).scroll(function () {
             if (window.scrollY < videoHeight) {
@@ -257,45 +203,16 @@
 
         $(window).scroll(function () {
             var scroll = $(window).scrollTop();
-            console.log("현재 스크롤 위치: " + scroll + "px");
-            if (scroll >= 2750) { // 852px 스크롤을 지났을 때
+            var triggerPoint = $('.scroll-section').offset().top + $('.scroll-section').outerHeight();
+
+            if (scroll >= triggerPoint) {
                 $(".navbar").addClass("white-background");
                 $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
                 $(".menu_li > a").css("color", "#000");
-
             } else {
                 $(".navbar").removeClass("white-background");
                 $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
                 $(".menu_li > a").css("color", "#fff");
-
-            }
-
-            if (scroll >= 2400) {
-                $('.service_div').show()
-                $('.service_div').addClass('show');
-            } else {
-                $('.service_div').removeClass('show');
-            }
-
-            if (scroll >= 2700) {
-                $('.mms_div').show()
-                $('.mms_div').addClass('show');
-            } else {
-                $('.mms_div').removeClass('show');
-            }
-
-            if (scroll >= 3600) {
-                $('.ibt_div').show()
-                $('.ibt_div').addClass('show');
-            } else {
-                $('.ibt_div').removeClass('show');
-            }
-
-            if (scroll >= 4700) {
-                $('.mes_div').show()
-                $('.mes_div').addClass('show');
-            } else {
-                $('.mes_div').removeClass('show');
             }
         });
     });

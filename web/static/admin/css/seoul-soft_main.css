@@ -187,12 +187,12 @@ ul li a::after {
 
 .main_overlay > h1 {
     text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);
-    font-size: 54px;
+    font-size: 5vh;
 }
 
 .main_overlay > h2 {
     text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);
-    font-size: 42px;
+    font-size: 4.5vh;
 }
 
 .relative_div {
@@ -208,19 +208,23 @@ ul li a::after {
 }
 
 .ex4_div p {
-    font-size: 24px;
+    font-size: 2.8vh;
 }
 
 .ex4_div img {
     margin-right: 4%
 }
 
+.ex4_div h6 {
+    font-size: 2vh;
+}
+
 .rnd_div {
-    position: absolute; top: 42%; left: 30%; color: white;
+    position: absolute; top: 42%; left: 27%; color: white;
 }
 
 .rnd_div span {
-    font-size: 30px;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500
+    font-size: 3vh;text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);font-weight: 500;
 }
 
 
@@ -234,24 +238,18 @@ ul li a::after {
     color: black;
 }
 
-/* mms_dashboard */
-.dash_board_div2 {
-    position: absolute;
-    top: 35%;
-    left: 10%;
-    color: white;
-}
 
 .dash_board_div2 p {
     color: #FF6B00;
     font-weight: 600;
-    font-size: 26px;
+    font-size: 2.3vh;
 }
 
 .dash_board_div2 span {
     color: #3E3A39;
-    font-size: 16px;
+    font-size: 1.8vh;
     line-height: 28px;
+    font-weight: 400;
 }
 
 .dash_board_div2 img {
@@ -260,24 +258,24 @@ ul li a::after {
 }
 
 /* mms_q%a */
-.q_div {
-    position: absolute; top: 40%; left: 11%;
-}
+/*.q_div {*/
+/*    position: absolute; top: 40%; left: 15%;*/
+/*}*/
 
 .q_div span, .a_div span {
-    font-weight: 500; font-size: 32px; line-height: 38px;
+    font-weight: 600; font-size: 2.5vh; line-height: 38px;
 }
 
-.a_div {
-    position: absolute; top: 7%; right: 9%;
-}
+/*.a_div {*/
+/*    position: absolute; top: 7%; right: 13%;*/
+/*}*/
 
 .tab_div {
     background: #FFFFFF; border-radius: 16px; height: 25%;
 }
 
 .tab_div span {
-   font-weight: 400; font-size: 28px;
+   font-weight: 400; font-size: 2.2vh;
 }
 
 .down_div2 {

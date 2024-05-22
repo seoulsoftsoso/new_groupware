@@ -1,24 +1,32 @@
 {% load static %}
 <style>
     .text-truncate {
-        font-size: 16px; font-weight: 500;
+        font-size: 1.7vh;
+        font-weight: 500;
+    }
+
+    .com_info span {
+        font-size: 1.5vh;
     }
 </style>
 <footer class="footer" style="background-color: rgba(237, 237, 237, 1)">
-    <div class="container-fluid pt-5">
-        <div class="col-xl-12 col-md-8 col-12 mb-md-0 mb-4">
-            <div class="d-flex justify-content-center">
-                <p style="font-weight: 500;font-size: 22px;">우리의 공간에서 쉬어보세요!</p>
-            </div>
-            <div class="d-flex justify-content-center">
-                <img src="{% static 'renewal/image/mini_logo.png' %}">
+    <div class="container-fluid pt-5 row justify-content-center">
+        <div class="col-xl-10" style="padding: 0 5% 0 5%;">
+            <div class="col-xl-12 row justify-content-between">
+                <div>
+                    <p style="font-weight: 600;font-size: 2.5vh;">우리의 공간에서 쉬어보세요!</p>
+                </div>
+                <div class="col-xl-4 row justify-content-end">
+                    <a href="#"><img src="{% static 'renewal/image/foot_insta.png' %}"></a>
+                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_facebook.png' %}"></a>
+                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_blog.png' %}"></a>
+                </div>
             </div>
         </div>
 
-        <div class="container-fluid d-flex justify-content-between" style="padding-top: 5%;">
-            <div class="row col-xl-6 col-md-8 col-12 mb-md-0 mb-4 ft_menu">
-
-                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+        <div class="col-xl-10" style="padding: 2% 5% 2% 5%;">
+            <div class="row">
+                <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
                         <div class="text-truncate" data-i18n="기업정보">기업정보</div>
                         <ul class="menu-sub mt-4">
@@ -31,7 +39,7 @@
                     </li>
                 </div>
 
-                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+                <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
                         <div class="text-truncate" data-i18n="서비스">서비스</div>
                         <ul class="menu-sub mt-4">
@@ -54,7 +62,30 @@
                     </li>
                 </div>
 
-                <div class="col-xl-3 col-md-8 col-12 mb-md-0 mb-4">
+                <div class="col-md-6 col-lg-2 mb-3">
+                    <li class="menu-item">
+                        <div class="text-truncate" data-i18n="스토리">스토리</div>
+                        <ul class="menu-sub mt-4">
+                            <li class="menu-item">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="MES">스토리1</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="모빌리티">스토리2</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="#" class="menu-link">
+                                    <div class="text-truncate" data-i18n="I.B.T">스토리3</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </div>
+
+                <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
                         <div class="text-truncate" data-i18n="약관">약관</div>
                         <ul class="menu-sub mt-4">
@@ -67,32 +98,35 @@
                     </li>
                 </div>
 
-                <div class="col-xl-2 col-md-8 col-12 mb-md-0 mb-4">
+                <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
-                        <div class="text-truncate" style="margin-left: 10px;" data-i18n="그룹웨어"><a href="/admins/index">그룹웨어</a></div>
+                        <div class="text-truncate" style="margin-left: 10px;" data-i18n="그룹웨어"><a href="/admins/index">그룹웨어</a>
+                        </div>
                     </li>
                 </div>
             </div>
-            <div>
-                <div>
-                    <a href="#"><img src="{% static 'renewal/image/footer_insta.png' %}"></a>
-                    <a href="#"><img src="{% static 'renewal/image/footer_facebook.png' %}"></a>
-                    <a href="#"><img src="{% static 'renewal/image/footer_blog.png' %}"></a>
-                    <div class="text-sm-end d-none d-sm-block mt-3">
-                        <span>(주) 서울소프트</span><br/>
-                        <span>대표 : 노병진</span> <span>사업자등록번호: 134-87-18556</span><br/>
-                        <span>주소 : 충청북도 충주시 중앙로 80(네오메디클리닉)</span><br/>
-                        <span>TEL : 02-6052-1192</span>
-                    </div>
+
+            <hr class="col-xl-12" style="background-color: #AFAFAF"/>
+        </div>
+
+        <div class="col-xl-10 mb-5" style="padding: 0 5% 0 5%;">
+            <div class="row justify-content-between">
+                <div class="pt-3">
+                    <img src="{% static 'renewal/image/logo_A.png' %}" style="width: 85%;">
+                </div>
+                <div class="col-xl-8 text-sm-end d-none d-sm-block mt-3 com_info">
+                    <span style="font-weight: 600; margin-right: 3%;">(주) 서울소프트</span>
+                    <span style="font-weight: 600;margin-right: 1%;">본사 / 연구소</span>
+                    <span>충청북도 충주시 중앙로 80(네오메디클리닉) / 서울특별시 금천구 가산디지털1로 84, 810호</span><br/>
+                    <span style="font-weight: 600; margin-right: 1%;">대표</span><span>노병진</span>
+                    <span style="font-weight: 600; margin-right: 1%;">사업자등록번호</span><span>134-87-18556</span>
+                    <span style="font-weight: 600; margin-right: 1%;margin-left: 1%;">TEL</span><span>02-6052-1192</span>
+                    <span style="font-weight: 600; margin-right: 1%;margin-left: 1%;">FAX</span><span>02-600-9349</span><br/>
+                    <span style="color: rgba(152, 152, 152, 1)">2024. Seoul-Soft. ALL RIGHTS RESERVED</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 mt-5">
-            <div class="text-sm-end d-none d-sm-block" style="color: rgba(152, 152, 152, 1)">
-                2024. Seoul-Soft. ALL RIGHTS RESERVED
-            </div>
-        </div>
     </div>
 </footer>
 

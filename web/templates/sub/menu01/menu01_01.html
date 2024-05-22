@@ -31,8 +31,9 @@
             <div class="content-wrapper" style="background-color: rgba(248, 248, 248, 1)">
 
                 <!-- Content -->
-                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center" style="margin-bottom: 5%; position: relative;">
-                    <img src="{% static 'renewal/image/mes/mes_main.png' %}" style="width: 1903px;">
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="margin-bottom: 5%; position: relative;padding: 0 0 0 0;">
+                    <img src="{% static 'renewal/image/mes/mes_main.png' %}" style="width: 100%;">
                     <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
                         <h1 style="font-weight: 800">MES</h1><br/>
                         <h2>유연한 Architecture를 가진</h2>
@@ -40,87 +41,96 @@
                     </div>
                 </div>
 
-                <div class="card-body" style="padding: 0 6.5% 0 6.5%;">
-                    <div class="row">
+                <div class="container-fluid card-body d-flex justify-content-center" style="padding: 0 6.5% 0 6.5%;">
+                    <div class="col-xl-11 row">
                         <div class="col-xl-6">
-                            <h3><b style="font-size: 38px;font-weight: 800">MES</b></h3><br/><br/>
-                            <h3 style="font-size: 34px;font-weight: 400;">공정에 따라 쉽게 확장이 가능한 MES를 만나보세요</h3>
-                            <h3 style="font-size: 34px;font-weight: 400">대규모 데이터 수집 및 예측 분석을 통해 생산성과 경쟁력을</h3>
-                            <h3 style="font-size: 34px;font-weight: 400">확보할 수 있습니다.</h3>
-                            <div class="mt-5">
-                                <img src="{% static 'renewal/image/mes/mes_architecture.png' %}">
+                            <h3><b style="font-size: 4.5vh;font-weight: 800">MES</b></h3><br/><br/>
+                            <h3 style="font-size: 3vh;font-weight: 400;">공정에 따라 쉽게 확장이 가능한 MES를</h3>
+                            <h3 style="font-size: 3vh;font-weight: 400">만나보세요. 대규모 데이터 수집 및 예측 분석을</h3>
+                            <h3 style="font-size: 3vh;font-weight: 400">통해 생산성과 경쟁력을 확보할 수 있습니다.</h3>
+                            <div class="col-xl-11 mt-5">
+                                <img src="{% static 'renewal/image/mes/mes_architecture.png' %}" width="100%">
                             </div>
                             <div class="mt-5">
                                 <a href="#"><img src="{% static 'renewal/image/mes/mes_q_btn.png' %}"></a>
                             </div>
                         </div>
                         <div class="col-xl-6">
-                            <div class="mt-5">
+                            <div class="col-xl-12 mt-5">
                                 <img src="{% static 'renewal/image/mes/monitorx2.png' %}" width="100%;">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" style="margin: 8% 7% 0 7%;">
-                    <div class="card-body" style="width: 50%;">
-                        <div class="card-body col-xl-12 white-background row justify-content-center">
-                            <div class="col-xl-5 mt-4">
-                                <img src="{% static 'renewal/image/mes/mes_card11.png' %}">
+                <div class="container-fluid row justify-content-center">
+                    <div class="col-xl-12" style="padding: 15% 7% 0 7%;">
+                        <div class="row justify-content-center">
+                            <div class="card-body" style="width: 50%;">
+                                <div class="card-body col-xl-12 white-background row justify-content-center">
+                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
+                                        <img src="{% static 'renewal/image/mes/mes_card11.png' %}" width="80%">
+                                    </div>
+                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
+                                        <p><b>클라우드 서버 기반 관리</b></p>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">접근성 확장을 통한 협업 및 업무의 유연성 강화</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">유연한 요금 체계를 통한 비용 최적화</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">리소스 확장 및 유지보수의 용이성</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">데이터 및 집약 기술의 보안성</h6>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-xl-6 mt-5 mb-5 ex4_div">
-                                <p><b>클라우드 서버 기반 관리</b></p>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">접근성 확장을 통한 협업 및 업무의 유연성 강화</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">유연한 요금 체계를 통한 비용 최적화</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">리소스 확장 및 유지보수의 용이성</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">데이터 및 집약 기술의 보안성</h6>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card-body" style="width: 50%;">
-                        <div class="card-body col-xl-12 white-background row justify-content-center">
-                            <div class="col-xl-5 mt-4">
-                                <img src="{% static 'renewal/image/mes/mes_card22.png' %}">
-                            </div>
-                            <div class="col-xl-7 mt-5 mb-5 ex4_div">
-                                <p><b>대규모 데이터 수집 및 예측 분석</b></p>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">공정 오류 사전 예측 및 예방을 통한 생산 효율 극대화</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">품질 및 고객 만족도 향상</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">효율적인 자원 관리를 통한 비용 절감</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">제품 수요 예측을 통한 시장 대응력 강화</h6>
+                            <div class="card-body" style="width: 50%;">
+                                <div class="card-body col-xl-12 white-background row justify-content-center">
+                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
+                                        <img src="{% static 'renewal/image/mes/mes_card22.png' %}" width="80%">
+                                    </div>
+                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
+                                        <p><b>대규모 데이터 수집 및 예측 분석</b></p>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">공정 오류 예측을 통한 생산 효율 극대화</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">품질 및 고객 만족도 향상</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">효율적인 자원 관리를 통한 비용 절감</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">제품 수요 예측을 통한 시장 대응력 강화</h6>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" style="margin: 1% 7% 8% 7%;">
-                    <div class="card-body" style="width: 50%;">
-                        <div class="card-body col-xl-12 white-background row justify-content-center">
-                            <div class="col-xl-5 mt-4">
-                                <img src="{% static 'renewal/image/mes/mes_card33.png' %}">
+                <div class="container-fluid row justify-content-center">
+                    <div class="col-xl-12" style="padding: 0% 7% 5% 7%;">
+                        <div class="row justify-content-center">
+                            <div class="card-body" style="width: 50%;">
+                                <div class="card-body col-xl-12 white-background row justify-content-center">
+                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
+                                        <img src="{% static 'renewal/image/mes/mes_card33.png' %}" width="80%">
+                                    </div>
+                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
+                                        <p><b>실시간 모니터링 및 시각화</b></p>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산 공정 문제 식별과 신속한 대응</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">시각화 데이터를 통한 인사이트 확보</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산자 및 관리자 간의 투명성 제고</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">재고 과잉 및 부족 방지를 통한 재고 최적화</h6>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-xl-6 mt-5 mb-5 ex4_div">
-                                <p><b>실시간 모니터링 및 시각화</b></p>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산 공정 문제 식별과 신속한 대응</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">시각화 데이터를 통한 인사이트 확보</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산자 및 관리자 간의 투명성 제고</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">재고 과잉 및 부족 방지를 통한 재고 최적화</h6>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card-body" style="width: 50%;">
-                        <div class="card-body col-xl-12 white-background row justify-content-center">
-                            <div class="col-xl-5 mt-4">
-                                <img src="{% static 'renewal/image/mes/mes_card44.png' %}">
-                            </div>
-                            <div class="col-xl-6 mt-5 mb-5 ex4_div">
-                                <p><b>맞춤화 서비스 진행</b></p>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">업종 및 고객 니즈에 맞는 커스터마이징</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">규제 및 표준 준수 강화</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">고객 서비스 및 만족도 향상</h6>
-                                <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">성능 및 생산성 최적화</h6>
+
+                            <div class="card-body" style="width: 50%;">
+                                <div class="card-body col-xl-12 white-background row justify-content-center">
+                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
+                                        <img src="{% static 'renewal/image/mes/mes_card44.png' %}" width="80%">
+                                    </div>
+                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
+                                        <p><b>맞춤화 서비스 진행</b></p>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">업종 및 고객 니즈에 맞는 커스터마이징</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">규제 및 표준 준수 강화</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">고객 서비스 및 만족도 향상</h6>
+                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">성능 및 생산성 최적화</h6>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,23 +138,25 @@
 
                 <div class="content-wrapper white-background" style="padding-top: 10%;">
                     <div class="row justify-content-center">
-                        <div style="margin: auto">
-                            <p style="font-weight: 600;font-size: 30px;line-height: 36px;color: #B21616;"><b>강력한 대시보드</b></p>
-                            <span style="font-size: 42px;line-height: 50px;"><b>한 눈에 알아보기 쉬운</b></span><br/>
-                            <span style="font-size: 42px;line-height: 50px;"><b>생산 프로세스 대시보드</b></span>
+                        <div class="col-xl-9 row justify-content-center">
+                            <div class="col-xl-5" style="margin: auto">
+                                <p style="font-weight: 600;font-size: 3vh;line-height: 36px;color: #B21616;"><b>강력한 대시보드</b></p>
+                                <span style="font-size: 4vh;line-height: 50px;"><b>한 눈에 알아보기 쉬운</b></span><br/>
+                                <span style="font-size: 4vh;line-height: 50px;"><b>생산 프로세스 대시보드</b></span>
+                            </div>
+                            <div class="col-xl-7" style="margin: auto">
+                                <img src="{% static 'renewal/image/mes/mes_main2.png' %}" width="90%">
+                            </div>
                         </div>
-                        <div style="margin: auto">
-                            <img src="{% static 'renewal/image/mes/mes_main2.png' %}">
-                        </div>
-                    </div>
-                    <div class="row justify-content-center" style="padding: 10% 0 10% 0; ">
-                        <div style="margin: auto">
-                            <p style="font-weight: 600;font-size: 30px;line-height: 36px;color: #B21616;"><b>재고관리를 완벽하게</b></p>
-                            <span style="font-size: 42px;line-height: 50px;"><b>재고 회전율 최적화를 통한</b></span><br/>
-                            <span style="font-size: 42px;line-height: 50px;"><b>생산성 향상 및 경쟁력 강화</b></span>
-                        </div>
-                        <div style="margin: auto">
-                            <img src="{% static 'renewal/image/mes/mes_main3.png' %}">
+                        <div class="col-xl-9 row justify-content-center" style="padding: 10% 0 10% 0; ">
+                            <div class="col-xl-5" style="margin: auto">
+                                <p style="font-weight: 600;font-size: 3vh;line-height: 36px;color: #B21616;"><b>재고관리를 완벽하게</b></p>
+                                <span style="font-size: 4vh;line-height: 50px;"><b>재고 회전율 최적화를 통한</b></span><br/>
+                                <span style="font-size: 4vh;line-height: 50px;"><b>생산성 향상 및 경쟁력 강화</b></span>
+                            </div>
+                            <div class="col-xl-7" style="margin: auto">
+                                <img src="{% static 'renewal/image/mes/mes_main3.png' %}" width="90%">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,91 +188,104 @@
                     </div>
                 </div>
 
-                <div class="row" style="margin: 8% 5% 0 5%;">
-                    <div class="card-body">
-                        <h3 style="font-weight: 700;font-size: 38px;">MES 도입 효과</h3>
-                        <div class="card-body row justify-content-center mt-5">
-                            <div class="col-xl-4">
-                                <div class="d-flex justify-content-center align-items-center tab_div">
-                                    <span>공정 현황 파악의 한계</span>
+                <div class="row justify-content-center">
+                    <div class="col-xl-10">
+                        <div class="card-body">
+                            <div class="">
+                                <h3 style="font-weight: 700;font-size: 38px;">MES 도입 효과</h3>
+                            </div>
+                            <div class="card-body row justify-content-center mt-5">
+                                <div class="col-xl-4">
+                                    <div class="d-flex justify-content-center align-items-center tab_div">
+                                        <span>공정 현황 파악의 한계</span>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
+                                        <span>데이터 수기 작성 및 수집 분석</span>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
+                                        <span>재고 파악 및 품질 관리의 한계</span>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                    <span>데이터 수기 작성 및 수집 분석</span>
+                                <div class="col-xl-1" style="margin-top: 1%;padding-left: 3.5%;">
+                                    <img src="{% static 'renewal/image/mms/mms_frame2.png' %}">
                                 </div>
-                                <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                    <span>재고 파악 및 품질 관리의 한계</span>
+                                <div class="col-xl-7">
+                                    <div class="d-flex justify-content-center align-items-center tab_div">
+                                        <span>생산 과정 실시간 모니터링 및 신속한 대응</span>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
+                                        <span>클라우드 서버를 통한 자동화 데이터 수집 및 분석, 오류 감소</span>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
+                                        <span>쉬운 재고 파악 등 생산 일정 최적화를 통한 비용 절감, 품질 문제 분석 및 개선</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xl-1" style="margin-top: 1%;padding-left: 3.5%;">
-                                <img src="{% static 'renewal/image/mms/mms_frame2.png' %}">
-                            </div>
-                            <div class="col-xl-7">
-                                <div class="d-flex justify-content-center align-items-center tab_div">
-                                    <span>생산 과정 실시간 모니터링 및 신속한 대응</span>
-                                </div>
-                                <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                    <span>클라우드 서버를 통한 자동화 데이터 수집 및 분석, 오류 감소</span>
-                                </div>
-                                <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                    <span>쉬운 재고 파악 등 생산 일정 최적화를 통한 비용 절감, 품질 문제 분석 및 개선</span>
-                                </div>
-                            </div>
+
                         </div>
-
-                        <div class="card-body row mt-4" style="padding: 5% 0 5% 0;">
-                            <div class="sub_overlay row" style="color: white;">
-                                <div class="relative_div">
-                                    <img src="{% static 'renewal/image/ibt/card.png' %}">
-                                    <div class="down_div2">
-                                        <span><b>클라우드 MES</b></span><br/>
-                                        <span><b>요금제 확인하기</b></span>
-                                    </div>
-                                    <div class="down_div3">
-                                        <a href="#"><span>바로가기</span></a>
-                                    </div>
-                                </div>
-
-                                <div class="relative_div ml-5">
-                                    <img src="{% static 'renewal/image/ibt/card.png' %}">
-                                    <div class="down_div2">
-                                        <span><b>클라우드 MES</b></span><br/>
-                                        <span><b>구축 문의하기</b></span>
-                                    </div>
-                                    <div class="down_div3">
-                                        <a href="#"><span>바로가기</span></a>
-                                    </div>
-                                </div>
-
-                                <div class="relative_div ml-5">
-                                    <img src="{% static 'renewal/image/ibt/card.png' %}">
-                                    <div class="down_div2">
-                                        <span><b>더 많은 활용방안이</b></span><br/>
-                                        <span><b>궁금하다면?</b></span>
-                                    </div>
-                                    <div class="down_div3">
-                                        <a href="#"><span>BLOG 바로가기</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
+                <div class="row justify-content-center">
+                    <hr class="row col-xl-9" style="margin: 5% 5% 0 5%;border: 0.1vh solid #000000;"/>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-xl-11">
+                        <div class="card-body pb-5">
+                            <div class="mt-5" style="padding-left: 5%;">
+                                <h3 style="font-weight: 700;font-size: 38px;">더 자세하게 알아보기</h3>
+                            </div>
+                            <div class="row justify-content-center pb-5">
+
+                                <div class="col-xl-10 row justify-content-center mt-5" style="color: white;">
+                                    <div class="card row justify-content-center align-items-center"
+                                         style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 20vw;">
+                                        <a href="#" class="d-flex align-items-center">
+                                            <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">클라우드 MES 요금제 확인하기</span>
+                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 3vh;">
+                                        </a>
+                                    </div>
+
+                                    <div class="card row justify-content-center align-items-center ml-5"
+                                         style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
+                                        <a href="#" class="d-flex align-items-center">
+                                            <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">MES 구축 문의하기</span>
+                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 3vh;">
+                                        </a>
+                                    </div>
+
+                                    <div class="card row justify-content-center align-items-center ml-5"
+                                         style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
+                                        <a href="#" class="d-flex align-items-center">
+                                            <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">BLOG 바로가기</span>
+                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 3vh;">
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="content-wrapper" style="background: linear-gradient(87.04deg, #F6F6F6 0.08%, #D8D8D8 99.92%);">
                     <div class="row justify-content-center" style="padding-top: 5%;">
-                        <p style="font-size: 38px;"><b>MES 정부지원사업 확인하기</b></p>
+                        <p style="font-size: 4vh;"><b>MES 정부지원사업 확인하기</b></p>
                     </div>
-                    <div class="row justify-content-center" style="padding: 5% 0 7% 0;">
-                        <div class="card-body col-xl-3 white-background mr-5" style="border-radius: 12px;height: 250px;width: 500px;padding-top: 3%;">
-                            <a href="#"><h3><b>스마트공방</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
-                            <span style="font-size: 28px;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
-                            <span style="font-size: 28px;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
-                        </div>
-                        <div class="card-body col-xl-3 white-background" style="border-radius: 12px;height: 250px;width: 500px;padding-top: 3%;">
-                            <a href="#"><h3><b>스마트팩토리</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
-                            <span style="font-size: 28px;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
-                            <span style="font-size: 28px;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
+                    <div class="row justify-content-center">
+                        <div class="col-xl-10 row justify-content-center" style="padding: 5% 0 7% 0;">
+                            <div class="col-xl-4 white-background mr-5" style="border-radius: 12px;height: 250px;width: 35%;padding-top: 3%;">
+                                <a href="#"><h3><b>스마트공방</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
+                                <span style="font-size: 2.8vh;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
+                                <span style="font-size: 2.8vh;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
+                            </div>
+                            <div class="col-xl-4 white-background" style="border-radius: 12px;height: 250px;width: 100%;padding-top: 3%;">
+                                <a href="#"><h3><b>스마트팩토리</b><img class="ml-4" src="{% static 'renewal/image/small_right.png' %}"></h3><br/></a>
+                                <span style="font-size: 2.8vh;line-height: 33px;color: #595757;">상시근로자수 10인 미만의 제조업</span><br/>
+                                <span style="font-size: 2.8vh;line-height: 33px;color: #595757;">소공인 수작업 위주의 생산 현장 개선</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -274,7 +299,7 @@
 <script>
     $(window).scroll(function () {
         var scroll = $(window).scrollTop();
-        // console.log("현재 스크롤 위치: " + scroll + "px");
+        console.log("현재 스크롤 위치: " + scroll + "px");
         if (scroll >= 950) { // 852px 스크롤을 지났을 때
             $(".navbar").addClass("white-background");
             $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
