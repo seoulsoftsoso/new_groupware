@@ -70,7 +70,7 @@
 
                 <div class="container-fluid" style="padding: 5% 7% 5% 7%; height: 30vh;">
                     <div class="col-xl-12 row justify-content-center" style="background: linear-gradient(to bottom, rgba(234, 234, 115, 1) 66.66%, transparent 66.66%);">
-                        <div class="relative_div" style="width: 20%;">
+                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
                             <img src="{% static 'renewal/image/ibt/button_e_1.png' %}" width="100%">
                             <div class="img_card2">
                                 <span>원격</span><br/>
@@ -78,7 +78,7 @@
                                 <span>모니터링</span>
                             </div>
                         </div>
-                        <div class="relative_div" style="width: 20%;">
+                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
                             <img src="{% static 'renewal/image/ibt/button_e_2.png' %}" width="100%">
                             <div class="img_card2">
                                 <span>Button</span><br/>
@@ -86,7 +86,7 @@
                                 <span style="font-size: 20px">Data 수집 및 분석</span>
                             </div>
                         </div>
-                        <div class="relative_div" style="width: 20%;">
+                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
                             <img src="{% static 'renewal/image/ibt/button_e_3.png' %}" width="100%">
                             <div class="img_card2">
                                 <span>기능성</span><br/>
@@ -94,14 +94,14 @@
                                 <span>BIO / R&D</span>
                             </div>
                         </div>
-                        <div class="relative_div" style="width: 20%;">
+                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
                             <img src="{% static 'renewal/image/ibt/button_e_4.png' %}" width="100%">
                             <div class="img_card2">
                                 <span>고부가가치</span><br/>
                                 <span>기능성 제품</span><br/>
                             </div>
                         </div>
-                        <div class="relative_div" style="width: 20%;">
+                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
                             <img src="{% static 'renewal/image/ibt/button_e_5.png' %}" width="100%">
                             <div class="img_card2">
                                 <span>유통 • 판매</span><br/>
@@ -205,30 +205,31 @@
                             <span style="font-size: 3.2vh"><b>품질 및 생산성을 향상시켜보세요</b></span>
                         </div>
                         <div class="col-xl-6 row justify-content-center" style="margin: auto">
-                            <img src="{% static 'renewal/image/ibt/phone3.png' %}" width="70%" height="80%;">
+                            <img src="{% static 'renewal/image/ibt/phone3.png' %}" width="55%" height="80%;">
                         </div>
                     </div>
                 </div>
 
 
 
-                <div class="card-body" style="padding: 5% 7% 8% 7%;">
-                    <div class="row justify-content-between">
-                        <div>
-                            <span style="font-size: 38px;"><b>Smart Farm</b></span><br/>
-                            <span style="font-size: 28px;">다원화된 수익기반형 사업모델</span>
-                        </div>
-                        <div>
-{#                            <img src="{% static 'renewal/image/ibt/Component 1.png' %}">#}
-                            <div class="btn-group custom_btn mt-5" role="group" aria-label="Basic outlined example">
-                                <button type="button" class="btn btn_by left" data-img-src="{% static 'renewal/image/ibt/사업모델.png' %}">수익공유 상생협력형</button>
-                                <button type="button" class="btn btn_by middle" data-img-src="{% static 'renewal/image/ibt/구독형.png' %}">구독형</button>
-                                <button type="button" class="btn btn_by right" data-img-src="{% static 'renewal/image/ibt/창업형.png' %}">창업형</button>
+                <div class="container-fluid d-flex justify-content-center" style="padding: 5% 7% 8% 7%;">
+                    <div class="col-xl-10">
+                        <div class="row justify-content-between">
+                            <div>
+                                <span style="font-size: 38px;"><b>Smart Farm</b></span><br/>
+                                <span style="font-size: 28px;">다원화된 수익기반형 사업모델</span>
+                            </div>
+                            <div>
+                                <div class="btn-group custom_btn mt-5" role="group" aria-label="Basic outlined example">
+                                    <button type="button" class="btn btn_by left" data-img-src="{% static 'renewal/image/ibt/사업모델.png' %}">수익공유 상생협력형</button>
+                                    <button type="button" class="btn btn_by middle" data-img-src="{% static 'renewal/image/ibt/구독형.png' %}">구독형</button>
+                                    <button type="button" class="btn btn_by right" data-img-src="{% static 'renewal/image/ibt/창업형.png' %}">창업형</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-5 row justify-content-center">
-                        <img id="bussiness_model" src="{% static 'renewal/image/ibt/사업모델.png' %}" width="90%">
+                        <div class="mt-5 row justify-content-center">
+                            <img id="bussiness_model" src="{% static 'renewal/image/ibt/사업모델.png' %}" width="90%">
+                        </div>
                     </div>
                 </div>
 
@@ -265,7 +266,6 @@
                 <div class="content-wrapper"
                      style="position: relative;background-image: url('{% static "renewal/image/ibt/ibt_main2.png" %}');
                              background-size: cover; background-repeat: no-repeat; background-position: center; ">
-                    {#                    <img src="{% static 'renewal/image/ibt/ibt_main2.png' %}" style="width: 100%">#}
                     <div class="col-xl-10" style=" color: white;padding: 10%;">
                         <p style="font-size: 3.5vh"><b>기능성 식품</b></p>
                         <span style="font-size: 3.4vh;line-height: 42px;">식품첨가물 등 맞춤형 소재 개발로</span><br/>
@@ -275,7 +275,7 @@
                         <p style="font-size: 3vh">이끌어 내고 있습니다.</p><br/>
                         <a href="#"><img src="{% static 'renewal/image/ibt/more_btn.png' %}" style="width: 30%"></a>
                     </div>
-                    <div class="row justify-content-center" style="padding: 0 5% 0 5%;border-top: 0.1vh solid white;"></div>
+                    <hr style="padding: 0 5% 0 5%;border-top: 0.1vh solid white;width: 70%;"/>
                     <div class="row justify-content-center">
                         <div class="col-xl-11">
                             <div class="card-body pb-5">
@@ -288,7 +288,7 @@
                                         <div class="card row justify-content-center align-items-center"
                                              style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 20vw;">
                                             <a href="#" class="d-flex align-items-center">
-                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">클라우드 MES 요금제 확인하기</span>
+                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">Button 소개서 다운로드</span>
                                                 <img src="{% static 'renewal/image/download_regular.png' %}"
                                                      style="height: 3vh;">
                                             </a>
@@ -297,7 +297,7 @@
                                         <div class="card row justify-content-center align-items-center ml-5"
                                              style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
                                             <a href="#" class="d-flex align-items-center">
-                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">MES 구축 문의하기</span>
+                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">스마트팜 구축 문의하기</span>
                                                 <img src="{% static 'renewal/image/download_regular.png' %}"
                                                      style="height: 3vh;">
                                             </a>
