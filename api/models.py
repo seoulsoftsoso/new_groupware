@@ -192,8 +192,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
 
 
 class Question(models.Model):
-    Question_type = models.CharField(max_length=1, null=False, verbose_name='문의종류')
-    Question_path = models.CharField(max_length=1, null=False, verbose_name='검색경로')
+    Question_type = models.CharField(max_length=30, null=False, verbose_name='문의종류')
+    Question_path = models.CharField(max_length=30, null=False, verbose_name='검색경로')
     Question_name = models.CharField(max_length=128, null=False, verbose_name='이름')
     Question_company = models.CharField(max_length=128, null=False, verbose_name='기업(기관)명')
     Question_position = models.CharField(max_length=128, null=False, verbose_name='직책/직급')

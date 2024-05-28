@@ -1,165 +1,182 @@
 {% load static %}
-
 {% include 'header.html' %}
-<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_contact.css' %}">
-
-
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <!--menu 로드-->
+<style>
+
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    .custom_btn > button {
+        background-color: rgba(239, 239, 239, 1);
+        color: rgba(137, 137, 137, 1);
+        border: 0;
+        border-radius: 21px;
+    }
+
+    .custom_btn > button:hover {
+        background-color: #EAEA73;
+        color: black;
+    }
+
+    .custom_btn > button:active {
+        background-color: #EAEA73;
+        color: black;
+    }
+
+    .custom_btn > button:focus {
+        box-shadow: 0 0 0 0;
+    }
+
+    .nav-pills .nav-link {
+        background-color: #f4f4f4;
+        color: black;
+        height: 40px;
+        width: 190px;
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #EAEA73;
+        color: black;
+    }
+
+</style>
+
 {% include 'menu.html' %}
+<body class="menu_contact" style="overflow-x: hidden;">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgb(255,255,255)">
 
-<div class="main_img">
-    <img src="{% static 'admin/img/문의하기 이미지.PNG' %}" alt="구축실적 배경">
-    <!-- <h1>문의하기</h1>        -->
-</div>
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="margin-bottom: 5%; position: relative; padding: 0 0 0 0;">
+                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
+                    </div>
+                </div>
 
+                <div class="row justify-content-start">
+                    <img src="{% static 'renewal/image/contact_img.jpg' %}" alt="contact_img" style="width: 864px; height: 960px;">
 
-<div id="senter_menu">
-    <ul class="senter_button">
-        <li><a href="/menu/0106/">문의하기</a></li>
-        <li><a href="/menu/010602/">오시는길</a></li>
-    </ul>
-</div>
+                    <div style="padding: 2% 5% 0 5%";>
+                        <h6 style="font-size: 16px; font-weight:bold;">문의 종류 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h6>
+                        <div class="container d-flex justify-content-between p-0 m-0 mb-4">
+                            <ul class="nav nav-pills" role="tablist">
+                                <li class="nav-item pr-4">
+                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-mms" role="tab"
+                                       aria-controls="navs-tabs-mms" aria-selected="true" data-category="MMS">MMS</a>
+                                </li>
+                                <li class="nav-item pr-4">
+                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-ibt" role="tab"
+                                       aria-controls="navs-tabs-ibt" aria-selected="false" data-category="IBT">I.B.T</a>
+                                </li>
+                                <li class="nav-item pr-4">
+                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-mes" role="tab"
+                                       aria-controls="navs-tabs-mes" aria-selected="false"
+                                       data-category="MES">MES</a>
+                                </li>
+                                <li class="nav-item pr">
+                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-etc" role="tab"
+                                       aria-controls="navs-tabs-etc" aria-selected="false" data-category="ETC">ETC</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <form style="display: flex; flex-direction: column;">
+                            <h5 style="font-weight: bold;">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요? <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h5>
+                            <div class="d-flex justify-content-start">
+                                <div class="mr-4">
+                                    <input type="radio" name="Question_path" value="같은_업종의_업체_추천" id="same_industry">
+                                    <label for="same_industry">같은 업종의 업체 추천</label>
+                                </div>
+                                <div class="mr-4">
+                                    <input type="radio" name="Question_path" value="인터넷_검색" id="internet_search">
+                                    <label for="internet_search">인터넷 검색</label>
+                                </div>
+                                <div class="mr-4">
+                                    <input type="radio" name="Question_path" value="네이버_블로그" id="naver_blog">
+                                    <label for="naver_blog">네이버 블로그</label>
+                                </div>
+                                <div class="mr-4">
+                                    <input type="radio" name="Question_path" value="SNS(인스타그램,페이스북_등)" id="sns">
+                                    <label for="sns">SNS(인스타그램,페이스북 등)</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="Question_path" value="기타" id="etc">
+                                    <label for="etc">기타</label></div>
+                            </div>
 
+                            <div class="mt-3" style="display: flex; flex-direction: column;">
+                                <label for="Question_name" style="font-size: 16px; font-weight:bold;">이름 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                <input type="text" id="Question_name" name="Question_name" placeholder="이름을 입력 하세요."
+                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-<!-- 문의하기 콘텐츠 -->
+                                <label for="Question_company" style="font-size: 16px; font-weight:bold;">기업(기관)명 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                <input type="text" id="Question_company" name="Question_company" placeholder="기업(기관)명을 입력 하세요."
+                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
+                                <label for="Question_position" style="font-size: 16px; font-weight:bold;">기업(기관) 홈페이지 URL</label>
+                                <input type="url" id="Question_position" name="Question_position"
+                                       placeholder="기업(기관) 홈페이지 URL을 입력 하세요."
+                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-<section class="contactbox container">
+                                <label for="customer_company" style="font-size: 16px; font-weight:bold;">연락처 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                <input type="tel" id="Question_phone" name="Question_phone" placeholder="연락처를 입력 하세요."
+                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
 
-    <div class="py-5 text-center contact_tit">
-      <h6>CONTACT US</h6>
-      <h1>문의하기</h1>
+                                <label for="Question_email" style="font-size: 16px; font-weight:bold;">이메일 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                <input type="email" id="Question_email" name="Question_email" placeholder="이메일을 입력 하세요."
+                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                <label for="Question_content" style="font-size: 16px; font-weight:bold;">문의내용 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                <textarea id="Question_content" name="Question_content" rows="5"
+                                          style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"></textarea>
+
+                                <div class="d-flex justify-content-between"
+                                     style="display: flex; align-items: center; margin: 3% 0 0 0;">
+                                    <div>
+                                        <input type="checkbox" id="agree" name="agree" style="margin-right: 5px;">
+                                        <label for="agree" style="font-size: 18px; color: #727171;"><a href="/term/" onclick="return openPopup()" style="text-decoration: underline;">개인정보처리방침</a> 동의</label>
+                                    </div>
+                                    <button type="submit" style="font-size:18px; width: 131px; height: 43px; padding: 10px; background: #f4f4f4; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"> 문의하기 </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <section class="content_wrap">
-     <form class="needs-validation gform" id="gform" method="post" action="{% url 'submit_question' %}" name="contactus">
-       {% csrf_token %}
-         {{ form }}
-       <fieldset>
-         <div class="formlist">
-          <div class="col-md-7 col-lg-8">
-              <div class="row g-3 befor">
-
-                <label for="Name" class="form-label label_list col-12">문의종류<sub>*</sub></label>
-
-                <div class="checkbox_all">
-                  <label for="checkbox1" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox1" name="Question_type" value="E" required>
-                      <div class="option_inner form-group">
-                        <div class="name">운송ERP</div>
-                      </div>
-                  </label>
-                  <label for="checkbox2" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox2" name="Question_type" value="S" required>
-                      <div class="option_inner form-group">
-                        <div class="name">스마트서비스</div>
-                      </div>
-                  </label>
-                  <label for="checkbox3" class="option_item">
-                    <input type="radio" class="checkbox1" id="checkbox3" name="Question_type" value="G" required>
-                      <div class="option_inner form-group">
-                        <div class="name">일반</div>
-                      </div>
-                  </label>
-                </div>
-
-                <label for="Name" class="form-label label_list_checkbox col-12">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요?<sub>*</sub></label>
-                <div class="form-group col-12 chkbox">
-                  <input type="radio" id="chk1" name="Question_path" value="A" required>
-                  <label for="chk1"><em class="chknumber1"></em>같은 업종의 업체 추천</label>
-                  <input type="radio" id="chk2" name="Question_path" value="B" required>
-                  <label for="chk2"><em class="chknumber2"></em>인터넷 검색</label>
-                  <input type="radio" id="chk3" name="Question_path" value="C" required>
-                  <label for="chk3"><em class="chknumber3"></em>네이버 블로그</label>
-                  <input type="radio" id="chk4" name="Question_path" value="D" required>
-                  <label for="chk4"><em class="chknumber4"></em>SNS(인스타그램,페이스북 등)</label>
-                  <input type="radio" id="chk5" name="Question_path" value="E" required>
-                  <label for="chk5"><em class="chknumber5"></em>기타</label>
-                </div>
-                <div class="form-group col-12 inputbox">
-                  <label for="usr" class="form-labe label_list">이름<sub>*</sub></label>
-                  <input type="text" class="form-control" id="usr" name="Question_name" placeholder="이름을 입력 하세요." autocomplete="off" required maxlength="128">
-                </div>
-    
-                <div class="form-group col-12 inputbox">
-                  <label for="company" class="form-label label_list">기업(기관)명<sub>*</sub></label>
-                  <input type="text" class="form-control" id="company" name="Question_company" placeholder="기업(기관)명을 입력 하세요." autocomplete="off" required maxlength="128">
-                </div>
-
-                <div class="form-group col-12 inputbox">
-                  <label for="jop" class="form-labe label_list">직책/직급<sub>*</sub></label>
-                  <input type="text" class="form-control" id="jop" name="Question_position" placeholder="직책/직급을 입력 하세요." autocomplete="off" required maxlength="128">
-                </div>
-
-               <div class="form-group col-12 inputbox">
-                  <label for="department" class="form-label label_list">부서명<sub>*</sub></label>
-                  <input type="text" class="form-control" id="department" name="Question_department" placeholder="부서명을 입력 하세요." autocomplete="off" required maxlength="128">
-               </div>
-
-               <div class="form-group col-12 inputbox">
-                  <label for="Tel" class="form-label label_list">연락처<sub>*</sub></label>
-                  <input type="text" class="form-control" id="Tel" name="Question_phone" placeholder="연락처를 입력 하세요." autocomplete="off" pattern="[0-9]+" required maxlength="16">
-               </div>
-               <div class="form-group col-12 inputbox">
-                  <label for="email" class="form-label label_list">이메일<sub>*</sub></label>
-                  <input type="email" class="form-control" id="email" name="Question_email" placeholder="이메일을 입력 하세요" autocomplete="off" required maxlength="68">
-                </div>
-                <div class="form-group col-12 py-2 inputbox">
-                  <label for="exampleFormControlTextarea1" class="form-label label_list">문의내용<sub>*</sub></label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" name="Question_content" rows="6" style="resize: none;" required></textarea>
-                </div>
-              </div>
-
-              <hr class="my-5">
-    
-              <div class="form-check form-group">
-                <input type="checkbox" class="form-check-input" id="same-address" name="checklead" required>
-                <label class="form-check-label chk_text" for="same-address" style="cursor: pointer;">개인정보 수집 및 이용, 마케팅 목적의 광고성 정보 수신에 동의합니다.</label>
-              </div>
-      
-            <div class="btn_box form-group" style="margin-left: 230px;">
-                <button type="submit" class="viewmore">Submit</button>
-            </div>
-          
-            <div class="thankyou_message">
-              <div class="thankyou_box">
-                <h1>작성 완료되었습니다.</h1>
-                <p>확인 후 빠르게 답변 드리겠습니다.</p>
-                <div class="btn_box2">
-                  <a href="#" class="commbtn close">닫기</a>
-                </div>
-              </div>
-            </div>
-          </div>
-         </div>
-       </fieldset>
-     </form>
-    </section>
-    
- </section>
-
-
-
-   <div class="slide_wrapper" style="display: none;">
-    <ul class="slides">
-        <li><img src="{% static 'admin/img/banner-01-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-02-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-03-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-04-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-05-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-06-1.png' %}" alt="" width="220px"></li>
-        <li><img src="{% static 'admin/img/banner-07-1.png' %}" alt="" width="220px"></li>
-    </ul>
-    
 </div>
-<p class="controls">
-    <span class="prev"></span>
-    <span class="next"></span>
-</p>
-
-
-<script src="{% static 'admin/js/build.js' %}" type="text/javascript"></script>
-<script src="{% static 'admin/js/form-submission-handler.js' %}"></script>
-
-<!--footer 로드-->
 {% include 'footer.html' %}
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $(".navbar").addClass("white-background");
+        $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+        $(".menu_li > a").css("color", "#000");
+    })
+
+    function validateForm() {
+            let agreeCheckbox = document.getElementById("agree");
+
+            if (!agreeCheckbox.checked) {
+                return false;
+            } else {
+                alert("개인정보처리방침에 동의해주시기 바랍니다.");
+                return true;
+            }
+        }
+
+        function openPopup() {
+            window.open('/term/', 'popup', 'width=1200,height=1000,scrollbars=yes,resizable=yes');
+            return false;
+        }
+
+</script>
