@@ -1,0 +1,185 @@
+{# 스토리 읽기 페이지 #}
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<!--menu 로드-->
+<style>
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .story_picture {
+        display: block;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: auto;
+        margin-right: auto;
+        width: auto !important;
+        max-width: 950px !important;
+        height: auto !important;
+        max-height: 520px !important;
+        object-fit: cover !important;
+        border-radius: 10px !important;
+    }
+
+</style>
+{% include 'menu.html' %}
+<body class="menu_story" style="overflow-x: hidden;">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgb(255,255,255)">
+
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="margin-bottom: 5%; position: relative; padding: 0 0 0 0;">
+                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
+                    </div>
+                </div>
+
+                <div class="card-body row justify-content-center" style="padding: 0 10% 0% 10%;">
+                    <div>
+                        <h2 id="catedate_id"
+                            style="text-align:center; font-size: 28px; font-weight: 500; line-height: 33px; color: #898989; margin: 5% 0 0 0;"></h2>
+                        <h1 id="story_title"
+                            style="text-align:center; font-size: 34px; font-weight: 600; line-height: 48px; margin: 2% 0 5% 0;"></h1>
+                        <div class="row justify-content-center">
+                            <img class="story_picture" style="margin: 0 0 5% 0;">
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12" id="story_content"></div>
+                        </div>
+                        <div class="footer d-flex justify-content-center" style="margin: 10% 0 10% 0">
+                            <a href="/menu/0109" class="btn btn-secondary mx-4"
+                               style="font-size: 18px; background-color: #f6f6f6; border-color: #f6f6f6; color: #595757; width: 131px; height: 43px;">목록보기</a>
+                            <button class="btn btn-info mx-4 d-none" id="story_update_btn" style="font-size: 18px; width: 131px; height: 43px;"
+                                    onclick="updateStory()">수정하기
+                            </button>
+                            <button class="btn btn-danger mx-4 d-none" id="story_delete_btn"  style="font-size: 18px; width: 131px; height: 43px;"
+                                    onclick="deleteStory()">삭제하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+</body>
+
+<script>
+
+    $(document).ready(function () {
+        $(".navbar").addClass("white-background");
+        $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+        $(".menu_li > a").css("color", "#000");
+    })
+
+    let defaultImageUrl = "{% static 'renewal/image/story_default.png' %}";
+    let urlParams = new URLSearchParams(window.location.search);
+    let storyId = urlParams.get('story_id');
+
+    if (storyId) {
+        api_gp("/story/story_read/?story_id=" + storyId, "get", {}, (stories) => {
+            console.log(stories);
+            let data = stories.results[0];
+            displayStoryDetail(data);
+        });
+    } else {
+        console.error('No storyId found in URL');
+    }
+
+    function displayStoryDetail(data) {
+
+        let cateDate = document.getElementById('catedate_id');
+        cateDate.innerHTML = `${data.story_category} &nbsp; | &nbsp; ${data.updated_at}`;
+
+        let storyTitle = document.getElementById('story_title');
+        storyTitle.innerHTML = `${data.story_title}`;
+
+        let storyContent = document.getElementById('story_content');
+        storyContent.innerHTML = `${data.story_content}`;
+
+        let storyPicture = document.querySelector('.story_picture');
+        if (data.story_picture) {
+            storyPicture.src = data.story_picture;
+        } else {
+            storyPicture.src = defaultImageUrl;
+        }
+    }
+
+    function updateStory() {
+        window.location.href = `/menu/010901/?story_id=${storyId}`;
+    }
+
+    function deleteStory() {
+        if (confirm('정말로 이 스토리를 삭제하시겠습니까?')) {
+            api_gp("/story/story_delete/", "post", {story_id: storyId}, (response) => {
+                if (response.message) {
+                    alert(response.message);
+                    window.location.href = "/menu/0109";
+                } else if (response.error) {
+                    alert(response.error);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function getLoginInfo() {
+            const loginInfo = {
+                username: getCookie('username'),
+                user_id: getCookie('user_id'),
+                token: getCookie('Authorization'),
+                is_superuser: getCookie('is_superuser') === 'true'
+            };
+            return loginInfo;
+        }
+
+        function displayLoginInfo() {
+            const loginInfo = getLoginInfo();
+            console.log("로그인 정보:");
+            for (let key in loginInfo) {
+                if (loginInfo[key]) {
+                    console.log(`${key}: ${loginInfo[key]}`);
+                } else {
+                    console.log(`${key}: 정보가 없습니다`);
+                }
+            }
+        }
+
+        // displayLoginInfo();
+
+        let user_id = getCookie('user_id')
+        let allowed_ids = ['1111', '3227'];
+
+        if (allowed_ids.includes(user_id)) {
+            document.getElementById("story_update_btn").classList.remove("d-none");
+            document.getElementById("story_delete_btn").classList.remove("d-none");
+        }
+    });
+
+</script>
