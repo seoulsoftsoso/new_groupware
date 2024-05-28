@@ -1,23 +1,77 @@
 {% load static %}
-    <link rel="stylesheet" href="{% static 'css/default.css' %}">
 
-    <nav class="navbar navbar-expand-lg justify-content-between d-flex fixed-top" style="height: 8%;">
-        <div class="main_logo" style="padding-left: 5%;">
-            <a href="/"><img src="{% static 'renewal/image/logo_B.png' %}" alt="main_logo" style="width: 50%"></a>
+<style>
+
+    .main_logo img {
+        max-width: 114px;
+        max-height: 35px;
+        width: auto;
+        height: auto;
+    }
+
+    .menu_li_a:hover,
+    .submenu a:hover {
+        text-decoration: none;
+    }
+
+    .menu_li {
+        position: relative;
+    }
+
+    .submenu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .menu_li:hover .submenu {
+        display: block;
+    }
+
+    .submenu li {
+        list-style: none;
+    }
+
+    .submenu li a {
+        padding: 12px 16px;
+        display: block;
+        text-decoration: none;
+        color: black;
+    }
+
+    .submenu li a:hover {
+        background-color: #f1f1f1;
+    }
+
+</style>
+
+<body id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top d-flex justify-content-center mx-0" id="topNav" style="max-height:68px;">
+    <div class="container d-flex justify-content-between px-2 px-lg-2 mx-0">
+
+        <div class="main_logo d-flex">
+            <a href="/">
+                <img src="{% static 'renewal/image/logo_B.png' %}" alt="main_logo">
+            </a>
         </div>
 
-        <div class="pr-5">
+        <div class="">
             <ul class="menu nav nav-pills">
                 <li class="menu_li">
-                    <a href="/menu/0102/" class="menu_li_a">기업정보</a>
+                    <a class="menu_li_a" style="font-size:16px; color:white;">기업정보</a>
                     <ul class="submenu">
-                        <li><a href="/menu/0102/">회사소개</a></li>
-                        <li><a href="/menu/010202/">BROCHURE</a></li>
+                        <li><a href="/menu/0107/">ESG 경영</a></li>
+                        <li><a href="/menu/0108/">사업영역</a></li>
                     </ul>
                 </li>
 
                 <li class="menu_li">
-                    <a href="/menu/0103/" class="menu_li_a">서비스</a>
+                    <a class="menu_li_a" style="font-size:16px; color:white;">서비스</a>
                     <ul class="submenu">
                         <li><a href="/menu/0102/">MMS</a></li>
                         <li><a href="/menu/0103/">I.B.T</a></li>
@@ -26,28 +80,20 @@
                 </li>
 
                 <li class="menu_li">
-                    <a href="/menu/0104/" class="menu_li_a">스토리</a>
-                    <ul class="submenu">
-                        <li><a href="/menu/0104/">운송ERP</a></li>
-                        <li><a href="/menu/010402/">MES</a></li>
-                    </ul>
+                    <a href="/menu/0109/" class="menu_li_a" style="font-size:16px;">스토리</a>
                 </li>
             </ul>
         </div>
 
-        <div style="padding-right: 3%;">
+        <div class="">
             <ul class="menu nav nav-pills contact-us">
                 <li class="menu_li">
-                    <a href="/menu/0106/" class="menu_li_a">Contact Us</a>
-                    <ul class="submenu">
-                        <li><a href="/menu/0106/">문의하기</a></li>
-                        <li><a href="/menu/010602/">오시는길</a></li>
-                    </ul>
+                    <a href="/menu/0106/" class="menu_li_a" style="font-size:16px;">Contact Us</a>
                 </li>
             </ul>
         </div>
-
-    </nav>
+    </div>
+</nav>
 
 
 <a href="#" id="topBtn"><i class="fa-solid fa-circle-arrow-up"></i></a>

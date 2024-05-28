@@ -1,5 +1,6 @@
 {% load static %}
 {% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <style>
     .layout-container {
         width: 100%; /* 또는 특정 너비 */
@@ -70,11 +71,17 @@
         transition: opacity 2s ease-in-out;
     }
 
+    .vertical-line {
+        border-left: 3px solid #c9c9c9;
+        height: 100px;
+        margin-top: 15px;
+        margin-bottom: 15px;
 
+    }
 </style>
-<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
 <!--menu 로드-->
 {% include 'menu.html' %}
+
 <body class="menu_main">
     <div class="layout-container">
         <div class="layout-page" id="layout_page">
@@ -83,7 +90,6 @@
                 <!-- Content -->
                 <div class="flex-grow-1 container-p-y">
                     <video src="{% static 'renewal/video/main_video.mov' %}" autoplay muted loop></video>
-{#                    <img class="video_gif" src="{% static 'renewal/video/AdobeStock_772450072.gif' %}">#}
                     <div class="text-overlay d-flex d-md-block justify-content-center" id="textOverlay">
                         <span id="oldText1"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">어려운 것을 쉽게 바꾸는 것</b></span><br/>
                         <span id="oldText2"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">편안함을 넘어 단순함이 되다</b></span>
@@ -100,28 +106,27 @@
                     </div>
                 </div>
 
-
-                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);height: 45vh">
+                <div class="container-fluid row flex-grow-1 container-p-y section" style="background-color: rgba(251, 251, 251, 1);height: 45vh">
                     <div class="col-xl-10 row justify-content-center service_div">
                         <span>
-                            <b style="font-size: 6vh;color: rgba(181, 182, 182, 1)">Service</b>
+                            <b style="font-size: 42px; color: rgba(181, 182, 182, 1)">Service</b>
                         </span>
                     </div>
                 </div>
 
                 <!-- MMS -->
-                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);">
+                <div class="container-fluid row flex-grow-1 container-p-y section" style="background-color: rgba(251, 251, 251, 1);">
                     <div class="col-xl-9 row">
                         <div class="col-xl-6 col-md-8 col-12 mb-md-0">
-                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">이동 자산 운영 End to End</h3>
-                            <h2 style="color: #FF7A00; font-size: 6vh; font-weight: 600">MMS</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">시너지를 극대화하는</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">Core Platform</h2>
-                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/mms_btn.png' %}" width="17%;"></a>
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">이동 자산 운영 End to End</h3>
+                            <h2 style="color: #fd7900; font-size: 54px; font-weight: 600">MMS</h2>
+                            <div class="vertical-line"></div>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">시너지를 극대화하는</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">Core Platform</h2>
+                            <a href="/menu/0102/"><img class="mt-3" src="{% static 'renewal/image/main/mms_btn.png' %}" width="17%;"></a>
                         </div>
-                        <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
+                        <div class="col-xl-6 col-md-8 col-12">
                             <img src="{% static 'renewal/image/main/mms_img.jpg' %}" style="width: 100%">
                         </div>
                     </div>
@@ -131,39 +136,40 @@
                 </div>
 
                 <!-- IBT -->
-                <div class="container-fluid row flex-grow-1 container-p-y ibt_div" style="background-color: rgba(251, 251, 251, 1);">
+                <div class="container-fluid row flex-grow-1 container-p-y ibt_div section" style="background-color: rgba(251, 251, 251, 1);">
                     <div class="col-xl-9 row">
                         <div class="col-xl-6 col-md-8 col-12 mb-md-0">
-                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 300;">Smart Farm을 활용한 순환 모델 구축</h3>
-                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 6vh; font-weight: 600">I.B.T</h2>
-                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 5vh; font-weight: 600">(Intergrative Bio Technology)</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">수익 보장형 스마트팜</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">바이오 융합 생태계 조성</h2>
-                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/ibt_btn.png' %}" width="17%"></a>
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Smart Farm을 활용한 순환 모델 구축</h3>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 54px; font-weight: 600">I.B.T</h2>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 34px; font-weight: 600">(Integrative Bio Technology)</h2>
+                            <div class="vertical-line"></div>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">수익 보장형 스마트팜</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">바이오 융합 생태계 조성</h2>
+                            <a href="/menu/0103/"><img class="mt-3" src="{% static 'renewal/image/main/ibt_btn.png' %}" width="17%"></a>
                         </div>
                         <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
                             <img src="{% static 'renewal/image/main/ibt_img.png' %}" style="width: 100%">
                         </div>
                     </div>
-                    <div class="col-xl-8 d-flex justify-content-center" style="margin-top: -10%;">
+                    <div class="col-xl-8 d-flex justify-content-center" style="margin-top: -8%;">
                         <img src="{% static 'renewal/image/main/ibt_bottom2.png' %}" width="100%">
                     </div>
                 </div>
 
-                <div class="container-fluid row flex-grow-1 container-p-y" style="background-color: rgba(251, 251, 251, 1);">
+                <!-- MES -->
+                <div class="container-fluid row flex-grow-1 container-p-y section" style="background-color: rgba(251, 251, 251, 1);">
                     <div class="col-xl-9 row">
                         <div class="col-xl-6 col-md-8 col-12 mb-md-0">
-                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 32px;font-weight: 500;">Cloud 기반 통합 생산관리</h3>
-                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 6vh; font-weight: 600">MES</h2>
-                            <img src="{% static 'renewal/image/main/Line 3.png' %}" style="height: 30%;">
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">생산효율 55% 극대화 및</h2>
-                            <h2 style="color: #000;font-size: 4vh;font-weight: 600;">불량률 18% 감소</h2>
-                            <a href="#"><img class="mt-3" src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
+                            <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Cloud 기반 통합 생산관리</h3>
+                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 54px; font-weight: 600">MES</h2>
+                            <div class="vertical-line"></div>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">생산효율 55% 극대화 및</h2>
+                            <h2 style="color: #000;font-size: 35px;font-weight: 600;">불량률 18% 감소</h2>
+                            <a href="/menu/0101/"><img class="mt-3" src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
                         </div>
-                        <div class="col-xl-6 col-md-8 col-12" style="margin: auto">
+                        <div class="col-xl-6 col-md-8 col-12">
                             <img src="{% static 'renewal/image/main/mes_img.png' %}" style="width: 100%">
                         </div>
                     </div>
@@ -179,7 +185,9 @@
 </div>
 {% include 'footer.html' %}
 </body>
+
 <script>
+
     $(document).ready(function () {
         const video = document.querySelector("video");
         const videoHeight = 2000; // 비디오를 고정할 높이
@@ -216,5 +224,6 @@
             }
         });
     });
+
 </script>
-</html>
+

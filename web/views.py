@@ -181,7 +181,22 @@ def SubView(request, menu_num):
     menucode1 = menu_num[:2]
     menucode2 = menu_num[2:]
     filename = 'sub/menu' + menucode1 + '/menu' + menucode1 + '_' + menucode2 + '.html'
-    # filename = 'sub/menu01/menu01_01.html'
+    # filename = 'sub/menu01/menu01_01.html' 서비스 - MES (리뉴얼)
+    # filename = 'sub/menu01/menu01_02.html' 서비스 - MMS (리뉴얼)
+    # filename = 'sub/menu01/menu01_03.html' 서비스 - IBT (리뉴얼)
+    # filename = 'sub/menu01/menu01_06.html' 문의하기 (리뉴얼)
+    # filename = 'sub/menu01/menu01_07.html' 기업정보 ESG경영 (리뉴얼)
+    # filename = 'sub/menu01/menu01_08.html' 기업정보 사업영역 (리뉴얼)
+    # filename = 'sub/menu01/menu01_09.html' 스토리 (리뉴얼)
+
+    # filename = 'sub/menu01/menu01_04.html' 운송 ERP (구버전)
+    # filename = 'sub/menu01/menu01_05.html' 회사소개 개요 (구버전)
+    # filename = 'sub/menu01/menu01_0202.html' 요금제 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 구축실적 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 회사연혁 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 오시는길 (구버전)
+
+
     return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
 
 

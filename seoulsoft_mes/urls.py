@@ -58,6 +58,7 @@ from api.weekly_report.views import *
 from api.weekly_report.views_pm import *
 from api.weekly_report.views_ceo import *
 from web.views import *
+from api.story import *
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -244,11 +245,19 @@ urlpatterns = [
                   path('submit_question/', submit_question, name='submit_question'),
                   path('term/', term_page, name='term_page'),
 
-                  path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll')
+                  path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll'),
+
+                  path('story/story_create/', StoryCreateView.as_view(),name='story_create'),
+                  # path('story/story_create/', Story_create.as_view(),name='story_create'),
+                  path('story/story_read/', Story_read.as_view(),name='Story_read'),
+                  # path('menu/010901/', Story_update.as_view(), name='story_update'),
+                  path('story/story_update/', Story_update.as_view(), name='story_update'),
+                  path('story/story_delete/', Story_delete.as_view(),name='story_delete'),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [
         # drf yasg
         re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

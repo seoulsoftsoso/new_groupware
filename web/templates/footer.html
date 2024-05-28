@@ -17,22 +17,27 @@
                     <p style="font-weight: 600;font-size: 2.5vh;">우리의 공간에서 쉬어보세요!</p>
                 </div>
                 <div class="col-xl-4 row justify-content-end">
-                    <a href="#"><img src="{% static 'renewal/image/foot_insta.png' %}"></a>
-                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_facebook.png' %}"></a>
-                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_blog.png' %}"></a>
+                    <a class="mr-2" href="#"><img src="{% static 'renewal/image/foot_insta.png' %}"></a>
+                    <a class="mr-2" href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_facebook.png' %}"></a>
+                    <a class="mr-2" href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_blog.png' %}"></a>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-10" style="padding: 2% 5% 2% 5%;">
+        <div class="col-xl-10" style="padding: 2% 5% 1% 5%;">
             <div class="row">
                 <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
-                        <div class="text-truncate" data-i18n="기업정보">기업정보</div>
+                        <div class="text-truncate" data-i18n="기업정보" style="font-weight: bold;">기업정보</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="회사소개서">회사소개서</div>
+                                <a href="/menu/0107/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="ESG 경영">ESG 경영</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="/menu/0108/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="사업영역">사업영역</div>
                                 </a>
                             </li>
                         </ul>
@@ -40,67 +45,50 @@
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="서비스">서비스</div>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="서비스" style="font-weight: bold;">서비스</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
-                                <a href="#" class="menu-link">
+                                <a href="/menu/0101/" class="menu-link">
                                     <div class="text-truncate" data-i18n="MES">MES</div>
                                 </a>
                             </li>
                             <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
+                                <a href="/menu/0102/" class="menu-link">
                                     <div class="text-truncate" data-i18n="모빌리티">모빌리티</div>
                                 </a>
                             </li>
                             <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
+                                <a href="/menu/0103/" class="menu-link">
                                     <div class="text-truncate" data-i18n="I.B.T">I.B.T</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="스토리">스토리</div>
-{#                        <ul class="menu-sub mt-4">#}
-{#                            <li class="menu-item">#}
-{#                                <a href="#" class="menu-link">#}
-{#                                    <div class="text-truncate" data-i18n="MES">스토리1</div>#}
-{#                                </a>#}
-{#                            </li>#}
-{#                            <li class="menu-item mt-4">#}
-{#                                <a href="#" class="menu-link">#}
-{#                                    <div class="text-truncate" data-i18n="모빌리티">스토리2</div>#}
-{#                                </a>#}
-{#                            </li>#}
-{#                            <li class="menu-item mt-4">#}
-{#                                <a href="#" class="menu-link">#}
-{#                                    <div class="text-truncate" data-i18n="I.B.T">스토리3</div>#}
-{#                                </a>#}
-{#                            </li>#}
-{#                        </ul>#}
-                    </li>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="스토리" style="font-weight: bold;"><a href="/menu/0109/">스토리</a></div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="약관">약관</div>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="약관" style="font-weight: bold;">약관</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
-                                <a href="{% url 'term_page' %}" class="menu-link">
-                                    <div class="text-truncate" data-i18n="개인정보 수집 이용 동의">개인정보 수집 이용 동의</div>
+                                <a href="{% url 'term_page' %}" class="menu-link" >
+                                    <div class="text-truncate" data-i18n="개인정보 수집 이용 동의" style="font-weight: bold;">개인정보 수집 이용 동의</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
                     <li class="menu-item">
-                        <div class="text-truncate" style="margin-left: 10px;" data-i18n="그룹웨어"><a href="/admins/index">그룹웨어</a>
+                        <div class="text-truncate" data-i18n="그룹웨어" style="font-weight: bold;"><a href="/admins/index">그룹웨어</a>
                         </div>
                     </li>
                 </div>
@@ -109,7 +97,7 @@
             <hr class="col-xl-12" style="background-color: #AFAFAF"/>
         </div>
 
-        <div class="col-xl-10 mb-5" style="padding: 0 5% 0 5%;">
+        <div class="col-xl-10 mb-5" style="padding: 0 5% 0 6%;">
             <div class="row justify-content-between">
                 <div class="pt-3">
                     <img src="{% static 'renewal/image/logo_A.png' %}" style="width: 85%;">

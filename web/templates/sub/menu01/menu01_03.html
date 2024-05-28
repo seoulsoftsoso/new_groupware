@@ -327,19 +327,24 @@
 {% include 'footer.html' %}
 </body>
 <script>
-     $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
-            // console.log("현재 스크롤 위치: " + scroll + "px");
-            if (scroll >= 950) { // 852px 스크롤을 지났을 때
-                $(".navbar").addClass("white-background");
-                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
-                $(".menu_li > a").css("color", "#000");
-            } else {
-                $(".navbar").removeClass("white-background");
-            }
-     })
+    $(window).scroll(function () {
+
+
+
+        var scroll = $(window).scrollTop();
+        // console.log("현재 스크롤 위치: " + scroll + "px");
+        if (scroll >= 950) { // 852px 스크롤을 지났을 때
+            $(".navbar").addClass("white-background");
+            $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+            $(".menu_li > a").css("color", "#000");
+        } else {
+            $(".navbar").removeClass("white-background");
+        }
+    })
 
      $(document).ready(function() {
+         $(".menu_li > a").css("color", "#000");
+
          $('.left').addClass('btn_selected').css({
              'background-color': 'rgba(234, 234, 115, 1)',
              'color': 'black',
