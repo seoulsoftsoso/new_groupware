@@ -8,38 +8,34 @@
         background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
     }
 
-    .custom_btn > button {
-        background-color: rgba(239, 239, 239, 1);
-        color: rgba(137, 137, 137, 1);
-        border: 0;
-        border-radius: 21px;
+    .option_item {
+        display: inline-block;
+        margin: 10px;
     }
 
-    .custom_btn > button:hover {
-        background-color: #EAEA73;
-        color: black;
+    .option_item input[type="radio"] {
+        display: none;
     }
 
-    .custom_btn > button:active {
-        background-color: #EAEA73;
-        color: black;
-    }
-
-    .custom_btn > button:focus {
-        box-shadow: 0 0 0 0;
-    }
-
-    .nav-pills .nav-link {
-        background-color: #f4f4f4;
-        color: black;
-        height: 40px;
+    .option_item .option_inner {
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        background-color: #f6f6f6;
         width: 190px;
-        text-align: center; /* 텍스트 중앙 정렬 */
+        height: 40px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #595757;
     }
 
-    .nav-pills .nav-link.active {
+    .option_item input[type="radio"]:checked + .option_inner {
         background-color: #EAEA73;
-        color: black;
+    }
+
+    .option_inner:hover {
+        background-color: #EAEA73;
     }
 
 </style>
@@ -62,90 +58,126 @@
                 <div class="row justify-content-start">
                     <img src="{% static 'renewal/image/contact_img.jpg' %}" alt="contact_img" style="width: 864px; height: 960px;">
 
-                    <div style="padding: 2% 5% 0 5%";>
-                        <h6 style="font-size: 16px; font-weight:bold;">문의 종류 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h6>
-                        <div class="container d-flex justify-content-between p-0 m-0 mb-4">
-                            <ul class="nav nav-pills" role="tablist">
-                                <li class="nav-item pr-4">
-                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-mms" role="tab"
-                                       aria-controls="navs-tabs-mms" aria-selected="true" data-category="MMS">MMS</a>
-                                </li>
-                                <li class="nav-item pr-4">
-                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-ibt" role="tab"
-                                       aria-controls="navs-tabs-ibt" aria-selected="false" data-category="IBT">I.B.T</a>
-                                </li>
-                                <li class="nav-item pr-4">
-                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-mes" role="tab"
-                                       aria-controls="navs-tabs-mes" aria-selected="false"
-                                       data-category="MES">MES</a>
-                                </li>
-                                <li class="nav-item pr">
-                                    <a class="nav-link" data-toggle="tab" href="#navs-tabs-etc" role="tab"
-                                       aria-controls="navs-tabs-etc" aria-selected="false" data-category="ETC">ETC</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <form style="display: flex; flex-direction: column;">
-                            <h5 style="font-weight: bold;">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요? <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h5>
-                            <div class="d-flex justify-content-start">
-                                <div class="mr-4">
-                                    <input type="radio" name="Question_path" value="같은_업종의_업체_추천" id="same_industry">
-                                    <label for="same_industry">같은 업종의 업체 추천</label>
+                    <div style="padding: 1% 5% 0 5%">
+                        <form class="needs-validation gform" id="gform" method="post"
+                              action="{% url 'submit_question' %}" name="contactus" onsubmit="return validateForm();">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <h6 style="font-size: 16px; font-weight:bold;">문의 종류 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h6>
+                            <div class="container d-flex justify-content-between p-0 m-0 mb-2">
+                                <div class="checkbox_all">
+                                    <label for="checkbox1" class="option_item">
+                                        <input type="radio" class="checkbox1" id="checkbox1" name="Question_type"
+                                               value="MMS" required>
+                                        <div class="option_inner form-group">
+                                            <div class="name">MMS</div>
+                                        </div>
+                                    </label>
+                                    <label for="checkbox2" class="option_item">
+                                        <input type="radio" class="checkbox1" id="checkbox2" name="Question_type"
+                                               value="IBT" required>
+                                        <div class="option_inner form-group">
+                                            <div class="name">I.B.T</div>
+                                        </div>
+                                    </label>
+                                    <label for="checkbox3" class="option_item">
+                                        <input type="radio" class="checkbox1" id="checkbox3" name="Question_type"
+                                               value="MES" required>
+                                        <div class="option_inner form-group">
+                                            <div class="name">MES</div>
+                                        </div>
+                                    </label>
+                                    <label for="checkbox4" class="option_item">
+                                        <input type="radio" class="checkbox1" id="checkbox4" name="Question_type"
+                                               value="ETC" required>
+                                        <div class="option_inner form-group">
+                                            <div class="name">ETC</div>
+                                        </div>
+                                    </label>
                                 </div>
-                                <div class="mr-4">
-                                    <input type="radio" name="Question_path" value="인터넷_검색" id="internet_search">
-                                    <label for="internet_search">인터넷 검색</label>
-                                </div>
-                                <div class="mr-4">
-                                    <input type="radio" name="Question_path" value="네이버_블로그" id="naver_blog">
-                                    <label for="naver_blog">네이버 블로그</label>
-                                </div>
-                                <div class="mr-4">
-                                    <input type="radio" name="Question_path" value="SNS(인스타그램,페이스북_등)" id="sns">
-                                    <label for="sns">SNS(인스타그램,페이스북 등)</label>
-                                </div>
-                                <div>
-                                    <input type="radio" name="Question_path" value="기타" id="etc">
-                                    <label for="etc">기타</label></div>
                             </div>
-
-                            <div class="mt-3" style="display: flex; flex-direction: column;">
-                                <label for="Question_name" style="font-size: 16px; font-weight:bold;">이름 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
-                                <input type="text" id="Question_name" name="Question_name" placeholder="이름을 입력 하세요."
-                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                                <label for="Question_company" style="font-size: 16px; font-weight:bold;">기업(기관)명 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
-                                <input type="text" id="Question_company" name="Question_company" placeholder="기업(기관)명을 입력 하세요."
-                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                                <label for="Question_position" style="font-size: 16px; font-weight:bold;">기업(기관) 홈페이지 URL</label>
-                                <input type="url" id="Question_position" name="Question_position"
-                                       placeholder="기업(기관) 홈페이지 URL을 입력 하세요."
-                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                                <label for="customer_company" style="font-size: 16px; font-weight:bold;">연락처 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
-                                <input type="tel" id="Question_phone" name="Question_phone" placeholder="연락처를 입력 하세요."
-                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                                <label for="Question_email" style="font-size: 16px; font-weight:bold;">이메일 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
-                                <input type="email" id="Question_email" name="Question_email" placeholder="이메일을 입력 하세요."
-                                       style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-
-                                <label for="Question_content" style="font-size: 16px; font-weight:bold;">문의내용 <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
-                                <textarea id="Question_content" name="Question_content" rows="5"
-                                          style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"></textarea>
-
-                                <div class="d-flex justify-content-between"
-                                     style="display: flex; align-items: center; margin: 3% 0 0 0;">
-                                    <div>
-                                        <input type="checkbox" id="agree" name="agree" style="margin-right: 5px;">
-                                        <label for="agree" style="font-size: 18px; color: #727171;"><a href="/term/" onclick="return openPopup()" style="text-decoration: underline;">개인정보처리방침</a> 동의</label>
+                            <div style="display: flex; flex-direction: column;">
+                                <h5 style="font-weight: bold;">서울소프트를 어떤 경로를 통해 알고 문의하게 되셨나요? <span
+                                        style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></h5>
+                                <div class="d-flex justify-content-start">
+                                    <div class="mr-4">
+                                        <input type="radio" name="Question_path" value="같은 업종의 업체 추천" id="same_industry"
+                                               required>
+                                        <label for="same_industry">같은 업종의 업체 추천</label>
                                     </div>
-                                    <button type="submit" style="font-size:18px; width: 131px; height: 43px; padding: 10px; background: #f4f4f4; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"> 문의하기 </button>
+                                    <div class="mr-4">
+                                        <input type="radio" name="Question_path" value="인터넷 검색" id="internet_search"
+                                               required>
+                                        <label for="internet_search">인터넷 검색</label>
+                                    </div>
+                                    <div class="mr-4">
+                                        <input type="radio" name="Question_path" value="네이버 블로그" id="naver_blog"
+                                               required>
+                                        <label for="naver_blog">네이버 블로그</label>
+                                    </div>
+                                    <div class="mr-4">
+                                        <input type="radio" name="Question_path" value="SNS(인스타그램,페이스북 등)" id="sns"
+                                               required>
+                                        <label for="sns">SNS(인스타그램,페이스북 등)</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="Question_path" value="기타" id="etc" required>
+                                        <label for="etc">기타</label></div>
+                                </div>
+
+                                <div class="mt-3" style="display: flex; flex-direction: column;">
+                                    <label for="Question_name" style="font-size: 16px; font-weight:bold;">이름 <span
+                                            style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                    <input type="text" id="Question_name" name="Question_name" placeholder="이름을 입력 하세요."
+                                           style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+                                           required>
+
+                                    <label for="Question_company" style="font-size: 16px; font-weight:bold;">기업(기관)명
+                                        <span style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                    <input type="text" id="Question_company" name="Question_company"
+                                           placeholder="기업(기관)명을 입력 하세요."
+                                           style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+                                           required>
+
+                                    <label for="Question_position" style="font-size: 16px; font-weight:bold;">기업(기관)
+                                        홈페이지 URL</label>
+                                    <input type="text" id="Question_position" name="Question_position"
+                                           placeholder="기업(기관) 홈페이지 URL을 입력 하세요."
+                                           style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+
+                                    <label for="customer_company" style="font-size: 16px; font-weight:bold;">연락처 <span
+                                            style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                    <input type="tel" id="Question_phone" name="Question_phone"
+                                           placeholder="연락처를 입력 하세요."
+                                           style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+                                           required>
+
+                                    <label for="Question_email" style="font-size: 16px; font-weight:bold;">이메일 <span
+                                            style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                    <input type="email" id="Question_email" name="Question_email"
+                                           placeholder="이메일을 입력 하세요."
+                                           style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+                                           required>
+
+                                    <label for="Question_content" style="font-size: 16px; font-weight:bold;">문의내용 <span
+                                            style="font-size:14px; font-weight:lighter; color:#4ca1da">*</span></label>
+                                    <textarea id="Question_content" name="Question_content" rows="5"
+                                              style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"
+                                              required></textarea>
+
+                                    <div class="d-flex justify-content-between"
+                                         style="display: flex; align-items: center; margin: 2% 0 0 0;">
+                                        <div>
+                                            <input type="checkbox" id="agree" name="agree" style="margin-right: 5px;">
+                                            <label for="agree" style="font-size: 18px; color: #727171;">
+                                                <a href="/term/" onclick="return openPopup()" style="text-decoration: underline;">개인정보처리방침</a> 동의</label>
+                                        </div>
+                                        <button type="submit" style="font-size:18px; width: 131px; height: 43px; padding: 10px; background: #f4f4f4; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"> 문의하기
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -164,19 +196,19 @@
     })
 
     function validateForm() {
-            let agreeCheckbox = document.getElementById("agree");
+        let agreeCheckbox = document.getElementById("agree");
 
-            if (!agreeCheckbox.checked) {
-                return false;
-            } else {
-                alert("개인정보처리방침에 동의해주시기 바랍니다.");
-                return true;
-            }
-        }
-
-        function openPopup() {
-            window.open('/term/', 'popup', 'width=1200,height=1000,scrollbars=yes,resizable=yes');
+        if (!agreeCheckbox.checked) {
+            alert("개인정보처리방침에 동의해주시기 바랍니다.");
             return false;
         }
+        alert("문의 접수가 완료되었습니다. 담당자 확인 후 연락드리도록 하겠습니다.");
+        return true;
+    }
+
+    function openPopup() {
+        window.open('/term/', 'popup', 'width=1200,height=1000,scrollbars=yes,resizable=yes');
+        return false;
+    }
 
 </script>

@@ -180,32 +180,6 @@
             ],
         });
 
-{% comment %}        $('#story-form').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            let story_content = $('#summernote').summernote('code');
-            formData.append('story_content', story_content);
-            let csrfToken = '{{ csrf_token }}';
-
-            $.ajax({
-                url: '{% url "story_create" %}',
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    alert("스토리가 등록되었습니다.");
-                    window.location.href = "/menu/0109/";
-                },
-                error: function (xhr, status, error) {
-                    console.error('에러: ', xhr, status, error);
-                    console.error(xhr.responseText);  // 에러 메시지를 로그에 출력
-                }
-            });
-        });{% endcomment %}
 
         $('#story-form').on('submit', function (e) {
             e.preventDefault();
