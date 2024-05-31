@@ -1,3 +1,5 @@
+{# 서비스 / IBT 페이지 #}
+
 {% load static %}
 {% include 'header.html' %}
 <link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
@@ -28,6 +30,104 @@
         box-shadow: 0 0 0 0;
     }
 
+    .desc-ul {
+        list-style: none; /* 기본 불릿 제거 */
+        padding-left: 20px; /* 왼쪽 여백 */
+        margin: 10px 0; /* 위아래 여백 */
+    }
+
+    .desc-li {
+        position: relative; /* 불릿 위치 조정용 */
+        font-size: 18px; /* 글자 크기 */
+        font-weight: 400; /* 글자 두께 */
+        line-height: 28px; /* 줄 간격 */
+        color: #3E3A39; /* 글자 색상 */
+        padding-left: -10px; /* 왼쪽 여백 */
+    }
+
+    .desc-li::before {
+        content: "•"; /* 원형 불릿 */
+        color: #d9d9d9; /* 불릿 색상 */
+        position: absolute; /* 불릿 위치 절대값 설정 */
+        left: 0; /* 불릿 왼쪽 정렬 */
+        font-size: 30px; /* 불릿 크기 조정 */
+        line-height: 30px; /* 불릿과 텍스트의 줄 맞춤 */
+        width: 20px; /* 불릿과 텍스트 간격 조정 */
+        margin-left: -25px; /* 불릿 가로 위치 조정 */
+        margin-top: -5px; /* 불릿 세로 위치 조정 */
+    }
+
+    .btn-group.custom_btn_types {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        background-color: #f0f0f0; /* 슬라이더 배경 색상 */
+        border-radius: 50px; /* 둥근 모서리 */
+        padding: 5px; /* 슬라이더 배경 여백 */
+        width: 45%;
+        height: 50px; /* 전체 버튼 그룹의 높이 제한 */
+    }
+
+    .btn-group.custom_btn_types .btn {
+        flex: 1;
+        border-radius: 50px;
+        background-color: transparent;
+        color: black;
+        border: none;
+        padding: 0 15px; /* 패딩을 조정하여 텍스트 여백 설정 */
+        font-size: 18px; /* 글자 크기 조정 */
+        height: 100%; /* 버튼 높이를 부모 높이에 맞춤 */
+        display: flex; /* Flexbox 사용 */
+        align-items: center; /* 수직 중앙 정렬 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        white-space: nowrap; /* 텍스트를 한 줄로 고정 */
+        overflow: hidden; /* 텍스트가 넘치면 숨김 */
+        text-overflow: ellipsis; /* 텍스트가 넘치면 생략 기호(...) 추가 */
+        position: relative;
+        z-index: 1;
+        transition: color 0.3s, background-color 0.3s;
+        cursor: pointer;
+        outline: none; /* 포커스 시 생기는 테두리 제거 */
+    }
+
+    .btn-group.custom_btn_types .btn:focus, .btn-group.custom_btn_types .btn:active {
+        outline: none; /* 포커스 및 활성 상태에서 생기는 테두리 제거 */
+        box-shadow: none; /* 활성 상태에서 생기는 박스 쉐도우 제거 */
+    }
+
+    .btn-group.custom_btn_types .slider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 33.33%;
+        background-color: #f5f57f;
+        border-radius: 50px;
+        transition: left 0.3s;
+        z-index: 0;
+    }
+
+    .btn-group.custom_btn_types .slider-bg {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #efefef; /* 슬라이더 배경 색상 */
+        border-radius: 50px; /* 둥근 모서리 */
+        z-index: 0;
+    }
+
+    .btn-group.custom_btn_types .btn.profit {
+        border-radius: 50px;
+        width: 180px;
+    }
+
+    .btn-group.custom_btn_types .btn.subscr,
+    .btn-group.custom_btn_types .btn.startup {
+        border-radius: 50px;
+        width: 140px;
+    }
 </style>
 {% include 'menu.html' %}
 <body class="menu_ibt">
@@ -43,283 +143,270 @@
                     <img src="{% static 'renewal/image/ibt/ibt_main.png' %}" style="width: 100%;">
                     <div class="main_overlay" style="position: absolute; top: 70%; bottom: 11%; left: 16%; color: white;">
                         <h1 style="font-size: 42px; font-weight: 800; line-height: 50px;">I.B.T(바이오융합)</h1><br/>
-                        <h2 style="font-size: 32px; font-weight: 600; line-height: 38px;">스마트팜 Button Platform을 통한 <br>
+                        <h2 style="font-size: 32px; font-weight: 600; line-height: 38px;">스마트팜 Button Platform을 통한 <br/>
                         농업과 바이오산업의 혁신 선도</h2>
                     </div>
                 </div>
 
-                <div class="card-body row justify-content-center" style="padding: 0 6.5% 0 6.5%;">
-                    <div class="row col-xl-10">
-                        <div class="col-xl-7">
-                            <h3><b style="font-size: 3.5vh;font-weight: 800">I.B.T(바이오융합)</b></h3><br/><br/>
-                            <h3 style="font-size: 3vh;font-weight: 400;">수익보장형 스마트팜 Button으로</h3>
-                            <h3 style="font-size: 3vh;font-weight: 400;">6차 농업 융복합 실현.</h3>
-                            <h3 style="font-size: 3vh;font-weight: 400;">지능형 시스템과 바이오융합</h3>
-                            <h3 style="font-size: 3vh;font-weight: 400">기술 결합으로 혁신을 선도합니다.</h3>
+                <div class="row justify-content-center">
+                    <div class="card-body row justify-content-between col-xl-10" style="padding: 0 6.5% 0 6.5%;">
+                        <div class="card-body">
+                            <h3 style="font-size: 32px; font-weight: 700; line-height: 38px;">I.B.T(바이오융합)</h3><br/>
+                            <h3 style="font-size: 28px; font-weight: 400; line-height: 33px;">수익보장형 스마트팜 Button으로<br/>6차 농업 융복합 실현.<br/>
+                                지능형 시스템과 바이오융합<br/>기술 결합으로 혁신을 선도합니다.</h3>
                         </div>
-                        <div class="col-xl-5">
-                            <div class="d-flex justify-content-center" style="padding-top: 10%">
-                                <img src="{% static 'renewal/image/ibt/button_logo.png' %}" width="100%">
-                            </div>
-                            <div class="d-flex justify-content-end" style="padding-top: 10%">
-                                <a href="#"><img src="{% static 'renewal/image/ibt/button_q_btn.png' %}"></a>
-                            </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img src="{% static 'renewal/image/ibt/button_logo.png' %}" width="100%">
+                        </div>
+                        <div class="d-flex justify-content-center align-items-end">
+                            <a href="/menu/0106"><img src="{% static 'renewal/image/ibt/button_q_btn.png' %}"></a>
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid" style="padding: 5% 7% 5% 7%; height: 30vh;">
-                    <div class="col-xl-12 row justify-content-center" style="background: linear-gradient(to bottom, rgba(234, 234, 115, 1) 66.66%, transparent 66.66%);">
-                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
-                            <img src="{% static 'renewal/image/ibt/button_e_1.png' %}" width="100%">
-                            <div class="img_card2">
-                                <span>원격</span><br/>
-                                <span>자동제어</span><br/>
-                                <span>모니터링</span>
-                            </div>
-                        </div>
-                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
-                            <img src="{% static 'renewal/image/ibt/button_e_2.png' %}" width="100%">
-                            <div class="img_card2">
-                                <span>Button</span><br/>
-                                <span>Platform</span><br/>
-                                <span style="font-size: 20px">Data 수집 및 분석</span>
-                            </div>
-                        </div>
-                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
-                            <img src="{% static 'renewal/image/ibt/button_e_3.png' %}" width="100%">
-                            <div class="img_card2">
-                                <span>기능성</span><br/>
-                                <span>원료개발</span><br/>
-                                <span>BIO / R&D</span>
-                            </div>
-                        </div>
-                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
-                            <img src="{% static 'renewal/image/ibt/button_e_4.png' %}" width="100%">
-                            <div class="img_card2">
-                                <span>고부가가치</span><br/>
-                                <span>기능성 제품</span><br/>
-                            </div>
-                        </div>
-                        <div class="relative_div" style="width: 20%;padding-top: 2%;">
-                            <img src="{% static 'renewal/image/ibt/button_e_5.png' %}" width="100%">
-                            <div class="img_card2">
-                                <span>유통 • 판매</span><br/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container-fluid row justify-content-center">
-                    <div class="col-xl-12" style="padding: 15% 7% 0 7%;">
-                        <div class="row justify-content-center">
-                            <div class="card-body" style="width: 50%;">
-                                <div class="card-body col-xl-12 white-background row justify-content-center">
-                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
-                                        <img src="{% static 'renewal/image/ibt/saw_wheel.png' %}" width="80%">
-                                    </div>
-                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
-                                        <p><b>클러스터형 스마트팜</b></p>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">최신 기술 및 데이터 분석을 통한 지속 가능성</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">농장 간의 지식 공유를 통한 생산성 향상</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">자원 최적화를 통한 환경친화적 농업 실현</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">농업 지역의 경제적인 다양성 증가</h6>
-                                    </div>
+                    <div class="container-fluid" style="padding: 8% 7% 5% 7%; height: 400px;">
+                        <div class="col-xl-12 row justify-content-center" style="background: linear-gradient(to bottom, #eaea73 80%, transparent 80%);">
+                            <div class="relative_div" style="width: 16%; padding-top: 3%;">
+                                <img src="{% static 'renewal/image/ibt/button_e_1.png' %}" width="100%" alt="button_e_1">
+                                <div class="img_card2 mt-4">
+                                    <span style="font-size: 24px; font-weight: 500; line-height: 28px;">원격<br/>자동제어<br/>모니터링</span>
                                 </div>
                             </div>
-
-                            <div class="card-body" style="width: 50%;">
-                                <div class="card-body col-xl-12 white-background row justify-content-center">
-                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
-                                        <img src="{% static 'renewal/image/ibt/phone.png' %}" width="80%">
-                                    </div>
-                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
-                                        <p><b>손쉬운 농작물 관리</b></p>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">전용 APP 을 활용한 원격관리와 환경제어</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">CCTV를 통한 24시간 다각도 모니터링</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">자동제어로 간편한 관리 및 균일한 품질 보장</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">실시간 알림 제공을 통한 위험요소 감소</h6>
-                                    </div>
+                            <div class="relative_div" style="width: 16%; padding-top: 3%;">
+                                <img src="{% static 'renewal/image/ibt/button_e_2.png' %}" width="100%" alt="button_e_2">
+                                <div class="img_card2 mt-4">
+                                    <span style="font-size: 24px; font-weight: 500; line-height: 28px;">Button<br/>Platform<br/></span>
+                                    <span style="font-size: 20px; font-weight: 500; line-height: 28px;">Data 수집 및 분석</span>
+                                </div>
+                            </div>
+                            <div class="relative_div" style="width: 16%; padding-top: 3%;">
+                                <img src="{% static 'renewal/image/ibt/button_e_3.png' %}" width="100%" alt="button_e_3">
+                                <div class="img_card2 mt-4">
+                                    <span style="font-size: 24px; font-weight: 500; line-height: 28px;">기능성<br/>원료개발<br/>BIO / R&D</span>
+                                </div>
+                            </div>
+                            <div class="relative_div" style="width: 16%; padding-top: 3%;">
+                                <img src="{% static 'renewal/image/ibt/button_e_4.png' %}" width="100%" alt="button_e_4">
+                                <div class="img_card2 mt-4">
+                                    <span style="font-size: 24px; font-weight: 500; line-height: 28px;">고부가가치<br/>기능성 제품</span>
+                                </div>
+                            </div>
+                            <div class="relative_div" style="width: 16%; padding-top: 3%;">
+                                <img src="{% static 'renewal/image/ibt/button_e_5.png' %}" width="100%" alt="button_e_5">
+                                <div class="img_card2 mt-4">
+                                    <span style="font-size: 24px; font-weight: 500; line-height: 28px;">유통 • 판매</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid row justify-content-center">
-                    <div class="col-xl-12" style="padding: 0% 7% 5% 7%;">
-                        <div class="row justify-content-center">
-                            <div class="card-body" style="width: 50%;">
-                                <div class="card-body col-xl-12 white-background row justify-content-center">
-                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
-                                        <img src="{% static 'renewal/image/ibt/thumb_up.png' %}" width="80%">
+                    <div class="col-9 row justify-content-center" style="margin: 20% 0 0 0;">
+                        <div class="d-flex justify-content-between">
+                            <div class="card-body">
+                                <div class="card-body col-12 white-background row justify-content-between"
+                                     style="width: 660px; height: 270px; border-radius:12px;">
+                                    <div class="col-4 row align-items-center justify-content-center">
+                                        <img src="{% static 'renewal/image/ibt/saw_wheel.png' %}" width="75%" alt="saw_wheel">
                                     </div>
-                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
-                                        <p><b>안정적인 생산환경 제공</b></p>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산성 극대화 및 수익 증대</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">예측 가능한 생산 일정을 통한 생산량 최적화</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">생산 신뢰성 향상을 통한 브랜드 가치 상승</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">품질 관리를 통한 시장 경쟁력 상승</h6>
+                                    <div class="col-9 row align-items-center my-4">
+                                        <span style="font-size: 24px; font-weight: 500; line-height: 28px;"><b>클러스터형 스마트팜</b></span>
+                                        <ul class="desc-ul" style="margin: 20px 0 0 0;">
+                                            <li class="desc-li">최신 기술 및 데이터 분석을 통한 지속 가능성</li>
+                                            <li class="desc-li">농장 간의 지식 공유를 통한 생산성 향상</li>
+                                            <li class="desc-li">자원 최적화를 통한 환경친화적 농업 실현</li>
+                                            <li class="desc-li">농업 지역의 경제적인 다양성 증가</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
 
-
-                            <div class="card-body" style="width: 50%;">
-                                <div class="card-body col-xl-12 white-background row justify-content-center">
-                                    <div class="col-xl-5 d-flex align-items-center justify-content-center mt-4">
-                                        <img src="{% static 'renewal/image/ibt/four-leaf-clover.png' %}" width="80%">
+                            <div class="card-body">
+                                <div class="card-body col-12 white-background row justify-content-between"
+                                     style="width: 660px; height: 270px; border-radius:12px;">
+                                    <div class="col-4 row align-items-center justify-content-center">
+                                        <img src="{% static 'renewal/image/ibt/phone.png' %}" width="80%" alt="phone">
                                     </div>
-                                    <div class="col-xl-7 mt-5 mb-5 ex4_div">
-                                        <p><b>농작물 활용 기능성 원료 개발</b></p>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">안정성과 품질이 보장된 원료</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">다양한 품종의 고부가 가치 작물 확보</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">지속 가능한 농업 및 자원 활용 촉진</h6>
-                                        <h6><img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">제품 및 기술 개발을 통한 산업구조 혁신</h6>
+                                    <div class="col-9 row align-items-center my-4">
+                                        <span style="font-size: 24px; font-weight: 500; line-height: 28px;"><b>손쉬운 농작물 관리</b></span>
+                                        <ul class="desc-ul" style="margin: 20px 0 0 0;">
+                                            <li class="desc-li">전용 APP 을 활용한 원격관리와 환경제어</li>
+                                            <li class="desc-li">CCTV를 통한 24시간 다각도 실시간 모니터링</li>
+                                            <li class="desc-li">자동제어로 간편한 관리 및 균일한 품질 보장</li>
+                                            <li class="desc-li">실시간 알림 제공을 통한 위험요소 감소</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <div class="card-body">
+                                <div class="card-body col-12 white-background row justify-content-between"
+                                     style="width: 660px; height: 270px; border-radius:12px;">
+                                    <div class="col-4 row align-items-center justify-content-center">
+                                        <img src="{% static 'renewal/image/ibt/thumb_up.png' %}" width="75%" alt="thumb_up">
+                                    </div>
+                                    <div class="col-9 row align-items-center my-4">
+                                        <span style="font-size: 24px; font-weight: 500; line-height: 28px;"><b>안정적인 생산환경 제공</b></span>
+                                        <ul class="desc-ul" style="margin: 20px 0 0 0;">
+                                            <li class="desc-li">생산성 극대화 및 수익 증대</li>
+                                            <li class="desc-li">예측 가능한 생산 일정을 통한 생산량 최적화</li>
+                                            <li class="desc-li">농작물 생산의 신뢰성 향상을 통한 브랜드 가치 상승</li>
+                                            <li class="desc-li">품질 관리를 통한 시장 경쟁력 상승</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="card-body col-12 white-background row justify-content-between"
+                                     style="width: 660px; height: 270px; border-radius:12px;">
+                                    <div class="col-4 row align-items-center justify-content-center">
+                                        <img src="{% static 'renewal/image/ibt/four-leaf-clover.png' %}" width="75%" alt="four-leaf-clover">
+                                    </div>
+                                    <div class="col-9 row align-items-center my-4">
+                                        <span style="font-size: 24px; font-weight: 500; line-height: 28px;"><b>농작물 활용 기능성 원료 개발</b></span>
+                                        <ul class="desc-ul" style="margin: 20px 0 0 0;">
+                                            <li class="desc-li">안정성과 품질이 보장된 원료</li>
+                                            <li class="desc-li">다양한 품종의 고부가 가치 작물 확보</li>
+                                            <li class="desc-li">지속 가능한 농업 및 자원 활용 촉진</li>
+                                            <li class="desc-li">새로운 제품과 기술 개발을 통한 산업 구조 혁신</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid row justify-content-center">
-                    <div class="col-xl-10 row">
-                        <div class="col-xl-6" style="margin: auto">
-                            <p style="color: #3D170F;font-weight: 600;font-size: 3vh;">APP으로 모든걸 원격관리</p>
-                            <span style="font-size: 3.2vh"><b>모바일 원격관리 자동제어 기능으로</b></span><br/>
-                            <span style="font-size: 3.2vh"><b>진입장벽 없는 스마트팜을 경험해보세요</b></span>
-                            <p class="mt-4" style="color: rgba(137, 137, 137, 1);font-size: 16px;">*디바이스 운영 체계에 따라 상이할 수 있음</p>
+                    <div class="col-9 row justify-content-start" style="margin: 15% 0 0 5%;">
+                        <div style="margin: auto 20% auto 0; padding: 0;">
+                            <span style="color: #3D170F; font-size: 28px; font-weight: 600; line-height: 33px;">APP으로 모든걸 원격관리</span><br/><br/>
+                            <span style="font-size: 36px; font-weight: 600; line-height: 42px;"><b>모바일 원격관리 자동제어 기능으로<br/>진입장벽 없는 스마트팜을 경험해보세요</b></span><br/><br/>
+                            <span style="color: #898989; font-size: 16px; font-weight: 400; line-height: 19px;">* 디바이스 운영 체계에 따라 상이할 수 있음</span>
                         </div>
-                        <div class="col-xl-6 row justify-content-center" style="margin: auto">
-                            <img src="{% static 'renewal/image/ibt/phone2.png' %}" width="80%">
+                        <div class="row align-items-center justify-content-center">
+                            <img src="{% static 'renewal/image/ibt/phone2.png' %}" style="width: 538px; height: 577px;">
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid row justify-content-center" style="padding-top: 10%;">
-                    <div class="col-xl-10 row">
-                        <div class="col-xl-6" style="margin: auto">
-                            <p style="color: #3D170F;font-weight: 600;font-size: 3vh;">영농의 A-Z까지</p>
-                            <span style="font-size: 3.2vh"><b>영농일지를 통해 농작물의 성장과정을 추적,</b></span><br/>
-                            <span style="font-size: 3.2vh"><b>품질 및 생산성을 향상시켜보세요</b></span>
+                    <div class="col-9 row justify-content-start" style="margin: 15% 0 0 5%;">
+                        <div style="margin: auto 20% auto 0; padding: 0;">
+                            <span style="color: #3D170F; font-size: 28px; font-weight: 600; line-height: 33px;">영농의 A-Z까지</span><br/><br/>
+                            <span style="font-size: 36px; font-weight: 600; line-height: 42px;"><b>영농일지를 통해 농작물의 성장과정을 추적,<br/>품질 및 생산성을 향상시켜보세요</b></span><br/><br/>
                         </div>
-                        <div class="col-xl-6 row justify-content-center" style="margin: auto">
-                            <img src="{% static 'renewal/image/ibt/phone3.png' %}" width="55%" height="80%;">
+                        <div class="row align-items-center justify-content-center">
+                            <img src="{% static 'renewal/image/ibt/phone3.png' %}" style="width: 353px; height: 577px;">
                         </div>
                     </div>
-                </div>
 
-
-
-                <div class="container-fluid d-flex justify-content-center" style="padding: 5% 7% 8% 7%;">
-                    <div class="col-xl-10">
-                        <div class="row justify-content-between">
+                    <div class="col-9 row justify-content-start" style="margin: 15% 0 0 5%;">
+                        <div class="d-flex justify-content-between align-items-end p-0" style="width:92%">
                             <div>
-                                <span style="font-size: 38px;"><b>Smart Farm</b></span><br/>
-                                <span style="font-size: 28px;">다원화된 수익기반형 사업모델</span>
+                                <span style="font-size: 32px; font-weight: 700; line-height: 38px;">Smart Farm</span><br/>
+                                <span style="font-size: 24px; font-weight: 400; line-height: 28px;">다원화된 수익기반형 사업모델</span>
                             </div>
+                            <div class="btn-group custom_btn_types" role="group" aria-label="SmartFarm_types">
+                                <div class="slider-bg"></div>
+                                <div class="slider"></div>
+                                <button type="button" class="btn profit"
+                                        data-img-src="{% static 'renewal/image/ibt/smart_farm_profit.png' %}"
+                                        onclick="toggleButton(this, 0)">수익공유 상생협력형
+                                </button>
+                                <button type="button" class="btn subscr"
+                                        data-img-src="{% static 'renewal/image/ibt/smart_farm_subscr.png' %}"
+                                        onclick="toggleButton(this, 1)">구독형
+                                </button>
+                                <button type="button" class="btn startup"
+                                        data-img-src="{% static 'renewal/image/ibt/smart_farm_startup.png' %}"
+                                        onclick="toggleButton(this, 2)">창업형
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-9 row justify-content-start" style="margin: 2% 0 0 5%;">
+                        <img id="business_model" src="{% static 'renewal/image/ibt/smart_farm_profit.png' %}" width="92%" alt="business_model">
+                    </div>
+
+                    <div class="col-9 row justify-content-start" style="margin: 3% 0 0 5%;">
+                        <div class="d-flex justify-content-between align-items-end p-0" style="width:92%">
                             <div>
-                                <div class="btn-group custom_btn mt-5" role="group" aria-label="Basic outlined example">
-                                    <button type="button" class="btn btn_by left" data-img-src="{% static 'renewal/image/ibt/사업모델.png' %}">수익공유 상생협력형</button>
-                                    <button type="button" class="btn btn_by middle" data-img-src="{% static 'renewal/image/ibt/구독형.png' %}">구독형</button>
-                                    <button type="button" class="btn btn_by right" data-img-src="{% static 'renewal/image/ibt/창업형.png' %}">창업형</button>
-                                </div>
+                                <span style="font-size: 32px; font-weight: 500; line-height: 38px;">R&D</span>
                             </div>
                         </div>
-                        <div class="mt-5 row justify-content-center">
-                            <img id="bussiness_model" src="{% static 'renewal/image/ibt/사업모델.png' %}" width="90%">
-                        </div>
-                    </div>
-                </div>
 
-                <div class="container-fluid row justify-content-center" style="padding: 5% 7% 8% 7%;">
-                    <div class="col-xl-10">
-                        <div class="row">
-                            <div>
-                                <span style="font-size: 38px;"><b>R&D</b></span><br/>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="card-body relative_div" style="width: 33%;">
-                                <img src="{% static 'renewal/image/ibt/randd1.png' %}" width="100%">
-                                <div class="rnd_div">
-                                    <span>질병 연관성 연구</span>
+                        <div class="d-flex justify-content-between p-0" style="width:93%;">
+                            <div class="card-body col-4 px-0">
+                                <img src="{% static 'renewal/image/ibt/randd1.png' %}" style="width:410px; height:240px;" alt="randd1">
+                                <div class="rnd_div" style="margin: 0 0 0 -5%;">
+                                    <span style="font-size: 34px; font-weight: 600; line-height: 40px;">질병 연관성 연구</span>
                                 </div>
                             </div>
-                            <div class="card-body relative_div" style="width: 33%;">
-                                <img src="{% static 'renewal/image/ibt/randd2.png' %}" width="100%">
-                                <div class="rnd_div">
-                                    <span>기능성 식품 개발</span>
+                            <div class="card-body col-4 px-0 mx-4">
+                                <img src="{% static 'renewal/image/ibt/randd2.png' %}" style="width:410px; height:240px;" alt="randd2">
+                                <div class="rnd_div" style="margin: 0 0 0 -5%;">
+                                    <span style="font-size: 34px; font-weight: 600; line-height: 40px;">기능성 식품 개발</span>
                                 </div>
                             </div>
-                            <div class="card-body relative_div" style="width: 33%;">
-                                <img src="{% static 'renewal/image/ibt/randd3.png' %}" width="100%">
-                                <div class="rnd_div">
-                                    <span>기능성 화장품 개발</span>
+                            <div class="card-body col-4 px-0">
+                                <img src="{% static 'renewal/image/ibt/randd3.png' %}"
+                                     style="width:410px; height:240px;" alt="randd3">
+                                <div class="rnd_div" style="margin: 0 0 0 -8%;">
+                                    <span style="font-size: 34px; font-weight: 600; line-height: 40px;">기능성 화장품 개발</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="content-wrapper"
-                     style="position: relative;background-image: url('{% static "renewal/image/ibt/ibt_main2.png" %}');
-                             background-size: cover; background-repeat: no-repeat; background-position: center; ">
-                    <div class="col-xl-10" style=" color: white;padding: 10%;">
-                        <p style="font-size: 3.5vh"><b>기능성 식품</b></p>
-                        <span style="font-size: 3.4vh;line-height: 42px;">식품첨가물 등 맞춤형 소재 개발로</span><br/>
-                        <p style="font-size: 3.4vh;line-height: 42px;">OEM / ODM 방식을 구축하고 있습니다.</p><br/>
-                        <span style="font-size: 3vh">스마트팜 Button에서 재배한 참송이버섯을</span><br/>
-                        <span style="font-size: 3vh">천연조미료로 가공하여 고부가 가치를</span><br/>
-                        <p style="font-size: 3vh">이끌어 내고 있습니다.</p><br/>
-                        <a href="#"><img src="{% static 'renewal/image/ibt/more_btn.png' %}" style="width: 30%"></a>
+                <div class="content-wrapper" style="position: relative; background-image: url('{% static "renewal/image/ibt/ibt_main2.png" %}');
+                             background-size: 100%; background-repeat: no-repeat; background-position: center; margin: 5% 0 -10% 0; ">
+
+                    <div class="col-9" style="color: white; padding: 15% 0 0 15%;">
+                        <span style="font-size: 32px; font-weight: 700; line-height: 38px;">기능성 식품<br/></span>
+                        <span style="font-size: 24px; font-weight: 500; line-height: 28px;"><br/>식품첨가물 등 맞춤형 소재 개발로<br/>
+                        OEM / ODM 방식을 구축하고 있습니다.<br/><br/></span>
+                        <span style="font-size: 22px; font-weight: 500; line-height: 26px;">스마트팜 Button에서 재배한 참송이버섯을<br/>
+                        천연조미료로 가공하여 고부가 가치를<br/>이끌어 내고 있습니다.<br/></span>
+                        <a href="/menu/0109/"><img src="{% static 'renewal/image/ibt/more_btn.png' %}" style="width: 28%; margin: 2% 0 0 0;"></a>
                     </div>
-                    <hr style="padding: 0 5% 0 5%;border-top: 0.1vh solid white;width: 70%;"/>
-                    <div class="row justify-content-center">
-                        <div class="col-xl-11">
-                            <div class="card-body pb-5">
-                                <div class="mt-5" style="padding-left: 5%;">
-                                    <h3 style="font-weight: 700;font-size: 3.4vh;color: white">더 자세하게 알아보기</h3>
+
+                    <div class="row justify-content-start" style="padding: 9% 0 0 15%;">
+                        <div class="col-10 row justify-content-start" style="padding: 0 2% 0 2%;">
+                            <hr style="border-top: 1px solid #ffffff; width: 100%;" />
+                        </div>
+                        <div class="col-10 row justify-content-start" style="padding: 2% 2% 0 2%;">
+                            <h3 style="color:#ffffff; font-size: 32px; font-weight: 700; line-height: 38px;">더 자세하게 알아보기</h3>
+                        </div>
+                        <div class="col-10 row justify-content-between" style="padding: 3% 8% 18% 8%;">
+                                <div>
+                                    <a href="/menu/0106/" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 348px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">Button 소개서 다운로드
+                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                        </div>
+                                    </a>
                                 </div>
-                                <div class="row justify-content-center pb-5">
 
-                                    <div class="col-xl-10 row justify-content-center mt-5" style="color: white;">
-                                        <div class="card row justify-content-center align-items-center"
-                                             style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 20vw;">
-                                            <a href="#" class="d-flex align-items-center">
-                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">Button 소개서 다운로드</span>
-                                                <img src="{% static 'renewal/image/download_regular.png' %}"
-                                                     style="height: 3vh;">
-                                            </a>
+                                <div>
+                                    <a href="/menu/0106/" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 334px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">스마트팜 구축 문의하기
+                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
                                         </div>
+                                    </a>
+                                </div>
 
-                                        <div class="card row justify-content-center align-items-center ml-5"
-                                             style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
-                                            <a href="#" class="d-flex align-items-center">
-                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">스마트팜 구축 문의하기</span>
-                                                <img src="{% static 'renewal/image/download_regular.png' %}"
-                                                     style="height: 3vh;">
-                                            </a>
+                                <div>
+                                    <a href="/menu/0109/" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 260px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">BLOG 바로가기
+                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow"></span>
                                         </div>
-
-                                        <div class="card row justify-content-center align-items-center ml-5"
-                                             style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
-                                            <a href="#" class="d-flex align-items-center">
-                                                <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">BLOG 바로가기</span>
-                                                <img src="{% static 'renewal/image/right_arrow.png' %}"
-                                                     style="height: 3vh;">
-                                            </a>
-                                        </div>
-                                    </div>
-
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -351,7 +438,7 @@
              'box-shadow': '0 0 0 0',
          });
 
-         $('.btn_by').click(function () {
+         {% comment %}$('.btn_by').click(function () {
              $('.btn_by').css({
                  'background-color': '',
                  'color': '',
@@ -359,16 +446,36 @@
              }).removeClass('btn_selected');
 
              $(this).css({
-                 'background-color': 'rgba(234, 234, 115, 1)',
+                 'background-color': '#eaea73',
                  'color': 'black',
                  'box-shadow': '0 0 0 0',
              }).addClass('btn_selected');
 
-             var imgSrc = $(this).data('img-src');
+             let imgSrc = $(this).data('img-src');
              $('#bussiness_model').attr('src', imgSrc);
 
-         })
+         }){% endcomment %}
      })
+
+    function toggleButton(selectedButton, index) {
+        const slider = document.querySelector('.btn-group.custom_btn_types .slider');
+        const buttons = document.querySelectorAll('.btn-group.custom_btn_types .btn');
+        const imgSrc = selectedButton.getAttribute('data-img-src');
+        const businessModelImage = document.getElementById('business_model');
+
+        // 슬라이더 이동
+        slider.style.left = `${index * 33.33}%`;
+
+        // 버튼 활성화/비활성화 및 이미지 변경
+        buttons.forEach((button, i) => {
+            if (i === index) {
+                button.style.color = 'black';
+                businessModelImage.setAttribute('src', imgSrc);
+            } else {
+                button.style.color = 'black';
+            }
+        });
+    }
 
 
 
