@@ -128,9 +128,30 @@
         border-radius: 50px;
         width: 140px;
     }
+
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width: 1300px;
+        }
+        .rnd_div_img_parent {
+            gap: 5%;
+        }
+        .rnd_div_img {
+            width: 320px !important;
+        }
+        .end-area {
+            background-size: 140% !important;
+        }
+        .mobile_view {
+            margin-left: 0 !important;
+        }
+        .footer {
+            width : 1300px;
+        }
+    }
 </style>
 {% include 'menu.html' %}
-<body class="menu_ibt">
+<body class="menu_ibt" style="overflow-x: hidden;">
 <div class="layout-content-navbar">
     <div class="layout-container">
         <div class="layout-page" id="layout_page">
@@ -140,10 +161,10 @@
                 <!-- Content -->
                 <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
                      style="margin-bottom: 5%; position: relative; padding: 0 0 0 0;">
-                    <img src="{% static 'renewal/image/ibt/ibt_main.png' %}" style="width: 100%;">
+                    <img src="{% static 'renewal/image/ibt/ibt_main.png' %}" style="width: 105%;">
                     <div class="main_overlay" style="position: absolute; top: 70%; bottom: 11%; left: 16%; color: white;">
                         <h1 style="font-size: 42px; font-weight: 800; line-height: 50px;">I.B.T(바이오융합)</h1><br/>
-                        <h2 style="font-size: 32px; font-weight: 600; line-height: 38px;">스마트팜 Button Platform을 통한 <br/>
+                        <h2 style="font-size: 32px; font-weight: normal; line-height: 38px;">스마트팜 Button Platform을 통한 <br/>
                         농업과 바이오산업의 혁신 선도</h2>
                     </div>
                 </div>
@@ -298,7 +319,7 @@
                         </div>
                     </div>
 
-                    <div class="col-9 row justify-content-start" style="margin: 15% 0 0 5%;">
+                    <div class="mobile_view col-9 row justify-content-start" style="margin: 15% 0 0 5%;">
                         <div class="d-flex justify-content-between align-items-end p-0" style="width:92%">
                             <div>
                                 <span style="font-size: 32px; font-weight: 700; line-height: 38px;">Smart Farm</span><br/>
@@ -322,32 +343,32 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-9 row justify-content-start" style="margin: 2% 0 0 5%;">
+                    <div class="mobile_view col-9 row justify-content-start" style="margin: 2% 0 0 5%;">
                         <img id="business_model" src="{% static 'renewal/image/ibt/smart_farm_profit.png' %}" width="92%" alt="business_model">
                     </div>
 
-                    <div class="col-9 row justify-content-start" style="margin: 3% 0 0 5%;">
+                    <div class="mobile_view col-9 row justify-content-start" style="margin: 3% 0 0 5%;">
                         <div class="d-flex justify-content-between align-items-end p-0" style="width:92%">
                             <div>
                                 <span style="font-size: 32px; font-weight: 500; line-height: 38px;">R&D</span>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between p-0" style="width:93%;">
+                        <div class="rnd_div_img_parent d-flex justify-content-between p-0" style="width:93%;">
                             <div class="card-body col-4 px-0">
-                                <img src="{% static 'renewal/image/ibt/randd1.png' %}" style="width:410px; height:240px;" alt="randd1">
+                                <img class="rnd_div_img" src="{% static 'renewal/image/ibt/randd1.png' %}" style="width:410px; height:240px;" alt="randd1">
                                 <div class="rnd_div" style="margin: 0 0 0 -5%;">
                                     <span style="font-size: 34px; font-weight: 600; line-height: 40px;">질병 연관성 연구</span>
                                 </div>
                             </div>
                             <div class="card-body col-4 px-0 mx-4">
-                                <img src="{% static 'renewal/image/ibt/randd2.png' %}" style="width:410px; height:240px;" alt="randd2">
+                                <img class="rnd_div_img" src="{% static 'renewal/image/ibt/randd2.png' %}" style="width:410px; height:240px;" alt="randd2">
                                 <div class="rnd_div" style="margin: 0 0 0 -5%;">
                                     <span style="font-size: 34px; font-weight: 600; line-height: 40px;">기능성 식품 개발</span>
                                 </div>
                             </div>
                             <div class="card-body col-4 px-0">
-                                <img src="{% static 'renewal/image/ibt/randd3.png' %}"
+                                <img class="rnd_div_img" src="{% static 'renewal/image/ibt/randd3.png' %}"
                                      style="width:410px; height:240px;" alt="randd3">
                                 <div class="rnd_div" style="margin: 0 0 0 -8%;">
                                     <span style="font-size: 34px; font-weight: 600; line-height: 40px;">기능성 화장품 개발</span>
@@ -357,7 +378,7 @@
                     </div>
                 </div>
 
-                <div class="content-wrapper" style="position: relative; background-image: url('{% static "renewal/image/ibt/ibt_main2.png" %}');
+                <div class="end-area content-wrapper" style="position: relative; background-image: url('{% static "renewal/image/ibt/ibt_main2.png" %}');
                              background-size: 100%; background-repeat: no-repeat; background-position: center; margin: 5% 0 -10% 0; ">
 
                     <div class="col-9" style="color: white; padding: 15% 0 0 15%;">
@@ -378,10 +399,12 @@
                         </div>
                         <div class="col-10 row justify-content-between" style="padding: 3% 8% 18% 8%;">
                                 <div>
-                                    <a href="/menu/0106/" style="text-decoration: none;">
+                                    <a href="{% static 'renewal/IBT_brochure.pdf' %}" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 348px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">Button 소개서 다운로드
-                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">Button 소개서 다운로드 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #3d170f;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -389,8 +412,10 @@
                                 <div>
                                     <a href="/menu/0106/" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 334px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">스마트팜 구축 문의하기
-                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">스마트팜 구축 문의하기 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #3d170f;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -398,8 +423,10 @@
                                 <div>
                                     <a href="/menu/0109/" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: rgba(255,255,255,0.4); border: 1px solid #ffffff; border-radius: 8px; width: 260px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">BLOG 바로가기
-                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #3d170f;">BLOG 바로가기 &nbsp;
+                                                <i class="fa-solid fa-arrow-down fa-rotate-by" style="color: #3d170f; --fa-rotate-angle: 230deg;"></i>
+{#                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>

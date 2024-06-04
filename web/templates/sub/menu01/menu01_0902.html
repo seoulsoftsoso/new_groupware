@@ -32,7 +32,30 @@
         height: auto !important;
         max-height: 520px !important;
         object-fit: cover !important;
-        border-radius: 10px !important;
+        {#border-radius: 10px !important;#}
+    }
+
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width: 1300px;
+        }
+
+        .title-area {
+            margin-top: 5% !important;
+        }
+
+        .card-body {
+            padding: 5% !important;
+        }
+
+        .story_content {
+            margin-left: 5% !important;
+            margin-right: 5% !important;
+        }
+
+        .footer {
+            width: 1300px;
+        }
     }
 
 </style>
@@ -51,16 +74,16 @@
                     </div>
                 </div>
 
-                <div class="card-body row justify-content-center" style="padding: 0 10% 0% 10%;">
+                <div class="title-area card-body row justify-content-center" style="padding: 0 10% 0% 10%;">
                     <div>
                         <h2 id="catedate_id"
-                            style="text-align:center; font-size: 28px; font-weight: 500; line-height: 33px; color: #898989; margin: 5% 0 0 0;"></h2>
+                            style="text-align:center; font-size: 22px; font-weight: 500; line-height: 26px; color: #898989; margin: 5% 0 0 0;"></h2>
                         <h1 id="story_title"
-                            style="text-align:center; font-size: 34px; font-weight: 600; line-height: 48px; margin: 2% 0 5% 0;"></h1>
+                            style="text-align:center; font-size: 26px; font-weight: 600; line-height: 48px; margin: 2% 0 5% 0;"></h1>
                         <div class="row justify-content-center">
                             <img class="story_picture" style="margin: 0 0 5% 0;">
                         </div>
-                        <div class="row justify-content-center">
+                        <div class="story_content row justify-content-center" style="padding-left: 15%; padding-right: 15%;">
                             <div class="col-12" id="story_content"></div>
                         </div>
                         <div class="footer d-flex justify-content-center" style="margin: 10% 0 10% 0">
@@ -97,7 +120,7 @@
 
     if (storyId) {
         api_gp("/story/story_read/?story_id=" + storyId, "get", {}, (stories) => {
-            console.log(stories);
+            // console.log(stories);
             let data = stories.results[0];
             displayStoryDetail(data);
         });
@@ -108,7 +131,7 @@
     function displayStoryDetail(data) {
 
         let cateDate = document.getElementById('catedate_id');
-        cateDate.innerHTML = `${data.story_category} &nbsp; | &nbsp; ${data.updated_at}`;
+        cateDate.innerHTML = `${data.story_category} &nbsp; | &nbsp; ${data.created_at}`;
 
         let storyTitle = document.getElementById('story_title');
         storyTitle.innerHTML = `${data.story_title}`;

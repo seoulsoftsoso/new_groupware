@@ -1,0 +1,64 @@
+{# MES요금제 페이지 #}
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<!--menu 로드-->
+<style>
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    {#@media (max-width: 1000px) {#}
+    {#    .title-area {#}
+    {#        padding: 20% 1% 41% 1% !important;#}
+    {#    }#}
+    {#    .title-sub-area {#}
+    {#        padding: 0 1% 0 1% !important;#}
+    {#    }#}
+    {#    .footer {#}
+    {#        width : 1600px;#}
+    {#    }#}
+    }
+
+</style>
+{#{% include 'menu.html' %}#}
+<body class="menu_esg" style="overflow-x: hidden;">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgb(255,255,255)">
+
+                <!-- Content -->
+{#                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"#}
+{#                     style="margin-bottom: 7%; position: relative; padding: 0 0 0 0;">#}
+{#                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">#}
+{#                    </div>#}
+{#                </div>#}
+
+                <div class="title-area card-body row justify-content-start" style="padding: 3% 4% 5% 4%;">
+                    <div class="title-sub-area col-12" style="padding: 1% 2% 5% 2%;">
+                        <span style="font-size: 32px; font-weight: 600; line-height: 38px;">MES 요금제<br/></span><br/><br/>
+                        <img src="{% static 'renewal/image/mes_cost.svg' %}" style="height:100%;" alt="mes_cost">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{#{% include 'footer.html' %}#}
+</body>
+<script>
+
+     {% comment %}$(document).ready(function() {
+        $(".navbar").addClass("white-background");
+        $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+        $(".menu_li > a").css("color", "#000");
+     }){% endcomment %}
+
+</script>
+</html>

@@ -50,9 +50,18 @@
         margin-top: -5px; /* 불릿 세로 위치 조정 */
     }
 
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width : 1500px;
+        }
+        .footer {
+            width : 1500px;
+        }
+    }
+
 </style>
 {% include 'menu.html' %}
-<body class="menu_mes">
+<body class="menu_mes" style="overflow-x: hidden;">
 <div class="layout-content-navbar">
     <div class="layout-container">
         <div class="layout-page" id="layout_page">
@@ -62,10 +71,10 @@
                 <!-- Content -->
                 <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
                      style="margin-bottom: 5%; position: relative;padding: 0 0 0 0;">
-                    <img src="{% static 'renewal/image/mes/mes_main.png' %}" style="width: 100%;">
+                    <img src="{% static 'renewal/image/mes/mes_main.png' %}" style="width: 105%;">
                     <div class="main_overlay" style="position: absolute; top: 70%; bottom: 11%; left: 16%; color: white;">
                         <h1 style="font-size: 42px; font-weight: 800; line-height: 50px;">MES</h1><br/>
-                        <h2 style="font-size: 32px; font-weight: 600; line-height: 38px;">유연한 Architecture를 가진<br>
+                        <h2 style="font-size: 32px; font-weight: normal; line-height: 38px;">유연한 Architecture를 가진<br>
                         Cloud 기반의 통합 생산관리</h2>
                     </div>
                 </div>
@@ -254,10 +263,12 @@
 
                         <div class="col-10 d-flex justify-content-start" style="margin: 3% 0 8% 8%;">
                             <div style="margin: 0 3.5% 0 0;">
-                                <a href="/menu/0106/" style="text-decoration: none;">
+                                <a href="/menu/010801/" onclick="return openPopup()" style="text-decoration: none;">
                                     <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 416px; height: 97px;">
-                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">클라우드 MES 요금제 확인하기
-                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">클라우드 MES 요금제 확인하기 &nbsp;
+                                            <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                        </span>
                                     </div>
                                 </a>
                             </div>
@@ -265,16 +276,20 @@
                             <div style="margin: 0 3.5% 0 0;">
                                 <a href="/menu/0106/" style="text-decoration: none;">
                                     <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 300px; height: 97px;">
-                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MES 구축 문의하기
-                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MES 구축 문의하기 &nbsp;
+                                            <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                        </span>
                                     </div>
                                 </a>
                             </div>
                             <div>
                                 <a href="/menu/0109/" style="text-decoration: none;">
                                     <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 260px; height: 97px;">
-                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">BLOG 바로가기
-                                        <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow"></span>
+                                        <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">BLOG 바로가기 &nbsp;
+                                            <i class="fa-solid fa-arrow-down fa-rotate-by" style="color: #595757; --fa-rotate-angle: 230deg;"></i>
+{#                                        <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow">#}
+                                        </span>
                                     </div>
                                 </a>
                             </div>
@@ -322,7 +337,7 @@
 <script>
     $(window).scroll(function () {
         var scroll = $(window).scrollTop();
-        console.log("현재 스크롤 위치: " + scroll + "px");
+        // console.log("현재 스크롤 위치: " + scroll + "px");
         if (scroll >= 950) { // 852px 스크롤을 지났을 때
             $(".navbar").addClass("white-background");
             $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
@@ -362,6 +377,11 @@
             slider.style.transform = `translateX(${offset}%)`;
         }
     });
+
+    function openPopup() {
+        window.open('/menu/010801/', 'popup', 'width=1700,height=1000,scrollbars=yes,resizable=yes');
+        return false;
+    }
 
 </script>
 </html>

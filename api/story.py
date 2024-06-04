@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from django.db import transaction
+from django.db import transaction, DatabaseError
 from django.db.models import Q
 from django.http import JsonResponse
 from lib import Pagenation
@@ -111,10 +111,15 @@ class Story_update(View):
 
         form = StoryForm(request.POST, request.FILES, instance=story)
         if form.is_valid():
-            story = form.save(commit=False)
-            story.updated_by = request.user
-            story.save()
-            return JsonResponse({"message": "스토리가 수정되었습니다."}, status=200)
+            try:
+                story = form.save(commit=False)
+                story.updated_by = request.user
+                story.save()
+                return JsonResponse({"message": "스토리가 수정되었습니다."}, status=200)
+            except DatabaseError as e:
+                # 디버깅을 위해 에러를 로그에 출력
+                print(f"DatabaseError: {e}")
+                return JsonResponse({"error": "데이터베이스 오류가 발생했습니다. 관리자에게 문의하세요."}, status=500)
         else:
             # 디버깅을 위해 폼 에러를 로그에 출력
             print(form.errors)

@@ -103,10 +103,25 @@
         flex-direction: column;
         align-items: center;
     }
+    .feature_cards {
+        padding-left: 4% !important;
+    }
+
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width : 1300px;
+        }
+        .feature_cards {
+            width: 380px !important;
+        }
+        .footer {
+            width : 1300px;
+        }
+    }
 
 </style>
 {% include 'menu.html' %}
-<body class="menu_mms">
+<body class="menu_mms" style="overflow-x: hidden;">
 <div class="layout-content-navbar">
     <div class="layout-container">
         <div class="layout-page" id="layout_page">
@@ -116,11 +131,11 @@
                 <!-- Content -->
                 <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
                      style="margin-bottom: 5%; position: relative;padding: 0 0 0 0;">
-                    <img src="{% static 'renewal/image/mms/mms_main.png' %}" style="width: 100%">
+                    <img src="{% static 'renewal/image/mms/mms_main.png' %}" style="width: 105%">
                     <div class="main_overlay"
                          style="position: absolute; top: 70%; bottom: 11%; left: 16%; color: white;">
                         <h1 style="font-size: 42px; font-weight: 800; line-height: 50px;">MMS</h1><br/>
-                        <h2 style="font-size: 32px; font-weight: 600; line-height: 38px;">많은 것을 뛰어넘는 하나로,<br>Mobility
+                        <h2 style="font-size: 32px; font-weight: normal; line-height: 38px;">많은 것을 뛰어넘는 하나로,<br>Mobility
                             Business Master</h2>
                     </div>
                 </div>
@@ -137,7 +152,7 @@
                             <a href="/menu/0106/"><img src="{% static 'renewal/image/mms/mms_q_btn.png' %}"></a>
 
                             <div class="row justify-content-start" style="padding: 20% 0 0 1%;">
-                                <div class="white-background mr-4"
+                                <div class="feature_cards white-background mr-4"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 3% 2% 3%;">
                                     <img src="{% static 'renewal/image/mms/ri_computer-line.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -149,7 +164,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="white-background mr-4"
+                                <div class="feature_cards white-background mr-4"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
                                     <img src="{% static 'renewal/image/mms/tdesign_money.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -161,7 +176,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="white-background"
+                                <div class="feature_cards white-background"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
                                     <img src="{% static 'renewal/image/mms/ep_data-line.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -176,7 +191,7 @@
                             </div>
 
                             <div class="row justify-content-start" style="padding: 2% 0 0 1%;">
-                                <div class="white-background mr-4"
+                                <div class="feature_cards white-background mr-4"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
                                     <img src="{% static 'renewal/image/mms/ri_bus-fill.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -188,7 +203,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="white-background mr-4"
+                                <div class="feature_cards white-background mr-4"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
                                     <img src="{% static 'renewal/image/mms/Group.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -200,7 +215,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="white-background"
+                                <div class="feature_cards white-background"
                                      style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
                                     <img src="{% static 'renewal/image/mms/akar-icons_network.png' %}">
                                     <div class="dash_board_div2 mt-2">
@@ -379,8 +394,10 @@
                                 <div style="margin: 0 0 0 5%;">
                                     <a href="/menu/0106/" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 370px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 소개서 다운로드
-                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 소개서 다운로드 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -388,16 +405,20 @@
                                 <div style="margin: 0 5% 0 5%;">
                                     <a href="/menu/0106/" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 330px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 구축 문의하기
-                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 구축 문의하기 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
                                 <div>
                                     <a href="/menu/0109/" style="text-decoration: none;">
                                         <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 290px; height: 97px;">
-                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">BLOG 바로가기
-                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow"></span>
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">BLOG 바로가기 &nbsp;
+                                                <i class="fa-solid fa-arrow-down fa-rotate-by" style="color: #595757; --fa-rotate-angle: 230deg;"></i>
+{#                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow">#}
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -413,7 +434,7 @@
 </body>
 <script>
     $(window).scroll(function () {
-        var scroll = $(window).scrollTop();
+        let scroll = $(window).scrollTop();
         // console.log("현재 스크롤 위치: " + scroll + "px");
         if (scroll >= 950) { // 852px 스크롤을 지났을 때
             $(".navbar").addClass("white-background");
@@ -446,7 +467,7 @@
                 'box-shadow': '0 0 0 0',
             }).addClass('btn_selected');
 
-            var imgSrc = $(this).data('img-src');
+            let imgSrc = $(this).data('img-src');
             $('#bussiness_model').attr('src', imgSrc);
 
         })

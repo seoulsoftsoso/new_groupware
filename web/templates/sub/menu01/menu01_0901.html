@@ -55,6 +55,24 @@
         color: #6c757d;
     }
 
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width: 1000px;
+        }
+
+        .title-area {
+            padding-top: 10% !important;
+        }
+
+        .card-body {
+            padding-left: 5% !important;
+        }
+
+        .footer {
+            width: 1300px;
+        }
+    }
+
 </style>
 {% include 'menu.html' %}
 <body class="menu_story" style="overflow-x: hidden;">
@@ -71,7 +89,7 @@
                     </div>
                 </div>
 
-                <div class="card-body row justify-content-start" style="padding: 0 10% 0% 20%;">
+                <div class="title-area card-body row justify-content-start" style="padding: 0 10% 0% 20%;">
                     <div>
                         <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">Story</h1>
                         <h2 style="font-size: 26px; font-weight: 500; line-height: 35px; color: #898989;" id="createupdate">스토리 작성</h2>
@@ -95,7 +113,7 @@
                                     </select>
                                 </div>
                                 <div class="col-7 form-group px-0 m-0">
-                                    <label id="updateimage" for="story_picture" class="form-label">대표 이미지 ( *최적사이즈 404x219 )</label>
+                                    <label id="updateimage" for="story_picture" class="form-label">대표 이미지 ( *최적사이즈 404x219, 1MB이하 )</label>
                                     <input type="file" id="story_picture" name="story_picture" class="form-control"
                                            style="height:50px;" aria-label="Thumbnail">
                                     {% if story.thumbnail %}
@@ -163,23 +181,25 @@
         $(".menu_li > a").css("color", "#000");
 
         $('#summernote').summernote({
-            height: 300, // 에디터 높이
+            height: 800, // 에디터 높이
             width: 1200,
             minHeight: null, // 최소 높이
             maxHeight: null, // 최대 높이
             focus: true, // 에디터 로딩후 포커스를 맞출지 여부
             lang: 'ko-KR', // 한글 설정
+            tabDisable: true,
             toolbar: [
                 ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']]
             ],
         });
-
 
         $('#story-form').on('submit', function (e) {
             e.preventDefault();
@@ -212,6 +232,7 @@
                     }
                 },
                 error: function (xhr, status, error) {
+                    alert(xhr.responseText);
                     console.error('에러: ', xhr, status, error);
                     console.error(xhr.responseText);
                 }

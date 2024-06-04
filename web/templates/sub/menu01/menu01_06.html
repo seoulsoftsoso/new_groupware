@@ -40,6 +40,24 @@
         background-color: #EAEA73;
     }
 
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width: 1000px;
+        }
+
+        .contact_img {
+            margin: 8% 0 8% 8%;
+        }
+
+        .end-area {
+            margin-bottom: 10% !important;
+        }
+
+        .footer {
+            width: 1000px;
+        }
+    }
+
 </style>
 
 {% include 'menu.html' %}
@@ -58,7 +76,7 @@
                 </div>
 
                 <div class="row justify-content-start">
-                    <img src="{% static 'renewal/image/contact_img.jpg' %}" alt="contact_img" style="width: 864px; height: 960px;">
+                    <img class="contact_img" src="{% static 'renewal/image/contact_img.jpg' %}" alt="contact_img" style="width: 864px; height: 960px;">
 
                     <div style="padding: 1% 5% 0 5%">
                         <form class="needs-validation gform" id="gform" method="post"
@@ -167,7 +185,7 @@
                                               style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"
                                               required></textarea>
 
-                                    <div class="d-flex justify-content-between"
+                                    <div class="end-area d-flex justify-content-between"
                                          style="display: flex; align-items: center; margin: 2% 0 0 0;">
                                         <div>
                                             <input type="checkbox" id="agree" name="agree" style="margin-right: 5px;">

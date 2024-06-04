@@ -18,6 +18,11 @@
         position: relative;
     }
 
+    .menu_li_a {
+        font-size: 16px;
+        color:white;
+    }
+
     .submenu {
         display: none;
         position: absolute;
@@ -26,6 +31,7 @@
         background-color: white;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         z-index: 1000;
+        border-radius: 10px;
     }
 
     .menu_li:hover .submenu {
@@ -45,13 +51,33 @@
 
     .submenu li a:hover {
         background-color: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .navbar {
+        max-height: 68px;
+    }
+
+    @media (max-width: 1000px) {
+        .navbar {
+            max-height: 100px;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .menu_li_a {
+            font-size:24px;
+        }
+        .menu_li {
+            padding-left: 40px !important;
+            padding-right: 20px !important;
+        }
     }
 
 </style>
 
-<body id="page-top">
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top d-flex justify-content-center mx-0" id="topNav" style="max-height:68px;">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top d-flex justify-content-center mx-0" id="topNav" ">
     <div class="container d-flex justify-content-between px-2 px-lg-2 mx-0">
 
         <div class="main_logo d-flex">
@@ -63,7 +89,7 @@
         <div class="">
             <ul class="menu nav nav-pills">
                 <li class="menu_li">
-                    <a class="menu_li_a" style="font-size:16px; color:white;">기업정보</a>
+                    <a class="menu_li_a">기업정보</a>
                     <ul class="submenu">
                         <li><a href="/menu/0107/">ESG 경영</a></li>
                         <li><a href="/menu/0108/">사업영역</a></li>
@@ -71,7 +97,7 @@
                 </li>
 
                 <li class="menu_li">
-                    <a class="menu_li_a" style="font-size:16px; color:white;">서비스</a>
+                    <a class="menu_li_a">서비스</a>
                     <ul class="submenu">
                         <li><a href="/menu/0102/">MMS</a></li>
                         <li><a href="/menu/0103/">I.B.T</a></li>
@@ -80,7 +106,7 @@
                 </li>
 
                 <li class="menu_li">
-                    <a href="/menu/0109/" class="menu_li_a" style="font-size:16px;">스토리</a>
+                    <a href="/menu/0109/" class="menu_li_a">스토리</a>
                 </li>
             </ul>
         </div>
@@ -88,7 +114,7 @@
         <div class="">
             <ul class="menu nav nav-pills contact-us">
                 <li class="menu_li">
-                    <a href="/menu/0106/" class="menu_li_a" style="font-size:16px;">Contact Us</a>
+                    <a href="/menu/0106/" class="menu_li_a">Contact Us</a>
                 </li>
             </ul>
         </div>

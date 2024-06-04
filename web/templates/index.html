@@ -12,7 +12,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh; /* 또는 비디오 높이에 맞게 조정 */
+        height: 900px; /* 또는 비디오 높이에 맞게 조정 */
     }
 
     video {
@@ -34,18 +34,20 @@
         color: white;
         text-align: center;
         font-size: 42px;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
     }
 
     .new-text-overlay {
         position: absolute;
-        top: 180%;
+        top: 210%;
         left: 0;
         right: 0;
         bottom: 0;
         opacity: 0;
         color: white;
         text-align: center;
-        font-size: 34px;
+        font-size: 42px;
     }
 
     .white-background {
@@ -63,12 +65,12 @@
     /* 스크롤에 따라 나타나고 사라지는 효과 */
     .fadeIn {
         opacity: 1 !important;
-        transition: opacity 2s ease-in-out; /* 2초 동안 서서히 나타나는 효과 */
+        transition: opacity 1s ease-in-out; /* 2초 동안 서서히 나타나는 효과 */
     }
 
     .fadeOut {
         opacity: 0 !important;
-        transition: opacity 2s ease-in-out;
+        transition: opacity 1s ease-in-out;
     }
 
     .vertical-line {
@@ -76,207 +78,165 @@
         height: 100px;
         margin-top: 15px;
         margin-bottom: 15px;
-
     }
+
+    .sv-sub-title {
+        font-size: 28px;
+    }
+
+    .sv-desc {
+        font-size: 35px;
+    }
+
+
+    /* 반응형 설정 */
+    @media (max-width: 1000px) {
+        .text-overlay {
+            font-size: 34px;
+            top: 105%;
+        }
+
+        .new-text-overlay {
+            font-size: 34px;
+            top: 130%;
+        }
+
+        .scroll-section {
+            height: 3000px;
+        }
+
+        video {
+            height: 2000px; /* 비디오의 높이를 자동으로 조절하여 비율 유지 */
+            object-fit: cover; /* 비디오가 컨테이너에 맞도록 비율을 유지하며 채움 */
+        }
+
+        .sv-sub-title {
+            font-size: 20px;
+        }
+
+        .sv-desc {
+            font-size: 28px;
+        }
+    }
+
 </style>
 <!--menu 로드-->
 {% include 'menu.html' %}
 
 <body class="menu_main">
-    <div class="layout-container">
-        <div class="layout-page" id="layout_page">
-            <!-- Content wrapper -->
-            <div class="content-wrapper">
-                <!-- Content -->
-                <div class="flex-grow-1 container-p-y">
-                    <video src="{% static 'renewal/video/main_video.mov' %}" autoplay muted loop></video>
-                    <div class="text-overlay d-flex d-md-block justify-content-center" id="textOverlay">
-                        <span id="oldText1"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">어려운 것을 쉽게 바꾸는 것</b></span><br/>
-                        <span id="oldText2"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">편안함을 넘어 단순함이 되다</b></span>
+<div class="layout-container">
+    <div class="layout-page" id="layout_page">
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+            <!-- Content -->
+            <div class="flex-grow-1 container-p-y">
+                <video src="{% static 'renewal/video/main_video.mov' %}" autoplay muted loop></video>
+                <div class="text-overlay d-flex d-md-block justify-content-center" id="textOverlay">
+                    <span id="oldText1"><b
+                            style="text-shadow: 0 0 4px rgba(0, 0, 0, 0.35);">어려운 것을 쉽게 바꾸는 것</b></span><br/>
+                    <span id="oldText2"><b style="text-shadow: 0 0 4px rgba(0, 0, 0, 0.35);">편안함을 넘어 단순함이 되다</b></span>
+                </div>
+            </div>
+
+            <div class="scroll-section">
+                <div class="new-text-overlay justify-content-center">
+                    <span><b style="text-shadow: 0 0 4px rgba(0, 0, 0, 0.35);">기업 전체의 자원을 효율적으로 사용하는</b></span><br/>
+                    <span><b style="text-shadow: 0 0 4px rgba(0, 0, 0, 0.35);">라이프 스타일 맞춤형 서비스</b></span><br/>
+                    <span style="margin-top: -5px;"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">누구나 구축할 수 있는 지속 가능한 미래,</b></span><br/>
+                    <br/>
+                    <span><b style="text-shadow: 0 0 4px rgba(0, 0, 0, 0.35);">서울소프트가 함께합니다.</b></span>
+                </div>
+            </div>
+
+            <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
+                 style="background-color: #f6f6f6; height: 460px">
+                <div class="col-10 row justify-content-center service_div">
+                    <span style="color: #B5B6B6; font-size: 42px; font-weight: 600; line-height: 50px;">Service</span>
+                </div>
+            </div>
+
+            <!-- MMS -->
+            <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
+                 style="background-color: #f6f6f6; margin: -10% 0 0 0;">
+                <div class="row justify-content-center">
+                    <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
+                         style="margin-bottom: 5%;">
+                        <div class="col-lg-5 col-md-6 col-sm-12">
+                            <h3 class="sv-sub-title" style="color: rgba(103, 103, 103, 1); font-weight: 500;">이동 자산 운영
+                                End to End</h3>
+                            <h2 style="color: #fd7900; font-size: 54px; font-weight: 600">MMS</h2>
+                            <div class="vertical-line"></div>
+                            <span class="sv-desc"
+                                  style="color: #000; font-weight: 600; line-height: 41px;">시너지를 극대화하는<br/>
+                            단 하나의 전략 모빌리티 비즈니스<br/>
+                            Core Platform<br/></span>
+                            <a href="/menu/0102/"><img class="mt-3" src="/static/renewal/image/main/mms_btn.png"
+                                                       width="17%;"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <img src="/static/renewal/image/main/mms_img.jpg" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
+                        <img src="/static/renewal/image/main/mms_bottom2.png" width="100%">
                     </div>
                 </div>
+            </div>
 
-                <div class="scroll-section">
-                     <div class="new-text-overlay justify-content-center" style="display: none;">
-                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">기업 전체의 자원을 효율적으로 사용하는</b></span><br/>
-                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">라이프 스타일 맞춤형 서비스</b></span><br/>
-                        <span style="margin-top: -5px;"><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">누구나 구축할 수 있는 지속 가능한 미래,</b></span><br/>
-                         <br/>
-                        <span><b style="text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);">서울소프트와 함께합니다.</b></span>
+            <!-- IBT -->
+            <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
+                 style="background-color: #f6f6f6;">
+                <div class="row justify-content-center">
+                    <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
+                         style="margin-bottom: 5%;">
+                        <div class="col-lg-5 col-md-6 col-sm-12">
+                            <h3 class="sv-sub-title" style="color: rgba(103, 103, 103, 1); font-weight: 500;">Smart
+                                Farm을
+                                활용한 순환 모델 구축</h3>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 54px; font-weight: 600">I.B.T</h2>
+                            <h2 style="color: rgba(61, 23, 15, 1); font-size: 34px; font-weight: 600">(Integrative
+                                Bio Technology)</h2>
+                            <div class="vertical-line"></div>
+                            <span class="sv-desc"
+                                  style="color: #000; font-weight: 600; line-height: 41px;">수익 보장형 스마트팜<br/>
+                            BUTTON 플랫폼을 통한<br/>바이오 융합 생태계 조성<br/></span>
+                            <a href="/menu/0103/"><img class="mt-3" src="/static/renewal/image/main/ibt_btn.png"
+                                                       width="17%"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <img src="/static/renewal/image/main/ibt_img.png" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
+                        <img src="/static/renewal/image/main/ibt_bottom2.png" width="100%">
                     </div>
                 </div>
+            </div>
 
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0" style="background-color: #f6f6f6; height: 460px">
-                    <div class="col-10 row justify-content-center service_div">
-                        <span style="color: #B5B6B6; font-size: 42px; font-weight: 600; line-height: 50px;">Service</span>
+            <!-- MES -->
+            <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
+                 style="background-color: #f6f6f6;">
+                <div class="row justify-content-center">
+                    <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
+                         style="margin-bottom: 5%;">
+                        <div class="col-lg-5 col-md-6 col-sm-12">
+                            <h3 class="sv-sub-title" style="color: rgba(103, 103, 103, 1); font-weight: 500;">Cloud 기반
+                                통합 생산관리</h3>
+                            <h2 style="color: rgba(178, 22, 22, 1); font-size: 54px; font-weight: 600">MES</h2>
+                            <div class="vertical-line"></div>
+                            <span class="sv-desc" style="color: #000; font-weight: 600; line-height: 41px;">데이터 실시간 수집 및 분석으로</br>
+                                생산효율 55% 극대화 및<br/>불량률 18% 감소<br/></span>
+                            <a href="/menu/0101/"><img class="mt-3"
+                                                       src="/static/renewal/image/main/mes_btn.png"></a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <img src="/static/renewal/image/main/mes_img.png" style="width: 100%">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
+                        <img src="/static/renewal/image/main/mes_bottom2.png" width="100%">
                     </div>
                 </div>
-
-                <!-- MMS -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class="row justify-content-center">
-                        <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
-                             style="margin-bottom: 2%;">
-                            <div class="col-lg-5 col-md-6 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px; font-weight: 500;">이동 자산 운영
-                                    End to End</h3>
-                                <h2 style="color: #fd7900; font-size: 54px; font-weight: 600">MMS</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">시너지를 극대화하는</h2>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">Core Platform</h2>
-                                <a href="/menu/0102/"><img class="mt-3" src="/static/renewal/image/main/mms_btn.png"
-                                                           width="17%;"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <img src="/static/renewal/image/main/mms_img.jpg" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/mms_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IBT -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class="row justify-content-center">
-                        <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
-                             style="margin-bottom: 2%;">
-                            <div class="col-lg-5 col-md-6 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Smart Farm을
-                                    활용한 순환 모델 구축</h3>
-                                <h2 style="color: rgba(61, 23, 15, 1); font-size: 54px; font-weight: 600">I.B.T</h2>
-                                <h2 style="color: rgba(61, 23, 15, 1); font-size: 34px; font-weight: 600">(Integrative
-                                    Bio Technology)</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">수익 보장형 스마트팜</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">바이오 융합 생태계 조성</h2>
-                                <a href="/menu/0103/"><img class="mt-3" src="/static/renewal/image/main/ibt_btn.png"
-                                                           width="17%"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <img src="/static/renewal/image/main/ibt_img.png" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/ibt_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MES -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class="row justify-content-center">
-                        <div class="row col-lg-8 col-md-10 col-sm-12 justify-content-between"
-                             style="margin-bottom: 2%;">
-                            <div class="col-lg-5 col-md-6 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Cloud 기반 통합
-                                    생산관리</h3>
-                                <h2 style="color: rgba(178, 22, 22, 1); font-size: 54px; font-weight: 600">MES</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">생산효율 55% 극대화 및</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">불량률 18% 감소</h2>
-                                <a href="/menu/0101/"><img class="mt-3"
-                                                           src="/static/renewal/image/main/mes_btn.png"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <img src="/static/renewal/image/main/mes_img.png" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/mes_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>
-
-
-
-                {% comment %}<!-- MMS -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class=" row justify-content-center">
-                        <div class="row col-8 justify-content-between" style="margin: 0 0 5% 0;">
-                            <div class="col-lg-5 col-md-4 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px; font-weight: 500;">이동 자산 운영
-                                    End to End</h3>
-                                <h2 style="color: #fd7900; font-size: 54px; font-weight: 600">MMS</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">시너지를 극대화하는</h2>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">단 하나의 전략 모빌리티 비즈니스</h2>
-                                <h2 style="color: #000; font-size: 35px; font-weight: 600;">Core Platform</h2>
-                                <a href="/menu/0102/"><img class="mt-3" src="/static/renewal/image/main/mms_btn.png"
-                                                           width="17%;"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-8 col-sm-12">
-                                <img src="/static/renewal/image/main/mms_img.jpg" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/mms_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IBT -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class="row justify-content-center">
-                        <div class="row col-8 justify-content-between" style="margin: 0 0 5% 0;">
-                            <div class="col-lg-5 col-md-4 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Smart Farm을
-                                    활용한 순환 모델 구축</h3>
-                                <h2 style="color: rgba(61, 23, 15, 1); font-size: 54px; font-weight: 600">I.B.T</h2>
-                                <h2 style="color: rgba(61, 23, 15, 1); font-size: 34px; font-weight: 600">(Integrative
-                                    Bio Technology)</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">수익 보장형 스마트팜</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">BUTTON 플랫폼을 통한</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">바이오 융합 생태계 조성</h2>
-                                <a href="/menu/0103/"><img class="mt-3" src="/static/renewal/image/main/ibt_btn.png"
-                                                           width="17%"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-8 col-sm-12">
-                                <img src="/static/renewal/image/main/ibt_img.png" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/ibt_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- MES -->
-                <div class="container-fluid d-flex flex-grow-1 container-p-y section px-0"
-                     style="background-color: #f6f6f6;">
-                    <div class="row justify-content-center">
-                        <div class="row col-8 justify-content-between" style="margin: 0 0 5% 0;">
-                            <div class="col-lg-5 col-md-4 col-sm-12">
-                                <h3 style="color: rgba(103, 103, 103, 1); font-size: 28px;font-weight: 500;">Cloud 기반 통합
-                                    생산관리</h3>
-                                <h2 style="color: rgba(178, 22, 22, 1); font-size: 54px; font-weight: 600">MES</h2>
-                                <div class="vertical-line"></div>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">데이터 실시간 수집 및 분석으로</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">생산효율 55% 극대화 및</h2>
-                                <h2 style="color: #000;font-size: 35px;font-weight: 600;">불량률 18% 감소</h2>
-                                <a href="/menu/0101/"><img class="mt-3"
-                                                           src="{% static 'renewal/image/main/mes_btn.png' %}"></a>
-                            </div>
-                            <div class="col-lg-6 col-md-8 col-sm-12">
-                                <img src="/static/renewal/image/main/mes_img.png" style="width: 100%">
-                            </div>
-                        </div>
-                        <div class="col-lg-7 col-md-10 col-sm-12 row justify-content-center">
-                            <img src="/static/renewal/image/main/mes_bottom2.png" width="100%">
-                        </div>
-                    </div>
-                </div>{% endcomment %}
             </div>
         </div>
     </div>
@@ -286,12 +246,23 @@
 
 <script>
 
-    $(document).ready(function () {
-        const video = document.querySelector("video");
-        const videoHeight = 2000; // 비디오를 고정할 높이
+{% comment %}    $(document).ready(function () {
+        let video = document.querySelector("video");
+        let videoHeight = 2000; // 비디오를 고정할 높이
+
+        if (window.innerWidth <= 1000) {
+            videoHeight = 4500; // 작은 화면에서 고정 높이
+        }
+
+        setTimeout(function () {
+            $('.text-overlay').addClass('fadeIn');
+        }, 500);
 
         $(window).scroll(function () {
-            if (window.scrollY < videoHeight) {
+            let scrollY = window.scrollY;
+            console.log(scrollY);
+
+            if (scrollY < videoHeight) {
                 video.style.position = 'fixed';
                 video.style.top = '0';
             } else {
@@ -299,19 +270,102 @@
                 video.style.top = videoHeight + 'px';
             }
 
-            if ($(window).scrollTop() >= 900) {
-                $('.new-text-overlay').show()
-                $('.new-text-overlay').addClass('fadeIn').removeClass('fadeOut');
+            let isScrolling = false;
+
+            window.addEventListener('wheel', function (event) {
+                if (isScrolling) {
+                    event.preventDefault();
+                    return;
+                }
+
+                let currentScroll = window.scrollY;
+                let viewportHeight = window.innerHeight;
+
+                // 스크롤 다운
+                if (event.deltaY > 0) {
+                    // 1구간: window.scrollY <= viewportHeight (첫 화면)
+                    if (currentScroll <= viewportHeight) {
+                        isScrolling = true;
+                        window.scrollTo({
+                            top: 1600,
+                            behavior: 'smooth'
+                        });
+                        setTimeout(() => {
+                            isScrolling = false;
+                        }, 1000); // 스크롤 제한 해제
+                        event.preventDefault();
+                    }
+                    // 2구간: viewportHeight < window.scrollY <= 2 * viewportHeight (두 번째 화면)
+                    else if (currentScroll > viewportHeight && currentScroll <= viewportHeight * 2) {
+                        isScrolling = true;
+                        window.scrollTo({
+                            top: viewportHeight * 3, // 3구간으로 이동
+                            behavior: 'smooth'
+                        });
+                        setTimeout(() => {
+                            isScrolling = false;
+                        }, 1000); // 스크롤 제한 해제
+                        event.preventDefault();
+                    }
+                }
+                // 스크롤 업
+                else if (event.deltaY < 0) {
+                    // 3구간: window.scrollY > 2 * viewportHeight (세 번째 화면)
+                    if (currentScroll > viewportHeight * 2) {
+                        isScrolling = true;
+                        window.scrollTo({
+                            top: 1600, // 2구간으로 이동
+                            behavior: 'smooth'
+                        });
+                        setTimeout(() => {
+                            isScrolling = false;
+                        }, 1000); // 스크롤 제한 해제
+                        event.preventDefault();
+                    }
+                    // 2구간: viewportHeight < window.scrollY <= 2 * viewportHeight (두 번째 화면)
+                    else if (currentScroll > viewportHeight && currentScroll <= viewportHeight * 2) {
+                        isScrolling = true;
+                        window.scrollTo({
+                            top: 0, // 1구간으로 이동
+                            behavior: 'smooth'
+                        });
+                        setTimeout(() => {
+                            isScrolling = false;
+                        }, 1000); // 스크롤 제한 해제
+                        event.preventDefault();
+                    }
+                }
+            }, {passive: false});
+
+            if (window.innerWidth < 1000) {
+                if (scrollY >= 0) {
+                    $('.text-overlay').addClass('fadeIn').removeClass('fadeOut');
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                } if (scrollY > 50) {
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                } if (scrollY > 100) {
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                } if (scrollY > 1800) {
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
             } else {
-                $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                if (scrollY >= 0) {
+                    $('.text-overlay').addClass('fadeIn').removeClass('fadeOut');
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                } if (scrollY > 500) {
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                } if (scrollY > 2000) {
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
             }
-        });
 
-        $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
-            var triggerPoint = $('.scroll-section').offset().top + $('.scroll-section').outerHeight();
+            let triggerPoint = $('.scroll-section').offset().top + $('.scroll-section').outerHeight() - 20;
+            // console.log("triggerPoint", triggerPoint);
 
-            if (scroll >= triggerPoint) {
+            if (scrollY >= triggerPoint) {
                 $(".navbar").addClass("white-background");
                 $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
                 $(".menu_li > a").css("color", "#000");
@@ -323,5 +377,138 @@
         });
     });
 
+    {% endcomment %}
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let video = document.querySelector("video");
+        let textOverlay = document.querySelector('.text-overlay');
+        let newTextOverlay = document.querySelector('.new-text-overlay');
+        let viewportHeight = window.innerHeight;
+        let videoHeight = 2000;
+        let isScrolling = false;
+
+        if (window.innerWidth <= 1000) {
+            videoHeight = 4500;
+        }
+
+        // 초기 상태 설정
+        setTimeout(function () {
+            textOverlay.classList.add('fadeIn');
+        }, 500);
+
+        window.addEventListener('scroll', function () {
+            let scrollY = window.scrollY;
+
+            if (scrollY < videoHeight) {
+                video.style.position = 'fixed';
+                video.style.top = '0';
+            } else {
+                video.style.position = 'absolute';
+                video.style.top = videoHeight + 'px';
+            }
+
+
+            if (window.innerWidth < 1000) {
+                if (scrollY >= 0) {
+                    $('.text-overlay').addClass('fadeIn').removeClass('fadeOut');
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
+                if (scrollY > 50) {
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                }
+                if (scrollY > 100) {
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                }
+                if (scrollY > 1800) {
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
+            } else {
+                if (scrollY >= 0) {
+                    $('.text-overlay').addClass('fadeIn').removeClass('fadeOut');
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
+                if (scrollY > 500) {
+                    $('.new-text-overlay').show().addClass('fadeIn').removeClass('fadeOut');
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
+                if (scrollY > 2000) {
+                    $('.new-text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                    $('.text-overlay').addClass('fadeOut').removeClass('fadeIn');
+                }
+            }
+
+            let triggerPoint = document.querySelector('.scroll-section').offsetTop + document.querySelector('.scroll-section').offsetHeight - 20;
+            if (scrollY >= triggerPoint) {
+                document.querySelector(".navbar").classList.add("white-background");
+                document.querySelector(".main_logo img").src = "{% static 'renewal/image/logo_A.png' %}";
+                document.querySelectorAll(".menu_li > a").forEach(function (el) {
+                    el.style.color = "#000";
+                });
+            } else {
+                document.querySelector(".navbar").classList.remove("white-background");
+                document.querySelector(".main_logo img").src = "{% static 'renewal/image/logo_B.png' %}";
+                document.querySelectorAll(".menu_li > a").forEach(function (el) {
+                    el.style.color = "#fff";
+                });
+            }
+        });
+
+        window.addEventListener('wheel', function (event) {
+            if (isScrolling) {
+                event.preventDefault();
+                return;
+            }
+
+            let currentScroll = window.scrollY;
+            console.log(currentScroll);
+
+            if (event.deltaY > 0) {
+                if (currentScroll <= viewportHeight) {
+                    isScrolling = true;
+                    window.scrollTo({
+                        top: 1600,
+                        behavior: 'smooth'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000);
+                    event.preventDefault();
+                } else if (currentScroll > viewportHeight && currentScroll <= viewportHeight * 2) {
+                    isScrolling = true;
+                    window.scrollTo({
+                        top: viewportHeight * 3,
+                        behavior: 'smooth'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000);
+                    event.preventDefault();
+                }
+            } else if (event.deltaY < 0) {
+                if (currentScroll === viewportHeight * 3) {
+                    isScrolling = true;
+                    window.scrollTo({
+                        top: 1600,
+                        behavior: 'smooth'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000);
+                    event.preventDefault();
+                } else if (currentScroll > viewportHeight && currentScroll <= viewportHeight * 2) {
+                    isScrolling = true;
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000);
+                    event.preventDefault();
+                }
+            }
+        }, { passive: false });
+    });
 </script>
 
