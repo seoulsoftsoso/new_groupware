@@ -91,7 +91,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 ROOT_URLCONF = 'seoulsoft_mes.urls'
 
 # 로그아웃 성공 시 자동으로 이동할 URL
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'
 
 TEMPLATES = [
     {
@@ -231,8 +231,7 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 
 # url
-# MEDIA_URL = 'http://127.0.0.1:8000/data/'
-# MEDIA_URL = 'http://192.168.0.122:8270/data/'  # For debug
+# MEDIA_URL = 'http://175.212.116.77:2000/data/'  # For debug
 MEDIA_URL = 'http://www.seoulsoft.kr/data/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'data')
 
