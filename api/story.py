@@ -36,7 +36,7 @@ class StoryCreateView(View):
             return JsonResponse({"message": "스토리가 등록되었습니다."}, status=201)
         else:
             # 디버깅을 위해 폼 에러를 로그에 출력
-            print(form.errors)
+            # print(form.errors)
             return JsonResponse({"errors": form.errors}, status=400)
 
 
@@ -121,11 +121,11 @@ class Story_update(View):
                 return JsonResponse({"message": "스토리가 수정되었습니다."}, status=200)
             except DatabaseError as e:
                 # 디버깅을 위해 에러를 로그에 출력
-                print(f"DatabaseError: {e}")
+                # print(f"DatabaseError: {e}")
                 return JsonResponse({"error": "데이터베이스 오류가 발생했습니다. 관리자에게 문의하세요."}, status=500)
         else:
             # 디버깅을 위해 폼 에러를 로그에 출력
-            print(form.errors)
+            # print(form.errors)
             return JsonResponse({"errors": form.errors}, status=400)
 
 
