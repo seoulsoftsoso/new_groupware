@@ -191,14 +191,23 @@
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
+                ['fontstyle', ['fontname', 'fontsize', 'color']],
+                ['para', ['paragraph']],
+                {#['para', ['ul', 'ol', 'paragraph']],#}
                 ['height', ['height']],
                 ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
+                ['insert', ['hr', 'link', 'picture', 'video']],
+                ['view', ['help']]
+                {#['view', ['fullscreen', 'codeview', 'help']]#}
             ],
+            callbacks: {
+                onInit: function () {
+                    // 'More Color' 드롭다운 버튼을 제외한 모든 'note-icon-caret' 요소 제거
+                    $('.note-icon-caret').not(function () {
+                        return $(this).closest('button[aria-label="More Color"]').length;
+                    }).remove();
+                }
+            }
         });
 
         $('#story-form').on('submit', function (e) {
