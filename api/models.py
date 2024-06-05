@@ -185,6 +185,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
                                       verbose_name='근무지')
     report_auth = models.CharField(max_length=1, null=True, verbose_name='주간업무보고권한설정') #M : 피보고자(팀장), E: 보고자(팀원), C: CEO
+    story_admin = models.BooleanField(default=0, verbose_name='스토리관리자')
 
 
     def __str__(self):
@@ -526,3 +527,4 @@ class StoryMaster(models.Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='story_updated_by')
     created_at = models.DateField(auto_now_add=True, verbose_name='최초 작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종 작성일')
+    views = models.PositiveIntegerField(default=0)

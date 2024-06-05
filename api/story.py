@@ -58,6 +58,9 @@ class Story_read(View):
 
         story_id = request.GET.get('story_id', '')
         if story_id:
+            story = get_object_or_404(StoryMaster, id=story_id)
+            story.views += 1  # 조회수 증가
+            story.save()
             qs = qs.filter(id=story_id)
 
         if _page == '' or _size == '':
@@ -157,4 +160,5 @@ def get_obj(obj):
         'updated_by': obj.updated_by.username if obj.updated_by is not None else '',
         'created_at': obj.created_at if obj.created_at is not None else '',
         'updated_at': obj.updated_at if obj.updated_at is not None else '',
+        'views': obj.views
     }

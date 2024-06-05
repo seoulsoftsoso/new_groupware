@@ -24,7 +24,7 @@
         <div class="w-px-400 mx-auto">
             <!-- Logo -->
             <div class="app-brand mb-5">
-                <a href="#" class="app-brand-link gap-2">
+                <a href="/" class="app-brand-link gap-2">
                     <span class="app-brand-text demo text-body fw-bold">
                         <img src="{% static 'img/logo.jpg' %}">
                     </span>
@@ -172,6 +172,7 @@
                 setCookie('username', data.user.username, 7);
                 setCookie('user_id', data.user.id, 7);
                 setCookie('is_superuser', data.is_superuser ? '1' : '0', 7);
+                setCookie('story_admin', data.story_admin ? '1' : '0', 7);
 
                 successCallback();
             },
@@ -201,14 +202,15 @@
                     username: getCookie('username'),
                     user_id: getCookie('user_id'),
                     token: getCookie('Authorization'),
-                    is_superuser: getCookie('is_superuser') === '1'
+                    is_superuser: getCookie('is_superuser'),
+                    story_admin: getCookie('story_admin'),
                 };
 
-{% comment %}                console.log("로그인 정보:");
+                console.log("로그인 정보:");
                 console.log("username:", loginInfo.username || "정보가 없습니다");
                 console.log("user_id:", loginInfo.user_id || "정보가 없습니다");
                 console.log("token:", loginInfo.token || "정보가 없습니다");
-                console.log("is_superuser:", loginInfo.is_superuser ? "슈퍼유저 권한 있음" : "슈퍼유저 권한 없음");{% endcomment %}
+                console.log("is_superuser:", loginInfo.is_superuser ? "슈퍼유저 권한 있음" : "슈퍼유저 권한 없음");
 
                 window.location.href = "/admins/index";
             },

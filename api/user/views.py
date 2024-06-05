@@ -31,5 +31,6 @@ class CustomObtainAuthToken(ObtainAuthToken):
         return Response({
             'user': UserMasterSerializer(user).data,
             'token': token.key,
-            'is_superuser': user.is_superuser
+            'is_superuser': user.is_superuser,
+            'story_admin': user.story_admin,
         }, status=status.HTTP_200_OK)

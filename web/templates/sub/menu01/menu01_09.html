@@ -68,7 +68,7 @@
         color: #898989;
         font-size: 22px;
         font-weight: 400;
-        padding: 5% 0 0 0;
+        padding: 20px 0 0 0;
     }
 
     .story-image-size {
@@ -197,6 +197,7 @@
 
     let defaultImageUrl = "{% static 'renewal/image/story_default.png' %}";
     let story_category_sch = 0;
+    let loginInfo = {};
 
     // Pagination Set Start
     let a_nation_data = {
@@ -225,6 +226,45 @@
         load_story();
     })
 
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function getLoginInfo() {
+            loginInfo = {
+                username: getCookie('username'),
+                user_id: getCookie('user_id'),
+                token: getCookie('Authorization'),
+                is_superuser: getCookie('is_superuser'),
+                story_admin: getCookie('story_admin'),
+            };
+            return loginInfo;
+        }
+
+        function displayLoginInfo() {
+            let loginInfo = getLoginInfo();
+            console.log("로그인 정보:");
+            for (let key in loginInfo) {
+                if (loginInfo[key]) {
+                    console.log(`${key}: ${loginInfo[key]}`);
+                } else {
+                    console.log(`${key}: 정보가 없습니다`);
+                }
+            }
+        }
+
+        displayLoginInfo();
+
+        if (loginInfo.story_admin === '1') {
+            document.getElementById("story_create_btn").classList.remove("d-none");
+        }
+    });
+
     function load_story() {
         let query = "?page=" + a_nation.page + "&page_size=" + a_nation_data.page_size;
         query += "&story_category_sch=" + story_category_sch;
@@ -241,14 +281,14 @@
     }
 
     function displayStories(stories) {
-        const container = document.getElementById('story_content');
+        let container = document.getElementById('story_content');
         container.innerHTML = ''; // 기존 내용을 지웁니다.
 
         stories.forEach(story => {
-            const storyItem = document.createElement('div');
+            let storyItem = document.createElement('div');
             storyItem.className = 'story-item';
 
-            const storyImage = document.createElement('img');
+            let storyImage = document.createElement('img');
             storyImage.src = story.story_picture ? story.story_picture : defaultImageUrl;
             storyImage.className = 'story-image-size';
             storyImage.style.cursor = 'pointer';
@@ -257,21 +297,32 @@
                 window.location.href = `/menu/010902?story_id=${story.id}`;
             };
 
-            const storyContent = document.createElement('div');
+            let storyContent = document.createElement('div');
             storyContent.className = 'story-content';
             storyContent.style.cursor = 'pointer';
             storyContent.onclick = () => {
                 window.location.href = `/menu/010902?story_id=${story.id}`;
             };
 
-            const cateDate = document.createElement('div');
+            let cateDate = document.createElement('div');
             cateDate.className = 'catedate';
             cateDate.innerHTML = `${story.story_category} &nbsp; | &nbsp; ${story.created_at}`;
 
-            const storyTitle = document.createElement('div');
+            let viewsDiv = document.createElement('span');
+            if (loginInfo.story_admin === '1') {
+                viewsDiv.className = '';
+            } else {
+                viewsDiv.className = 'd-none';
+            }
+            viewsDiv.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-eye fa-xs"></i> ${story.views}`;
+
+
+
+            cateDate.appendChild(viewsDiv);
+
+            let storyTitle = document.createElement('div');
             storyTitle.className = 'story-title px-0';
             storyTitle.innerText = story.story_title;
-
 
             storyContent.appendChild(cateDate);
             storyContent.appendChild(document.createElement('br'));
@@ -285,12 +336,12 @@
     }
 
     function renderPagination(stories) {
-        const pagination = document.getElementById('pagination');
+        let pagination = document.getElementById('pagination');
         pagination.innerHTML = '';
 
         let total_pages = Math.ceil(stories.count / a_nation_data.page_size);
 
-        const prevPage = document.createElement('span');
+        let prevPage = document.createElement('span');
         prevPage.className = 'page-item';
         prevPage.innerHTML = '&lt;';
         if (a_nation.page === 1) {
@@ -304,7 +355,7 @@
         pagination.appendChild(prevPage);
 
         for (let i = 1; i <= total_pages; i++) {
-            const pageItem = document.createElement('span');
+            let pageItem = document.createElement('span');
             pageItem.className = 'page-item';
             pageItem.innerText = i;
             if (i === a_nation.page) {
@@ -317,7 +368,7 @@
             pagination.appendChild(pageItem);
         }
 
-        const nextPage = document.createElement('span');
+        let nextPage = document.createElement('span');
         nextPage.className = 'page-item';
         nextPage.innerHTML = '&gt;';
         if (a_nation.page === total_pages) {
@@ -330,49 +381,5 @@
         }
         pagination.appendChild(nextPage);
     }
-
-
-
-
-
-    $(document).ready(function () {
-        function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
-
-        function getLoginInfo() {
-            const loginInfo = {
-                username: getCookie('username'),
-                user_id: getCookie('user_id'),
-                token: getCookie('Authorization'),
-                is_superuser: getCookie('is_superuser') === 'true'
-            };
-            return loginInfo;
-        }
-
-        function displayLoginInfo() {
-            const loginInfo = getLoginInfo();
-            console.log("로그인 정보:");
-            for (let key in loginInfo) {
-                if (loginInfo[key]) {
-                    console.log(`${key}: ${loginInfo[key]}`);
-                } else {
-                    console.log(`${key}: 정보가 없습니다`);
-                }
-            }
-        }
-
-        // displayLoginInfo();
-
-        let user_id = getCookie('user_id')
-        let allowed_ids = ['1111', '3227', '3189', '3186'];
-
-        if (allowed_ids.includes(user_id)) {
-            document.getElementById("story_create_btn").classList.remove("d-none");
-        }
-    });
 
 </script>

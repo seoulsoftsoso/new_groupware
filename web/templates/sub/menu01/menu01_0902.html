@@ -27,8 +27,8 @@
         margin-bottom: auto;
         margin-left: auto;
         margin-right: auto;
-        width: auto !important;
-        max-width: 950px !important;
+        width: 900px !important;
+        max-width: 900px !important;
         height: auto !important;
         max-height: 520px !important;
         object-fit: cover !important;
@@ -49,8 +49,8 @@
         }
 
         .story_content {
-            margin-left: 5% !important;
-            margin-right: 5% !important;
+            margin-left: 15% !important;
+            margin-right: 15% !important;
         }
 
         .footer {
@@ -83,8 +83,8 @@
                         <div class="row justify-content-center">
                             <img class="story_picture" style="margin: 0 0 5% 0;">
                         </div>
-                        <div class="story_content row justify-content-center" style="padding-left: 15%; padding-right: 15%;">
-                            <div class="col-12" id="story_content"></div>
+                        <div class="story_content row justify-content-start" style="width:900px;">
+                            <div class="col-12 px-0" id="story_content"></div>
                         </div>
                         <div class="footer d-flex justify-content-center" style="margin: 10% 0 10% 0">
                             <a href="/menu/0109" class="btn btn-secondary mx-4"
@@ -117,6 +117,47 @@
     let defaultImageUrl = "{% static 'renewal/image/story_default.png' %}";
     let urlParams = new URLSearchParams(window.location.search);
     let storyId = urlParams.get('story_id');
+    let loginInfo = {};
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function getLoginInfo() {
+            loginInfo = {
+                username: getCookie('username'),
+                user_id: getCookie('user_id'),
+                token: getCookie('Authorization'),
+                is_superuser: getCookie('is_superuser'),
+                story_admin: getCookie('story_admin'),
+            };
+            return loginInfo;
+        }
+
+        function displayLoginInfo() {
+            let loginInfo = getLoginInfo();
+            // console.log("로그인 정보:");
+            for (let key in loginInfo) {
+                if (loginInfo[key]) {
+                    // console.log(`${key}: ${loginInfo[key]}`);
+                } else {
+                    // console.log(`${key}: 정보가 없습니다`);
+                }
+            }
+        }
+
+        displayLoginInfo();
+
+        if (loginInfo.story_admin === '1') {
+            document.getElementById("story_update_btn").classList.remove("d-none");
+            document.getElementById("story_delete_btn").classList.remove("d-none");
+        }
+    });
 
     if (storyId) {
         api_gp("/story/story_read/?story_id=" + storyId, "get", {}, (stories) => {
@@ -163,46 +204,5 @@
             });
         }
     }
-
-    $(document).ready(function () {
-        function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
-
-        function getLoginInfo() {
-            const loginInfo = {
-                username: getCookie('username'),
-                user_id: getCookie('user_id'),
-                token: getCookie('Authorization'),
-                is_superuser: getCookie('is_superuser') === 'true'
-            };
-            return loginInfo;
-        }
-
-        function displayLoginInfo() {
-            const loginInfo = getLoginInfo();
-            console.log("로그인 정보:");
-            for (let key in loginInfo) {
-                if (loginInfo[key]) {
-                    console.log(`${key}: ${loginInfo[key]}`);
-                } else {
-                    console.log(`${key}: 정보가 없습니다`);
-                }
-            }
-        }
-
-        // displayLoginInfo();
-
-        let user_id = getCookie('user_id')
-        let allowed_ids = ['1111', '3227', '3189', '3186'];
-
-        if (allowed_ids.includes(user_id)) {
-            document.getElementById("story_update_btn").classList.remove("d-none");
-            document.getElementById("story_delete_btn").classList.remove("d-none");
-        }
-    });
 
 </script>
