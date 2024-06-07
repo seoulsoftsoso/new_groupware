@@ -212,7 +212,10 @@
                 console.log("token:", loginInfo.token || "정보가 없습니다");
                 console.log("is_superuser:", loginInfo.is_superuser ? "슈퍼유저 권한 있음" : "슈퍼유저 권한 없음");
 
-                window.location.href = "/admins/index";
+                let urlParams = new URLSearchParams(window.location.search);
+                let nextUrl = urlParams.get('next') || '/admins/index/';
+
+                window.location.href = nextUrl;
             },
             handle_error,
             (xhr, status) => {

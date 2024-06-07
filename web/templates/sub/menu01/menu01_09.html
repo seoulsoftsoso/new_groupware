@@ -248,12 +248,12 @@
 
         function displayLoginInfo() {
             let loginInfo = getLoginInfo();
-            console.log("로그인 정보:");
+            {#console.log("로그인 정보:");#}
             for (let key in loginInfo) {
                 if (loginInfo[key]) {
-                    console.log(`${key}: ${loginInfo[key]}`);
+                    {#console.log(`${key}: ${loginInfo[key]}`);#}
                 } else {
-                    console.log(`${key}: 정보가 없습니다`);
+                    {#console.log(`${key}: 정보가 없습니다`);#}
                 }
             }
         }
@@ -270,7 +270,7 @@
         query += "&story_category_sch=" + story_category_sch;
 
         api_gp("/story/story_read/" + query, "get", {}, (stories) => {
-            // console.log(stories);
+            console.log(stories);
 
             let data = stories.results;
             displayStories(data);
@@ -307,18 +307,8 @@
             let cateDate = document.createElement('div');
             cateDate.className = 'catedate';
             cateDate.innerHTML = `${story.story_category} &nbsp; | &nbsp; ${story.created_at}`;
-
-            let viewsDiv = document.createElement('span');
-            if (loginInfo.story_admin === '1') {
-                viewsDiv.className = 'd-none';      // story_admin 권한
-            } else {
-                viewsDiv.className = 'd-none';
-            }
-            viewsDiv.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-eye fa-xs"></i> ${story.views}`;
-
-
-
-            cateDate.appendChild(viewsDiv);
+            {% comment %}cateDate.innerHTML = `${story.story_category} &nbsp; | &nbsp; ${story.created_at} &nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fa-solid fa-eye fa-xs"></i> ${story.views}&nbsp;&nbsp; <i class="fa-solid fa-heart fa-xs"></i> ${story.like_count}`;{% endcomment %}
 
             let storyTitle = document.createElement('div');
             storyTitle.className = 'story-title px-0';

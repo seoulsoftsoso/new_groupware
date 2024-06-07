@@ -514,6 +514,7 @@ class GradeMaster(Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='gd_updatedby')  # 최종작성자
 
 
+#처음에 카테고리에 1.news, 2.activity, 3.crew 를 db에 추가해줘야함
 class StoryCategory(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -528,3 +529,8 @@ class StoryMaster(models.Model):
     created_at = models.DateField(auto_now_add=True, verbose_name='최초 작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종 작성일')
     views = models.PositiveIntegerField(default=0)
+
+class StoryLikes(models.Model):
+    story = models.ForeignKey(StoryMaster, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(UserMaster, related_name='likes', on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)

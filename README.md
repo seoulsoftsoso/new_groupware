@@ -90,3 +90,7 @@ For open source projects, say how it is licensed.
 
 ## Project status
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+
+
+## Story
+처음에 카테고리에 1.news, 2.activity, 3.crew 를 db에 추가해줘야함

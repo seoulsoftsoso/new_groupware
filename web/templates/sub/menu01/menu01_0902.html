@@ -39,20 +39,16 @@
         .layout-content-navbar {
             width: 1300px;
         }
-
         .title-area {
             margin-top: 5% !important;
         }
-
         .card-body {
             padding: 5% !important;
         }
-
-        .story_content {
+        .story_content, .story_tail {
             margin-left: 15% !important;
             margin-right: 15% !important;
         }
-
         .footer {
             width: 1300px;
         }
@@ -83,10 +79,24 @@
                         <div class="row justify-content-center">
                             <img class="story_picture" style="margin: 0 0 5% 0;">
                         </div>
+
                         <div class="story_content row justify-content-start" style="width:900px;">
                             <div class="col-12 px-0" id="story_content"></div>
                         </div>
-                        <div class="footer d-flex justify-content-center" style="margin: 10% 0 10% 0">
+
+                        <div class="story_tail row justify-content-start" style="width:900px; padding: 5% 0 0 0;">
+                            <div class="col-12 px-0" id="story_tail">
+                                {% csrf_token %}
+                                <button type="button" id="like-button" class="btn p-0">
+                                    <i class="fa-regular fa-heart" id="like-icon"></i>&nbsp;
+                                    <span id="like-count">{{ story.likes.count }}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                </button>
+                                <span><i class="fa-solid fa-eye"></i>&nbsp;</span>
+                                <span id="story-views"></span>
+                            </div>
+                        </div>
+
+                        <div class="footer d-flex justify-content-center" style="margin: 5% 0 10% 0">
                             <a href="/menu/0109" class="btn btn-secondary mx-4"
                                style="font-size: 18px; background-color: #f6f6f6; border-color: #f6f6f6; color: #595757; width: 131px; height: 43px;">목록보기</a>
                             <button class="btn btn-info mx-4 d-none" id="story_update_btn" style="font-size: 18px; width: 131px; height: 43px;"
@@ -170,6 +180,16 @@
     }
 
     function displayStoryDetail(data) {
+        let likeIcon = document.getElementById('like-icon');
+        if (data.liked) {
+            likeIcon.classList.remove('fa-regular');
+            likeIcon.classList.add('fa-solid');
+        } else {
+            likeIcon.classList.remove('fa-solid');
+            likeIcon.classList.add('fa-regular');
+        }
+        document.getElementById('like-count').textContent = data.like_count;
+        document.getElementById('story-views').textContent = data.views;
 
         let cateDate = document.getElementById('catedate_id');
         cateDate.innerHTML = `${data.story_category} &nbsp; | &nbsp; ${data.created_at}`;
@@ -204,5 +224,35 @@
             });
         }
     }
+
+    document.getElementById('like-button').addEventListener('click', function () {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/story/likes/${storyId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                let likeIcon = document.getElementById('like-icon');
+                if (data.liked) {
+                    likeIcon.classList.remove('fa-regular');
+                    likeIcon.classList.add('fa-solid');
+                } else {
+                    likeIcon.classList.remove('fa-solid');
+                    likeIcon.classList.add('fa-regular');
+                }
+                document.getElementById('like-count').textContent = data.like_count;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('로그인이 필요합니다.')
+                let currentUrl = window.location.pathname + window.location.search;
+                window.location.href = `/login/?next=${encodeURIComponent(currentUrl)}`;
+            });
+    });
 
 </script>

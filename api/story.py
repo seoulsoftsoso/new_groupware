@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from django.db import transaction, DatabaseError
 from django.db.models import Q
@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
-from api.models import StoryMaster, StoryCategory
+from api.models import StoryMaster, StoryCategory, StoryLikes
 
 from django import forms
 
@@ -46,6 +46,7 @@ class Story_read(View):
     def get(self, request, *args, **kwargs):
         _page = request.GET.get('page', '')
         _size = request.GET.get('page_size', '')
+        user = request.user
 
         qs = StoryMaster.objects.filter().order_by('-id')
 
@@ -53,7 +54,7 @@ class Story_read(View):
         story_category_sch = request.GET.get('story_category_sch', '')
         if story_category_sch == '0' or story_category_sch == '':
             qs = qs
-        else :
+        else:
             qs = qs.filter(story_category=story_category_sch)
 
         story_id = request.GET.get('story_id', '')
@@ -66,7 +67,7 @@ class Story_read(View):
         if _page == '' or _size == '':
             # 조건 에러시, 전체 보여주기
             print(_page, _size)
-            results = [get_obj(row) for row in qs]
+            results = [get_obj(row, user) for row in qs]
 
             context = {}
             context['results'] = results
@@ -86,7 +87,7 @@ class Story_read(View):
         if next > qs_ps.paginator.num_pages:
             url_next = None
 
-        results = [get_obj(row) for row in qs_ps]
+        results = [get_obj(row, user) for row in qs_ps]
 
         context = {}
         context['count'] = qs_ps.paginator.count
@@ -147,7 +148,25 @@ class Story_delete(View):
         return JsonResponse({"message": "스토리가 삭제되었습니다."}, status=200)
 
 
-def get_obj(obj):
+@login_required(login_url='/login/')
+def toggle_like(request, story_id):
+    story = get_object_or_404(StoryMaster, id=story_id)
+    user = request.user
+
+    if StoryLikes.objects.filter(story=story, user=user).exists():
+        StoryLikes.objects.filter(story=story, user=user).delete()
+        liked = False
+    else:
+        StoryLikes.objects.create(story=story, user=user)
+        liked = True
+
+    return JsonResponse({'liked': liked, 'like_count': story.likes.count()})
+
+
+def get_obj(obj, user):
+    liked = False
+    if user.is_authenticated:
+        liked = StoryLikes.objects.filter(story=obj, user=user).exists()
 
     return {
         'id': obj.id,
@@ -160,5 +179,8 @@ def get_obj(obj):
         'updated_by': obj.updated_by.username if obj.updated_by is not None else '',
         'created_at': obj.created_at if obj.created_at is not None else '',
         'updated_at': obj.updated_at if obj.updated_at is not None else '',
-        'views': obj.views
+
+        'views': obj.views,
+        'liked': liked,
+        'like_count': obj.likes.count()
     }
