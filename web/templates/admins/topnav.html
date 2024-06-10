@@ -1,0 +1,147 @@
+{% load static %}
+<style>
+    body {
+        background-color: #ffffff !important;
+    }
+</style>
+<header id="page-topbar">
+    <div class="navbar-header layout-navbar d-flex justify-content-between">
+        <div class="d-flex justify-content-start align-items-center p-3 px-5">
+{#            왼쪽 공간#}
+        </div>
+        <div class="d-flex justify-content-end align-items-center p-3 px-5">
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-bell bx-tada" style="font-size: 30px;"></i>
+                    <span class="badge bg-danger rounded-pill" style="font-size: 12px;">3</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                     aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-0" key="t-notifications"> Notifications </h6>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#!" class="small" key="t-view-all"> View All</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div data-simplebar style="height: auto; width: 400px; margin: 0 20px 10px 20px;">
+                        <a href="javascript: void(0);" class="text-reset notification-item p-2">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                        <i class="bx bx-cart"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" key="t-your-order">Your order is placed</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-grammer">If several languages coalesce the
+                                            grammar</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
+                                                key="t-min-ago">3 min ago</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript: void(0);" class="text-reset notification-item p-2">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                        <i class="bx bx-cart"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">James Lemire</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-simplified">It will seem like simplified
+                                            English.</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
+                                                key="t-hours-ago">1 hours ago</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript: void(0);" class="text-reset notification-item p-2">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-success rounded-circle font-size-16">
+                                        <i class="bx bx-badge-check"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" key="t-shipped">Your item is shipped</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-grammer">If several languages coalesce the
+                                            grammar</p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
+                                                key="t-min-ago">3 min ago</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="p-2 border-top d-grid">
+                        <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                            <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View More..</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="{% static 'renewal/image/avatar_default.png' %}" style="width: 36px; border: 2px solid #697a8d; margin-right: 10px;"
+                         alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1" id="username" style="color: #697a8d; font-size: 18px;">{{ request.user.username }} 님 &nbsp;</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="{% url 'userSettingsPage' %}"><i
+                            class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
+                    {% comment %}<a class="dropdown-item" href="#"><i
+                            class="bx bx-wallet font-size-16 align-middle me-1"></i> <span
+                            key="t-my-wallet">My Wallet</span></a>
+                    <a class="dropdown-item d-block" href="#"><span
+                            class="badge bg-success float-end">11</span><i
+                            class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+                    <a class="dropdown-item" href="#"><i
+                            class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span
+                            key="t-lock-screen">Lock screen</span></a>{% endcomment %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
+                            key="t-logout">로그아웃</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    $("#logout").click(function () {
+        flush_token();
+        window.location.href = "/logout/";
+    });
+
+    function flush_token() {
+        document.cookie = 'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'username=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_superuser=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_master=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'is_active=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'permissions=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'enterprise_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+</script>

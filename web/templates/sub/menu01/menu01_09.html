@@ -270,7 +270,7 @@
         query += "&story_category_sch=" + story_category_sch;
 
         api_gp("/story/story_read/" + query, "get", {}, (stories) => {
-            console.log(stories);
+            // console.log(stories);
 
             let data = stories.results;
             displayStories(data);

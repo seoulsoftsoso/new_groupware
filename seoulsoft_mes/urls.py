@@ -59,6 +59,7 @@ from api.weekly_report.views_pm import *
 from api.weekly_report.views_ceo import *
 from web.views import *
 from api.story import *
+from api.approval import *
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -244,11 +245,20 @@ urlpatterns = [
 
     path('event/get_event_all/', get_eventDataAll.as_view(), name='get_eventDataAll'),
 
+    # 스토리
     path('story/story_create/', StoryCreateView.as_view(), name='story_create'),
     path('story/story_read/', Story_read.as_view(), name='Story_read'),
     path('story/story_update/', Story_update.as_view(), name='story_update'),
     path('story/story_delete/', Story_delete.as_view(), name='story_delete'),
     path('story/likes/<int:story_id>/', toggle_like, name='toggle_like'),
+
+    # 전자결재
+    path('admins/apv/', ApvListView.as_view(), name='apv_list'),
+    path('admins/apv/<int:pk>/', ApvDetailView.as_view(), name='apv_detail'),
+    path('admins/apv/create/', ApvCreateView.as_view(), name='apv_create'),
+    path('admins/apv/<int:pk>/update/', ApvUpdateView.as_view(), name='apv_update'),
+    path('admins/apv/<int:pk>/delete/', ApvDeleteView.as_view(), name='apv_delete'),
+    path('admins/apv/<int:pk>/comment/', ApvCommentCreateView.as_view(), name='apvcomment_create'),
 
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
