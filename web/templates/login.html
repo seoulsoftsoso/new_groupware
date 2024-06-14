@@ -173,6 +173,7 @@
                 setCookie('user_id', data.user.id, 7);
                 setCookie('is_superuser', data.is_superuser ? '1' : '0', 7);
                 setCookie('story_admin', data.story_admin ? '1' : '0', 7);
+                setCookie('department_position_name', data.user.department_position.name, 7);
 
                 successCallback();
             },

@@ -253,12 +253,15 @@ urlpatterns = [
     path('story/likes/<int:story_id>/', toggle_like, name='toggle_like'),
 
     # 전자결재
-    path('admins/apv/', ApvListView.as_view(), name='apv_list'),
-    path('admins/apv/<int:pk>/', ApvDetailView.as_view(), name='apv_detail'),
-    path('admins/apv/create/', ApvCreateView.as_view(), name='apv_create'),
+    path('admins/apv/', apv_list, name='apv_list'),
+    path('admins/apv/get/', ApvListView.as_view(), name='apv_get_data'),
+    # path('admins/apv/<int:pk>/', ApvDetailView.as_view(), name='apv_detail'),
+    path('admins/apv/create/', ApvCreate.as_view(), name='apv_create'),
     path('admins/apv/<int:pk>/update/', ApvUpdateView.as_view(), name='apv_update'),
     path('admins/apv/<int:pk>/delete/', ApvDeleteView.as_view(), name='apv_delete'),
     path('admins/apv/<int:pk>/comment/', ApvCommentCreateView.as_view(), name='apvcomment_create'),
+    path('admins/apv/category/', ApvCategoryList.as_view(), name='apv_category'),
+    path('admins/apv/category/<str:category_no>/', apv_template_view, name='ApvTemplateView'),
 
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

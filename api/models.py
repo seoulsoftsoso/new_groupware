@@ -543,8 +543,15 @@ class FormTemplate(models.Model):
     status = models.CharField(max_length=255)
     fields = models.TextField()
 
+
 class ApvCategory(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+
+class ApvAttachments(models.Model):
+    file = models.FileField(upload_to='attachments/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class ApvMaster(models.Model):
     STATUS_CHOICES = [
@@ -556,27 +563,13 @@ class ApvMaster(models.Model):
     ]
     LEAVE_CHOICES = [
         ('연차', '연차'),
-        ('오전반차', '오전반차'),
-        ('오후반차', '오후반차'),
-        ('결혼(본인)', '결혼(본인)'),
-        ('결혼(본인,배우자의 형제자매)', '결혼(본인, 배우자의 형제자매)'),
-        ('결혼(자녀)', '결혼(자녀)'),
-        ('사망(배우자)', '사망(배우자)'),
-        ('사망(본인, 배우자의 부모)', '사망(본인, 배우자의 부모)'),
-        ('사망(본인,배우자의 조부모)', '사망(본인, 배우자의 조부모)'),
-        ('사망(자녀)', '사망(자녀)'),
-        ('사망(본인, 배우자의 백숙부모)', '사망(본인, 배우자의 백숙부모)'),
-        ('사망(본인, 배우자의 형제자매)', '사망(본인, 배우자의 형제자매)'),
-        ('회갑(본인,배우자의 부모)', '회갑(본인, 배우자의 부모)'),
-        ('출산(배우자)', '출산(배우자)'),
-        ('출산(본인)', '출산(본인)'),
+        ('결혼', '결혼'),
+        ('사망', '사망'),
+        ('출산', '출산'),
+        ('예비군/민방위', '예비군/민방위'),
         ('보건휴가', '보건휴가'),
-        ('예비군', '예비군'),
-        ('민방위', '민방위'),
-        ('병가(무급휴가)', '병가(무급휴가)'),
-        ('탈상', '탈상'),
-        ('교육훈련휴가', '교육훈련휴가'),
-        ('공민권', '공민권')
+        ('무급휴가', '무급휴가'),
+        ('기타휴가', '기타휴가')
     ]
 
     doc_no = models.CharField(max_length=50, unique=True, blank=True)
@@ -591,6 +584,7 @@ class ApvMaster(models.Model):
     comments_count = models.PositiveIntegerField(default=0)
     views_count = models.PositiveIntegerField(default=0)
     special_comment = models.TextField(null=True, blank=True)
+    attached_files = models.ManyToManyField('ApvAttachments', blank=True)
 
     deadline = models.DateField(null=True, blank=True)
     payment_method = models.CharField(max_length=100, null=True, blank=True)
@@ -602,13 +596,6 @@ class ApvMaster(models.Model):
     period_to = models.DateField(null=True, blank=True)
     period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     leave_reason = models.CharField(max_length=255, choices=LEAVE_CHOICES, default='연차', null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.doc_no:
-            today = date.today()
-            count_today = ApvMaster.objects.filter(created_at__date=today).count() + 1
-            self.doc_no = f'AP{today.strftime("%y%m%d")}-{count_today:03d}'
-        super(ApvMaster, self).save(*args, **kwargs)
 
 
 class ApvSubItem(models.Model):
@@ -622,24 +609,44 @@ class ApvSubItem(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     remarks = models.TextField(blank=True, null=True)
 
-class ApvAttachments(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='attached_files')
-    attached_file = models.FileField(upload_to='apv_attachments/', null=True, blank=True)
+
 
 class ApvComment(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
     content = models.TextField()
+    created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class ApvApprover(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs')
-    approver = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver')
-    approver_status = models.CharField(max_length=50)
-    approver_date = models.DateField(null=True, blank=True)
-    approver_priority = models.CharField(max_length=50, null=True, blank=True)
+    approver1 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver1')
+    approver1_status = models.CharField(max_length=50)
+    approver1_date = models.DateField(null=True, blank=True)
+    approver2 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver2')
+    approver2_status = models.CharField(max_length=50)
+    approver2_date = models.DateField(null=True, blank=True)
+    approver3 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver3')
+    approver3_status = models.CharField(max_length=50)
+    approver3_date = models.DateField(null=True, blank=True)
+    approver4 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver4')
+    approver4_status = models.CharField(max_length=50)
+    approver4_date = models.DateField(null=True, blank=True)
+    approver5 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver5')
+    approver5_status = models.CharField(max_length=50)
+    approver5_date = models.DateField(null=True, blank=True)
+    approver6 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver6')
+    approver6_status = models.CharField(max_length=50)
+    approver6_date = models.DateField(null=True, blank=True)
 
 
 class ApvCC(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_cc')
     user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='cc_users')
+
+
+class ApvReadStatus(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_read')
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
+    is_read = models.BooleanField(default=False)

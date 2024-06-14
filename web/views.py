@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
-    ProTask, ProMembers, Weekly
+    ProTask, ProMembers, Weekly, ApvMaster
 from api.views import *
 
 
@@ -441,3 +441,20 @@ def test_form(request):
     context = {}
     return render(request, 'admins/administrator/test_form.html', context)
 
+def apv_list(request):
+    context = {}
+    return render(request, 'approval/apv_list.html', context)
+
+def apv_template_view(request, category_no):
+    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+                     .order_by('department_position', 'username'))
+    approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
+
+    leave_choices = ApvMaster.LEAVE_CHOICES
+    filename = 'approval/apv_template_' + category_no + '.html'
+    context = {
+        'category_no': category_no,
+        'leave_choices': leave_choices,
+        'approver_list': approver_choices,
+    }
+    return render(request, filename, context)

@@ -9,7 +9,13 @@
         white-space: nowrap;
     }
 
+
+
     @media (max-width: 1000px) {
+        .control-buttons {
+            height: 40px;
+        }
+
     }
 </style>
 <body>
@@ -26,42 +32,55 @@
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column px-3 pb-2">
                 <div class="mb-xl-0 mb-4">
                     <div class="d-flex svg-illustration mb-2 gap-2">
-                        <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;">전자결재</strong>
+                        <a href="{% url 'apv_list' %}">
+                            <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;">전자결재</strong></a>
                     </div>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between" style="padding: 0 2% 0 2%;">
+            <div class="control-buttons d-flex justify-content-between" style="padding: 0 2% 0 2%;">
                 <div class="d-flex justify-content-start">
-                    <button class="btn btn-outline-dark me-2">전체</button>
-                    <button class="btn btn-outline-secondary me-2">임시</button>
-                    <button class="btn btn-outline-primary me-2">진행</button>
-                    <button class="btn btn-outline-success me-2">완료</button>
-                    <button class="btn btn-outline-danger me-2">반려</button>
-                    <button class="btn btn-outline-warning me-2">참조</button>
+                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px;" aria-selected="true" data-status="전체">전체</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-secondary p-0 me-2" style="width: 65px;" aria-selected="false" data-status="임시">임시</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-primary p-0 me-2" style="width: 65px;" aria-selected="false" data-status="진행">진행</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-success p-0 me-2" style="width: 65px;" aria-selected="false" data-status="완료">완료</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-danger p-0 me-2" style="width: 65px;" aria-selected="false" data-status="반려">반려</a>
+                    <a href="#" class="apv_view_cc btn btn-outline-warning p-0 me-2" style="width: 65px;">참조</a>
                 </div>
+
                 <div class="d-flex justify-content-end">
-                    <div style="padding: 0 5px 0 0;">
-                        <div class="input-group input-daterange" style="width:300px;">
+                    <div style="padding: 0 5px 0 5px;">
+                        <select class="form-control m-0 h-100 btn-outline-secondary" name="page_size"
+                                style="width: 100px; height: 40px; display: block;" id="page_size"
+                                title="페이지당 목록 수 설정" onchange="search_apv_click()">
+                            <option value="10">10개</option>
+                            <option value="20" selected>20개</option>
+                            <option value="50">50개</option>
+                        </select>
+                    </div>
+                    <div style="padding: 0 5px 0 5px;">
+                        <div class="input-group input-daterange" style="width:300px;" title="검색기간 설정">
                             <input id="date_sch_from" placeholder="시작 날짜" class="form-control btn-outline-secondary"
-                                   name="date_sch_from"
-                                   value="{{ search_to | default_if_none:'' }}" autocomplete="off" style="text-align: left; height: 40px;"/>
+                                   name="date_sch_from" autocomplete="off" onchange="search_apv_click()"
+                                   style="text-align: left; height: 40px;" type="text"/>
                             <input id="date_sch_to" placeholder="끝 날짜" class="form-control btn-outline-secondary"
-                                   name="date_sch_from"
-                                   value="{{ search_from | default_if_none:'' }}" autocomplete="off" style="text-align: left; height: 40px;"/>
+                                   name="date_sch_to" autocomplete="off" onchange="search_apv_click()"
+                                   style="text-align: left; height: 40px;" type="text"/>
                         </div>
                     </div>
                     <div style="padding: 0 50px 0 5px;">
-                        <form class="app-search d-none d-lg-block">
-                            <div class="d-flex position-relative">
-                                <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색" style="border-radius: 6px 0px 0px 6px;">
-                                <button class="btn btn-secondary" style="width:60px; height:40px; border-radius: 0px 6px 6px 0px;">
-                                    <span class="bx bx-search-alt"></span></button>
-                            </div>
-                        </form>
+                        <div class="d-flex position-relative">
+                            <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색"
+                                   id="apv_all_sch" style="border-radius: 6px 0px 0px 6px;"
+                                   title="문서번호 / 카테고리 / 제목 / 작성자 검색">
+                            <button class="btn btn-secondary"
+                                    style="width:60px; height:40px; border-radius: 0px 6px 6px 0px;"
+                                    onclick="search_apv_click()">
+                                <span class="bx bx-search-alt"></span></button>
+                        </div>
                     </div>
                     <div style="padding: 0 0 0 50px;">
-                        <button class="btn btn-info me-2">신규 결재 작성</button>
+                        <div class="btn btn-info p-0 me-2" style="width: 100px; height: 40px;" data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성</div>
                     </div>
                 </div>
             </div>
@@ -71,53 +90,194 @@
                        style="border-left: none; border-right: none;">
                     <thead>
                     <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                        <th style="color: #000; font-size: medium; font-weight: bold;">작성일</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">문서번호</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">카테고리</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">제목</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">작성자</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">결재상태</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold">결재대기</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">작성일</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서번호</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 30%;">제목</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">작성자</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재상태</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재대기</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {% for apv in apv_list %}
-                        <tr style="text-align: start; cursor: pointer;"
-                            onclick="window.location='{% url 'apv_detail' apv.id %}'">
-                            <td style="color: #000;">{{ apv.created_at|date:"Y-m-d" }}</td>
-                            <td style="color: #000;">{{ apv.doc_no }}</td>
-                            <td style="color: #000;">{{ apv.apv_category.name }}</td>
-                            <td style="color: #000;">{{ apv.doc_title }}</td>
-                            <td style="color: #000;">{{ apv.created_by }}</td>
-                            <td style="color: #000;">{{ apv.apv_status }}</td>
-                            <td style="color: #000;"></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
+                    <tbody id="apv_tbody"></tbody>
                 </table>
             </div>
-
-            <div class="d-flex justify-content-start" style="padding: 2% 2% 2% 2%;">
-                <div class="pagination">
-                    {#to be updated#}
-                </div>
+            <div class="d-flex justify-content-center" style="padding: 2% 2% 2% 2%;">
+            <div id="apv_nation_id"></div>
             </div>
-
         </div>
+    </div>
+</div>
+
+<!-- apv_md_create -->
+<div class="modal fade" id="apv_md_create" tabindex="-1" role="dialog" aria-labelledby="apv_md_create"
+     data-bs-backdrop="static" data-bs-keyboard="true" aria-hidden="true">
+    <div class="apv_md_create modal-dialog modal-xl" style="position:relative; top:0px; max-width:1800px;">
+        {% include 'approval/apv_md_create.html' %}
     </div>
 </div>
 
 </body>
 {% include 'admins/admin_footer.html' %}
 
+<script src="{% static 'js/api_paginations.js' %}"></script>
+<script src="{% static 'js/core.js' %}"></script>
 <script>
+    let apv_status_sch = '';
+    let apv_all_sch = '';
+    let date_sch_from = '';
+    let date_sch_to = '';
+    let apv_click_id = null;
+    let apv_nation_data = {
+        cname: 'apv_nation',  // 인스턴스 명과 일치해야함
+        nation_id: 'apv_nation_id',
+        range: 5,
+        page_size: 20,  // 세로 Row 수
+    };
 
     $(function () {
         $("#date_sch_from, #date_sch_to").datepicker({
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
         });
     });
 
+    let apv_nation = new Nations(apv_nation_data, search_apv_data); // 인스턴스 명
+    apv_nation.nation_display({});
+
+    window.onkeydown = function (event) {
+        if (event.keyCode == 116) {  // F5
+            event.returnValue = false;
+            refresh();
+        } else if (event.keyCode == 13) {  // Enter
+            search_apv_click();
+        }
+    }
+
+    function refresh() {
+        location.href = "/admins/apv/";
+    }
+
+    document.querySelectorAll('.apv_status_sch').forEach(tab => {
+        tab.addEventListener('click', function () {
+            apv_status_sch = this.getAttribute('data-status');
+            apv_nation.page = 1;
+            search_apv_data();
+        });
+    });
+
+    $(function () {
+        main();
+    });
+
+    function main() {
+        search_apv_data();
+    }
+
+    function search_apv_click() {
+        apv_nation.page = 1;
+        apv_nation_data.page_size = document.getElementById("page_size").value;
+        date_sch_from = $("#date_sch_from").val();
+        date_sch_to = $("#date_sch_to").val();
+        apv_all_sch = $('#apv_all_sch').val();
+
+        search_apv_data();
+    }
+
+    function search_apv_data() {
+        let query = "?page=" + apv_nation.page + "&page_size=" + apv_nation_data.page_size;
+        query += "&date_sch_from=" + date_sch_from;
+        query += "&date_sch_to=" + date_sch_to;
+        query += "&apv_all_sch=" + apv_all_sch;
+        query += "&apv_status_sch=" + apv_status_sch;
+
+        api_gp("/admins/apv/get/" + query, "get", {}, (done) => {
+            draw_apv_table(done);
+        });
+    }
+
+    function draw_apv_table(done) {
+        console.log("draw_apv_table: ", done);
+
+        let data = done.results;
+        let num = (((apv_nation.page * 1) - 1) * apv_nation_data.page_size) + 1;
+
+        let rows = "";
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+
+            let row = `
+            <tr id='${item.id}' style='cursor:pointer;'>
+            <td name="no" class="d-none">${num + i}</td>
+            <td name='created_at'>${item.created_at.split('T')[0]}</td>
+            <td name='doc_no'>${item.doc_no}</td>
+            <td name='apv_category'>${item.apv_category.name}</td>
+            <td name='doc_title'>${item.doc_title}</td>
+            <td name='created_by'>${item.created_by.username}</td>
+            <td name='apv_status'>${item.apv_status}</td>
+            <td name='apv_next_approver'>${item.apv_next_approver}</td>
+            </tr>`;
+
+            rows += row;
+        }
+
+        apv_nation.nation_display(done);
+        $('#apv_tbody').html(rows);
+
+    }
+
+    function apv_md_create() {
+        if (a_click_user_id == null) {
+            alert(txt.update_select);
+            return;
+        }
+
+        $('#r_md_update #name').val(a_click_name); // 업체명
+        $('#r_md_update #user_id').val(a_click_user_id); // 사용자계정
+        $('#r_md_update #username').val(a_click_username); // 사용자이름
+
+        load_customer_permission();
+        load_company_user_permission();
+
+        $('#r_md_update').modal("show");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function getLoginInfo() {
+            loginInfo = {
+                username: getCookie('username'),
+                user_id: getCookie('user_id'),
+                token: getCookie('Authorization'),
+                is_superuser: getCookie('is_superuser'),
+                story_admin: getCookie('story_admin'),
+                department_position_name : getCookie('department_position_name'),
+            };
+            return loginInfo;
+        }
+
+        function displayLoginInfo() {
+            let loginInfo = getLoginInfo();
+            console.log("로그인 정보:");
+            for (let key in loginInfo) {
+                if (loginInfo[key]) {
+                    console.log(`${key}: ${loginInfo[key]}`);
+                } else {
+                    console.log(`${key}: 정보가 없습니다`);
+                }
+            }
+        }
+
+        displayLoginInfo();
+    });
 
 
 </script>

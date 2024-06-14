@@ -33,4 +33,5 @@ class CustomObtainAuthToken(ObtainAuthToken):
             'token': token.key,
             'is_superuser': user.is_superuser,
             'story_admin': user.story_admin,
+            'department_position_name': user.department_position.name,
         }, status=status.HTTP_200_OK)
