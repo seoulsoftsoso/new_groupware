@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
-from api.models import StoryMaster, StoryCategory, StoryLikes
+from api.models import StoryMaster, StoryLikes
 
 from django import forms
 
@@ -52,7 +52,7 @@ class Story_read(View):
 
         # 카테고리
         story_category_sch = request.GET.get('story_category_sch', '')
-        if story_category_sch == '0' or story_category_sch == '':
+        if story_category_sch == '':
             qs = qs
         else:
             qs = qs.filter(story_category=story_category_sch)
@@ -173,7 +173,7 @@ def get_obj(obj, user):
         'story_title': obj.story_title if obj.story_title is not None else '',
         'story_content': obj.story_content if obj.story_content is not None else '',
         'story_picture': obj.story_picture.url if obj.story_picture else '',
-        'story_category': obj.story_category.name if obj.story_category is not None else '',
+        'story_category': obj.story_category if obj.story_category is not None else '',
 
         'created_by': obj.created_by.username if obj.created_by is not None else '',
         'updated_by': obj.updated_by.username if obj.updated_by is not None else '',

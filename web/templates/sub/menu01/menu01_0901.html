@@ -107,9 +107,9 @@
                                     <select class="form-select" aria-label="Story Category" id="story_category"
                                             name="story_category" style="height:50px;">
                                         <option value="" disabled {% if not story.category %}selected{% endif %}>카테고리를 선택하세요</option>
-                                        <option value="1" {% if story.category == '1' %}selected{% endif %}>News</option>
-                                        <option value="2" {% if story.category == '2' %}selected{% endif %}>Activity</option>
-                                        <option value="3" {% if story.category == '3' %}selected{% endif %}>Crew</option>
+                                        <option value="NEWS" {% if story.category == 'NEWS' %}selected{% endif %}>NEWS</option>
+                                        <option value="ACTIVITY" {% if story.category == 'ACTIVITY' %}selected{% endif %}>ACTIVITY</option>
+                                        <option value="CREW" {% if story.category == 'CREW' %}selected{% endif %}>CREW</option>
                                     </select>
                                 </div>
                                 <div class="col-7 form-group px-0 m-0">
@@ -154,11 +154,11 @@
 
                 let story_category_id;
                 if (data.story_category === "NEWS") {
-                    story_category_id = 1;
+                    story_category_id = NEWS;
                 } else if (data.story_category === "ACTIVITY") {
-                    story_category_id = 2;
+                    story_category_id = ACTIVITY;
                 } else if (data.story_category === "CREW") {
-                    story_category_id = 3;
+                    story_category_id = CREW;
                 } else {
                     story_category_id = null;
                 }

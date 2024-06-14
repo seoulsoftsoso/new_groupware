@@ -160,20 +160,20 @@
                         <ul class="nav nav-pills" role="tablist">
                             <li class="nav-item pr-3">
                                 <a class="nav-link active" data-toggle="tab" href="#navs-tabs-all" role="tab"
-                                   aria-controls="navs-tabs-all" aria-selected="true" data-category="0">ALL</a>
+                                   aria-controls="navs-tabs-all" aria-selected="true" data-category="">ALL</a>
                             </li>
                             <li class="nav-item pr-3">
                                 <a class="nav-link" data-toggle="tab" href="#navs-tabs-news" role="tab"
-                                   aria-controls="navs-tabs-news" aria-selected="false" data-category="1">NEWS</a>
+                                   aria-controls="navs-tabs-news" aria-selected="false" data-category="news">NEWS</a>
                             </li>
                             <li class="nav-item pr-3">
                                 <a class="nav-link" data-toggle="tab" href="#navs-tabs-activity" role="tab"
                                    aria-controls="navs-tabs-activity" aria-selected="false"
-                                   data-category="2">ACTIVITY</a>
+                                   data-category="activity">ACTIVITY</a>
                             </li>
                             <li class="nav-item pr-3">
                                 <a class="nav-link" data-toggle="tab" href="#navs-tabs-crew" role="tab"
-                                   aria-controls="navs-tabs-crew" aria-selected="false" data-category="3">CREW</a>
+                                   aria-controls="navs-tabs-crew" aria-selected="false" data-category="crew">CREW</a>
                             </li>
                         </ul>
                         <div>
@@ -196,7 +196,7 @@
 <script>
 
     let defaultImageUrl = "{% static 'renewal/image/story_default.png' %}";
-    let story_category_sch = 0;
+    let story_category_sch = '';
     let loginInfo = {};
 
     // Pagination Set Start

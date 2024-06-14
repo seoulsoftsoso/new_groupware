@@ -515,16 +515,16 @@ class GradeMaster(Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='gd_updatedby')  # 최종작성자
 
 
-#처음에 카테고리에 1.news, 2.activity, 3.crew 를 db에 추가해줘야함
-class StoryCategory(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-
 class StoryMaster(models.Model):
+    STORY_CATEGORY_CHOICES = [
+        ('NEWS', 'NEWS'),
+        ('ACTIVITY', 'ACTIVITY'),
+        ('CREW', 'CREW'),
+    ]
     story_title = models.CharField(null=False, max_length=100, verbose_name="스토리 제목")
     story_content = models.TextField(null=False, verbose_name="스토리 내용")
     story_picture = models.ImageField(upload_to='story_pictures/', null=True, blank=True, verbose_name="스토리 사진")
-    story_category = models.ForeignKey('StoryCategory', null=True, blank=True, on_delete=models.SET_NULL, verbose_name="스토리 카테고리")
+    story_category = models.CharField(max_length=100, choices=STORY_CATEGORY_CHOICES, default='draft', verbose_name="스토리 카테고리")
     created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='story_created_by')
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='story_updated_by')
     created_at = models.DateField(auto_now_add=True, verbose_name='최초 작성일')
