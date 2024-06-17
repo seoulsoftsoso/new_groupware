@@ -548,11 +548,6 @@ class ApvCategory(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
 
-class ApvAttachments(models.Model):
-    file = models.FileField(upload_to='attachments/')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
 class ApvMaster(models.Model):
     STATUS_CHOICES = [
         ('draft', '임시'),
@@ -584,7 +579,7 @@ class ApvMaster(models.Model):
     comments_count = models.PositiveIntegerField(default=0)
     views_count = models.PositiveIntegerField(default=0)
     special_comment = models.TextField(null=True, blank=True)
-    attached_files = models.ManyToManyField('ApvAttachments', blank=True)
+    # attached_files = models.ManyToManyField('ApvAttachments', blank=True)
 
     deadline = models.DateField(null=True, blank=True)
     payment_method = models.CharField(max_length=100, null=True, blank=True)
@@ -596,6 +591,13 @@ class ApvMaster(models.Model):
     period_to = models.DateField(null=True, blank=True)
     period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     leave_reason = models.CharField(max_length=255, choices=LEAVE_CHOICES, default='연차', null=True, blank=True)
+
+
+class ApvAttachments(models.Model):
+    document = models.ForeignKey(ApvMaster, related_name='attachments', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='attachments/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 
 class ApvSubItem(models.Model):
@@ -621,29 +623,29 @@ class ApvComment(models.Model):
 
 class ApvApprover(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs')
-    approver1 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver1')
-    approver1_status = models.CharField(max_length=50)
+    approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True, blank=True)
+    approver1_status = models.CharField(max_length=50, null=True, blank=True)
     approver1_date = models.DateField(null=True, blank=True)
-    approver2 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver2')
-    approver2_status = models.CharField(max_length=50)
+    approver2 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver2', null=True, blank=True)
+    approver2_status = models.CharField(max_length=50, null=True, blank=True)
     approver2_date = models.DateField(null=True, blank=True)
-    approver3 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver3')
-    approver3_status = models.CharField(max_length=50)
+    approver3 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver3', null=True, blank=True)
+    approver3_status = models.CharField(max_length=50, null=True, blank=True)
     approver3_date = models.DateField(null=True, blank=True)
-    approver4 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver4')
-    approver4_status = models.CharField(max_length=50)
+    approver4 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver4', null=True, blank=True)
+    approver4_status = models.CharField(max_length=50, null=True, blank=True)
     approver4_date = models.DateField(null=True, blank=True)
-    approver5 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver5')
-    approver5_status = models.CharField(max_length=50)
+    approver5 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver5', null=True, blank=True)
+    approver5_status = models.CharField(max_length=50, null=True, blank=True)
     approver5_date = models.DateField(null=True, blank=True)
-    approver6 = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='approver6')
-    approver6_status = models.CharField(max_length=50)
+    approver6 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver6', null=True, blank=True)
+    approver6_status = models.CharField(max_length=50, null=True, blank=True)
     approver6_date = models.DateField(null=True, blank=True)
 
 
 class ApvCC(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_cc')
-    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='cc_users')
+    user = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='cc_users', null=True, blank=True)
 
 
 class ApvReadStatus(models.Model):

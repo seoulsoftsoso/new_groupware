@@ -228,13 +228,17 @@
         }
     }
 
-    function apv_modal_tempsave() {
+
+{% comment %}    function apv_modal_tempsave() {
+
+        let apvCcElement = document.getElementById('apv_cc');
+        let selectedCcValues = getSelectedValues(apvCcElement);
 
         let api_data = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
 
             apv_category_id: nullapply(categoryId),
-            apv_status : nullapply('임시'),
+            apv_status : '임시',
 
             doc_title: nullapply($('#apv_md_create #doc_title').val()),
             leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
@@ -242,7 +246,7 @@
             period_to: nullapply($('#apv_md_create #period_to').val()),
             period_count: nullapply($('#apv_md_create #period_count').val()),
             special_comment: nullapply($('#apv_md_create #special_comment').val()),
-            attached_files: $('#apv_md_create #attached_files').val() ? $('#apv_md_create #attached_files').val().split(',') : [],
+            {#attached_files: $('#apv_md_create #attached_files').val() ? $('#apv_md_create #attached_files').val().split(',') : [],#}
 
             approver1: getApproverId('approver1'),
             approver2: getApproverId('approver2'),
@@ -250,8 +254,13 @@
             approver4: getApproverId('approver4'),
             approver5: getApproverId('approver5'),
             approver6: getApproverId('approver6'),
-            // apv_cc: nullapply($('#apv_md_create #apv_cc').val()),
+            apv_cc: selectedCcValues,
         };
+
+        let attachedFiles = document.getElementById('attached_files').files;
+        for (let i = 0; i < attachedFiles.length; i++) {
+            api_data[`attached_files_${i}`] = attachedFiles[i];
+        }
 
         api_gp('/admins/apv/create/', 'post', api_data, (done) => {
             $('#apv_md_create').modal("hide");
@@ -262,7 +271,7 @@
             search_apv_data();
             alert(txt.create_ed);
         });
-    }
+    }{% endcomment %}
 
     function getApproverId(approverInputId) {
         let approverName = $(`#${approverInputId}`).val();
@@ -271,6 +280,82 @@
         });
 
         return option.length ? option.data('approver-id') : null;
+    }
+
+    function getSelectedValues(selectElement) {
+        const selectedValues = [];
+        const selectedOptions = selectElement && selectElement.options;
+
+        for (let i = 0; i < selectedOptions.length; i++) {
+            if (selectedOptions[i].selected) {
+                selectedValues.push(selectedOptions[i].value);
+            }
+        }
+
+        return selectedValues.length > 0 ? selectedValues : null;
+    }
+
+    function apv_modal_tempsave() {
+        let apvCcElement = document.getElementById('apv_cc');
+        let selectedCcValues = getSelectedValues(apvCcElement);
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            apv_category_id: nullapply(categoryId),
+            apv_status: '임시',
+            doc_title: nullapply($('#apv_md_create #doc_title').val()),
+            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
+            period_from: nullapply($('#apv_md_create #period_from').val()),
+            period_to: nullapply($('#apv_md_create #period_to').val()),
+            period_count: nullapply($('#apv_md_create #period_count').val()),
+            special_comment: nullapply($('#apv_md_create #special_comment').val()),
+            attached_files: [],
+            approver1: getApproverId('approver1'),
+            approver2: getApproverId('approver2'),
+            approver3: getApproverId('approver3'),
+            approver4: getApproverId('approver4'),
+            approver5: getApproverId('approver5'),
+            approver6: getApproverId('approver6'),
+            apv_cc: selectedCcValues,
+        };
+
+        let attachedFiles = document.getElementById('attached_files').files;
+        let fileReadCount = 0;
+
+        function sendApiRequest() {
+            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
+                $('#apv_md_create').modal("hide");
+                apv_nation.page = 1;  // 첫 페이지로
+                search_apv_data();
+                alert(txt.create_ed);
+            });
+        }
+
+        function readFileAndAddToApiData(file, index) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
+                };
+                api_data.attached_files.push(fileData);
+                fileReadCount++;
+                if (fileReadCount === attachedFiles.length) {
+                    sendApiRequest();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        if (attachedFiles.length > 0) {
+            for (let i = 0; i < attachedFiles.length; i++) {
+                readFileAndAddToApiData(attachedFiles[i], i);
+            }
+        } else {
+            sendApiRequest();
+        }
     }
 
 

@@ -9,6 +9,8 @@ from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCa
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
+import base64
+from django.core.files.base import ContentFile
 
 
 class ApvForm(forms.ModelForm):
@@ -148,24 +150,43 @@ class ApvCreate(View):
         leave_reason = request.POST.get('leave_reason', '')
         period_from = request.POST.get('period_from', '')
         period_to = request.POST.get('period_to', '')
-        period_count = request.POST.get('period_count', '')
+        period_count = request.POST.get('period_count', None)
         special_comment = request.POST.get('special_comment', '')
 
-        # approver1 = int(request.POST.get('approver1', ''))
-        # approver2 = int(request.POST.get('approver2', ''))
-        # approver3 = int(request.POST.get('approver3', ''))
-        # approver4 = int(request.POST.get('approver4', ''))
-        # approver5 = int(request.POST.get('approver5', ''))
-        # approver6 = int(request.POST.get('approver6', ''))
+        if period_count == '':
+            period_count = None
+        else:
+            try:
+                period_count = float(period_count) if period_count is not None else None
+            except ValueError:
+                period_count = None
 
-        approver1 = UserMaster.objects.get(pk=request.POST.get('approver1', ''))
-        approver2 = UserMaster.objects.get(pk=request.POST.get('approver2', ''))
-        approver3 = UserMaster.objects.get(pk=request.POST.get('approver3', ''))
-        approver4 = UserMaster.objects.get(pk=request.POST.get('approver4', ''))
-        approver5 = UserMaster.objects.get(pk=request.POST.get('approver5', ''))
-        approver6 = UserMaster.objects.get(pk=request.POST.get('approver6', ''))
+        try:
+            period_from = datetime.strptime(period_from, '%Y-%m-%d').date() if period_from else None
+        except ValueError:
+            period_from = None
 
-        # apv_cc = request.POST.get('apv_cc', '')
+        try:
+            period_to = datetime.strptime(period_to, '%Y-%m-%d').date() if period_to else None
+        except ValueError:
+            period_to = None
+
+        approver1_id = request.POST.get('approver1', None)
+        approver2_id = request.POST.get('approver2', None)
+        approver3_id = request.POST.get('approver3', None)
+        approver4_id = request.POST.get('approver4', None)
+        approver5_id = request.POST.get('approver5', None)
+        approver6_id = request.POST.get('approver6', None)
+
+        approver1 = UserMaster.objects.get(pk=approver1_id) if approver1_id else None
+        approver2 = UserMaster.objects.get(pk=approver2_id) if approver2_id else None
+        approver3 = UserMaster.objects.get(pk=approver3_id) if approver3_id else None
+        approver4 = UserMaster.objects.get(pk=approver4_id) if approver4_id else None
+        approver5 = UserMaster.objects.get(pk=approver5_id) if approver5_id else None
+        approver6 = UserMaster.objects.get(pk=approver6_id) if approver6_id else None
+
+        apv_cc_ids = request.POST.getlist('apv_cc[]', [])
+        apv_cc_users = UserMaster.objects.filter(pk__in=apv_cc_ids) if apv_cc_ids else []
 
         context = {}
 
@@ -180,7 +201,6 @@ class ApvCreate(View):
                 period_to=period_to,
                 period_count=period_count,
                 special_comment=special_comment,
-                # apc_cc=apc_cc,
                 created_by=user,
                 created_at=d_today,
                 updated_at=d_today,
@@ -194,13 +214,46 @@ class ApvCreate(View):
                 approver4=approver4,
                 approver5=approver5,
                 approver6=approver6,
+                approver1_status='대기' if approver1 else None,
+                approver2_status='대기' if approver2 else None,
+                approver3_status='대기' if approver3 else None,
+                approver4_status='대기' if approver4 else None,
+                approver5_status='대기' if approver5 else None,
+                approver6_status='대기' if approver6 else None,
             )
 
-            attached_files = request.FILES.getlist('attached_files')
-            if attached_files:
-                attached_file_objs = [ApvAttachments(file=f) for f in attached_files]
+            for apv_cc_user in apv_cc_users:
+                ApvCC.objects.create(
+                    document=ApvMaster_obj,
+                    user=apv_cc_user
+                )
+
+            attached_file_objs = []
+            i = 0
+            while f'attached_files[{i}][name]' in request.POST:
+                file_name = request.POST[f'attached_files[{i}][name]']
+                file_content_base64 = request.POST[f'attached_files[{i}][content]']
+                file_content = base64.b64decode(file_content_base64)
+                file = ContentFile(file_content, name=file_name)
+                attached_file_objs.append(ApvAttachments(document=ApvMaster_obj, file=file))
+                i += 1
+
+            if attached_file_objs:
                 ApvAttachments.objects.bulk_create(attached_file_objs)
-                ApvMaster_obj.attached_files.set(attached_file_objs)
+
+            # attached_file_objs = []
+            # i = 0
+            # while f'attached_files[{i}][name]' in request.POST:
+            #     file_name = request.POST[f'attached_files[{i}][name]']
+            #     file_content_base64 = request.POST[f'attached_files[{i}][content]']
+            #     file_content = base64.b64decode(file_content_base64)
+            #     file = ContentFile(file_content, name=file_name)
+            #     attachment = ApvAttachments.objects.create(file=file)
+            #     attached_file_objs.append(attachment)
+            #     i += 1
+            #
+            # if attached_file_objs:
+            #     ApvMaster_obj.attached_files.add(*attached_file_objs)
 
             if ApvMaster_obj:
                 context = get_res(context, ApvMaster_obj)
@@ -233,12 +286,12 @@ def get_res(context, obj):
     context['period_count'] = obj.period_count
     context['special_comment'] = obj.special_comment
     context['attached_files'] = [file.id for file in obj.attached_files.all()]
-    context['approver1'] = obj.approver1
-    context['approver2'] = obj.approver2
-    context['approver3'] = obj.approver3
-    context['approver4'] = obj.approver4
-    context['approver5'] = obj.approver5
-    context['approver6'] = obj.approver6
+    # context['approver1'] = obj.approver1
+    # context['approver2'] = obj.approver2
+    # context['approver3'] = obj.approver3
+    # context['approver4'] = obj.approver4
+    # context['approver5'] = obj.approver5
+    # context['approver6'] = obj.approver6
     # context['apv_cc'] = obj.apv_cc
     context['created_by'] = obj.created_by.id
     context['created_at'] = obj.created_at
