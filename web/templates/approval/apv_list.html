@@ -90,7 +90,7 @@
                        style="border-left: none; border-right: none;">
                     <thead>
                     <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">작성일</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">최종수정일</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서번호</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 30%;">제목</th>
@@ -127,7 +127,8 @@
     let apv_all_sch = '';
     let date_sch_from = '';
     let date_sch_to = '';
-    let apv_click_id = null;
+    let apv_click_id = '';
+    let apv_click_status = '';
     let apv_nation_data = {
         cname: 'apv_nation',  // 인스턴스 명과 일치해야함
         nation_id: 'apv_nation_id',
@@ -208,9 +209,9 @@
             let item = data[i];
 
             let row = `
-            <tr id='${item.id}' style='cursor:pointer;'>
+            <tr id='${item.id}' apv_status='${item.apv_status}' style='cursor:pointer;'>
             <td name="no" class="d-none">${num + i}</td>
-            <td name='created_at'>${item.created_at.split('T')[0]}</td>
+            <td name='updated_at'>${item.updated_at.split('T')[0]}</td>
             <td name='doc_no'>${item.doc_no}</td>
             <td name='apv_category'>${item.apv_category.name}</td>
             <td name='doc_title'>${item.doc_title}</td>
@@ -225,22 +226,18 @@
         apv_nation.nation_display(done);
         $('#apv_tbody').html(rows);
 
-    }
+        $('#apv_tbody > tr').on('click', function () {
+            $(this).parent().find('tr').removeClass('clicked');
+            $(this).addClass('clicked');
 
-    function apv_md_create() {
-        if (a_click_user_id == null) {
-            alert(txt.update_select);
-            return;
-        }
-
-        $('#r_md_update #name').val(a_click_name); // 업체명
-        $('#r_md_update #user_id').val(a_click_user_id); // 사용자계정
-        $('#r_md_update #username').val(a_click_username); // 사용자이름
-
-        load_customer_permission();
-        load_company_user_permission();
-
-        $('#r_md_update').modal("show");
+            apv_click_id = $(this).attr("id");
+            apv_click_status = $(this).attr("apv_status");
+            if (apv_click_status === '임시') {
+                location.href = `/admins/apv/apv_temp_update/${apv_click_id}`;
+            } else {
+                alert("임시 외는 추후 작업예정");
+            }
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function () {

@@ -579,7 +579,6 @@ class ApvMaster(models.Model):
     comments_count = models.PositiveIntegerField(default=0)
     views_count = models.PositiveIntegerField(default=0)
     special_comment = models.TextField(null=True, blank=True)
-    # attached_files = models.ManyToManyField('ApvAttachments', blank=True)
 
     deadline = models.DateField(null=True, blank=True)
     payment_method = models.CharField(max_length=100, null=True, blank=True)

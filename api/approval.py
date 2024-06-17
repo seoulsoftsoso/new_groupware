@@ -13,41 +13,6 @@ import base64
 from django.core.files.base import ContentFile
 
 
-class ApvForm(forms.ModelForm):
-    class Meta:
-        model = ApvMaster
-        fields = [
-            'doc_title', 'apv_category', 'apv_status', 'form_template', 'form_data',
-            'special_comment', 'deadline', 'payment_method',
-            'related_team', 'related_project', 'related_info', 'total_cost',
-            'period_from', 'period_to', 'period_count', 'leave_reason'
-        ]
-        labels = {
-            'doc_title': '제목',
-            'apv_category': '카테고리',
-            'apv_status': '결재 상태',
-            'form_template': '양식 템플릿',
-            'form_data': '양식 데이터',
-            'special_comment': '특별 의견',
-            'deadline': '마감 기한',
-            'payment_method': '결제 방법',
-            'related_team': '관련 팀',
-            'related_project': '관련 프로젝트',
-            'related_info': '관련 정보',
-            'total_cost': '총 비용',
-            'period_from': '시작 기간',
-            'period_to': '종료 기간',
-            'period_count': '기간 수',
-            'leave_reason': '휴가 사유'
-        }
-
-
-class ApvCommentForm(forms.ModelForm):
-    class Meta:
-        model = ApvComment
-        fields = ['content']
-
-
 class ApvListView(View):
 
     @transaction.atomic
@@ -60,54 +25,37 @@ class ApvListView(View):
         qs = ApvMaster.objects.filter().order_by('-updated_at')
 
         # 기간 검색
-        if date_sch_from != '':
+        if date_sch_from:
             qs = qs.filter(updated_at__gte=date_sch_from)
 
-        if date_sch_to != '':
+        if date_sch_to:
             qs = qs.filter(updated_at__lte=date_sch_to)
 
         # 키워드 검색
         apv_all_sch = request.GET.get("apv_all_sch", '')
-        search_keywords = apv_all_sch.split(',')
-        search_conditions = Q()
-        for keyword in search_keywords:
-            keyword = keyword.strip()
-            if keyword:
-                all_sch_upper = keyword.upper()
-                all_sch_lower = keyword.lower()
-
-                search_condition = (
-                        Q(doc_no__icontains=keyword) |
-                        Q(doc_title__icontains=keyword) |
-                        Q(created_by__username__icontains=keyword) |
-                        Q(apv_category__name__icontains=keyword) |
-
-                        Q(doc_no__icontains=all_sch_lower) |
-                        Q(doc_title__icontains=all_sch_lower) |
-                        Q(created_by__username__icontains=all_sch_lower) |
-                        Q(apv_category__name__icontains=all_sch_lower) |
-
-                        Q(doc_no__icontains=all_sch_upper) |
-                        Q(doc_title__icontains=all_sch_upper) |
-                        Q(created_by__username__icontains=all_sch_upper) |
-                        Q(apv_category__name__icontains=all_sch_upper)
-                )
-                search_conditions |= search_condition  # OR 연산으로 추가
-        qs = qs.filter(search_conditions)
+        if apv_all_sch:
+            search_keywords = apv_all_sch.split(',')
+            search_conditions = Q()
+            for keyword in search_keywords:
+                keyword = keyword.strip()
+                if keyword:
+                    search_condition = (
+                            Q(doc_no__icontains=keyword) |
+                            Q(doc_title__icontains=keyword) |
+                            Q(created_by__username__icontains=keyword) |
+                            Q(apv_category__name__icontains=keyword)
+                    )
+                    search_conditions |= search_condition
+            qs = qs.filter(search_conditions)
 
         # 결재상태 검색
         apv_status_sch = request.GET.get('apv_status_sch', '')
-        if apv_status_sch == '전체' or apv_status_sch == '':
-            qs = qs
-        else:
+        if apv_status_sch and apv_status_sch != '전체':
             qs = qs.filter(apv_status=apv_status_sch)
 
         if _page == '' or _size == '':
-            print(_page, _size)
             results = [get_obj(row) for row in qs]
-            context = {}
-            context['results'] = results
-
+            context = {'results': results}
             return JsonResponse(context, safe=False)
 
         # Pagination
@@ -124,14 +72,116 @@ class ApvListView(View):
             url_next = None
 
         results = [get_obj(row) for row in qs_ps]
-
-        context = {}
-        context['count'] = qs_ps.paginator.count
-        context['previous'] = url_pre
-        context['next'] = url_next
-        context['results'] = results
+        context = {
+            'count': qs_ps.paginator.count,
+            'previous': url_pre,
+            'next': url_next,
+            'results': results
+        }
 
         return JsonResponse(context, safe=False)
+
+
+
+class ApvDetail(View):
+    @transaction.atomic
+    def get(self, request, *args, **kwargs):
+        apv_id = request.GET.get('apv_id', '')
+        if apv_id:
+            apv_master = ApvMaster.objects.get(id=apv_id)
+            qs = [apv_master]
+
+            # 세부항목 로딩
+            sub_items = ApvSubItem.objects.filter(document=apv_master)
+            sub_item_data = [{
+                'item_no': item.item_no,
+                'desc1': item.desc1,
+                'desc2': item.desc2,
+                'desc3': item.desc3,
+                'price': item.price,
+                'qty': item.qty,
+                'amount': item.amount,
+                'remarks': item.remarks,
+            } for item in sub_items]
+
+            # approver 로딩
+            approvers = ApvApprover.objects.filter(document=apv_master)
+            approver_data = []
+            for approver in approvers:
+                approver_data.append({
+                    'approver1_id': approver.approver1.id if approver.approver1 is not None else None,
+                    'approver1_name': approver.approver1.username if approver.approver1 is not None else None,
+                    'approver1_team': approver.approver1.department_position.name if approver.approver1 is not None else None,
+                    'approver1_status': approver.approver1_status,
+                    'approver1_date': approver.approver1_date,
+                    'approver2_id': approver.approver2.id if approver.approver2 is not None else None,
+                    'approver2_name': approver.approver2.username if approver.approver2 is not None else None,
+                    'approver2_team': approver.approver1.department_position.name if approver.approver2 is not None else None,
+                    'approver2_status': approver.approver2_status,
+                    'approver2_date': approver.approver2_date,
+                    'approver3_id': approver.approver3.id if approver.approver3 is not None else None,
+                    'approver3_name': approver.approver3.username if approver.approver3 is not None else None,
+                    'approver3_team': approver.approver1.department_position.name if approver.approver3 is not None else None,
+                    'approver3_status': approver.approver3_status,
+                    'approver3_date': approver.approver3_date,
+                    'approver4_id': approver.approver4.id if approver.approver4 is not None else None,
+                    'approver4_name': approver.approver4.username if approver.approver4 is not None else None,
+                    'approver4_team': approver.approver1.department_position.name if approver.approver4 is not None else None,
+                    'approver4_status': approver.approver4_status,
+                    'approver4_date': approver.approver4_date,
+                    'approver5_id': approver.approver5.id if approver.approver5 is not None else None,
+                    'approver5_name': approver.approver5.username if approver.approver5 is not None else None,
+                    'approver5_team': approver.approver1.department_position.name if approver.approver5 is not None else None,
+                    'approver5_status': approver.approver5_status,
+                    'approver5_date': approver.approver5_date,
+                    'approver6_id': approver.approver6.id if approver.approver6 is not None else None,
+                    'approver6_name': approver.approver6.username if approver.approver6 is not None else None,
+                    'approver6_team': approver.approver1.department_position.name if approver.approver6 is not None else None,
+                    'approver6_status': approver.approver6_status,
+                    'approver6_date': approver.approver6_date,
+                })
+
+            # cc목록 로딩
+            cc_list = ApvCC.objects.filter(document=apv_master)
+            cc_data = [{
+                'user_id': cc.user.id if cc.user else '',
+                'username': cc.user.username if cc.user else '',
+            } for cc in cc_list]
+
+            # 첨부파일 로딩
+            attachments = ApvAttachments.objects.filter(document=apv_master)
+            attachment_data = [{
+                'file': attachment.file.url,
+                'created_at': attachment.created_at,
+            } for attachment in attachments]
+
+            # 댓글 로딩
+            comments = ApvComment.objects.filter(document=apv_master)
+            comment_data = [{
+                'content': comment.content,
+                'created_by': {
+                    'id': comment.created_by.id,
+                    'username': comment.created_by.username,
+                },
+                'created_at': comment.created_at,
+                'updated_at': comment.updated_at,
+            } for comment in comments]
+
+
+        results = [get_obj(row) for row in qs]
+        for result in results:
+            result['sub_items'] = sub_item_data
+            result['approvers'] = approver_data
+            result['apv_cc'] = cc_data
+            result['attachments'] = attachment_data
+            result['comments'] = comment_data
+
+        context = {
+            'results': results
+        }
+
+        return JsonResponse(context, safe=False)
+
 
 
 class ApvCreate(View):
@@ -139,51 +189,21 @@ class ApvCreate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         user_id = request.COOKIES["user_id"]
-        user = UserMaster.objects.get(id=user_id)
+        user = get_object_or_404(UserMaster, id=user_id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
+        doc_no = generate_doc_no()
         apv_category_id = request.POST.get('apv_category_id', '')
         apv_status = request.POST.get('apv_status', '')
-
-        doc_no = generate_doc_no()
         doc_title = request.POST.get('doc_title', '')
         leave_reason = request.POST.get('leave_reason', '')
-        period_from = request.POST.get('period_from', '')
-        period_to = request.POST.get('period_to', '')
-        period_count = request.POST.get('period_count', None)
+        period_from = self.get_date_from_string(request.POST.get('period_from', ''))
+        period_to = self.get_date_from_string(request.POST.get('period_to', ''))
+        period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
 
-        if period_count == '':
-            period_count = None
-        else:
-            try:
-                period_count = float(period_count) if period_count is not None else None
-            except ValueError:
-                period_count = None
-
-        try:
-            period_from = datetime.strptime(period_from, '%Y-%m-%d').date() if period_from else None
-        except ValueError:
-            period_from = None
-
-        try:
-            period_to = datetime.strptime(period_to, '%Y-%m-%d').date() if period_to else None
-        except ValueError:
-            period_to = None
-
-        approver1_id = request.POST.get('approver1', None)
-        approver2_id = request.POST.get('approver2', None)
-        approver3_id = request.POST.get('approver3', None)
-        approver4_id = request.POST.get('approver4', None)
-        approver5_id = request.POST.get('approver5', None)
-        approver6_id = request.POST.get('approver6', None)
-
-        approver1 = UserMaster.objects.get(pk=approver1_id) if approver1_id else None
-        approver2 = UserMaster.objects.get(pk=approver2_id) if approver2_id else None
-        approver3 = UserMaster.objects.get(pk=approver3_id) if approver3_id else None
-        approver4 = UserMaster.objects.get(pk=approver4_id) if approver4_id else None
-        approver5 = UserMaster.objects.get(pk=approver5_id) if approver5_id else None
-        approver6 = UserMaster.objects.get(pk=approver6_id) if approver6_id else None
+        approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
+        approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
 
         apv_cc_ids = request.POST.getlist('apv_cc[]', [])
         apv_cc_users = UserMaster.objects.filter(pk__in=apv_cc_ids) if apv_cc_ids else []
@@ -208,52 +228,14 @@ class ApvCreate(View):
 
             ApvApprover_obj = ApvApprover.objects.create(
                 document=ApvMaster_obj,
-                approver1=approver1,
-                approver2=approver2,
-                approver3=approver3,
-                approver4=approver4,
-                approver5=approver5,
-                approver6=approver6,
-                approver1_status='대기' if approver1 else None,
-                approver2_status='대기' if approver2 else None,
-                approver3_status='대기' if approver3 else None,
-                approver4_status='대기' if approver4 else None,
-                approver5_status='대기' if approver5 else None,
-                approver6_status='대기' if approver6 else None,
+                **{f'approver{i}': approver for i, approver in enumerate(approvers, start=1)},
+                **{f'approver{i}_status': '대기' for i in range(1, len(approvers) + 1)}
             )
 
             for apv_cc_user in apv_cc_users:
-                ApvCC.objects.create(
-                    document=ApvMaster_obj,
-                    user=apv_cc_user
-                )
+                ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
 
-            attached_file_objs = []
-            i = 0
-            while f'attached_files[{i}][name]' in request.POST:
-                file_name = request.POST[f'attached_files[{i}][name]']
-                file_content_base64 = request.POST[f'attached_files[{i}][content]']
-                file_content = base64.b64decode(file_content_base64)
-                file = ContentFile(file_content, name=file_name)
-                attached_file_objs.append(ApvAttachments(document=ApvMaster_obj, file=file))
-                i += 1
-
-            if attached_file_objs:
-                ApvAttachments.objects.bulk_create(attached_file_objs)
-
-            # attached_file_objs = []
-            # i = 0
-            # while f'attached_files[{i}][name]' in request.POST:
-            #     file_name = request.POST[f'attached_files[{i}][name]']
-            #     file_content_base64 = request.POST[f'attached_files[{i}][content]']
-            #     file_content = base64.b64decode(file_content_base64)
-            #     file = ContentFile(file_content, name=file_name)
-            #     attachment = ApvAttachments.objects.create(file=file)
-            #     attached_file_objs.append(attachment)
-            #     i += 1
-            #
-            # if attached_file_objs:
-            #     ApvMaster_obj.attached_files.add(*attached_file_objs)
+            self.save_attachments(request, ApvMaster_obj)
 
             if ApvMaster_obj:
                 context = get_res(context, ApvMaster_obj)
@@ -273,6 +255,32 @@ class ApvCreate(View):
 
         return JsonResponse(context)
 
+    @staticmethod
+    def get_date_from_string(date_str):
+        try:
+            return datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+        except ValueError:
+            return None
+
+    @staticmethod
+    def get_float_from_string(float_str):
+        try:
+            return float(float_str) if float_str else None
+        except ValueError:
+            return None
+
+    @staticmethod
+    def save_attachments(request, apv_master_obj):
+        i = 0
+        while f'attached_files[{i}][name]' in request.POST:
+            file_name = request.POST[f'attached_files[{i}][name]']
+            file_content_base64 = request.POST[f'attached_files[{i}][content]']
+            file_content = base64.b64decode(file_content_base64)
+            file = ContentFile(file_content, name=file_name)
+            apv_attachment = ApvAttachments.objects.create(document=apv_master_obj)
+            apv_attachment.file.save(file_name, file)
+            i += 1
+
 
 def get_res(context, obj):
     context['id'] = obj.id
@@ -285,7 +293,7 @@ def get_res(context, obj):
     context['period_to'] = obj.period_to
     context['period_count'] = obj.period_count
     context['special_comment'] = obj.special_comment
-    context['attached_files'] = [file.id for file in obj.attached_files.all()]
+    # context['attached_files'] = [file.id for file in obj.attached_files.all()]
     # context['approver1'] = obj.approver1
     # context['approver2'] = obj.approver2
     # context['approver3'] = obj.approver3
@@ -307,48 +315,28 @@ def generate_doc_no():
     return doc_no
 
 
-# class ApvDetailView(DetailView):
+
+# class ApvUpdateView(UpdateView):
+
+
+# class ApvDeleteView(DeleteView):
 #     model = ApvMaster
-#     template_name = 'approval/apv_detail.html'
-#     context_object_name = 'apv_detail'
+#     template_name = 'approval/apv_confirm_delete.html'
+#     success_url = reverse_lazy('apv_list')
+
+
+# class ApvCommentCreateView(CreateView):
+#     model = ApvComment
+#     form_class = ApvCommentForm
+#     template_name = 'approval/apvcomment_form.html'
 #
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         document = self.get_object()
-#         approvers = document.apv_docs.all().order_by('approver_priority')
+#     def form_valid(self, form):
+#         form.instance.author = self.request.user
+#         form.instance.document = get_object_or_404(ApvMaster, pk=self.kwargs['pk'])
+#         return super().form_valid(form)
 #
-#         context['approvers'] = approvers
-#         context['user_is_approver'] = approvers.filter(approver=self.request.user).exists()
-#         context['user_is_creator'] = document.created_by == self.request.user
-#
-#         return context
-
-
-class ApvUpdateView(UpdateView):
-    model = ApvMaster
-    form_class = ApvForm
-    template_name = 'approval/apv_form.html'
-    success_url = reverse_lazy('apv_list')
-
-
-class ApvDeleteView(DeleteView):
-    model = ApvMaster
-    template_name = 'approval/apv_confirm_delete.html'
-    success_url = reverse_lazy('apv_list')
-
-
-class ApvCommentCreateView(CreateView):
-    model = ApvComment
-    form_class = ApvCommentForm
-    template_name = 'approval/apvcomment_form.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.document = get_object_or_404(ApvMaster, pk=self.kwargs['pk'])
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('apv_detail', kwargs={'pk': self.kwargs['pk']})
+#     def get_success_url(self):
+#         return reverse_lazy('apv_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 def get_obj(obj):
@@ -361,7 +349,6 @@ def get_obj(obj):
             'name': obj.apv_category.name
         } if obj.apv_category else '',
         'apv_status': obj.apv_status if obj.apv_status is not None else '',
-        # 'created_by': obj.created_by.username if obj.created_by is not None else '',
         'created_by': {
             'username': obj.created_by.username,
             'department_position': obj.created_by.department_position.name,

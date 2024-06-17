@@ -31,8 +31,7 @@
 
 <div class="modal-content">
     <div class="modal-header" style="background:white; height: 50px;">
-        <strong style="color: #000; font-size: x-large; margin: 10px 0 0 20px; font-family: Pretendard;">신규 결재
-            작성</strong></a>
+        <strong style="color: #000; font-size: x-large; margin: 10px 0 0 20px; font-family: Pretendard;">신규 결재 작성</strong></a>
     </div>
     <div class="modal-body w-100 d-flex" style="height:750px;">
         <!-- 결재 종류 선택 영역 -->
@@ -46,7 +45,7 @@
                      style="border: 1px solid #ddd; width:80%; max-height: 600px; overflow-y: auto;"></div>
             </div>
             <div class="col-10">
-                <div id="template_include" style="overflow-y: auto;">
+                <div id="template_include" data-temp-update="template_temp_update" style="overflow-y: auto;">
                     <div class="d-flex justify-content-center" style="margin-top: 25%;">결재양식을 선택해 주세요</div>
                 </div>
             </div>
@@ -108,8 +107,8 @@
     function loadCategoryTemplate() {
         fetch(`category/${categoryId}`)
             .then(response => response.text())
-            .then(data => {
-                document.getElementById('template_include').innerHTML = data;
+            .then(templateCreate => {
+                document.getElementById('template_include').innerHTML = templateCreate;
                 loadTemplateScripts();
             })
             .catch(error => {
@@ -207,7 +206,7 @@
         }
 
         if (daysDiff >= 0.5) {
-            periodCount.val(daysDiff);
+            periodCount.val(daysDiff.toFixed(1));
         } else {
             periodCount.val('');
         }
@@ -227,51 +226,6 @@
             periodToHalf.prop('disabled', false);
         }
     }
-
-
-{% comment %}    function apv_modal_tempsave() {
-
-        let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
-
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-
-            apv_category_id: nullapply(categoryId),
-            apv_status : '임시',
-
-            doc_title: nullapply($('#apv_md_create #doc_title').val()),
-            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
-            period_from: nullapply($('#apv_md_create #period_from').val()),
-            period_to: nullapply($('#apv_md_create #period_to').val()),
-            period_count: nullapply($('#apv_md_create #period_count').val()),
-            special_comment: nullapply($('#apv_md_create #special_comment').val()),
-            {#attached_files: $('#apv_md_create #attached_files').val() ? $('#apv_md_create #attached_files').val().split(',') : [],#}
-
-            approver1: getApproverId('approver1'),
-            approver2: getApproverId('approver2'),
-            approver3: getApproverId('approver3'),
-            approver4: getApproverId('approver4'),
-            approver5: getApproverId('approver5'),
-            approver6: getApproverId('approver6'),
-            apv_cc: selectedCcValues,
-        };
-
-        let attachedFiles = document.getElementById('attached_files').files;
-        for (let i = 0; i < attachedFiles.length; i++) {
-            api_data[`attached_files_${i}`] = attachedFiles[i];
-        }
-
-        api_gp('/admins/apv/create/', 'post', api_data, (done) => {
-            $('#apv_md_create').modal("hide");
-
-            apv_nation.page = 1;  // 첫페이지로
-
-            {#apv_api_data_save(done);#}
-            search_apv_data();
-            alert(txt.create_ed);
-        });
-    }{% endcomment %}
 
     function getApproverId(approverInputId) {
         let approverName = $(`#${approverInputId}`).val();
@@ -296,6 +250,41 @@
     }
 
     function apv_modal_tempsave() {
+        let apvCcElement = document.getElementById('apv_cc');
+        let selectedCcValues = getSelectedValues(apvCcElement);
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            apv_category_id: nullapply(categoryId),
+            apv_status: '임시',
+            doc_title: nullapply($('#apv_md_create #doc_title').val()),
+            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
+            period_from: nullapply($('#apv_md_create #period_from').val()),
+            period_to: nullapply($('#apv_md_create #period_to').val()),
+            period_count: nullapply($('#apv_md_create #period_count').val()),
+            special_comment: nullapply($('#apv_md_create #special_comment').val()),
+            approver1: getApproverId('approver1'),
+            approver2: getApproverId('approver2'),
+            approver3: getApproverId('approver3'),
+            approver4: getApproverId('approver4'),
+            approver5: getApproverId('approver5'),
+            approver6: getApproverId('approver6'),
+            apv_cc: selectedCcValues,
+        };
+
+        function sendApiRequest() {
+            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
+                $('#apv_md_create').modal("hide");
+                apv_nation.page = 1;  // 첫 페이지로
+                search_apv_data();
+                alert(txt.create_ed);
+            });
+        }
+        sendApiRequest();
+    }
+
+    // 첨부파일 가능 버전
+    {% comment %}function apv_modal_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -356,8 +345,6 @@
         } else {
             sendApiRequest();
         }
-    }
-
-
+    }{% endcomment %}
 
 </script>
