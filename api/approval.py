@@ -13,6 +13,7 @@ import base64
 from django.core.files.base import ContentFile
 
 
+
 class ApvListView(View):
 
     @transaction.atomic
@@ -325,7 +326,7 @@ class ApvUpdate(View):
         user = get_object_or_404(UserMaster, id=user_id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
-        doc_no = generate_doc_no()
+        doc_no = request.POST.get('doc_no', '')
         apv_category_id = request.POST.get('apv_category_id', '')
         apv_status = request.POST.get('apv_status', '')
         doc_title = request.POST.get('doc_title', '')
@@ -344,20 +345,19 @@ class ApvUpdate(View):
         context = {}
 
         try:
-
             obj = ApvMaster.objects.get(pk=int(pk))
-            obj.apv_category_id=apv_category_id,
-            obj.apv_status=apv_status,
-            obj.doc_no=doc_no,
-            obj.doc_title=doc_title,
-            obj.leave_reason=leave_reason,
-            obj.period_from=period_from,
-            obj.period_to=period_to,
-            obj.period_count=period_count,
-            obj.special_comment=special_comment,
-            obj.created_by=user,
-            obj.created_at=d_today,
-            obj.updated_at=d_today,
+            obj.apv_category_id = apv_category_id,
+            obj.apv_status = apv_status,
+            obj.doc_no = doc_no,
+            obj.doc_title = doc_title,
+            obj.leave_reason = leave_reason,
+            obj.period_from = period_from,
+            obj.period_to = period_to,
+            obj.period_count = period_count,
+            obj.special_comment = special_comment,
+            obj.created_by = user,
+            obj.created_at = d_today,
+            obj.updated_at = d_today,
 
             obj.save()
 
