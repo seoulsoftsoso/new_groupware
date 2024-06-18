@@ -361,22 +361,22 @@ class ApvUpdate(View):
 
             obj.save()
 
-            ApvApprover_obj = ApvApprover.objects.create(
-                document=ApvMaster_obj,
-                **{f'approver{i}': approver for i, approver in enumerate(approvers, start=1)},
-                **{f'approver{i}_status': '대기' for i in range(1, len(approvers) + 1)}
-            )
+            for i, approver in enumerate(approvers, start=1):
+                ApvApprover.objects.update_or_create(
+                    document=obj,
+                    approver=approver,
+                    defaults={f'approver{i}_status': '대기'}
+                )
 
             for apv_cc_user in apv_cc_users:
-                ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
+                ApvCC.objects.update_or_create(
+                    document=obj,
+                    user=apv_cc_user
+                )
 
-            self.save_attachments(request, ApvMaster_obj)
+            self.save_attachments(request, obj)
 
-            if ApvMaster_obj:
-                context = get_res(context, ApvMaster_obj)
-            else:
-                msg = "등록 실패했습니다.\n"
-                return JsonResponse({'error': True, 'message': msg})
+            context = get_res(context, obj)
 
         except Exception as e:
             print('Exception 오류 발생')
