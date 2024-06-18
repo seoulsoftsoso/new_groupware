@@ -387,6 +387,9 @@
         let videoHeight = 2000;
         let isScrolling = false;
 
+        document.querySelectorAll(".menu_li > a").forEach(function (el) {el.style.color = "#fff";});
+
+
         if (window.innerWidth <= 1000) {
             videoHeight = 4500;
         }

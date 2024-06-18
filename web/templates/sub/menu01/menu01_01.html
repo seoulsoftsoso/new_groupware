@@ -350,6 +350,7 @@
     })
 
     document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".menu_li > a").forEach(function (el) {el.style.color = "#fff";});
         let currentIndex = 0;
         const images = document.querySelectorAll('.slide-image');
         const totalImages = images.length;

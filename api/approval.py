@@ -316,7 +316,105 @@ def generate_doc_no():
 
 
 
-# class ApvUpdateView(UpdateView):
+class ApvUpdate(View):
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        pk = request.POST.get('pk')
+        user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=user_id)
+        d_today = datetime.today().strftime('%Y-%m-%d')
+
+        doc_no = generate_doc_no()
+        apv_category_id = request.POST.get('apv_category_id', '')
+        apv_status = request.POST.get('apv_status', '')
+        doc_title = request.POST.get('doc_title', '')
+        leave_reason = request.POST.get('leave_reason', '')
+        period_from = self.get_date_from_string(request.POST.get('period_from', ''))
+        period_to = self.get_date_from_string(request.POST.get('period_to', ''))
+        period_count = self.get_float_from_string(request.POST.get('period_count', ''))
+        special_comment = request.POST.get('special_comment', '')
+
+        approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
+        approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
+
+        apv_cc_ids = request.POST.getlist('apv_cc[]', [])
+        apv_cc_users = UserMaster.objects.filter(pk__in=apv_cc_ids) if apv_cc_ids else []
+
+        context = {}
+
+        try:
+
+            obj = ApvMaster.objects.get(pk=int(pk))
+            obj.apv_category_id=apv_category_id,
+            obj.apv_status=apv_status,
+            obj.doc_no=doc_no,
+            obj.doc_title=doc_title,
+            obj.leave_reason=leave_reason,
+            obj.period_from=period_from,
+            obj.period_to=period_to,
+            obj.period_count=period_count,
+            obj.special_comment=special_comment,
+            obj.created_by=user,
+            obj.created_at=d_today,
+            obj.updated_at=d_today,
+
+            obj.save()
+
+            ApvApprover_obj = ApvApprover.objects.create(
+                document=ApvMaster_obj,
+                **{f'approver{i}': approver for i, approver in enumerate(approvers, start=1)},
+                **{f'approver{i}_status': '대기' for i in range(1, len(approvers) + 1)}
+            )
+
+            for apv_cc_user in apv_cc_users:
+                ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
+
+            self.save_attachments(request, ApvMaster_obj)
+
+            if ApvMaster_obj:
+                context = get_res(context, ApvMaster_obj)
+            else:
+                msg = "등록 실패했습니다.\n"
+                return JsonResponse({'error': True, 'message': msg})
+
+        except Exception as e:
+            print('Exception 오류 발생')
+            print(e)
+            msg = "입력한 데이터에 오류가 존재합니다.\n"
+            for i in e.args:
+                if i == 1062:
+                    msg = '중복된 데이터가 존재합니다.'
+
+            return JsonResponse({'error': True, 'message': msg})
+
+        return JsonResponse(context)
+
+    @staticmethod
+    def get_date_from_string(date_str):
+        try:
+            return datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+        except ValueError:
+            return None
+
+    @staticmethod
+    def get_float_from_string(float_str):
+        try:
+            return float(float_str) if float_str else None
+        except ValueError:
+            return None
+
+    @staticmethod
+    def save_attachments(request, apv_master_obj):
+        i = 0
+        while f'attached_files[{i}][name]' in request.POST:
+            file_name = request.POST[f'attached_files[{i}][name]']
+            file_content_base64 = request.POST[f'attached_files[{i}][content]']
+            file_content = base64.b64decode(file_content_base64)
+            file = ContentFile(file_content, name=file_name)
+            apv_attachment = ApvAttachments.objects.create(document=apv_master_obj)
+            apv_attachment.file.save(file_name, file)
+            i += 1
 
 
 # class ApvDeleteView(DeleteView):
