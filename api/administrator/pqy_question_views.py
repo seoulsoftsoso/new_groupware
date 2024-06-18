@@ -9,7 +9,7 @@ from api.models import UserMaster, Question
 
 class PayQuestionPage(ListView):
     template_name = 'admins/administrator/pay_question/pay_question.html'
-    paginate_by = 15
+    paginate_by = 1000
 
     def get_queryset(self):
         search_to = self.request.GET.get('search-to', None)
@@ -27,7 +27,7 @@ class PayQuestionPage(ListView):
 
         result = queryset.values(
             'id', 'Question_type', 'Question_path', 'Question_name', 'Question_company', 'Question_position',
-            'Question_department', 'Question_phone', 'Question_content', 'Question_date'
+            'Question_phone', 'Question_content', 'Question_date'
         ).order_by('-id')
 
         return result

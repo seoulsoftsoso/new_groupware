@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1000px) {
+        .control-buttons {
+            height: 40px;
+        }
+
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/topnav.html' %}
+
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column px-3 pb-2">
+                <div class="mb-xl-0 mb-4">
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'apv_list' %}">
+                            <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;">전자결재</strong></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-2">
+                <div id="template_include" style="border: 1px solid #ddd; padding: 2% 0 2% 0;"></div>
+
+                <div class="d-flex justify-content-end" style="margin: 3%">
+                    <div type="button" class="btn btn-outline-secondary mx-2" style="width: 150px;"
+                         onclick="apv_modal_temp_update()"> 임시 저장
+                    </div>
+                    <div type="button" class="btn btn-outline-info mx-2" style="width: 150px;"
+                         onclick="apv_modal_approvalsend()"> 결재 전송
+                    </div>
+                    <a href="{% url 'apv_list' %}" class="btn btn-outline-danger mx-2" style="width: 150px;">목록 보기</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<script>
+
+    let currentUrl = window.location.href;
+    let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];
+
+    $(function () {
+        apv_md_temp_update()
+    });
+
+    function loadTemplateScripts() {
+        $(document).ready(function () {
+            $('#period_from, #period_to').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $('#period_from, #period_to, #period_from_half, #period_to_half').change(function () {
+                updatePeriodToOptions();
+                calculatePeriod();
+            });
+            updatePeriodToOptions();
+        });
+    }
+
+    function calculatePeriod() {
+        let periodFrom = $('#period_from').val();
+        let periodTo = $('#period_to').val();
+        let periodFromHalf = $('#period_from_half').val();
+        let periodToHalf = $('#period_to_half').val();
+        let periodCount = $('#period_count');
+
+        let fromDate = new Date(periodFrom);
+        let toDate = new Date(periodTo);
+
+        if (isNaN(fromDate) || isNaN(toDate)) {
+            periodCount.val('');
+            return;
+        }
+
+        if (fromDate > toDate) {
+            alert("시작 날짜는 종료 날짜보다 나중일 수 없습니다.");
+            periodCount.val('');
+            return;
+        }
+
+        let daysDiff = 0;
+        let currentDate = fromDate;
+        while (currentDate <= toDate) {
+            let dayOfWeek = currentDate.getDay();
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 일요일(0)과 토요일(6) 제외
+                daysDiff++;
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        if (fromDate.getTime() === toDate.getTime()) {
+            if (periodFromHalf === 'am' && periodToHalf === 'pm') {
+                daysDiff = 1; // 같은 날 오전과 오후를 선택하면 1일로 계산
+            } else if (periodFromHalf === 'pm' && periodToHalf === 'am') {
+                daysDiff = 0; // 같은 날 오후와 오전을 선택하면 0일로 계산
+            } else if (periodFromHalf !== periodToHalf) {
+                daysDiff = 0.5; // 같은 날 오전과 오후가 다른 경우 반나절로 계산
+            }
+        } else {
+            if (periodFromHalf === 'pm') {
+                daysDiff -= 0.5; // 시작일이 오후면 반나절 차감
+            }
+            if (periodToHalf === 'am') {
+                daysDiff -= 0.5; // 종료일이 오전이면 반나절 차감
+            }
+        }
+
+        if (daysDiff >= 0.5) {
+            periodCount.val(daysDiff.toFixed(1));
+        } else {
+            periodCount.val('');
+        }
+    }
+
+    function updatePeriodToOptions() {
+        let periodFrom = $('#period_from').val();
+        let periodFromHalf = $('#period_from_half').val();
+        let periodToHalf = $('#period_to_half');
+
+        let fromDate = new Date(periodFrom);
+        let toDate = new Date($('#period_to').val());
+
+        if (fromDate.getTime() === toDate.getTime()) {
+            periodToHalf.val(periodFromHalf).prop('disabled', true);
+        } else {
+            periodToHalf.prop('disabled', false);
+        }
+    }
+
+    function apv_md_temp_update() {
+        let query = "?apv_id=" + apv_click_id;
+        api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
+            draw_apv_temp_update(done);
+        })
+    }
+
+    function draw_apv_temp_update(done) {
+        console.log("draw_apv_temp_update: ", done);
+        let data = done.results[0];
+
+        categoryId = data.apv_category.id;
+        fetch(`/admins/apv/category/${categoryId}`)
+            .then(response => response.text())
+            .then(templateData => {
+                loadTemplateScripts();
+                document.getElementById('template_include').innerHTML = templateData;
+                document.getElementById('doc_title').value = data.doc_title;
+                document.getElementById('doc_no').value = data.doc_no;
+                document.getElementById('create_date').value = data.updated_at.split('T')[0];
+                document.getElementById('username_md').value = data.created_by.username;
+                document.getElementById('team').value = data.created_by.department_position;
+                document.getElementById('approver1').value = data.approvers[0]?.approver1_name ? data.approvers[0].approver1_name + ' (' + data.approvers[0].approver1_team + ')' : '';
+                document.getElementById('approver2').value = data.approvers[0]?.approver2_name ? data.approvers[0].approver2_name + ' (' + data.approvers[0].approver2_team + ')' : '';
+                document.getElementById('approver3').value = data.approvers[0]?.approver3_name ? data.approvers[0].approver3_name + ' (' + data.approvers[0].approver3_team + ')' : '';
+                document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name + ' (' + data.approvers[0].approver4_team + ')' : '';
+                document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name + ' (' + data.approvers[0].approver5_team + ')' : '';
+                document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name + ' (' + data.approvers[0].approver6_team + ')' : '';
+                document.getElementById('leave_reason').value = data.leave_reason;
+                document.getElementById('period_from').value = data.period_from;
+                document.getElementById('period_to').value = data.period_to;
+                document.getElementById('period_count').value = data.period_count;
+                document.getElementById('special_comment').value = data.special_comment;
+
+                let apvCcSelect = document.getElementById('apv_cc');
+                let selectedCcIds = data.apv_cc.map(cc => cc.user_id);
+                Array.from(apvCcSelect.options).forEach(option => {
+                    if (selectedCcIds.includes(parseInt(option.value))) {
+                        option.selected = true;
+                    } else {
+                        option.selected = false;
+                    }
+                });
+            })
+
+            .catch(error => {
+                console.error('Error loading category detail:', error);
+            });
+    }
+
+    function apv_modal_temp_update() {
+        alert("이제 작업 예정");
+    }
+
+
+</script>

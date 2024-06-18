@@ -69,21 +69,28 @@
                         <table class="dt-multilingual table border-top table table-hover mb-5" style="border-left: lightgrey 1px solid; border-right: lightgrey 1px solid;">
                             <thead>
                             <tr style="text-align: center; width: auto; height: auto; background-color: #fffbfb">
+                                <th style="font-size: medium; font-weight: bold">번호</th>
                                 <th style="font-size: medium; font-weight: bold">기업(기관)명</th>
-                                <th style="font-size: medium; font-weight: bold">부서</th>
-                                <th style="font-size: medium; font-weight: bold">직책/직급</th>
+{#                                <th style="font-size: medium; font-weight: bold">부서</th>#}
+{#                                <th style="font-size: medium; font-weight: bold">직책/직급</th>#}
                                 <th style="font-size: medium; font-weight: bold">성명</th>
+                                <th style="font-size: medium; font-weight: bold">연락처</th>
+                                <th style="font-size: medium; font-weight: bold">문의내용</th>
                                 <th style="font-size: medium; font-weight: bold">작성일</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for obj in result %}
                                 <tr style="text-align: center; cursor: pointer;" onclick="window.location='{% url 'PayQuestionDetail' obj.id %}'">
-                                    <td>{{ obj.Question_company }}</td>
-                                    <td>{{ obj.Question_department }}</td>
-                                    <td>{{ obj.Question_position }}</td>
-                                    <td>{{ obj.Question_name }}</td>
-                                    <td>{{ obj.Question_date|date:"Y년 m월 d일 a g:i" }}</td>
+                                <td>{{ obj.id }}</td>
+                                <td>{{ obj.Question_company }}</td>
+{#                              <td>{{ obj.Question_department }}</td>#}
+{#                              <td>{{ obj.Question_position }}</td>#}
+                                <td>{{ obj.Question_name }}</td>
+                                <td>{{ obj.Question_phone }}</td>
+                                <td style="max-width:250px;overflow: hidden;text-overflow: ellipsis;">{{ obj.Question_content }}</td>
+                                <td>{{ obj.Question_date|date:"Y-m-d // H:i" }}</td>
+{#                                <td>{{ obj.Question_date|date:"Y년 m월 d일 a g:i" }}</td>#}
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -94,7 +101,7 @@
 
 
             </div>
-        {% include 'admins/index_footer.html' %}
+{#        {% include 'admins/index_footer.html' %}#}
             </div>
         </div>
     </div>

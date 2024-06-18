@@ -9,6 +9,7 @@ from django.db.models import Model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from datetime import date
 
 
 def board_upload_path(instance, filename):
@@ -185,6 +186,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
                                       verbose_name='근무지')
     report_auth = models.CharField(max_length=1, null=True, verbose_name='주간업무보고권한설정') #M : 피보고자(팀장), E: 보고자(팀원), C: CEO
+    story_admin = models.BooleanField(default=0, verbose_name='스토리관리자')
 
 
     def __str__(self):
@@ -192,8 +194,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
 
 
 class Question(models.Model):
-    Question_type = models.CharField(max_length=1, null=False, verbose_name='문의종류')
-    Question_path = models.CharField(max_length=1, null=False, verbose_name='검색경로')
+    Question_type = models.CharField(max_length=30, null=False, verbose_name='문의종류')
+    Question_path = models.CharField(max_length=30, null=False, verbose_name='검색경로')
     Question_name = models.CharField(max_length=128, null=False, verbose_name='이름')
     Question_company = models.CharField(max_length=128, null=False, verbose_name='기업(기관)명')
     Question_position = models.CharField(max_length=128, null=False, verbose_name='직책/직급')
@@ -513,5 +515,139 @@ class GradeMaster(Model):
     updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='gd_updatedby')  # 최종작성자
 
 
+class StoryMaster(models.Model):
+    STORY_CATEGORY_CHOICES = [
+        ('NEWS', 'NEWS'),
+        ('ACTIVITY', 'ACTIVITY'),
+        ('CREW', 'CREW'),
+    ]
+    story_title = models.CharField(null=False, max_length=100, verbose_name="스토리 제목")
+    story_content = models.TextField(null=False, verbose_name="스토리 내용")
+    story_picture = models.ImageField(upload_to='story_pictures/', null=True, blank=True, verbose_name="스토리 사진")
+    story_category = models.CharField(max_length=100, choices=STORY_CATEGORY_CHOICES, default='draft', verbose_name="스토리 카테고리")
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='story_created_by')
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='story_updated_by')
+    created_at = models.DateField(auto_now_add=True, verbose_name='최초 작성일')
+    updated_at = models.DateField(auto_now=True, verbose_name='최종 작성일')
+    views = models.PositiveIntegerField(default=0)
+
+class StoryLikes(models.Model):
+    story = models.ForeignKey(StoryMaster, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(UserMaster, related_name='likes', on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)
 
 
+# 전자결재
+class FormTemplate(models.Model):
+    name = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    fields = models.TextField()
+
+
+class ApvCategory(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+
+class ApvMaster(models.Model):
+    STATUS_CHOICES = [
+        ('draft', '임시'),
+        ('sent', '진행'),
+        ('approved', '완료'),
+        ('rejected', '반려'),
+        ('deleted', '삭제')
+    ]
+    LEAVE_CHOICES = [
+        ('연차', '연차'),
+        ('결혼', '결혼'),
+        ('사망', '사망'),
+        ('출산', '출산'),
+        ('예비군/민방위', '예비군/민방위'),
+        ('보건휴가', '보건휴가'),
+        ('무급휴가', '무급휴가'),
+        ('기타휴가', '기타휴가')
+    ]
+
+    doc_no = models.CharField(max_length=50, unique=True, blank=True)
+    doc_title = models.CharField(max_length=255, null=True, blank=True)
+    apv_category = models.ForeignKey(ApvCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="전자결재 카테고리")
+    apv_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='apv_created_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    form_template = models.ForeignKey(FormTemplate, on_delete=models.CASCADE, related_name='documents', null=True, blank=True)
+    form_data = models.TextField(null=True, blank=True)
+    comments_count = models.PositiveIntegerField(default=0)
+    views_count = models.PositiveIntegerField(default=0)
+    special_comment = models.TextField(null=True, blank=True)
+
+    deadline = models.DateField(null=True, blank=True)
+    payment_method = models.CharField(max_length=100, null=True, blank=True)
+    related_team = models.CharField(max_length=255, null=True, blank=True)
+    related_project = models.CharField(max_length=255, null=True, blank=True)
+    related_info = models.CharField(max_length=255, null=True, blank=True)
+    total_cost = models.CharField(max_length=255, null=True, blank=True)
+    period_from = models.DateField(null=True, blank=True)
+    period_to = models.DateField(null=True, blank=True)
+    period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
+    leave_reason = models.CharField(max_length=255, choices=LEAVE_CHOICES, default='연차', null=True, blank=True)
+
+
+class ApvAttachments(models.Model):
+    document = models.ForeignKey(ApvMaster, related_name='attachments', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='attachments/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class ApvSubItem(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='items')
+    item_no = models.IntegerField()
+    desc1 = models.CharField(max_length=255)
+    desc2 = models.CharField(max_length=255)
+    desc3 = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    qty = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    remarks = models.TextField(blank=True, null=True)
+
+
+
+class ApvComment(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class ApvApprover(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs')
+    approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True, blank=True)
+    approver1_status = models.CharField(max_length=50, null=True, blank=True)
+    approver1_date = models.DateField(null=True, blank=True)
+    approver2 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver2', null=True, blank=True)
+    approver2_status = models.CharField(max_length=50, null=True, blank=True)
+    approver2_date = models.DateField(null=True, blank=True)
+    approver3 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver3', null=True, blank=True)
+    approver3_status = models.CharField(max_length=50, null=True, blank=True)
+    approver3_date = models.DateField(null=True, blank=True)
+    approver4 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver4', null=True, blank=True)
+    approver4_status = models.CharField(max_length=50, null=True, blank=True)
+    approver4_date = models.DateField(null=True, blank=True)
+    approver5 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver5', null=True, blank=True)
+    approver5_status = models.CharField(max_length=50, null=True, blank=True)
+    approver5_date = models.DateField(null=True, blank=True)
+    approver6 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver6', null=True, blank=True)
+    approver6_status = models.CharField(max_length=50, null=True, blank=True)
+    approver6_date = models.DateField(null=True, blank=True)
+
+
+class ApvCC(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_cc')
+    user = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='cc_users', null=True, blank=True)
+
+
+class ApvReadStatus(models.Model):
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_read')
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
+    is_read = models.BooleanField(default=False)

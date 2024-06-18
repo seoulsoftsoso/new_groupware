@@ -1,0 +1,129 @@
+{# 기업정보 / ESG경영 페이지 #}
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<!--menu 로드-->
+<style>
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    .custom_btn > button {
+        background-color: rgba(239, 239, 239, 1);
+        color: rgba(137, 137, 137, 1);
+        border: 0;
+        border-radius: 21px;
+    }
+
+    .custom_btn > button:hover {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:active {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:focus {
+        box-shadow: 0 0 0 0;
+    }
+
+    @media (max-width: 1000px) {
+        .title-area {
+            padding: 30% 10% 41% 10% !important;
+        }
+    }
+
+</style>
+{% include 'menu.html' %}
+<body class="menu_esg" style="overflow-x: hidden;">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgb(255,255,255)">
+
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="margin-bottom: 20%; position: relative; padding: 0 0 0 0;">
+                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
+                    </div>
+                </div>
+
+                <div class="title-area card-body row justify-content-center" style="padding: 0% 10% 21% 10%;">
+                    <div class="col-xl-10">
+                        <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">지속가능경영</h1>
+                        <span style="font-size: 34px; font-weight: 500; line-height: 35px;">서울소프트는 'Innovation &
+                            Sustainability' 핵심 목표를 가지고,<br/> 단순 이익 이상의 ESG 가치 창출을 목표로 합니다.</span>
+                    </div>
+                </div>
+
+                <!-- Environment 영역 -->
+                <div class="content-wrapper"
+                     style="position: relative;background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('{% static "renewal/image/info/esg_bg_1.png" %}');
+                             background-size: cover; background-repeat: no-repeat; background-position: center; padding-bottom: 5%; margin-bottom: 15%;">
+                    <div style="color: white; padding: 5% 15% 5% 15%">
+                        <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">Environment</h1>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">서울소프트는 생활친화형 녹색 경영을 통해 환경과 우리
+                            모두에게</h2>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">지속 가능한 제품과 서비스를 개발하고, 제공할 것을
+                            약속합니다.</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <img src="{% static 'renewal/image/info/esg_bg_1_1.png' %}" width="50%">
+                    </div>
+                </div>
+
+                <!-- Social 영역 -->
+                <div class="content-wrapper"
+                     style="position: relative;background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('{% static "renewal/image/info/esg_bg_2.png" %}');
+                             background-size: cover; background-repeat: no-repeat; background-position: center; padding-bottom: 5%; margin-bottom: 15%;">
+                    <div style="color: white; padding: 5% 15% 5% 15%">
+                        <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">Social</h1>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">서울소프트는 다양한 이해관계자들과의 공존을 통해 함께
+                            성장하고 있으며,
+
+                        </h2>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">근로자들이 존중 받는 환경을 위해 노력하고
+                            있습니다.</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <img src="{% static 'renewal/image/info/esg_bg_2_1.png' %}" width="50%">
+                    </div>
+                </div>
+
+                <!-- Governance 영역 -->
+                <div class="content-wrapper"
+                     style="position: relative;background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('{% static "renewal/image/info/esg_bg_3.png" %}');
+                             background-size: cover; background-repeat: no-repeat; background-position: center; padding-bottom: 5%; margin-bottom: 15%;">
+                    <div style="color: white; padding: 5% 15% 5% 15%">
+                        <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">Governance</h1>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">서울소프트는 책임감있는 기업경영을 위해 이해관계자들과의
+                        </h2>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 30px;">소통을 통한 피드백 수렴, 투명한 의사결정 및
+                            보고체계를 준수하고 있습니다.</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                        <img src="{% static 'renewal/image/info/esg_bg_3_1.png' %}" width="50%">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+<script>
+
+     $(document).ready(function() {
+        $(".navbar").addClass("white-background");
+        $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+        $(".menu_li > a").css("color", "#000");
+     })
+
+</script>
+</html>

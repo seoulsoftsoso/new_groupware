@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1000px) {
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/topnav.html' %}
+
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column px-3 pb-2">
+                <div class="mb-xl-0 mb-4">
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'apv_list' %}">
+                            <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;">전자결재</strong></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between" style="padding: 0 2% 0 2%;">
+                <div class="d-flex justify-content-start">
+                    {#왼쪽 공간#}
+                </div>
+                <div class="d-flex justify-content-end">
+                    <div style="padding: 0 0 0 50px;">
+                        <button class="btn btn-secondary me-2" onclick="window.history.back();">목록</button>
+                        <a href="{% url 'apv_update' apv_detail.pk %}" class="btn btn-primary me-2">수정</a>
+                        <button class="btn btn-danger me-2">삭제</button>
+                        <button class="btn btn-primary me-2">승인</button>
+                        <button class="btn btn-danger me-2">반려</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start" style="padding: 2% 2% 2% 2%;">
+                <table class="table border-top table-hover mb-5"
+                       style="border-left: none; border-right: none;">
+                    <thead>
+                    <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                        <th style="color: #000; font-size: medium; font-weight: bold;">항목</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold">상세내용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="color: #000;">작성일</td>
+                        <td style="color: #000;">{{ apv_detail.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">문서번호</td>
+                        <td style="color: #000;">{{ apv_detail.doc_no }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">카테고리</td>
+                        <td style="color: #000;">{{ apv_detail.apv_category.name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">제목</td>
+                        <td style="color: #000;">{{ apv_detail.doc_title }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">작성자</td>
+                        <td style="color: #000;">{{ apv_detail.created_by }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">결재상태</td>
+                        <td style="color: #000;">{{ apv_detail.apv_status }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">내용</td>
+                        <td style="color: #000;">{{ apv_detail.doc_content|linebreaks }}</td>
+                    </tr>
+                    <tr>
+                        <td style="color: #000;">결재자</td>
+                        <td style="color: #000;">
+                            <ul>
+                                {% for approver in apv_detail.approvers.all %}
+                                    <li>{{ approver.name }} - {{ approver.status }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<script>
+
+
+</script>

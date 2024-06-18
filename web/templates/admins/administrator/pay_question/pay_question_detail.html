@@ -45,50 +45,52 @@
                         <tbody>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">작성일자</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_date|date:"Y-m-d a g:i" }}</p>
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">기업/기관명</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_company }}</p>
                             </td>
                         </tr>
-                        <tr>
+                        {% comment %}<tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">부서명</small></td>
                             <td class="py-4">
                                 <p class="lead mb-0">{{ obj.Question_department }}</p>
                             </td>
-                        </tr>
+                        </tr>{% endcomment %}
                         <tr>
-                            <td class="align-middle col-md-2"><small class="text-light fw-medium">직책/직급</small></td>
-                            <td class="py-4">
+                            <td class="align-middle col-md-2"><small class="text-light fw-medium">기업/기관 url</small></td>
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_position }}</p>
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">이름</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_name }}</p>
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">문의 종류</small></td>
-                            <td class="py-4">
-                                {% if obj.Question_type == 'E' %}
+                            <td class="py-2">
+                                <p class="lead mb-0">{{ obj.Question_type }}</p>
+{% comment %}                                {% if obj.Question_type == 'E' %}
                                      <p class="lead mb-0">운송ERP</p>
                                 {% elif obj.Question_type == 'S' %}
                                     <p class="lead mb-0">스마트서비스</p>
                                 {% else %}
                                     <p class="lead mb-0">일반</p>
-                                {% endif %}
+                                {% endif %}{% endcomment %}
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">문의 경로</small></td>
-                            <td class="py-4">
-                                {% if obj.Question_path == 'A' %}
+                            <td class="py-2">
+                                <p class="lead mb-0">{{ obj.Question_path }}</p>
+                                {% comment %}{% if obj.Question_path == 'A' %}
                                     <p class="lead mb-0">같은 업종의 업체 추천</p>
                                 {% elif obj.Question_path == 'B' %}
                                     <p class="lead mb-0">인터넷 검색</p>
@@ -98,24 +100,24 @@
                                     <p class="lead mb-0">SNS(인스타그램,페이스북 등)</p>
                                 {% elif obj.Question_path == 'E' %}
                                     <p class="lead mb-0">기타</p>
-                                {% endif %}
+                                {% endif %}{% endcomment %}
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">연락처</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_phone }}</p>
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">메일주소</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <p class="lead mb-0">{{ obj.Question_email }}</p>
                             </td>
                         </tr>
                         <tr>
                             <td class="align-middle col-md-2"><small class="text-light fw-medium">문의내용</small></td>
-                            <td class="py-4">
+                            <td class="py-2">
                                 <textarea class="form-control" readonly rows="10">{{ obj.Question_content }}</textarea>
                             </td>
                         </tr>
@@ -134,7 +136,7 @@
             </div>
 
 
-            {% include 'admins/index_footer.html' %}
+{#            {% include 'admins/index_footer.html' %}#}
             </div>
             </div>
         </div>

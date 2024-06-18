@@ -14,3 +14,7 @@ __pycache__/
 data/
 log/
 uwsgi.ini
+seoulsoft_mes/settings.py
+static
+*.sql
+

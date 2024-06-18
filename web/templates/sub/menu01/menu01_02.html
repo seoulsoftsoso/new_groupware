@@ -1,3 +1,5 @@
+{# 서비스 / MMS 페이지 #}
+
 {% load static %}
 {% include 'header.html' %}
 <link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
@@ -6,9 +8,120 @@
     .white-background {
         background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
     }
+
+    .desc-ul {
+        list-style: none; /* 기본 불릿 제거 */
+        padding-left: 20px; /* 왼쪽 여백 */
+        margin: 10px 0; /* 위아래 여백 */
+    }
+
+    .desc-li {
+        position: relative; /* 불릿 위치 조정용 */
+        font-size: 20px; /* 글자 크기 */
+        font-weight: 400; /* 글자 두께 */
+        line-height: 30px; /* 줄 간격 */
+        color: #3E3A39; /* 글자 색상 */
+        padding-left: -10px; /* 왼쪽 여백 */
+    }
+
+    .desc-li::before {
+        content: "•"; /* 원형 불릿 */
+        color: #d9d9d9; /* 불릿 색상 */
+        position: absolute; /* 불릿 위치 절대값 설정 */
+        left: 0; /* 불릿 왼쪽 정렬 */
+        font-size: 30px; /* 불릿 크기 조정 */
+        line-height: 30px; /* 불릿과 텍스트의 줄 맞춤 */
+        width: 20px; /* 불릿과 텍스트 간격 조정 */
+        margin-left: -25px; /* 불릿 가로 위치 조정 */
+        margin-top: -5px; /* 불릿 세로 위치 조정 */
+    }
+
+
+    /* 말풍선 컨테이너 스타일 */
+    .chat-bubble {
+        max-width: 100%; /* 말풍선의 최대 너비를 80%로 설정 */
+        padding: 7% 7% 7% 7%; /* 말풍선 내부 여백을 설정 */
+        background-color: #ffffff; /* 말풍선 배경색 */
+        border: 2px solid #c8c8c8;
+        border-radius: 20px; /* 말풍선 모서리를 둥글게 설정 */
+        display: inline-block;
+        position: relative; /* 가상 요소 위치를 위한 상대 위치 설정 */
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 28px;
+        margin: 0 0 0 10%; /* 이름과 말풍선 간격 */
+    }
+
+    /* 말풍선 꼬리 스타일 */
+    .chat-bubble::before {
+        content: "";
+        position: absolute;
+        top: 15px; /* 말풍선의 상단에서의 위치 */
+        left: -38px; /* 말풍선의 왼쪽 외부에 위치 */
+        border-width: 20px; /* 꼬리 크기 */
+        border-style: solid;
+        border-color: transparent #ffffff transparent transparent; /* 꼬리 색상 설정 */
+        z-index: 1; /* 꼬리를 말풍선 위에 배치 */
+    }
+
+    .chat-bubble::after {
+        content: "";
+        position: absolute;
+        top: 15px; /* 말풍선의 상단에서의 위치 */
+        left: -41px; /* 말풍선의 왼쪽 외부에 위치 */
+        border-width: 20px; /* 꼬리 크기 */
+        border-style: solid;
+        border-color: transparent #c8c8c8 transparent transparent; /* 꼬리 외곽선 색상 설정 */
+        z-index: 0; /* 꼬리를 말풍선 아래에 배치 */
+    }
+
+    /* 사용자 프로필 이미지 스타일 */
+    .user-avatar {
+        width: 90px; /* 프로필 이미지 너비 */
+        height: 90px; /* 프로필 이미지 높이 */
+        border-radius: 50%; /* 원형 이미지로 만들기 */
+        margin: 5% 0 10% 0; /* 이미지와 말풍선 간격 */
+    }
+
+    /* 사용자 이름 스타일 */
+    .user-name {
+        font-size: 20px;
+        font-weight: bold; /* 사용자 이름을 굵게 */
+        margin: 0 0 0 0; /* 이름과 말풍선 간격 */
+        color: #898989;
+    }
+
+    /* 채팅 박스 스타일 */
+    .chat-box {
+        display: flex; /* 프로필 이미지와 말풍선을 가로로 정렬 */
+        align-items: flex-start; /* 상단 정렬 */
+        margin-bottom: 10px;
+    }
+
+    .chat-box .user-name {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .feature_cards {
+        padding-left: 4% !important;
+    }
+
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width : 1300px;
+        }
+        .feature_cards {
+            width: 380px !important;
+        }
+        .footer {
+            width : 1300px;
+        }
+    }
+
 </style>
 {% include 'menu.html' %}
-<body class="menu_mms">
+<body class="menu_mms" style="overflow-x: hidden;">
 <div class="layout-content-navbar">
     <div class="layout-container">
         <div class="layout-page" id="layout_page">
@@ -18,522 +131,347 @@
                 <!-- Content -->
                 <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
                      style="margin-bottom: 5%; position: relative;padding: 0 0 0 0;">
-                    <img src="{% static 'renewal/image/mms/mms_main.png' %}" style="width: 100%">
-                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
-                        <h1 style="font-weight: 800">MMS</h1><br/>
-                        <h2>많은 것을 뛰어넘는 하나로,</h2>
-                        <h2>Mobility Business Master</h2>
+                    <img src="{% static 'renewal/image/mms/mms_main.png' %}" style="width: 105%">
+                    <div class="main_overlay"
+                         style="position: absolute; top: 70%; bottom: 11%; left: 16%; color: white;">
+                        <h1 style="font-size: 42px; font-weight: 800; line-height: 50px;">MMS</h1><br/>
+                        <h2 style="font-size: 32px; font-weight: normal; line-height: 38px;">많은 것을 뛰어넘는 하나로,<br>Mobility
+                            Business Master</h2>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
-                    <div class="card-body row justify-content-center col-xl-10" style="padding: 0 5% 0 5%;">
+                    <div class="card-body row justify-content-center col-xl-10" style="padding: 0 6.5% 0 6.5%;">
                         <div class="card-body">
-                            <div class="">
-                                <h3><b style="font-size: 3.5vh;font-weight: 700">MMS(Move Mastery System) </b></h3><br/><br/>
-                                <h3 style="font-weight: 400;font-size: 3.6vh;line-height: 41px;">ERP와 FMS를 한 플랫폼에서</h3>
-                                <h3 style="font-size: 3.6vh;line-height: 41px;font-weight: 400">독보적인 이동 자산 운영 서비스 신세계를 경험해보세요</h3>
+                            <h3 style="font-size: 32px; font-weight: 700; line-height: 38px;">MMS(Move Mastery System)</h3><br>
+                            <h3 style="font-size: 28px; font-weight: 400; line-height: 33px;">ERP와 FMS를 한 플랫폼에서<br>
+                                독보적인 이동 자산 운영 서비스 신세계를 경험해보세요</h3>
+                            <div class="row justify-content-start" style="padding: 3% 0 3% 1%;">
+                                <img src="{% static 'renewal/image/mms/mms_e1.png' %}" width="95.5%">
                             </div>
-                            <div class="card-body">
-                                <div class="row justify-content-center mt-4 mb-5">
-                                    <img src="{% static 'renewal/image/mms/mms_e1.png' %}" width="90%">
+                            <a href="/menu/0106/"><img src="{% static 'renewal/image/mms/mms_q_btn.png' %}"></a>
+
+                            <div class="row justify-content-start" style="padding: 20% 0 0 1%;">
+                                <div class="feature_cards white-background mr-4"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 3% 2% 3%;">
+                                    <img src="{% static 'renewal/image/mms/ri_computer-line.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>강력한 대시보드</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">퍼포먼스 통찰력 상승</li>
+                                            <li class="desc-li">업무 효율성 증대</li>
+                                            <li class="desc-li">대규모 데이터 관리</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <a href="#"><img src="{% static 'renewal/image/mms/mms_q_btn.png' %}"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container-fluid row justify-content-center" style="padding-top: 10%">
-                    <div class="col-xl-10 row justify-content-center">
-                        <div class="col-xl-3 white-background"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/ri_computer-line.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>강력한 대시보드</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    퍼포먼스 통찰력 상승
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    업무 효율성 증대
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    대규모 데이터 관리
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 white-background ml-4"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/tdesign_money.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>원가절감 분석 기능</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    지출 현황 시각화
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    비교 지표를 통한 자원 최적화
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    다양한 인사이트 수집
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 white-background ml-4"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/ep_data-line.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>실시간 차량 데이터 관제</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    운행 현황 모니터링
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    신속한 대응 및 서비스 품질 향상
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    효율적인 업무 관리
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container-fluid row justify-content-center mt-4">
-                    <div class="col-xl-10 row justify-content-center">
-                        <div class="col-xl-3 white-background"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/ri_bus-fill.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>드라이빙 퍼포먼스 평가 활용</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    운전 품질 스코어링
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    경제  안전운전 평가
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    법규 준수 및 브랜드 이미지 강화
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 white-background ml-4"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/Group.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>데이터 기반 운전자 평가</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    인사 평가 및 관리의 지속성
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    모니터링을 통한 안전운전 촉진
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    서비스 향상 및 유지보수 비용 절감
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 white-background ml-4"
-                             style="border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/akar-icons_network.png' %}">
-                            </div>
-                            <div class="dash_board_div2">
-                                <p>사내 네트워크</p>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    실무자 중심 협업 강화
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    스케줄 자동화 관리
-                                </span><br/>
-                                <span>
-                                    <img src="{% static 'renewal/image/ibt/Ellipse 340.png' %}">
-                                    필수교육 관리
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="container-fluid row justify-content-center" style="padding: 8% 5% 0 5%;">
-                    <div class="card-body col-xl-10">
-                        <div class="col-xl-6">
-                            <span><b style="font-size: 3.7vh;font-weight: 700;line-height: 50px;">모든 기능을 담은 MMS</b></span><br/>
-                            <span><b style="font-size: 3.7vh;font-weight: 700;line-height: 50px;">클라우드 기반의 지속적인 서비스</b></span>
-                        </div>
-                        <div class="mt-4 ml-2">
-                            <a href="#"><img src="{% static 'renewal/image/mms/mms_detail_btn.png' %}"></a>
-                        </div>
-                        <div class="row justify-content-center" style="margin-top: 5%;">
-                            <div style="width: 52%">
-                                <h3 style="color: #FF6B00;font-weight: 600;font-size: 28px;">클라우드 →  PC(고객사)</h3>
-                                <div class="row justify-content-start mt-5" style="background: #FFFFFF;box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);border-radius: 9px;">
-                                    <div class="row justify-content-center">
-                                        <img src="{% static 'renewal/image/mms/1.png' %}" width="20%" style="padding: 3% 0 2% 0;">
-                                        <img src="{% static 'renewal/image/mms/2.png' %}" width="20%" style="margin-left: 3%;padding: 3% 0 2% 0;">
-                                        <img src="{% static 'renewal/image/mms/3.png' %}" width="20%" style="margin-left: 3%;padding: 3% 0 2% 0;">
-                                        <img src="{% static 'renewal/image/mms/4.png' %}" width="20%" style="margin-left: 3%;padding: 3% 0 2% 0;">
-
-                                        <img src="{% static 'renewal/image/mms/6.png' %}" width="20%" style="padding: 1% 0 2% 0;">
-                                        <img src="{% static 'renewal/image/mms/7.png' %}" width="43%" style="margin-left: 3%;padding: 1% 0 2% 0;">
-                                        <img src="{% static 'renewal/image/mms/8.png' %}" width="20%" style="margin-left: 3%;padding: 1% 0 2% 0;">
-
-                                        <img src="{% static 'renewal/image/mms/9.png' %}" width="20%" style="padding: 1% 0 3% 0;">
-                                        <img src="{% static 'renewal/image/mms/10.png' %}" width="20%" style="margin-left: 3%;padding: 1% 0 3% 0;">
-                                        <img src="{% static 'renewal/image/mms/11.png' %}" width="20%" style="margin-left: 3%;padding: 1% 0 3% 0;">
-                                        <img src="{% static 'renewal/image/mms/12.png' %}" width="20%" style="margin-left: 3%;padding: 1% 0 3% 0;">
+                                <div class="feature_cards white-background mr-4"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
+                                    <img src="{% static 'renewal/image/mms/tdesign_money.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>원가절감 분석 기능</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">지출 현황 시각화</li>
+                                            <li class="desc-li">비교 지표를 통한 자원 최적화</li>
+                                            <li class="desc-li">다양한 인사이트 수집</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature_cards white-background"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
+                                    <img src="{% static 'renewal/image/mms/ep_data-line.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>실시간 차량 데이터 관제</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">운행 현황 모니터링</li>
+                                            <li class="desc-li">신속한 대응 및 서비스 품질 향상</li>
+                                            <li class="desc-li">효율적인 업무 관리</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div style="width: 44%;margin-left: 2%;">
-                                <h3 style="color: #FF6B00;font-weight: 600;font-size: 28px;">클라우드 →  Mobile(운전자)</h3>
-                                <div class="row justify-content-start mt-5" style="background: #FFFFFF;box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);border-radius: 9px;">
-                                    <div class="row justify-content-center">
-                                        <div style="width: 81%;padding-top: 2%">
-                                            <img src="{% static 'renewal/image/mms/21.png' %}" width="30%" style="padding: 3% 0 1% 0;">
-                                            <img src="{% static 'renewal/image/mms/22.png' %}" width="30%" style="margin-left: 3%;padding: 3% 0 1% 0;">
-                                            <img src="{% static 'renewal/image/mms/23.png' %}" width="30%" style="margin-left: 3%;padding: 3% 0 1% 0;">
-                                        </div>
 
-                                        <div style="width: 81%">
-                                            <img src="{% static 'renewal/image/mms/24.png' %}" width="97%" style="padding: 2% 0 2% 0;">
-                                        </div>
-
-                                        <div style="width: 81%;padding-bottom: 2%;">
-                                            <img src="{% static 'renewal/image/mms/25.png' %}" width="30%" style="padding: 1% 0 2% 0;">
-                                            <img src="{% static 'renewal/image/mms/26.png' %}" width="30%" style="margin-left: 3%;padding: 1% 0 2% 0;">
-                                            <img src="{% static 'renewal/image/mms/27.png' %}" width="30%" style="margin-left: 3%;padding: 1% 0 2% 0;">
-                                        </div>
+                            <div class="row justify-content-start" style="padding: 2% 0 0 1%;">
+                                <div class="feature_cards white-background mr-4"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
+                                    <img src="{% static 'renewal/image/mms/ri_bus-fill.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>드라이빙 퍼포먼스 평가 활용</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">운전 품질 스코어링</li>
+                                            <li class="desc-li">경제 · 안전운전 평가</li>
+                                            <li class="desc-li">법규 준수 및 브랜드 이미지 강화</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature_cards white-background mr-4"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
+                                    <img src="{% static 'renewal/image/mms/Group.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>데이터 기반 운전자 평가</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">인사 평가 및 관리의 지속성</li>
+                                            <li class="desc-li">모니터링을 통한 안전운전 촉진</li>
+                                            <li class="desc-li">서비스 향상 및 유지보수 비용 절감</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="feature_cards white-background"
+                                     style="width:404px; height:254px; border-radius: 12px;background: #FFF;box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);padding: 2% 2% 2% 2%;">
+                                    <img src="{% static 'renewal/image/mms/akar-icons_network.png' %}">
+                                    <div class="dash_board_div2 mt-2">
+                                        <p>사내 네트워크</p>
+                                        <ul class="desc-ul">
+                                            <li class="desc-li">실무자 중심 협업 강화</li>
+                                            <li class="desc-li">스케줄 자동화 관리</li>
+                                            <li class="desc-li">필수교육 관리</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-
-                <div class="container-fluid-body d-grid" style="margin: 8% 5% 0 5%;">
-                    <div class="row justify-content-center">
-
-                        <div class="col-xl-10 row">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/_Layer_.png' %}">
-                            </div>
-                            <div class="q_div">
-                                <div class="ml-5">
-                                    <h5 style="color: #898989;">사용자</h5>
+                            <div class="row justify-content-start" style="padding: 20% 0 0 0;">
+                                <div>
+                                    <div style="font-size: 32px; font-weight: 600; line-height: 38px; padding: 0 0 8% 0;">
+                                        모든 기능을 담은 MMS<br>클라우드 기반의 지속적인 서비스
+                                    </div>
+                                    <div>
+                                        <a href="/menu/0106/"><img src="{% static 'renewal/image/mms/mms_detail_btn.png' %}"></a>
+                                    </div>
                                 </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="293" height="118" viewBox="0 0 293 118"
-                                     fill="none">
-                                    <g filter="url(#filter0_d_309_1409)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                              d="M21 33.6915L5.17566 18.0173C3.90647 16.7601 4.7967 14.5963 6.58311 14.5963H23.5859C24.0479 14.5963 24.4734 14.753 24.812 15.0161C29.0833 8.38854 36.5291 4 45 4H265C278.255 4 289 14.7452 289 28V90C289 103.255 278.255 114 265 114H45C31.7452 114 21 103.255 21 90V33.6915Z"
-                                              fill="white"/>
-                                    </g>
-                                    <text x="50%" y="40%" dominant-baseline="middle" text-anchor="middle"
-                                          font-size="2.2vh"
-                                          font-weight="bold" fill="#000">
-                                        <tspan x="50%" dy="0.2em">복잡도가 높은 솔루션은</tspan>
-                                        <tspan x="50%" dy="1em">사용하기 어려워요</tspan>
-                                    </text>
-                                    <defs>
-                                        <filter id="filter0_d_309_1409" x="0.579102" y="0" width="292.421" height="118"
-                                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                            <feColorMatrix in="SourceAlpha" type="matrix"
-                                                           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                                                           result="hardAlpha"/>
-                                            <feOffset/>
-                                            <feGaussianBlur stdDeviation="2"/>
-                                            <feComposite in2="hardAlpha" operator="out"/>
-                                            <feColorMatrix type="matrix"
-                                                           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                                            <feBlend mode="normal" in2="BackgroundImageFix"
-                                                     result="effect1_dropShadow_309_1409"/>
-                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_309_1409"
-                                                     result="shape"/>
-                                        </filter>
-                                    </defs>
-                                </svg>
                             </div>
-                        </div>
-                        <div class="col-xl-10 d-flex justify-content-end relative_div">
-                            <div class="content-wrapper"
-                                 style="border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
-                                <div class="a_div">
-                                    <span>강력한 대시보드를 통한 시각적 통찰력을 얻어보세요</span><br/>
-                                    <span>실시간 데이터 연동으로 인사이트 결정을 지원합니다</span>
+
+                            <div class="row justify-content-start" style="padding: 5% 0 0 0;">
+                                <div style="margin-right:7%">
+                                    <h3 style="color: #FF6B00; font-weight: 600; font-size: 24px;">클라우드 → Web(고객사)</h3>
+                                    <img src="{% static 'renewal/image/mms/mms_cloudtopc.png' %}" width="100%" style="width:659px; height:355px; padding: 2% 0 2% 0;">
                                 </div>
                                 <div>
-                                    <img src="{% static 'renewal/image/mms/Type B-1.png' %}"
-                                         style="width: 90%; margin-top: 20px;">
+                                    <h3 style="color: #FF6B00;font-weight: 600; font-size: 24px;">클라우드 → Mobile(운전자)</h3>
+                                    <img src="{% static 'renewal/image/mms/mms_cloudtodriver.png' %}" width="100%" style="width:510px; height:352px; padding: 2% 0 2% 0;">
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="row justify-content-center">
-
-                        <div class="col-xl-10 row">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/_Layer_2.png' %}">
-                            </div>
-                            <div class="q_div">
-                                <div class="ml-5">
-                                    <h5 style="color: #898989;">사용자</h5>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="293" height="118" viewBox="0 0 293 118"
-                                     fill="none">
-                                    <g filter="url(#filter0_d_309_1409)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                              d="M21 33.6915L5.17566 18.0173C3.90647 16.7601 4.7967 14.5963 6.58311 14.5963H23.5859C24.0479 14.5963 24.4734 14.753 24.812 15.0161C29.0833 8.38854 36.5291 4 45 4H265C278.255 4 289 14.7452 289 28V90C289 103.255 278.255 114 265 114H45C31.7452 114 21 103.255 21 90V33.6915Z"
-                                              fill="white"/>
-                                    </g>
-                                    <text x="50%" y="40%" dominant-baseline="middle" text-anchor="middle"
-                                          font-size="2.2vh"
-                                          font-weight="bold" fill="#000">
-                                        <tspan x="50%" dy="0.2em">준공영제화를 고려한</tspan>
-                                        <tspan x="50%" dy="1em">플랫폼 찾기 어려워요</tspan>
-                                    </text>
-                                    <defs>
-                                        <filter id="filter0_d_309_1409" x="0.579102" y="0" width="292.421" height="118"
-                                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                            <feColorMatrix in="SourceAlpha" type="matrix"
-                                                           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                                                           result="hardAlpha"/>
-                                            <feOffset/>
-                                            <feGaussianBlur stdDeviation="2"/>
-                                            <feComposite in2="hardAlpha" operator="out"/>
-                                            <feColorMatrix type="matrix"
-                                                           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                                            <feBlend mode="normal" in2="BackgroundImageFix"
-                                                     result="effect1_dropShadow_309_1409"/>
-                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_309_1409"
-                                                     result="shape"/>
-                                        </filter>
-                                    </defs>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="col-xl-10 d-flex justify-content-end relative_div">
-                            <div class="content-wrapper"
-                                 style="border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
-                                <div class="a_div">
-                                    <span>실시간 차량 데이터 관제를 통해 운행 효율성을 개선하세요</span><br/>
-                                    <span>서비스 품질 및 신뢰도에 대한 고민까지 해결해 드립니다.</span>
-                                </div>
-                                <div>
-                                    <img src="{% static 'renewal/image/mms/Type B-2 1.png' %}"
-                                         style="width: 90%; margin-top: 20px;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row justify-content-center">
-
-                        <div class="col-xl-10 row">
-                            <div>
-                                <img src="{% static 'renewal/image/mms/_Layer_-1.png' %}">
-                            </div>
-                            <div class="q_div">
-                                <div class="ml-5">
-                                    <h5 style="color: #898989;">사용자</h5>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="293" height="118" viewBox="0 0 293 118" fill="none">
-    <g filter="url(#filter0_d_309_1409)">
-        <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M21 33.6915L5.17566 18.0173C3.90647 16.7601 4.7967 14.5963 6.58311 14.5963H23.5859C24.0479 14.5963 24.4734 14.753 24.812 15.0161C29.0833 8.38854 36.5291 4 45 4H265C278.255 4 289 14.7452 289 28V90C289 103.255 278.255 114 265 114H45C31.7452 114 21 103.255 21 90V33.6915Z"
-              fill="white"/>
-    </g>
-    <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" font-size="1.8vh" font-weight="bold" fill="#000">
-        <tspan x="50%" dy="0.2em">배차-경영-인사-재고 관리를</tspan>
-        <tspan x="50%" dy="1em">하나의 플랫폼에서 하고 싶어요</tspan>
-    </text>
-    <defs>
-        <filter id="filter0_d_309_1409" x="0.579102" y="0" width="292.421" height="118" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-            <feOffset/>
-            <feGaussianBlur stdDeviation="2"/>
-            <feComposite in2="hardAlpha" operator="out"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_309_1409"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_309_1409" result="shape"/>
-        </filter>
-    </defs>
-</svg>
-                            </div>
-                        </div>
-                        <div class="col-xl-10 d-flex justify-content-end relative_div">
-                            <div class="content-wrapper"
-                                 style="border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
-                                <div class="a_div">
-                                    <span>데이터 기반의 운전자 평가 및 에코 드라이빙을 실현하세요</span><br/>
-                                    <span>우리의 클라우드에서 원하는 모든 정보를 선택할 수 있습니다</span>
-                                </div>
-                                <div>
-                                    <img src="{% static 'renewal/image/mms/Type_c_.png' %}"
-                                         style="width: 90%; margin-top: 20px;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row justify-content-center" style="margin: 8% 5% 0 5%;">
-                        <div class="card-body col-xl-10">
-                            <h3 style="font-weight: 700;font-size: 3.5vh;">MMS 도입 효과</h3>
-                            <div class="card-body row justify-content-center mt-5">
-                                <div class="col-xl-4">
-                                    <div class="d-flex justify-content-center align-items-center tab_div">
-                                        <span>비효율적인 업무 프로세스</span>
+                            <div class="container-fluid-body d-grid" style="margin: 20% 0 0 0;">
+                                <div class="chat-box" style="margin:0 0 0 0;">
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="User Avatar"
+                                             class="user-avatar">
+                                        <div class="user-name">사용자</div>
                                     </div>
-                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                        <span>분산된 시스템과 데이터</span>
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                        <span>효율성 및 생산성 저하</span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-1" style="margin-top: 1%;padding-left: 3.5%;">
-                                    <img src="{% static 'renewal/image/mms/mms_frame2.png' %}">
-                                </div>
-                                <div class="col-xl-7">
-                                    <div class="d-flex justify-content-center align-items-center tab_div">
-                                        <span>주요 기능 데이터 연계 및 자동화, 실시간 모니터링</span>
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                        <span>실시간 모니터링 디바이스를 활용한 지능화, 심층적인 인사이트 제공</span>
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center tab_div mt-5">
-                                        <span>다양한 IoT 기기 연계와 체계적인 데이터 관리로 경제 및 안전운전 실현</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr style="border: 1px solid #000000;margin-top: 5%;width: 70%"/>
-
-                    <div class="row justify-content-center" style="margin: 3% 5% 0 5%;">
-                        <div class="card-body col-xl-10">
-                            <h3 style="font-weight: 700;font-size: 3.5vh;">더 자세하게 알아보기</h3>
-                            <div class="row justify-content-center">
-                                <div class="col-xl-12">
-                                    <div class="card-body">
-                                        <div style="padding-left: 5%;">
+                                    <div>
+                                        <div class="chat-bubble" style="width: 280px; height: 100px;">
+                                            복잡도가 높은 솔루션은<br> 사용하기 어려워요
                                         </div>
-                                        <div class="col-xl-12 row justify-content-center">
-                                            <div class="col-xl-11 row justify-content-center mt-5" style="color: white;">
-                                                <div class="card row justify-content-center align-items-center"
-                                                     style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
-                                                    <a href="#" class="d-flex align-items-center">
-                                                        <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">MMS 소개서 다운로드</span>
-                                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 3vh;">
-                                                    </a>
-                                                </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                <div class="card row justify-content-center align-items-center ml-5"
-                                                     style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 15vw;">
-                                                    <a href="#" class="d-flex align-items-center">
-                                                        <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">MMS 구축 문의하기</span>
-                                                        <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 3vh;">
-                                                    </a>
-                                                </div>
+                            <div class="d-flex justify-content-end" style="margin: 1% 6.5% 0 0;">
+                                <div class="content-wrapper"
+                                     style="width:780px; height:529px; border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
+                                    <div>
+                                        <p style="font-size: 24px; font-weight: 600; line-height: 28px; margin-top:1%">
+                                            강력한 대시보드를 통한 시각적 통찰력을 얻어보세요<br>
+                                            실시간 데이터 연동으로 인사이트 결정을 지원합니다</p>
+                                    </div>
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/Type B-1.png' %}"
+                                             style="width: 662px; height:397px; margin-top: 1%;">
+                                    </div>
+                                </div>
+                            </div>
 
-                                                <div class="card row justify-content-center align-items-center ml-5"
-                                                     style="background: rgba(255, 255, 255, 0.6);border: 1px solid #B5B6B6;border-radius: 8px;height: 8vh;width: 12vw;">
-                                                    <a href="#" class="d-flex align-items-center">
-                                                        <span style="font-size: 2vh;font-weight: 600;color: #595757;margin-right: 1vh;">BLOG 바로가기</span>
-                                                        <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 3vh;">
-                                                    </a>
-                                                </div>
+                            <div class="container-fluid-body d-grid" style="margin: 20% 0 0 0;">
+                                <div class="chat-box" style="margin:0 0 0 0;">
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="User Avatar"
+                                             class="user-avatar">
+                                        <div class="user-name">사용자</div>
+                                    </div>
+                                    <div>
+                                        <div class="chat-bubble" style="width: 280px; height: 100px;">
+                                            준공영제화를 고려한<br> 플랫폼을 찾기 어려워요
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end" style="margin: 1% 6.5% 0 0;">
+                                <div class="content-wrapper"
+                                     style="width:780px; height:529px; border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
+                                    <div>
+                                        <p style="font-size: 24px; font-weight: 600; line-height: 28px; margin-top:1%">
+                                            실시간 차량 데이터 관제를 통해 운행 효율성을 개선하세요<br>
+                                            서비스 품질 및 신뢰도에 대한 고민까지 해결해 드립니다</p>
+                                    </div>
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/Type B-2 1.png' %}"
+                                             style="width: 662px; height:397px; margin-top: 1%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid-body d-grid" style="margin: 20% 0 0 0;">
+                                <div class="chat-box" style="margin:0 0 0 0;">
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/_Layer_-1.png' %}" alt="User Avatar"
+                                             class="user-avatar">
+                                        <div class="user-name">사용자</div>
+                                    </div>
+                                    <div>
+                                        <div class="chat-bubble" style="width: 350px; height: 105px;">
+                                            배차-경영-인사-재고 관리를<br> 하나의 플랫폼에서 하고 싶어요
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end" style="margin: 2% 6.5% 0 0;">
+                                <div class="content-wrapper"
+                                     style="width:780px; height:529px; border-radius: 24px; background: #FFF; box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center;">
+                                    <div>
+                                        <p style="font-size: 24px; font-weight: 600; line-height: 28px; margin-top:1%">
+                                            데이터 기반의 운전자 평가 및 에코 드라이빙을 실현하세요<br>
+                                            우리의 클라우드에서 원하는 모든 정보를 선택할 수 있습니다</p>
+                                    </div>
+                                    <div>
+                                        <img src="{% static 'renewal/image/mms/Type_c_.png' %}"
+                                             style="width: 662px; height:397px; margin-top: 1%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-start" style="padding: 20% 0 0 1%;">
+                                <div>
+                                    <div style="font-size: 32px; font-weight: 700; line-height: 38px; padding: 0 0 5% 0;">
+                                        MMS 도입 효과
+                                    </div>
+
+                                    <div class="card-body d-flex justify-content-start" style="padding: 0; margin: 0;">
+                                        <div>
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:321px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">비효율적인 업무 프로세스</span>
                                             </div>
-
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:321px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">분산된 시스템과 데이터</span>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:321px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">효율성 및 생산성 저하</span>
+                                            </div>
+                                        </div>
+                                        <div style="margin: 3% 2.5% 0 3%;">
+                                            <img src="{% static 'renewal/image/mms/mms_frame2.png' %}"
+                                                 style="height:80%;" alt="mms_frame2">
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:846px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">주요 기능 데이터 연계 및 자동화, 실시간 모니터링</span>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:846px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">실시간 모니터링 디바이스를 활용한 지능화, 심층적인 인사이트 제공</span>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center tab_div"
+                                                 style="width:846px; height: 86px; margin-bottom: 30px;">
+                                                <span style="font-size: 24px; font-weight: 500; line-height: 28px;">다양한 IoT 기기 연계와 체계적인 데이터 관리로 경제 및 안전운전 실현</span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <hr style="border: 1px solid #000000;width: 105%; margin-top: 5%;"/>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-start" style="padding: 3% 0 0 1%;">
+                                <h3 style="font-size: 32px; font-weight: 700; line-height: 38px;">더 자세하게 알아보기</h3>
+                            </div>
+
+                            <div class="row justify-content-start" style="padding: 3% 0 0 1%;">
+                                <div style="margin: 0 0 0 5%;">
+                                    <a href="/menu/0106/" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 370px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 소개서 다운로드 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div style="margin: 0 5% 0 5%;">
+                                    <a href="/menu/0106/" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 330px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">MMS 구축 문의하기 &nbsp;
+                                                <i class="fa-solid fa-download" style="color: #595757;"></i>
+{#                                            <img src="{% static 'renewal/image/download_regular.png' %}" style="height: 34px; margin-left: 10px;" alt="download_regular">#}
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://blog.naver.com/seoul-soft" style="text-decoration: none;">
+                                        <div class="card d-flex justify-content-center align-items-center" style="background: #ffffff; border: 1px solid #B5B6B6; border-radius: 8px; width: 290px; height: 97px;">
+                                            <span style="font-size: 26px; font-weight: 600; line-height: 31px; color: #595757;">BLOG 바로가기 &nbsp;
+                                                <i class="fa-solid fa-arrow-down fa-rotate-by" style="color: #595757; --fa-rotate-angle: 230deg;"></i>
+{#                                            <img src="{% static 'renewal/image/right_arrow.png' %}" style="height: 34px; margin-left: 10px;" alt="right_arrow">#}
+                                            </span>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-{% include 'footer.html' %}
+        {% include 'footer.html' %}
 </body>
 <script>
-     $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
-            // console.log("현재 스크롤 위치: " + scroll + "px");
-            if (scroll >= 950) { // 852px 스크롤을 지났을 때
-                $(".navbar").addClass("white-background");
-                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
-                $(".menu_li > a").css("color", "#000");
-            } else {
-                $(".navbar").removeClass("white-background");
-                $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
-                $(".menu_li > a").css("color", "white");
-            }
-     })
+    $(window).scroll(function () {
+        let scroll = $(window).scrollTop();
+        // console.log("현재 스크롤 위치: " + scroll + "px");
+        if (scroll >= 950) { // 852px 스크롤을 지났을 때
+            $(".navbar").addClass("white-background");
+            $(".main_logo img").attr("src", "{% static 'renewal/image/logo_A.png' %}");
+            $(".menu_li > a").css("color", "#000");
+        } else {
+            $(".navbar").removeClass("white-background");
+            $(".main_logo img").attr("src", "{% static 'renewal/image/logo_B.png' %}");
+            $(".menu_li > a").css("color", "white");
+        }
+    })
 
-     $(document).ready(function() {
-         $('.left').addClass('btn_selected').css({
-             'background-color': 'rgba(234, 234, 115, 1)',
-             'color': 'black',
-             'box-shadow': '0 0 0 0',
-         });
+    $(document).ready(function () {
+        document.querySelectorAll(".menu_li > a").forEach(function (el) {el.style.color = "#fff";});
+        $('.left').addClass('btn_selected').css({
+            'background-color': 'rgba(234, 234, 115, 1)',
+            'color': 'black',
+            'box-shadow': '0 0 0 0',
+        });
 
-         $('.btn_by').click(function () {
-             $('.btn_by').css({
-                 'background-color': '',
-                 'color': '',
-                 'box-shadow': '0 0 0 0',
-             }).removeClass('btn_selected');
+        $('.btn_by').click(function () {
+            $('.btn_by').css({
+                'background-color': '',
+                'color': '',
+                'box-shadow': '0 0 0 0',
+            }).removeClass('btn_selected');
 
-             $(this).css({
-                 'background-color': 'rgba(234, 234, 115, 1)',
-                 'color': 'black',
-                 'box-shadow': '0 0 0 0',
-             }).addClass('btn_selected');
+            $(this).css({
+                'background-color': 'rgba(234, 234, 115, 1)',
+                'color': 'black',
+                'box-shadow': '0 0 0 0',
+            }).addClass('btn_selected');
 
-             var imgSrc = $(this).data('img-src');
-             $('#bussiness_model').attr('src', imgSrc);
+            let imgSrc = $(this).data('img-src');
+            $('#bussiness_model').attr('src', imgSrc);
 
-         })
-     })
-
+        })
+    })
 
 
 </script>

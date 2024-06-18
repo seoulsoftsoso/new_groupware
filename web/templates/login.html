@@ -24,7 +24,7 @@
         <div class="w-px-400 mx-auto">
             <!-- Logo -->
             <div class="app-brand mb-5">
-                <a href="#" class="app-brand-link gap-2">
+                <a href="/" class="app-brand-link gap-2">
                     <span class="app-brand-text demo text-body fw-bold">
                         <img src="{% static 'img/logo.jpg' %}">
                     </span>
@@ -96,10 +96,11 @@
     // If you have an access token in the cookie (but this save-at-cookie feature must be modified in the future)
     // pass login page and redirect view to the codemaster.
     // Note that you must make a logic that redirect an un-authorized user to login page.
-    if (get_token() !== "") {
+
+{% comment %}    if (get_token() !== "") {
         //window.location.href = "/admins/index/"; // TODO:
         window.location.href = "/"; // TODO:
-    }
+    }{% endcomment %}
 
     $(function() {
            fnInit();
@@ -135,11 +136,62 @@
         }
     }
 
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : "";
+    }
+
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+{% comment %}    if (getCookie('Authorization') !== "") {
+        window.location.href = "/"; // TODO:
+    }{% endcomment %}
+
+    function api_login(username, password, successCallback, errorCallback, completeCallback) {
+        $.ajax({
+            url: '/users/login/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            success: function (data) {
+                setCookie('Authorization', data.token, 7);
+                setCookie('username', data.user.username, 7);
+                setCookie('user_id', data.user.id, 7);
+                setCookie('is_superuser', data.is_superuser ? '1' : '0', 7);
+                setCookie('story_admin', data.story_admin ? '1' : '0', 7);
+                setCookie('department_position_name', data.user.department_position.name, 7);
+
+                successCallback();
+            },
+            error: function (xhr, status, error) {
+                errorCallback(xhr, status, error);
+            },
+            complete: function (xhr, status) {
+                completeCallback(xhr, status);
+            }
+        });
+    }
+
+
+
     // An example to login using /users/login/ API endpoint.
     // It will ends up with putting api token to cookies.
     // Note that processing CSRF token is not scope of this example.
     $("#login").submit(function (event) {
-        // get vals
         let username = $('#login [name="username"]').val();
         let password = $('#login [name="password"]').val();
 
@@ -147,7 +199,24 @@
             username,
             password,
             () => {
-                window.location.href = "/admins/index";
+                const loginInfo = {
+                    username: getCookie('username'),
+                    user_id: getCookie('user_id'),
+                    token: getCookie('Authorization'),
+                    is_superuser: getCookie('is_superuser'),
+                    story_admin: getCookie('story_admin'),
+                };
+
+                console.log("로그인 정보:");
+                console.log("username:", loginInfo.username || "정보가 없습니다");
+                console.log("user_id:", loginInfo.user_id || "정보가 없습니다");
+                console.log("token:", loginInfo.token || "정보가 없습니다");
+                console.log("is_superuser:", loginInfo.is_superuser ? "슈퍼유저 권한 있음" : "슈퍼유저 권한 없음");
+
+                let urlParams = new URLSearchParams(window.location.search);
+                let nextUrl = urlParams.get('next') || '/admins/index/';
+
+                window.location.href = nextUrl;
             },
             handle_error,
             (xhr, status) => {
@@ -159,7 +228,6 @@
 
     document.querySelector('#forgot-password').addEventListener('click', function (e) {
         e.preventDefault();
-
         Swal.fire({
             title: 'Info!',
             text: '관리자에게 문의 바랍니다.',
@@ -167,6 +235,16 @@
             confirmButtonText: '확인'
         });
     });
+
+    function handle_error(xhr, status, error) {
+        console.error("Error during login:", error);
+        Swal.fire({
+            title: 'Error!',
+            text: '로그인에 실패했습니다. 다시 시도해 주세요.',
+            icon: 'error',
+            confirmButtonText: '확인'
+        });
+    }
 </script>
 </body>
 <script src="{% static 'sneat/assets/vendor/libs/sweetalert2/sweetalert2.js' %}"></script>

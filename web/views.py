@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.exceptions import ValidationError
 from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
-    ProTask, ProMembers, Weekly
+    ProTask, ProMembers, Weekly, ApvMaster
 from api.views import *
 
 
@@ -181,7 +181,22 @@ def SubView(request, menu_num):
     menucode1 = menu_num[:2]
     menucode2 = menu_num[2:]
     filename = 'sub/menu' + menucode1 + '/menu' + menucode1 + '_' + menucode2 + '.html'
-    # filename = 'sub/menu01/menu01_01.html'
+    # filename = 'sub/menu01/menu01_01.html' 서비스 - MES (리뉴얼)
+    # filename = 'sub/menu01/menu01_02.html' 서비스 - MMS (리뉴얼)
+    # filename = 'sub/menu01/menu01_03.html' 서비스 - IBT (리뉴얼)
+    # filename = 'sub/menu01/menu01_06.html' 문의하기 (리뉴얼)
+    # filename = 'sub/menu01/menu01_07.html' 기업정보 ESG경영 (리뉴얼)
+    # filename = 'sub/menu01/menu01_08.html' 기업정보 사업영역 (리뉴얼)
+    # filename = 'sub/menu01/menu01_09.html' 스토리 (리뉴얼)
+
+    # filename = 'sub/menu01/menu01_04.html' 운송 ERP (구버전)
+    # filename = 'sub/menu01/menu01_05.html' 회사소개 개요 (구버전)
+    # filename = 'sub/menu01/menu01_0202.html' 요금제 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 구축실적 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 회사연혁 (구버전)
+    # filename = 'sub/menu01/menu01_0402.html' 오시는길 (구버전)
+
+
     return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
 
 
@@ -426,3 +441,39 @@ def test_form(request):
     context = {}
     return render(request, 'admins/administrator/test_form.html', context)
 
+def apv_list(request):
+    context = {}
+    return render(request, 'approval/apv_list.html', context)
+
+def apv_temp_update(request, document_id):
+    context = {
+        'document_id': document_id
+    }
+    return render(request, 'approval/apv_temp_update.html', context)
+
+def apv_template_view(request, category_no):
+    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+                     .order_by('department_position', 'username'))
+    approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
+
+    leave_choices = ApvMaster.LEAVE_CHOICES
+    create_template = 'approval/template_' + category_no + '_create.html'
+    context = {
+        'category_no': category_no,
+        'leave_choices': leave_choices,
+        'approver_list': approver_choices,
+    }
+    return render(request, create_template, context)
+
+# def apv_template_detail(request, category_no):
+#     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+#                      .order_by('department_position', 'username'))
+#     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
+#     leave_choices = ApvMaster.LEAVE_CHOICES
+#     detail_template = 'approval/template_' + category_no + '_detail.html'
+#     context = {
+#         'category_no': category_no,
+#         'leave_choices': leave_choices,
+#         'approver_list': approver_choices,
+#     }
+#     return render(request, detail_template, context)

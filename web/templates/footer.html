@@ -1,134 +1,155 @@
 {% load static %}
 <style>
     .text-truncate {
-        font-size: 1.7vh;
+        font-size: 20px;
         font-weight: 500;
+        color: #555555;
     }
 
     .com_info span {
-        font-size: 1.5vh;
+        font-size: 18px;
+        color: #555555;
+    }
+
+    @media (max-width: 1200px) {
+        .text-truncate {
+            font-size: 18px;
+        }
+
+        .com_info span {
+            font-size: 14px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+        }
+
+        .menu-sub {
+            margin-top: 10px;
+        }
+
+        .com_info img {
+            width: 70%;
+        }
+
+        .footer {
+            padding: 20px 20px 50px 20px;
+        }
+
+        .com_info {
+            margin: 3% 0 0 0 !important;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     }
 </style>
+
 <footer class="footer" style="background-color: rgba(237, 237, 237, 1)">
     <div class="container-fluid pt-5 row justify-content-center">
         <div class="col-xl-10" style="padding: 0 5% 0 5%;">
             <div class="col-xl-12 row justify-content-between">
                 <div>
-                    <p style="font-weight: 600;font-size: 2.5vh;">우리의 공간에서 쉬어보세요!</p>
+                    <p style="color:#3E3A39; font-size: 26px; font-weight: 600;">우리의 공간에서 쉬어보세요!</p>
                 </div>
-                <div class="col-xl-4 row justify-content-end">
-                    <a href="#"><img src="{% static 'renewal/image/foot_insta.png' %}"></a>
-                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_facebook.png' %}"></a>
-                    <a href="#" style="margin-left: 1%;"><img src="{% static 'renewal/image/foot_blog.png' %}"></a>
+                <div class="col-xl-4 row justify-content-end social-icons">
+                    <a class="mx-2" href="https://www.instagram.com/seoul_soft/"><img src="{% static 'renewal/image/foot_insta.png' %}" alt="Instagram"></a>
+                    <a class="mx-2" href="https://www.facebook.com/seoulsoftco"><img src="{% static 'renewal/image/foot_facebook.png' %}" alt="Facebook"></a>
+                    <a class="mx-2" href="https://blog.naver.com/seoul-soft"><img src="{% static 'renewal/image/foot_blog.png' %}" alt="Blog"></a>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-10" style="padding: 2% 5% 2% 5%;">
+        <div class="col-xl-10" style="padding: 20px 5% 10px 5%;">
             <div class="row">
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="기업정보">기업정보</div>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="기업정보" style="font-weight: bold;">기업정보</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="회사소개서">회사소개서</div>
+                                <a href="/menu/0107/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="ESG 경영">ESG 경영</div>
+                                </a>
+                            </li>
+                            <li class="menu-item mt-4">
+                                <a href="/menu/0108/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="사업영역">사업영역</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="서비스">서비스</div>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="서비스" style="font-weight: bold;">서비스</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="MES">MES</div>
+                                <a href="/menu/0102/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="MMS">MMS</div>
                                 </a>
                             </li>
                             <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="모빌리티">모빌리티</div>
-                                </a>
-                            </li>
-                            <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
+                                <a href="/menu/0103/" class="menu-link">
                                     <div class="text-truncate" data-i18n="I.B.T">I.B.T</div>
                                 </a>
                             </li>
-                        </ul>
-                    </li>
-                </div>
-
-                <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="스토리">스토리</div>
-                        <ul class="menu-sub mt-4">
-                            <li class="menu-item">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="MES">스토리1</div>
-                                </a>
-                            </li>
                             <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="모빌리티">스토리2</div>
-                                </a>
-                            </li>
-                            <li class="menu-item mt-4">
-                                <a href="#" class="menu-link">
-                                    <div class="text-truncate" data-i18n="I.B.T">스토리3</div>
+                                <a href="/menu/0101/" class="menu-link">
+                                    <div class="text-truncate" data-i18n="MES">MES</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" data-i18n="약관">약관</div>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="스토리" style="font-weight: bold;"><a href="/menu/0109/">스토리</a></div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-2 mb-3">
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="약관" style="font-weight: bold;">약관</div>
                         <ul class="menu-sub mt-4">
                             <li class="menu-item">
                                 <a href="{% url 'term_page' %}" class="menu-link">
-                                    <div class="text-truncate" data-i18n="개인정보 수집 이용 동의">개인정보 수집 이용 동의</div>
+                                    <div class="text-truncate" data-i18n="개인정보 수집 이용 동의" style="font-weight: bold;">개인정보 수집 이용 동의</div>
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-lg-2 mb-3">
-                    <li class="menu-item">
-                        <div class="text-truncate" style="margin-left: 10px;" data-i18n="그룹웨어"><a href="/admins/index">그룹웨어</a>
-                        </div>
-                    </li>
+                    <div class="menu-item">
+                        <div class="text-truncate" data-i18n="그룹웨어" style="font-weight: bold;"><a href="/admins/index">그룹웨어</a></div>
+                    </div>
                 </div>
             </div>
 
-            <hr class="col-xl-12" style="background-color: #AFAFAF"/>
+            <hr class="col-xl-12" style="background-color: #AFAFAF" />
         </div>
 
-        <div class="col-xl-10 mb-5" style="padding: 0 5% 0 5%;">
-            <div class="row justify-content-between">
-                <div class="pt-3">
-                    <img src="{% static 'renewal/image/logo_A.png' %}" style="width: 85%;">
+        <div class="col-xl-10 mb-5" style="padding: 0 5% 0 6%;">
+            <div class="row justify-content-start">
+                <div class="logo-container pt-3">
+                    <img src="{% static 'renewal/image/logo_A.png' %}" style="width: 85%;" alt="Logo">
                 </div>
-                <div class="col-xl-8 text-sm-end d-none d-sm-block mt-3 com_info">
+                <div class="col-xl-9 text-sm-end d-none d-sm-block com_info" style="margin: 1% 0 0 7%;">
                     <span style="font-weight: 600; margin-right: 3%;">(주) 서울소프트</span>
-                    <span style="font-weight: 600;margin-right: 1%;">본사 / 연구소</span>
-                    <span>충청북도 충주시 중앙로 80(네오메디클리닉) / 서울특별시 금천구 가산디지털1로 84, 810호</span><br/>
+                    <span style="font-weight: 600; margin-right: 1%;">본사 / 연구소</span>
+                    <span> 충청북도 충주시 중앙로 80(네오메디클리닉), 501호 &nbsp; / &nbsp; 서울특별시 금천구 가산디지털1로 84, 810호</span><br />
                     <span style="font-weight: 600; margin-right: 1%;">대표</span><span>노병진</span>
-                    <span style="font-weight: 600; margin-right: 1%;">사업자등록번호</span><span>134-87-18556</span>
-                    <span style="font-weight: 600; margin-right: 1%;margin-left: 1%;">TEL</span><span>02-6052-1192</span>
-                    <span style="font-weight: 600; margin-right: 1%;margin-left: 1%;">FAX</span><span>02-600-9349</span><br/>
-                    <span style="color: rgba(152, 152, 152, 1)">2024. Seoul-Soft. ALL RIGHTS RESERVED</span>
+                    <span style="font-weight: 600; margin: 0 1% 0 2%;">사업자등록번호</span><span>134-87-18556</span>
+                    <span style="font-weight: 600; margin: 0 1% 0 2%;">TEL</span><span>02-6052-1192</span>
+                    <span style="font-weight: 600; margin: 0 1% 0 2%;">FAX</span><span>02-600-9349</span><br />
+                    <span style="color: #b1b1b1">2024. Seoul-Soft. ALL RIGHTS RESERVED</span>
                 </div>
             </div>
         </div>
-
     </div>
 </footer>
-
-<script>
-</script>
