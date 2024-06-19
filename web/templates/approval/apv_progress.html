@@ -67,131 +67,26 @@
     let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];
 
     $(function () {
-        load_apv_temp_update()
+        load_apv_detail()
     });
 
     function loadTemplateScripts() {
-        $(document).ready(function () {
-            $('#period_from, #period_to').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-            });
 
-            $('#period_from, #period_to, #period_from_half, #period_to_half').change(function () {
-                updatePeriodToOptions();
-                calculatePeriod();
-            });
-            updatePeriodToOptions();
-        });
     }
 
-    function calculatePeriod() {
-        let periodFrom = $('#period_from').val();
-        let periodTo = $('#period_to').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half').val();
-        let periodCount = $('#period_count');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date(periodTo);
-
-        if (isNaN(fromDate) || isNaN(toDate)) {
-            periodCount.val('');
-            return;
-        }
-
-        if (fromDate > toDate) {
-            alert("시작 날짜는 종료 날짜보다 나중일 수 없습니다.");
-            periodCount.val('');
-            return;
-        }
-
-        let daysDiff = 0;
-        let currentDate = fromDate;
-        while (currentDate <= toDate) {
-            let dayOfWeek = currentDate.getDay();
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 일요일(0)과 토요일(6) 제외
-                daysDiff++;
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            if (periodFromHalf === 'am' && periodToHalf === 'pm') {
-                daysDiff = 1; // 같은 날 오전과 오후를 선택하면 1일로 계산
-            } else if (periodFromHalf === 'pm' && periodToHalf === 'am') {
-                daysDiff = 0; // 같은 날 오후와 오전을 선택하면 0일로 계산
-            } else if (periodFromHalf !== periodToHalf) {
-                daysDiff = 0.5; // 같은 날 오전과 오후가 다른 경우 반나절로 계산
-            }
-        } else {
-            if (periodFromHalf === 'pm') {
-                daysDiff -= 0.5; // 시작일이 오후면 반나절 차감
-            }
-            if (periodToHalf === 'am') {
-                daysDiff -= 0.5; // 종료일이 오전이면 반나절 차감
-            }
-        }
-
-        if (daysDiff >= 0.5) {
-            periodCount.val(daysDiff.toFixed(1));
-        } else {
-            periodCount.val('');
-        }
-    }
-
-    function updatePeriodToOptions() {
-        let periodFrom = $('#period_from').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date($('#period_to').val());
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            periodToHalf.val(periodFromHalf).prop('disabled', true);
-        } else {
-            periodToHalf.prop('disabled', false);
-        }
-    }
-
-    function getApproverId(approverInputId) {
-        let approverName = $(`#${approverInputId}`).val();
-        let option = $(`#approver_list option`).filter(function() {
-            return $(this).val() === approverName;
-        });
-
-        return option.length ? option.data('approver-id') : null;
-    }
-
-    function getSelectedValues(selectElement) {
-        const selectedValues = [];
-        const selectedOptions = selectElement && selectElement.options;
-
-        for (let i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i].selected) {
-                selectedValues.push(selectedOptions[i].value);
-            }
-        }
-
-        return selectedValues.length > 0 ? selectedValues : null;
-    }
-
-
-    function load_apv_temp_update() {
+    function load_apv_detail() {
         let query = "?apv_id=" + apv_click_id;
         api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
-            draw_apv_temp_update(done);
+            draw_apv_detail(done);
         })
     }
 
-    function draw_apv_temp_update(done) {
+    function draw_apv_detail(done) {
         console.log("draw_apv_temp_update: ", done);
         let data = done.results[0];
 
         categoryId = data.apv_category.id;
-        fetch(`/admins/apv/category/${categoryId}`)
+        fetch(`/admins/apv/detail_temp/${categoryId}`)
             .then(response => response.text())
             .then(templateData => {
                 loadTemplateScripts();
@@ -209,9 +104,7 @@
                 document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name + ' (' + data.approvers[0].approver6_team + ')' : '';
                 document.getElementById('leave_reason').value = data.leave_reason;
                 document.getElementById('period_from').value = data.period_from;
-                document.getElementById('period_from_half').value = data.period_from_half;
                 document.getElementById('period_to').value = data.period_to;
-                document.getElementById('period_to_half').value = data.period_to_half;
                 document.getElementById('period_count').value = data.period_count;
                 document.getElementById('special_comment').value = data.special_comment;
 
@@ -222,50 +115,30 @@
                         option.selected = true;
                     } else {
                         option.selected = false;
+                        option.style.display = 'none';
                     }
+                });
+
+                let attachedFilesDiv = document.getElementById('attached_files');
+                attachedFilesDiv.innerHTML = ''; // 초기화
+                data.attachments.forEach((attachment, index) => {
+                    let fileLink = document.createElement('a');
+                    fileLink.href = attachment.file;
+
+                    let decodedUrl = decodeURIComponent(attachment.file);
+                    let fileName = decodedUrl.split('/').pop(); // URL에서 파일명 추출
+                    let fileExtension = fileName.split('.').pop(); // 파일명에서 확장자 추출
+
+                    fileLink.textContent = `첨부${index + 1} : ` + fileName;
+                    fileLink.setAttribute('download', `파일_${index + 1}.${fileExtension}`); // 동적 확장자 설정
+                    fileLink.style.display = 'block';
+                    attachedFilesDiv.appendChild(fileLink);
                 });
             })
 
             .catch(error => {
                 console.error('Error loading category detail:', error);
             });
-    }
-
-    function apv_tempsave() {
-        let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
-
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            pk: nullapply(apv_click_id),
-            apv_category_id: nullapply(categoryId),
-            apv_status: '임시',
-            doc_no: nullapply($('#doc_no').val()),
-            doc_title: nullapply($('#doc_title').val()),
-            leave_reason: nullapply($('#leave_reason').val()),
-            period_from: nullapply($('#period_from').val()),
-            period_from_half: nullapply($('#period_from_half').val()),
-            period_to: nullapply($('#period_to').val()),
-            period_to_half: nullapply($('#period_to_half').val()),
-            period_count: nullapply($('#period_count').val()),
-            special_comment: nullapply($('#special_comment').val()),
-            approver1: getApproverId('approver1'),
-            approver2: getApproverId('approver2'),
-            approver3: getApproverId('approver3'),
-            approver4: getApproverId('approver4'),
-            approver5: getApproverId('approver5'),
-            approver6: getApproverId('approver6'),
-            apv_cc: selectedCcValues,
-        };
-
-        function sendApiRequest() {
-            api_gp('/admins/apv/update/', 'post', api_data, (done) => {
-                alert(txt.create_ed);
-                location.href = "/admins/apv/";
-            });
-        }
-
-        sendApiRequest();
     }
 
     function apv_delete() {
@@ -284,7 +157,5 @@
             alert(txt.cancel);
         }
     }
-
-
 
 </script>

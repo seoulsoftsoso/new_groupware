@@ -451,6 +451,12 @@ def apv_temp_update(request, document_id):
     }
     return render(request, 'approval/apv_temp_update.html', context)
 
+def apv_progress(request, document_id):
+    context = {
+        'document_id': document_id
+    }
+    return render(request, 'approval/apv_progress.html', context)
+
 def apv_template_view(request, category_no):
     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
                      .order_by('department_position', 'username'))
@@ -465,15 +471,16 @@ def apv_template_view(request, category_no):
     }
     return render(request, create_template, context)
 
-# def apv_template_detail(request, category_no):
-#     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
-#                      .order_by('department_position', 'username'))
-#     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
-#     leave_choices = ApvMaster.LEAVE_CHOICES
-#     detail_template = 'approval/template_' + category_no + '_detail.html'
-#     context = {
-#         'category_no': category_no,
-#         'leave_choices': leave_choices,
-#         'approver_list': approver_choices,
-#     }
-#     return render(request, detail_template, context)
+def apv_template_detail(request, category_no):
+    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+                     .order_by('department_position', 'username'))
+    approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
+
+    leave_choices = ApvMaster.LEAVE_CHOICES
+    detail_template = 'approval/template_' + category_no + '_detail.html'
+    context = {
+        'category_no': category_no,
+        'leave_choices': leave_choices,
+        'approver_list': approver_choices,
+    }
+    return render(request, detail_template, context)

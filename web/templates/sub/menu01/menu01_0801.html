@@ -9,17 +9,17 @@
         background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
     }
 
-    {#@media (max-width: 1000px) {#}
-    {#    .title-area {#}
-    {#        padding: 20% 1% 41% 1% !important;#}
-    {#    }#}
-    {#    .title-sub-area {#}
-    {#        padding: 0 1% 0 1% !important;#}
-    {#    }#}
-    {#    .footer {#}
-    {#        width : 1600px;#}
-    {#    }#}
-    }
+    {% comment %}@media (max-width: 1000px) {
+        .title-area {
+            padding: 20% 1% 41% 1% !important;
+        }
+        .title-sub-area {
+            padding: 0 1% 0 1% !important;
+        }
+        .footer {
+            width : 1600px;
+        }
+    }{% endcomment %}
 
 </style>
 {#{% include 'menu.html' %}#}
