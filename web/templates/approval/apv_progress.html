@@ -9,6 +9,11 @@
         white-space: nowrap;
     }
 
+    .attached_hover:hover {
+        text-decoration: underline;
+        color: midnightblue !important;
+    }
+
     @media (max-width: 1000px) {
         .control-buttons {
             height: 40px;
@@ -119,26 +124,73 @@
                     }
                 });
 
+                let iconClassMap = {
+                    'default': 'fa-regular fa-file fa-lg',
+                    'txt': 'fa-regular fa-file-lines fa-lg',
+                    'hwp': 'fa-regular fa-file-lines fa-lg',
+                    'hwpx': 'fa-regular fa-file-lines fa-lg',
+                    'jpg': 'fa-regular fa-file-image fa-lg',
+                    'png': 'fa-regular fa-file-image fa-lg',
+                    'pdf': 'fa-regular fa-file-powerpoint fa-lg',
+                    'doc': 'fa-regular fa-file-word fa-lg',
+                    'docx': 'fa-regular fa-file-word fa-lg',
+                    'ppt': 'fa-regular fa-file-powerpoint fa-lg',
+                    'pptx': 'fa-regular fa-file-powerpoint fa-lg',
+                    'xls': 'fa-regular fa-file-excel fa-lg',
+                    'xlsx': 'fa-regular fa-file-excel fa-lg',
+                    'zip': 'fa-regular fa-file-zipper fa-lg',
+                };
+
+                // 첨부 파일을 표시할 div 요소를 가져옴
                 let attachedFilesDiv = document.getElementById('attached_files');
-                attachedFilesDiv.innerHTML = ''; // 초기화
+                attachedFilesDiv.innerHTML = '';
+
+                // 첨부 파일 데이터를 순회하여 링크 요소를 생성
                 data.attachments.forEach((attachment, index) => {
                     let fileLink = document.createElement('a');
                     fileLink.href = attachment.file;
 
                     let decodedUrl = decodeURIComponent(attachment.file);
                     let fileName = decodedUrl.split('/').pop(); // URL에서 파일명 추출
-                    let fileExtension = fileName.split('.').pop(); // 파일명에서 확장자 추출
+                    let fileExtension = fileName.split('.').pop().toLowerCase(); // 파일명에서 확장자 추출 및 소문자로 변환
 
-                    fileLink.textContent = `첨부${index + 1} : ` + fileName;
-                    fileLink.setAttribute('download', `파일_${index + 1}.${fileExtension}`); // 동적 확장자 설정
-                    fileLink.style.display = 'block';
-                    attachedFilesDiv.appendChild(fileLink);
+                    // 아이콘 클래스 설정
+                    let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
+                    let iconElement = document.createElement('i');
+                    iconElement.className = iconClass;
+                    iconElement.style.marginRight = '8px'; // 아이콘과 텍스트 사이에 여백 추가
+
+                    // 링크 텍스트 설정
+                    {#fileLink.textContent = `첨부${index + 1} : ` + fileName;#}
+                    fileLink.textContent = fileName;
+                    fileLink.insertBefore(iconElement, fileLink.firstChild);
+
+                    // 동적 확장자를 포함한 다운로드 파일명 설정
+                    fileLink.setAttribute('download', `파일_${index + 1}.${fileExtension}`);
+
+                    // 링크 텍스트 스타일 설정
+                    fileLink.style.color = '#343a40';
+                    fileLink.style.display = 'inline-block'; // 인라인 블록으로 설정하여 아이콘과 텍스트가 같은 줄에 오게 함
+                    fileLink.style.fontSize = '16px'; // 글자 크기 설정
+                    fileLink.classList.add('attached_hover'); // 클래스 추가
+
+                    // 링크 요소를 블록으로 표시
+                    let fileContainer = document.createElement('div');
+                    fileContainer.appendChild(fileLink);
+                    fileContainer.style.display = 'block'; // 각 파일을 블록으로 표시
+
+                    // 첨부 파일 div에 링크 요소 추가
+                    attachedFilesDiv.appendChild(fileContainer);
                 });
             })
 
             .catch(error => {
                 console.error('Error loading category detail:', error);
             });
+    }
+
+    function draw_apv_attached_files() {
+
     }
 
     function apv_delete() {

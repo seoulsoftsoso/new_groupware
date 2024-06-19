@@ -479,8 +479,6 @@ def get_obj(obj):
         } if obj.created_by else '',
         'created_at': obj.created_at if obj.created_at is not None else '',
         'updated_at': obj.updated_at if obj.updated_at is not None else '',
-        'form_template': obj.form_template if obj.form_template is not None else '',
-        'form_data': obj.form_data if obj.form_data is not None else '',
         'comments_count': obj.comments_count if obj.comments_count else '',
         'views_count': obj.views_count if obj.views_count is not None else '',
         'special_comment': obj.special_comment if obj.special_comment is not None else '',

@@ -189,20 +189,7 @@ def SubView(request, menu_num):
     # filename = 'sub/menu01/menu01_08.html' 기업정보 사업영역 (리뉴얼)
     # filename = 'sub/menu01/menu01_09.html' 스토리 (리뉴얼)
 
-    # filename = 'sub/menu01/menu01_04.html' 운송 ERP (구버전)
-    # filename = 'sub/menu01/menu01_05.html' 회사소개 개요 (구버전)
-    # filename = 'sub/menu01/menu01_0202.html' 요금제 (구버전)
-    # filename = 'sub/menu01/menu01_0402.html' 구축실적 (구버전)
-    # filename = 'sub/menu01/menu01_0402.html' 회사연혁 (구버전)
-    # filename = 'sub/menu01/menu01_0402.html' 오시는길 (구버전)
-
-
     return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
-
-
-# def cost_page(request):
-#
-#     return render(request,'sub/menu01/me')
 
 
 def submit_question(request):

@@ -231,7 +231,7 @@
             });
     }
 
-    function apv_tempsave() {
+{% comment %}    function apv_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -266,6 +266,73 @@
         }
 
         sendApiRequest();
+    }{% endcomment %}
+
+
+    // 첨부파일 가능 버전
+    function apv_tempsave() {
+        let apvCcElement = document.getElementById('apv_cc');
+        let selectedCcValues = getSelectedValues(apvCcElement);
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            pk: nullapply(apv_click_id),
+            apv_category_id: nullapply(categoryId),
+            apv_status: '임시',
+            doc_no: nullapply($('#doc_no').val()),
+            doc_title: nullapply($('#doc_title').val()),
+            leave_reason: nullapply($('#leave_reason').val()),
+            period_from: nullapply($('#period_from').val()),
+            period_from_half: nullapply($('#period_from_half').val()),
+            period_to: nullapply($('#period_to').val()),
+            period_to_half: nullapply($('#period_to_half').val()),
+            period_count: nullapply($('#period_count').val()),
+            special_comment: nullapply($('#special_comment').val()),
+            attached_files: [],
+            approver1: getApproverId('approver1'),
+            approver2: getApproverId('approver2'),
+            approver3: getApproverId('approver3'),
+            approver4: getApproverId('approver4'),
+            approver5: getApproverId('approver5'),
+            approver6: getApproverId('approver6'),
+            apv_cc: selectedCcValues,
+        };
+
+        let attachedFiles = document.getElementById('attached_files').files;
+        let fileReadCount = 0;
+
+        function sendApiRequest() {
+            api_gp('/admins/apv/update/', 'post', api_data, (done) => {
+                alert(txt.create_ed);
+                location.href = "/admins/apv/";
+            });
+        }
+
+        function readFileAndAddToApiData(file, index) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
+                };
+                api_data.attached_files.push(fileData);
+                fileReadCount++;
+                if (fileReadCount === attachedFiles.length) {
+                    sendApiRequest();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        if (attachedFiles.length > 0) {
+            for (let i = 0; i < attachedFiles.length; i++) {
+                readFileAndAddToApiData(attachedFiles[i], i);
+            }
+        } else {
+            sendApiRequest();
+        }
     }
 
     function apv_delete() {

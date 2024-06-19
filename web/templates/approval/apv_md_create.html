@@ -249,7 +249,7 @@
         return selectedValues.length > 0 ? selectedValues : null;
     }
 
-    function apv_modal_tempsave() {
+{% comment %}    function apv_modal_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -283,10 +283,11 @@
             });
         }
         sendApiRequest();
-    }
+    }{% endcomment %}
+
 
     // 첨부파일 가능 버전
-    {% comment %}function apv_modal_tempsave() {
+    function apv_modal_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -347,6 +348,6 @@
         } else {
             sendApiRequest();
         }
-    }{% endcomment %}
+    }
 
 </script>
