@@ -156,8 +156,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     department_position = models.ForeignKey('CodeMaster', models.PROTECT,
                                             null=True,
                                             related_name='department_position',
-                                            verbose_name='부서구분',
-                                            default=70)
+                                            verbose_name='부서구분')
     postal_code = models.CharField(max_length=12, null=True, verbose_name='우편번호')  # 우편번호
     address = models.CharField(max_length=64, null=True, verbose_name='주소')  # 주소
     # enable = models.BooleanField(default=True, verbose_name='사용구분')  # 사용구분
