@@ -156,7 +156,8 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     department_position = models.ForeignKey('CodeMaster', models.PROTECT,
                                             null=True,
                                             related_name='department_position',
-                                            verbose_name='부서구분')
+                                            verbose_name='부서구분',
+                                            default=70)
     postal_code = models.CharField(max_length=12, null=True, verbose_name='우편번호')  # 우편번호
     address = models.CharField(max_length=64, null=True, verbose_name='주소')  # 주소
     # enable = models.BooleanField(default=True, verbose_name='사용구분')  # 사용구분
@@ -538,12 +539,6 @@ class StoryLikes(models.Model):
 
 
 # 전자결재
-class FormTemplate(models.Model):
-    name = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
-    fields = models.TextField()
-
-
 class ApvCategory(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -572,10 +567,8 @@ class ApvMaster(models.Model):
     apv_category = models.ForeignKey(ApvCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="전자결재 카테고리")
     apv_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='apv_created_by')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    form_template = models.ForeignKey(FormTemplate, on_delete=models.CASCADE, related_name='documents', null=True, blank=True)
-    form_data = models.TextField(null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
     comments_count = models.PositiveIntegerField(default=0)
     views_count = models.PositiveIntegerField(default=0)
     special_comment = models.TextField(null=True, blank=True)
@@ -587,7 +580,9 @@ class ApvMaster(models.Model):
     related_info = models.CharField(max_length=255, null=True, blank=True)
     total_cost = models.CharField(max_length=255, null=True, blank=True)
     period_from = models.DateField(null=True, blank=True)
+    period_from_half = models.CharField(max_length=255, null=True, blank=True)
     period_to = models.DateField(null=True, blank=True)
+    period_to_half = models.CharField(max_length=255, null=True, blank=True)
     period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     leave_reason = models.CharField(max_length=255, choices=LEAVE_CHOICES, default='연차', null=True, blank=True)
 

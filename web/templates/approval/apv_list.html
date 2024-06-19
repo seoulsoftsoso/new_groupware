@@ -33,7 +33,7 @@
                 <div class="mb-xl-0 mb-4">
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
-                            <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;">전자결재</strong></a>
+                            <strong style="color: #000; font-size: x-large; margin-left: 20px; font-family: Pretendard;"></i><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
                     </div>
                 </div>
             </div>
@@ -211,7 +211,7 @@
             let row = `
             <tr id='${item.id}' apv_status='${item.apv_status}' style='cursor:pointer;'>
             <td name="no" class="d-none">${num + i}</td>
-            <td name='updated_at'>${item.updated_at.split('T')[0]}</td>
+            <td name='updated_at'>${item.updated_at}</td>
             <td name='doc_no'>${item.doc_no}</td>
             <td name='apv_category'>${item.apv_category.name}</td>
             <td name='doc_title'>${item.doc_title}</td>
@@ -233,9 +233,9 @@
             apv_click_id = $(this).attr("id");
             apv_click_status = $(this).attr("apv_status");
             if (apv_click_status === '임시') {
-                location.href = `/admins/apv/apv_temp_update/${apv_click_id}`;
+                location.href = `/admins/apv/temp_update/${apv_click_id}`;
             } else {
-                alert("임시 외는 추후 작업예정");
+                location.href = `/admins/apv/progress/${apv_click_id}`;
             }
         });
     }

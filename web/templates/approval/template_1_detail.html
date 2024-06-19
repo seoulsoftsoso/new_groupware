@@ -37,7 +37,7 @@
 
 <div class="template-layout container-fluid">
     <div class="d-flex justify-content-center">
-        <input class="form-control" id="doc_title" style="color: #000; font-size: 30px; font-weight: 700; border: none; margin-bottom: 10px;">
+        <input class="form-control bg-white" id="doc_title" style="color: #000; font-size: 30px; font-weight: 700; border: none; margin-bottom: 10px;" disabled>
     </div>
 
     <div class="d-flex">
@@ -50,19 +50,19 @@
             <div style="border: 1px solid #ddd; margin: auto 20px auto 0px">
                 <div class="d-flex justify-content-start my-3">
                     <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">문서번호</div>
-                    <input class="form-control" id="doc_no" style="width:200px;" placeholder="자동으로 생성됩니다" readonly>
+                    <input class="form-control" id="doc_no" style="width:200px;" placeholder="자동으로 생성됩니다" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
                     <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">작성일</div>
-                    <input class="form-control" id="create_date" style="width:200px;" readonly>
+                    <input class="form-control" id="create_date" style="width:200px;" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
                     <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">작성자</div>
-                    <input class="form-control" id="username_md" style="width:200px;" readonly>
+                    <input class="form-control" id="username_md" style="width:200px;" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
                     <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">부 서</div>
-                    <input class="form-control" id="team" style="width:200px;" readonly>
+                    <input class="form-control" id="team" style="width:200px;" disabled>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
                     <div>
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 1</div>
-                            <input list="approver_list" class="form-control" id="approver1" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver1" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 2</div>
-                            <input list="approver_list" class="form-control" id="approver2" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver2" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -94,7 +94,7 @@
                         </div>
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 3</div>
-                            <input list="approver_list" class="form-control" id="approver3" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver3" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -104,7 +104,7 @@
                     <div class="mx-4">
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 4</div>
-                            <input list="approver_list" class="form-control" id="approver4" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver4" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -112,7 +112,7 @@
                         </div>
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 5</div>
-                            <input list="approver_list" class="form-control" id="approver5" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver5" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="d-flex justify-content-start my-3">
                             <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 6</div>
-                            <input list="approver_list" class="form-control" id="approver6" name="approver_list" style="width:200px;">
+                            <input list="approver_list" class="form-control" id="approver6" name="approver_list" style="width:200px;" disabled>
                             <datalist id="approver_list">
                                 {% for position, name, id in approver_list %}
                                     <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="d-flex justify-content-start my-3">
                         <div class="row justify-content-center align-items-start mt-1 mx-1" style="color: #000; font-size: 16px; width:100px;">참조자</div>
-                        <select class="form-control" id="apv_cc" name="approver_list" style="width:240px;" multiple>
+                        <select class="form-control" id="apv_cc" name="approver_list" style="width:240px;" multiple disabled>
                             {% for position, name, id in approver_list %}
                                 <option value="{{ id }}">{{ position }} - {{ name }}</option>
                             {% endfor %}
@@ -152,7 +152,7 @@
                      style="color: #000; font-size: 16px; width:100px;">휴가 종류
                 </div>
                 <div class="custom-select">
-                    <select class="form-control" id="leave_reason" name="leave_reason">
+                    <select class="form-control" id="leave_reason" name="leave_reason" disabled>
                         <option value="">클릭 후 선택하세요</option>
                         {% for value, display in leave_choices %}
                             <option value="{{ value }}">{{ display }}</option>
@@ -164,15 +164,15 @@
                      style="color: #000; font-size: 16px; width:100px;">휴가 기간
                 </div>
                 <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off"
-                       style="width:150px;" type="text"/>
-                <select id="period_from_half" class="form-control" style="width:70px; margin: 0 10px 0 0;">
+                       style="width:150px;" type="text" disabled/>
+                <select id="period_from_half" class="form-control" style="width:70px; margin: 0 10px 0 0;" disabled>
                     <option value="full">종일</option>
                     <option value="am">오전</option>
                     <option value="pm">오후</option>
                 </select>
                 <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off"
-                       style="width:150px;" type="text"/>
-                <select id="period_to_half" class="form-control" style="width:70px;">
+                       style="width:150px;" type="text" disabled/>
+                <select id="period_to_half" class="form-control" style="width:70px;" disabled>
                     <option value="full">종일</option>
                     <option value="am">오전</option>
                     <option value="pm">오후</option>
@@ -181,7 +181,7 @@
                 <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">휴가 일수 총
                 </div>
                 <input class="form-control" id="period_count"
-                       style="text-align: right; width:60px; border: none; padding-left: 0;">
+                       style="text-align: right; width:60px; border: none; padding-left: 0;" disabled>
                 <div class="row justify-content-start align-items-center mx-1" style="color: #000; font-size: 16px; width:50px;"> 일
                 </div>
 
@@ -189,12 +189,12 @@
             <div class="d-flex justify-content-start my-3">
                 <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">휴가 사유
                 </div>
-                <textarea class="form-control" id="special_comment" style="width:80%; height:100px;"></textarea>
+                <textarea class="form-control" id="special_comment" style="width:80%; height:100px;" disabled></textarea>
             </div>
             <div class="d-flex justify-content-start my-3">
                 <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">관련 첨부
                 </div>
-                <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" multiple>
+                <div id="attached_files"></div>
             </div>
         </div>
     </div>

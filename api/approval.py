@@ -9,6 +9,7 @@ from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCa
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
+from django.utils import timezone
 import base64
 from django.core.files.base import ContentFile
 
@@ -23,7 +24,7 @@ class ApvListView(View):
         date_sch_from = request.GET.get('date_sch_from', '')
         date_sch_to = request.GET.get('date_sch_to', '')
 
-        qs = ApvMaster.objects.filter().order_by('-updated_at')
+        qs = ApvMaster.objects.filter().order_by('-updated_at', '-doc_no')
 
         # 기간 검색
         if date_sch_from:
@@ -199,7 +200,9 @@ class ApvCreate(View):
         doc_title = request.POST.get('doc_title', '')
         leave_reason = request.POST.get('leave_reason', '')
         period_from = self.get_date_from_string(request.POST.get('period_from', ''))
+        period_from_half = request.POST.get('period_from_half', '')
         period_to = self.get_date_from_string(request.POST.get('period_to', ''))
+        period_to_half = request.POST.get('period_to_half', '')
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
 
@@ -219,7 +222,9 @@ class ApvCreate(View):
                 doc_title=doc_title,
                 leave_reason=leave_reason,
                 period_from=period_from,
+                period_from_half=period_from_half,
                 period_to=period_to,
+                period_to_half=period_to_half,
                 period_count=period_count,
                 special_comment=special_comment,
                 created_by=user,
@@ -291,17 +296,11 @@ def get_res(context, obj):
     context['doc_title'] = obj.doc_title
     context['leave_reason'] = obj.leave_reason
     context['period_from'] = obj.period_from
+    context['period_from_half'] = obj.period_from_half
     context['period_to'] = obj.period_to
+    context['period_to_half'] = obj.period_to_half
     context['period_count'] = obj.period_count
     context['special_comment'] = obj.special_comment
-    # context['attached_files'] = [file.id for file in obj.attached_files.all()]
-    # context['approver1'] = obj.approver1
-    # context['approver2'] = obj.approver2
-    # context['approver3'] = obj.approver3
-    # context['approver4'] = obj.approver4
-    # context['approver5'] = obj.approver5
-    # context['approver6'] = obj.approver6
-    # context['apv_cc'] = obj.apv_cc
     context['created_by'] = obj.created_by.id
     context['created_at'] = obj.created_at
     context['updated_at'] = obj.updated_at
@@ -310,11 +309,15 @@ def get_res(context, obj):
 
 
 def generate_doc_no():
-    today = date.today()
-    count_today = ApvMaster.objects.filter(created_at__date=today).count() + 1
+    # today = date.today()
+    today = timezone.now().date()
+    count_today = ApvMaster.objects.filter(
+        created_at__year=today.year,
+        created_at__month=today.month,
+        created_at__day=today.day
+    ).count() + 1
     doc_no = f'AP{today.strftime("%y%m%d")}-{count_today:03d}'
     return doc_no
-
 
 
 class ApvUpdate(View):
@@ -332,7 +335,9 @@ class ApvUpdate(View):
         doc_title = request.POST.get('doc_title', '')
         leave_reason = request.POST.get('leave_reason', '')
         period_from = self.get_date_from_string(request.POST.get('period_from', ''))
+        period_from_half = request.POST.get('period_from_half', '')
         period_to = self.get_date_from_string(request.POST.get('period_to', ''))
+        period_to_half = request.POST.get('period_to_half', '')
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
 
@@ -345,29 +350,32 @@ class ApvUpdate(View):
         context = {}
 
         try:
-            obj = ApvMaster.objects.get(pk=int(pk))
-            obj.apv_category_id = apv_category_id,
-            obj.apv_status = apv_status,
-            obj.doc_no = doc_no,
-            obj.doc_title = doc_title,
-            obj.leave_reason = leave_reason,
-            obj.period_from = period_from,
-            obj.period_to = period_to,
-            obj.period_count = period_count,
-            obj.special_comment = special_comment,
-            obj.created_by = user,
-            obj.created_at = d_today,
-            obj.updated_at = d_today,
+            obj = get_object_or_404(ApvMaster, pk=int(pk))
+            obj.apv_category_id = apv_category_id
+            obj.apv_status = apv_status
+            obj.doc_no = doc_no
+            obj.doc_title = doc_title
+            obj.leave_reason = leave_reason
+            obj.period_from = period_from
+            obj.period_from_half = period_from_half
+            obj.period_to = period_to
+            obj.period_to_half = period_to_half
+            obj.period_count = period_count
+            obj.special_comment = special_comment
+            obj.created_by = user
+            obj.created_at = d_today
+            obj.updated_at = d_today
 
             obj.save()
 
+            ApvApprover.objects.filter(document=obj).delete()
+            approver_data = {'document': obj}
             for i, approver in enumerate(approvers, start=1):
-                ApvApprover.objects.update_or_create(
-                    document=obj,
-                    approver=approver,
-                    defaults={f'approver{i}_status': '대기'}
-                )
+                approver_data[f'approver{i}'] = approver
+                approver_data[f'approver{i}_status'] = '대기'
+            ApvApprover.objects.create(**approver_data)
 
+            ApvCC.objects.filter(document=obj).delete()
             for apv_cc_user in apv_cc_users:
                 ApvCC.objects.update_or_create(
                     document=obj,
@@ -417,10 +425,28 @@ class ApvUpdate(View):
             i += 1
 
 
-# class ApvDeleteView(DeleteView):
-#     model = ApvMaster
-#     template_name = 'approval/apv_confirm_delete.html'
-#     success_url = reverse_lazy('apv_list')
+class ApvDelete(View):
+    @transaction.atomic
+    def post(self, request):
+
+        pk = request.POST.get('pk', '')
+
+        if (pk == ''):
+            msg = "삭제하시겠습니까?"
+            return JsonResponse({'error': True, 'message': msg})
+
+        try:
+            obj = ApvMaster.objects.get(pk=int(pk))
+            obj.delete()
+        except Exception as e:
+            print('삭제 실패')
+            print(e)
+            msg = ["사용중인 데이터 입니다. 관련 데이터 삭제 후 다시 시도해주세요."]
+            return JsonResponse({'error': True, 'message': msg})
+
+        context = {}
+        context['id'] = pk
+        return JsonResponse(context)
 
 
 # class ApvCommentCreateView(CreateView):
@@ -466,7 +492,9 @@ def get_obj(obj):
         'related_info': obj.related_info if obj.related_info else '',
         'total_cost': obj.total_cost if obj.total_cost is not None else '',
         'period_from': obj.period_from if obj.period_from is not None else '',
+        'period_from_half': obj.period_from_half if obj.period_from_half is not None else '',
         'period_to': obj.period_to if obj.period_to is not None else '',
+        'period_to_half': obj.period_to_half if obj.period_to_half is not None else '',
         'period_count': obj.period_count if obj.period_count is not None else '',
         'leave_reason': obj.leave_reason if obj.leave_reason is not None else '',
     }
@@ -480,36 +508,36 @@ class ApvCategoryList(View):
 
 
 
-class ApproveDocumentView(View):
-    def post(self, request, *args, **kwargs):
-        doc_id = self.kwargs.get('pk')
-        document = get_object_or_404(ApvMaster, pk=doc_id)
-        approver = document.apv_docs.filter(approver=request.user).first()
-
-        if approver and approver.approver_status != 'approved':
-            approver.approver_status = 'approved'
-            approver.approver_date = datetime.now()
-            approver.save()
-
-            # 모든 승인자가 승인했는지 확인
-            if all(a.approver_status == 'approved' for a in document.apv_docs.all()):
-                document.apv_status = 'approved'
-                document.save()
-
-        return JsonResponse({'status': 'success'})
-
-
-class RejectDocumentView(View):
-    def post(self, request, *args, **kwargs):
-        doc_id = self.kwargs.get('pk')
-        document = get_object_or_404(ApvMaster, pk=doc_id)
-        approver = document.apv_docs.filter(approver=request.user).first()
-
-        if approver and approver.approver_status != 'rejected':
-            approver.approver_status = 'rejected'
-            approver.approver_date = datetime.now()
-            approver.save()
-            document.apv_status = 'rejected'
-            document.save()
-
-        return JsonResponse({'status': 'success'})
+# class ApproveDocumentView(View):
+#     def post(self, request, *args, **kwargs):
+#         doc_id = self.kwargs.get('pk')
+#         document = get_object_or_404(ApvMaster, pk=doc_id)
+#         approver = document.apv_docs.filter(approver=request.user).first()
+#
+#         if approver and approver.approver_status != 'approved':
+#             approver.approver_status = 'approved'
+#             approver.approver_date = datetime.now()
+#             approver.save()
+#
+#             # 모든 승인자가 승인했는지 확인
+#             if all(a.approver_status == 'approved' for a in document.apv_docs.all()):
+#                 document.apv_status = 'approved'
+#                 document.save()
+#
+#         return JsonResponse({'status': 'success'})
+#
+#
+# class RejectDocumentView(View):
+#     def post(self, request, *args, **kwargs):
+#         doc_id = self.kwargs.get('pk')
+#         document = get_object_or_404(ApvMaster, pk=doc_id)
+#         approver = document.apv_docs.filter(approver=request.user).first()
+#
+#         if approver and approver.approver_status != 'rejected':
+#             approver.approver_status = 'rejected'
+#             approver.approver_date = datetime.now()
+#             approver.save()
+#             document.apv_status = 'rejected'
+#             document.save()
+#
+#         return JsonResponse({'status': 'success'})

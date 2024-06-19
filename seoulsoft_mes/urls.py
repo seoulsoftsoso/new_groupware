@@ -254,14 +254,16 @@ urlpatterns = [
 
     # 전자결재
     path('admins/apv/', apv_list, name='apv_list'),
-    path('admins/apv/apv_temp_update/<str:document_id>/', apv_temp_update, name='apv_temp_update'),
-
+    path('admins/apv/temp_update/<str:document_id>/', apv_temp_update, name='apv_temp_update'),
+    path('admins/apv/progress/<str:document_id>/', apv_progress, name='apv_progress'),
     path('admins/apv/get/', ApvListView.as_view(), name='apv_get_data'),
     path('admins/apv/create/', ApvCreate.as_view(), name='apv_create'),
     path('admins/apv/update/', ApvUpdate.as_view(), name='apv_update'),
     path('admins/apv/detail/', ApvDetail.as_view(), name='apv_detail'),
+    path('admins/apv/delete/', ApvDelete.as_view(), name='apv_delete'),
     path('admins/apv/category/', ApvCategoryList.as_view(), name='apv_category'),
     path('admins/apv/category/<str:category_no>/', apv_template_view, name='ApvTemplateView'),
+    path('admins/apv/detail_temp/<str:category_no>/', apv_template_detail, name='ApvTemplateView'),
 
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
