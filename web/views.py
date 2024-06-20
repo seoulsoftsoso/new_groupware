@@ -12,6 +12,11 @@ from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
     ProTask, ProMembers, Weekly, ApvMaster
 from api.views import *
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
+from django.conf.urls import handler403
+from django.contrib import messages
+
 
 
 class DateDiff(Func):
@@ -424,9 +429,30 @@ def user_authority_page(request):
     return render(request, 'admins/administrator/user_authority/user_authority.html', context)
 
 
-def test_form(request):
+# def test_form(request):
+#     context = {}
+#     return render(request, 'admins/administrator/test_form.html', context)
+
+
+def check_story_admin(user):
+    if user.story_admin:
+        return True
+    raise PermissionDenied("접근 권한이 없습니다.")
+
+
+@login_required
+@user_passes_test(check_story_admin)
+def story_create_page(request):
     context = {}
-    return render(request, 'admins/administrator/test_form.html', context)
+    return render(request, 'story/story_create.html', context)
+
+
+def permission_denied_view(request, exception):
+    return render(request, 'story/story_403.html', status=403)
+
+
+handler403 = permission_denied_view
+
 
 def apv_list(request):
     context = {}

@@ -236,7 +236,7 @@ urlpatterns = [
     path('admins/user_settings_page', UserSettingsPage.as_view(), name="userSettingsPage"),
     path('admins/change_password', change_password, name="changePassword"),
     path('admins/signature_img_upload', signature_img_upload, name="signatureImgUpload"),
-    path('admins/testform', test_form, name="testForm"),
+    # path('admins/testform', test_form, name="testForm"),
 
     # 메인페이지
     path('menu/<str:menu_num>/', SubView, name='sub'),
@@ -251,6 +251,7 @@ urlpatterns = [
     path('story/story_update/', Story_update.as_view(), name='story_update'),
     path('story/story_delete/', Story_delete.as_view(), name='story_delete'),
     path('story/likes/<int:story_id>/', toggle_like, name='toggle_like'),
+    path('story/create_page/', story_create_page, name='story_create_page'),
 
     # 전자결재
     path('admins/apv/', apv_list, name='apv_list'),
