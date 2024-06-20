@@ -1,0 +1,169 @@
+{# 스토리 / 목록 페이지 #}
+
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<!--menu 로드-->
+<style>
+    .white-background {
+        background-color: rgba(255, 255, 255, 1) !important; /* 배경색을 흰색으로 설정 */
+    }
+
+    .custom_btn > button {
+        background-color: rgba(239, 239, 239, 1);
+        color: rgba(137, 137, 137, 1);
+        border: 0;
+        border-radius: 21px;
+    }
+
+    .custom_btn > button:hover {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:active {
+        background-color: rgba(234, 234, 115, 1);
+        color: black;
+    }
+
+    .custom_btn > button:focus {
+        box-shadow: 0 0 0 0;
+    }
+
+    .nav-pills .nav-link {
+        background-color: #f4f4f4;
+        color: black;
+        height: 43px;
+        width: 136px;
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #e8e872;
+        color: black;
+    }
+
+    .story-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 40px;
+    }
+
+    .story-item img {
+        width: 100px;
+        height: auto;
+        margin-right: 60px;
+    }
+
+    .story-item div {
+        flex: 1;
+    }
+
+    .story-title {
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .catedate {
+        color: #898989;
+        font-size: 22px;
+        font-weight: 400;
+        padding: 20px 0 0 0;
+    }
+
+    .story-image-size {
+        width: 300px !important;
+        height: 200px !important;
+        object-fit: cover !important;
+        {#border-radius: 20px !important;#}
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .page-item {
+        padding: 8px 12px;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: #f4f4f4; /* 회색 배경색 */
+    }
+
+    .page-item.active {
+        background-color: #e8e872;
+        font-weight: bold;
+    }
+
+    .page-item.disabled {
+        color: #ccc;
+        pointer-events: none;
+    }
+
+    @media (max-width: 1000px) {
+        .layout-content-navbar {
+            width: 1000px;
+        }
+
+        .title-area {
+            padding-top: 10% !important;
+        }
+
+        .card-body {
+            padding-left: 10% !important;
+        }
+
+        .story-image-size {
+            width: 240px !important;
+            height: 200px !important;
+        }
+
+        .pagination {
+            padding-right: 100px !important;
+            margin: 0 !important;
+        }
+
+        .footer {
+            width: 1000px;
+        }
+    }
+
+</style>
+{% include 'menu.html' %}
+<body class="menu_story" style="overflow-x: hidden;">
+<div class="layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page" id="layout_page">
+            <!-- Content wrapper -->
+            <div class="content-wrapper" style="background-color: rgb(255,255,255)">
+
+                <!-- Content -->
+                <div class="container-fluid flex-grow-1 container-p-y row justify-content-center"
+                     style="margin-bottom: 5%; position: relative; padding: 0 0 0 0;">
+                    <div class="main_overlay" style="position: absolute; bottom: 11%; left: 7%; color: white;">
+                    </div>
+                </div>
+
+                <div class="title-area card-body row justify-content-start" style="padding: 0 10% 0% 20%;">
+                    <div>
+                        <h1 style="font-size: 42px; font-weight: 700; line-height: 80px;">Story</h1>
+                        <h2 style="font-size: 26px; font-weight: 500; line-height: 35px; color: #898989;">What’s Coming
+                            up!</h2>
+                        <br>
+                    </div>
+                </div>
+                <div class="card-body row justify-content-start" style="padding: 0 10% 5% 20%;">
+                    <div class="container d-flex justify-content-between p-0 m-0">
+                        접근 권한이 없습니다.
+                    </div>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary" style="margin:3% 0 8% 0;">뒤로가기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>

@@ -92,6 +92,7 @@ ROOT_URLCONF = 'seoulsoft_mes.urls'
 
 # 로그아웃 성공 시 자동으로 이동할 URL
 LOGOUT_REDIRECT_URL = '/login'
+LOGIN_URL = '/login'
 
 TEMPLATES = [
     {
