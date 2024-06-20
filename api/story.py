@@ -7,10 +7,12 @@ from django.http import JsonResponse
 from lib import Pagenation
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from api.models import StoryMaster, StoryLikes
-
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
+from django.conf.urls import handler403
+from django.contrib import messages
 from django import forms
 
 class StoryForm(forms.ModelForm):
@@ -107,7 +109,7 @@ class Story_update(View):
 
         story = get_object_or_404(StoryMaster, pk=story_id)
         form = StoryForm(instance=story)
-        return render(request, '/menu/010901/', {'form': form, 'story': story})
+        return render(request, '/story/create_page/', {'form': form, 'story': story})
 
     def post(self, request, *args, **kwargs):
         story_id = request.GET.get('story_id')
@@ -130,8 +132,13 @@ class Story_update(View):
             return JsonResponse({"errors": form.errors}, status=400)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(csrf_exempt, name='dispatch')
+def check_story_admin(user):
+    if user.story_admin:
+        return True
+    raise PermissionDenied("접근 권한이 없습니다.")
+
+@method_decorator([login_required, csrf_exempt], name='dispatch')
+@method_decorator(user_passes_test(check_story_admin), name='dispatch')
 class Story_delete(View):
     def post(self, request, *args, **kwargs):
         story_id = request.POST.get('story_id')
@@ -141,8 +148,8 @@ class Story_delete(View):
         story = get_object_or_404(StoryMaster, pk=story_id)
 
         # 삭제 권한 확인 (자신이 작성한 글만 삭제할 수 있게 하는 예시)
-        if story.created_by != request.user:
-            return JsonResponse({"error": "삭제 권한이 없습니다."}, status=403)
+        # if story.created_by != request.user:
+        #     return JsonResponse({"error": "삭제 권한이 없습니다."}, status=403)
 
         story.delete()
         return JsonResponse({"message": "스토리가 삭제되었습니다."}, status=200)

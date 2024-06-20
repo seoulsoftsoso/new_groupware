@@ -142,28 +142,27 @@
 
     let urlParams = new URLSearchParams(window.location.search);
     let storyId = urlParams.get('story_id');
-    let story_category_id = '';
+    let story_category = '';
 
     if (storyId) {
         $.ajax({
             url: `/story/story_read/?story_id=${storyId}`,
             method: 'GET',
             success: function (response) {
-                const data = response.results[0];
+                let data = response.results[0];
                 $('#story_title').val(data.story_title);
 
-                let story_category_id;
                 if (data.story_category === "NEWS") {
-                    story_category_id = NEWS;
+                    story_category = 'NEWS';
                 } else if (data.story_category === "ACTIVITY") {
-                    story_category_id = ACTIVITY;
+                    story_category = 'ACTIVITY';
                 } else if (data.story_category === "CREW") {
-                    story_category_id = CREW;
+                    story_category = 'CREW';
                 } else {
-                    story_category_id = null;
+                    story_category = null;
                 }
 
-                $('#story_category').val(story_category_id);
+                $('#story_category').val(story_category);
                 $('#story_picture').val(data.story_picture.url);
                 $('#summernote').summernote('code', data.story_content);
                 document.getElementById("createupdate").innerHTML = "스토리 수정";
