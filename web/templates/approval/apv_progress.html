@@ -101,87 +101,16 @@
                 document.getElementById('create_date').value = data.updated_at;
                 document.getElementById('username_md').value = data.created_by.username;
                 document.getElementById('team').value = data.created_by.department_position;
-                document.getElementById('approver1').value = data.approvers[0]?.approver1_name ? data.approvers[0].approver1_name + ' (' + data.approvers[0].approver1_team + ')' : '';
-                document.getElementById('approver2').value = data.approvers[0]?.approver2_name ? data.approvers[0].approver2_name + ' (' + data.approvers[0].approver2_team + ')' : '';
-                document.getElementById('approver3').value = data.approvers[0]?.approver3_name ? data.approvers[0].approver3_name + ' (' + data.approvers[0].approver3_team + ')' : '';
-                document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name + ' (' + data.approvers[0].approver4_team + ')' : '';
-                document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name + ' (' + data.approvers[0].approver5_team + ')' : '';
-                document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name + ' (' + data.approvers[0].approver6_team + ')' : '';
                 document.getElementById('leave_reason').value = data.leave_reason;
                 document.getElementById('period_from').value = data.period_from;
                 document.getElementById('period_to').value = data.period_to;
                 document.getElementById('period_count').value = data.period_count;
                 document.getElementById('special_comment').value = data.special_comment;
 
-                let apvCcSelect = document.getElementById('apv_cc');
-                let selectedCcIds = data.apv_cc.map(cc => cc.user_id);
-                Array.from(apvCcSelect.options).forEach(option => {
-                    if (selectedCcIds.includes(parseInt(option.value))) {
-                        option.selected = true;
-                    } else {
-                        option.selected = false;
-                        option.style.display = 'none';
-                    }
-                });
+                draw_apv_approval_flow(data);
+                draw_apv_cc_users(data);
+                draw_apv_attached_files(data);
 
-                let iconClassMap = {
-                    'default': 'fa-regular fa-file fa-lg',
-                    'txt': 'fa-regular fa-file-lines fa-lg',
-                    'hwp': 'fa-regular fa-file-lines fa-lg',
-                    'hwpx': 'fa-regular fa-file-lines fa-lg',
-                    'jpg': 'fa-regular fa-file-image fa-lg',
-                    'png': 'fa-regular fa-file-image fa-lg',
-                    'pdf': 'fa-regular fa-file-powerpoint fa-lg',
-                    'doc': 'fa-regular fa-file-word fa-lg',
-                    'docx': 'fa-regular fa-file-word fa-lg',
-                    'ppt': 'fa-regular fa-file-powerpoint fa-lg',
-                    'pptx': 'fa-regular fa-file-powerpoint fa-lg',
-                    'xls': 'fa-regular fa-file-excel fa-lg',
-                    'xlsx': 'fa-regular fa-file-excel fa-lg',
-                    'zip': 'fa-regular fa-file-zipper fa-lg',
-                };
-
-                // 첨부 파일을 표시할 div 요소를 가져옴
-                let attachedFilesDiv = document.getElementById('attached_files');
-                attachedFilesDiv.innerHTML = '';
-
-                // 첨부 파일 데이터를 순회하여 링크 요소를 생성
-                data.attachments.forEach((attachment, index) => {
-                    let fileLink = document.createElement('a');
-                    fileLink.href = attachment.file;
-
-                    let decodedUrl = decodeURIComponent(attachment.file);
-                    let fileName = decodedUrl.split('/').pop(); // URL에서 파일명 추출
-                    let fileExtension = fileName.split('.').pop().toLowerCase(); // 파일명에서 확장자 추출 및 소문자로 변환
-
-                    // 아이콘 클래스 설정
-                    let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
-                    let iconElement = document.createElement('i');
-                    iconElement.className = iconClass;
-                    iconElement.style.marginRight = '8px'; // 아이콘과 텍스트 사이에 여백 추가
-
-                    // 링크 텍스트 설정
-                    {#fileLink.textContent = `첨부${index + 1} : ` + fileName;#}
-                    fileLink.textContent = fileName;
-                    fileLink.insertBefore(iconElement, fileLink.firstChild);
-
-                    // 동적 확장자를 포함한 다운로드 파일명 설정
-                    fileLink.setAttribute('download', `파일_${index + 1}.${fileExtension}`);
-
-                    // 링크 텍스트 스타일 설정
-                    fileLink.style.color = '#343a40';
-                    fileLink.style.display = 'inline-block'; // 인라인 블록으로 설정하여 아이콘과 텍스트가 같은 줄에 오게 함
-                    fileLink.style.fontSize = '16px'; // 글자 크기 설정
-                    fileLink.classList.add('attached_hover'); // 클래스 추가
-
-                    // 링크 요소를 블록으로 표시
-                    let fileContainer = document.createElement('div');
-                    fileContainer.appendChild(fileLink);
-                    fileContainer.style.display = 'block'; // 각 파일을 블록으로 표시
-
-                    // 첨부 파일 div에 링크 요소 추가
-                    attachedFilesDiv.appendChild(fileContainer);
-                });
             })
 
             .catch(error => {
@@ -189,9 +118,175 @@
             });
     }
 
-    function draw_apv_attached_files() {
+    function draw_apv_attached_files(data) {
+        let attachedFilesDiv = document.getElementById('attached_files');
+        attachedFilesDiv.innerHTML = '';
 
+        let iconClassMap = {
+            'default': 'fa-regular fa-file fa-lg',
+            'txt': 'fa-regular fa-file-lines fa-lg',
+            'hwp': 'fa-regular fa-file-lines fa-lg',
+            'hwpx': 'fa-regular fa-file-lines fa-lg',
+            'jpg': 'fa-regular fa-file-image fa-lg',
+            'png': 'fa-regular fa-file-image fa-lg',
+            'pdf': 'fa-regular fa-file-powerpoint fa-lg',
+            'doc': 'fa-regular fa-file-word fa-lg',
+            'docx': 'fa-regular fa-file-word fa-lg',
+            'ppt': 'fa-regular fa-file-powerpoint fa-lg',
+            'pptx': 'fa-regular fa-file-powerpoint fa-lg',
+            'xls': 'fa-regular fa-file-excel fa-lg',
+            'xlsx': 'fa-regular fa-file-excel fa-lg',
+            'zip': 'fa-regular fa-file-zipper fa-lg',
+        };
+
+        // 첨부 파일 데이터를 순회하여 링크 요소를 생성
+        data.attachments.forEach((attachment, index) => {
+            let fileLink = document.createElement('a');
+            fileLink.href = attachment.file;
+
+            let decodedUrl = decodeURIComponent(attachment.file);
+            let fileName = decodedUrl.split('/').pop(); // URL에서 파일명 추출
+            let fileExtension = fileName.split('.').pop().toLowerCase(); // 파일명에서 확장자 추출 및 소문자로 변환
+
+            // 아이콘 클래스 설정
+            let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
+            let iconElement = document.createElement('i');
+            iconElement.className = iconClass;
+            iconElement.style.marginRight = '8px'; // 아이콘과 텍스트 사이에 여백 추가
+
+            // 링크 텍스트 설정
+            {#fileLink.textContent = `첨부${index + 1} : ` + fileName;#}
+            fileLink.textContent = fileName;
+            fileLink.insertBefore(iconElement, fileLink.firstChild);
+
+            // 동적 확장자를 포함한 다운로드 파일명 설정
+            fileLink.setAttribute('download', `파일_${index + 1}.${fileExtension}`);
+
+            // 링크 텍스트 스타일 설정
+            fileLink.style.color = '#343a40';
+            fileLink.style.display = 'inline-block'; // 인라인 블록으로 설정하여 아이콘과 텍스트가 같은 줄에 오게 함
+            fileLink.style.fontSize = '16px'; // 글자 크기 설정
+            fileLink.classList.add('attached_hover'); // 클래스 추가
+
+            // 링크 요소를 블록으로 표시
+            let fileContainer = document.createElement('div');
+            fileContainer.appendChild(fileLink);
+            fileContainer.style.display = 'block'; // 각 파일을 블록으로 표시
+
+            // 첨부 파일 div에 링크 요소 추가
+            attachedFilesDiv.appendChild(fileContainer);
+        });
     }
+
+
+    function draw_apv_cc_users(data) {
+        let apvCcDiv = document.getElementById('apv_cc');
+        let apvCcList = apvCcDiv.querySelector('ul');
+        apvCcList.innerHTML = ''; // 기존 내용을 비움
+
+        if (!data.apv_cc) {
+            return;
+        }
+
+        let createCcUserDiv = (username, imageSrc, departmentName) => {
+            return `
+            <li style="display: flex; align-items: center; padding: 10px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                    <img src="{% static "renewal/image/mms/_Layer_.png" %}" alt="Avatar"
+                         style="width: 100%; height: 100%;">
+                </div>
+                <div><span style="">${departmentName}<br/>${username}</span></div>
+            </li>
+        `;
+        };
+
+        data.apv_cc.forEach(cc => {
+            apvCcList.innerHTML += createCcUserDiv(cc.username || '{% static "renewal/image/mms/_Layer_.png" %}', cc.departmentName || '');
+            {#apvCcList.innerHTML += createCcUserDiv(cc.username, cc.imageSrc || '{% static "renewal/image/mms/_Layer_.png" %}', cc.departmentName || '');#}
+        });
+    }
+
+
+    function draw_apv_approval_flow(data) {
+        let approvalFlowDiv = document.getElementById('approval_flow');
+        approvalFlowDiv.innerHTML = ''; // 기존 내용을 비움
+
+        let createApproverDiv = (title, name, date, status, imageSrc) => {
+            let statusBadge = status === '완료' ? 'text-bg-success' : 'text-bg-primary';
+            return `
+            <div class="px-3" style="text-align: center;">
+                <div class="my-1" style="font-size: 14px; font-weight: bold; color: #555;">${title}</div>
+                <img class="mb-3" src="${imageSrc}" alt="${name}"
+                     style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover; display: block; margin: 0 auto;">
+                <div class="my-0" style="font-weight: bold; white-space: nowrap;">${name}</div>
+                <div class="my-0" style="font-size: 14px; color: #555;">${date}</div>
+                <div class="my-2" style="font-size: 16px; color: #555;"><span class="badge ${statusBadge}">${status}</span></div>
+            </div>
+        `;
+        };
+
+        let approvers = [
+            {
+                title: '작성자',
+                name: data.created_by.username,
+                date: data.updated_at,
+                status: '완료',
+                imageSrc: '{% static "renewal/image/mms/_Layer_.png" %}'
+            },
+            {
+                title: '승인자1',
+                name: data.approvers[0]?.approver1_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver1_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+            },
+            {
+                title: '승인자2',
+                name: data.approvers[0]?.approver2_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver2_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_-1.png" %}'
+            },
+            {
+                title: '승인자3',
+                name: data.approvers[0]?.approver3_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver3_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+            },
+            {
+                title: '승인자4',
+                name: data.approvers[0]?.approver4_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver4_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_-1.png" %}'
+            },
+            {
+                title: '승인자5',
+                name: data.approvers[0]?.approver5_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver5_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_.png" %}'
+            },
+            {
+                title: '승인자6',
+                name: data.approvers[0]?.approver6_name,
+                date: data.updated_at,
+                status: data.approvers[0]?.approver6_status,
+                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+            }
+        ];
+
+        approvers.forEach((approver, index) => {
+            if (approver.name) {
+                approvalFlowDiv.innerHTML += createApproverDiv(approver.title, approver.name, approver.date, approver.status, approver.imageSrc);
+                if (index < approvers.length - 1 && approvers[index + 1].name) {
+                    approvalFlowDiv.innerHTML += `<div style="font-size: 24px; color: #999; margin: 0 10px 0 10px;">→</div>`;
+                }
+            }
+        });
+    }
+
 
     function apv_delete() {
         if (confirm('전자결재를 작성하시겠습니까?')) {

@@ -587,14 +587,14 @@ class ApvMaster(models.Model):
 
 
 class ApvAttachments(models.Model):
-    document = models.ForeignKey(ApvMaster, related_name='attachments', on_delete=models.CASCADE)
+    document = models.ForeignKey(ApvMaster, related_name='apv_dpcs_attachments', on_delete=models.CASCADE)
     file = models.FileField(upload_to='attachments/')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 
 class ApvSubItem(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='items')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apc_docs_items')
     item_no = models.IntegerField()
     desc1 = models.CharField(max_length=255)
     desc2 = models.CharField(max_length=255)
@@ -607,7 +607,7 @@ class ApvSubItem(models.Model):
 
 
 class ApvComment(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='comments')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_comments')
     content = models.TextField()
     created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -615,7 +615,7 @@ class ApvComment(models.Model):
 
 
 class ApvApprover(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_approvers')
     approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True, blank=True)
     approver1_status = models.CharField(max_length=50, null=True, blank=True)
     approver1_date = models.DateField(null=True, blank=True)
@@ -642,6 +642,6 @@ class ApvCC(models.Model):
 
 
 class ApvReadStatus(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_read')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_check')
     user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
     is_read = models.BooleanField(default=False)

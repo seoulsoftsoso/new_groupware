@@ -19,12 +19,39 @@ class ApvListView(View):
 
     @transaction.atomic
     def get(self, request, *args, **kwargs):
+        user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=user_id)
         _page = request.GET.get('page', '')
         _size = request.GET.get('page_size', '')
         date_sch_from = request.GET.get('date_sch_from', '')
         date_sch_to = request.GET.get('date_sch_to', '')
 
         qs = ApvMaster.objects.filter().order_by('-updated_at', '-doc_no')
+
+
+        # 사용자의 권한에 따라 필터링
+        if user.is_authenticated:
+            if user.is_superuser:  # 슈퍼유저는 모든 게시물 조회 가능
+                pass
+
+            # elif user.department_position:
+            #     qs = qs.filter(created_by__department_position=user.department_position)
+
+            else:  # 사용자가 생성한 게시물, cc_list에 포함된 게시물, 승인자로 포함된 게시물만 필터링
+                qs = qs.filter(
+                    Q(created_by=user) |
+                    Q(apv_docs_cc__user=user) |
+                    Q(apv_docs_approvers__approver1=user) |
+                    Q(apv_docs_approvers__approver2=user) |
+                    Q(apv_docs_approvers__approver3=user) |
+                    Q(apv_docs_approvers__approver4=user) |
+                    Q(apv_docs_approvers__approver5=user) |
+                    Q(apv_docs_approvers__approver6=user)
+                ).distinct()
+
+        else:  # 인증되지 않은 사용자는 아무 게시물도 조회할 수 없음
+            qs = qs.none()
+
 
         # 기간 검색
         if date_sch_from:
@@ -73,7 +100,18 @@ class ApvListView(View):
         if next > qs_ps.paginator.num_pages:
             url_next = None
 
-        results = [get_obj(row) for row in qs_ps]
+        results = []
+        for row in qs_ps:
+            cc_list = ApvCC.objects.filter(document=row)
+            cc_data = [{
+                'user_id': cc.user.id if cc.user else '',
+                'username': cc.user.username if cc.user else '',
+            } for cc in cc_list]
+
+            result = get_obj(row)
+            result['apv_cc'] = cc_data
+            results.append(result)
+
         context = {
             'count': qs_ps.paginator.count,
             'previous': url_pre,
@@ -112,32 +150,32 @@ class ApvDetail(View):
             for approver in approvers:
                 approver_data.append({
                     'approver1_id': approver.approver1.id if approver.approver1 is not None else None,
-                    'approver1_name': approver.approver1.username if approver.approver1 is not None else None,
+                    'approver1_name': approver.approver1.username + ' ' + approver.approver1.job_position.name if approver.approver1 is not None else None,
                     'approver1_team': approver.approver1.department_position.name if approver.approver1 is not None else None,
                     'approver1_status': approver.approver1_status,
                     'approver1_date': approver.approver1_date,
                     'approver2_id': approver.approver2.id if approver.approver2 is not None else None,
-                    'approver2_name': approver.approver2.username if approver.approver2 is not None else None,
+                    'approver2_name': approver.approver2.username + ' ' + approver.approver2.job_position.name if approver.approver2 is not None else None,
                     'approver2_team': approver.approver1.department_position.name if approver.approver2 is not None else None,
                     'approver2_status': approver.approver2_status,
                     'approver2_date': approver.approver2_date,
                     'approver3_id': approver.approver3.id if approver.approver3 is not None else None,
-                    'approver3_name': approver.approver3.username if approver.approver3 is not None else None,
+                    'approver3_name': approver.approver3.username + ' ' + approver.approver3.job_position.name if approver.approver3 is not None else None,
                     'approver3_team': approver.approver1.department_position.name if approver.approver3 is not None else None,
                     'approver3_status': approver.approver3_status,
                     'approver3_date': approver.approver3_date,
                     'approver4_id': approver.approver4.id if approver.approver4 is not None else None,
-                    'approver4_name': approver.approver4.username if approver.approver4 is not None else None,
+                    'approver4_name': approver.approver4.username + ' ' + approver.approver4.job_position.name if approver.approver4 is not None else None,
                     'approver4_team': approver.approver1.department_position.name if approver.approver4 is not None else None,
                     'approver4_status': approver.approver4_status,
                     'approver4_date': approver.approver4_date,
                     'approver5_id': approver.approver5.id if approver.approver5 is not None else None,
-                    'approver5_name': approver.approver5.username if approver.approver5 is not None else None,
+                    'approver5_name': approver.approver5.username + ' ' + approver.approver5.job_position.name if approver.approver5 is not None else None,
                     'approver5_team': approver.approver1.department_position.name if approver.approver5 is not None else None,
                     'approver5_status': approver.approver5_status,
                     'approver5_date': approver.approver5_date,
                     'approver6_id': approver.approver6.id if approver.approver6 is not None else None,
-                    'approver6_name': approver.approver6.username if approver.approver6 is not None else None,
+                    'approver6_name': approver.approver6.username + ' ' + approver.approver6.job_position.name if approver.approver6 is not None else None,
                     'approver6_team': approver.approver1.department_position.name if approver.approver6 is not None else None,
                     'approver6_status': approver.approver6_status,
                     'approver6_date': approver.approver6_date,
@@ -147,7 +185,8 @@ class ApvDetail(View):
             cc_list = ApvCC.objects.filter(document=apv_master)
             cc_data = [{
                 'user_id': cc.user.id if cc.user else '',
-                'username': cc.user.username if cc.user else '',
+                'username': cc.user.username + ' ' + cc.user.job_position.name if cc.user else '',
+                'departmentName': cc.user.department_position.name if cc.user.department_position.name else '',
             } for cc in cc_list]
 
             # 첨부파일 로딩
@@ -369,11 +408,15 @@ class ApvUpdate(View):
             obj.save()
 
             ApvApprover.objects.filter(document=obj).delete()
+            ApvApprover_obj = ApvApprover.objects.create(document=obj,
+                **{f'approver{i}': approver for i, approver in enumerate(approvers, start=1)},
+                **{f'approver{i}_status': '대기' for i in range(1, len(approvers) + 1)}
+            )
             approver_data = {'document': obj}
-            for i, approver in enumerate(approvers, start=1):
-                approver_data[f'approver{i}'] = approver
-                approver_data[f'approver{i}_status'] = '대기'
-            ApvApprover.objects.create(**approver_data)
+            # for i, approver in enumerate(approvers, start=1):
+            #     approver_data[f'approver{i}'] = approver
+            #     approver_data[f'approver{i}_status'] = '대기'
+            # ApvApprover.objects.create(**approver_data)
 
             ApvCC.objects.filter(document=obj).delete()
             for apv_cc_user in apv_cc_users:

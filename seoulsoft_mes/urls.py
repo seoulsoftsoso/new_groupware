@@ -228,15 +228,16 @@ urlpatterns = [
     path('admins/user_approval', user_approval, name="userApproval"),
     path('admins/user_resignation', user_resignation, name="userResignation"),
     path('admins/user_authority_page', user_authority_page, name="userAuthorityPage"),
+
     # 견적문의
     path('admins/pay_question_page', PayQuestionPage.as_view(), name="payQuestionPage"),
     path('admins/pay_question/detail/<int:question_id>/', PayQuestionDetail.as_view(),
        name="PayQuestionDetail"),
+
     # 내정보 관리
     path('admins/user_settings_page', UserSettingsPage.as_view(), name="userSettingsPage"),
     path('admins/change_password', change_password, name="changePassword"),
     path('admins/signature_img_upload', signature_img_upload, name="signatureImgUpload"),
-    # path('admins/testform', test_form, name="testForm"),
 
     # 메인페이지
     path('menu/<str:menu_num>/', SubView, name='sub'),

@@ -1,3 +1,4 @@
+{% load static %}
 <style>
     .custom-select {
         position: relative;
@@ -68,77 +69,79 @@
         </div>
 
         <!-- 우측 결재라인 -->
-        <div class="col-9">
+        <div class="col-7">
             <div class="d-flex align-items-center p-2">
                 <i class="fa-solid fa-user-check fa-lg" style="color: #000;"></i>
                 <span style="color: #000; font-size: 18px; padding-left: 10px;">결재선 정보</span>
             </div>
             <div style="border: 1px solid #ddd; margin: auto 20px auto 0; overflow: hidden;">
-                <div class="d-flex" style="height:237px;">
-                    <div>
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 1</div>
-                            <input list="approver_list" class="form-control" id="approver1" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 2</div>
-                            <input list="approver_list" class="form-control" id="approver2" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 3</div>
-                            <input list="approver_list" class="form-control" id="approver3" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
+                <div class="d-flex justify-content-start" style="height:237px;">
+                    <div class="d-flex justify-content-between align-items-center px-3 w-100" id="approval_flow" style="overflow-x: auto;">
                     </div>
-                    <div class="mx-4">
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 4</div>
-                            <input list="approver_list" class="form-control" id="approver4" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 5</div>
-                            <input list="approver_list" class="form-control" id="approver5" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
-                        <div class="d-flex justify-content-start my-3">
-                            <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">결재자 6</div>
-                            <input list="approver_list" class="form-control" id="approver6" name="approver_list" style="width:200px;" disabled>
-                            <datalist id="approver_list">
-                                {% for position, name, id in approver_list %}
-                                    <option value="{{ name }} ({{ position }})" data-approver-id="{{ id }}"></option>
-                                {% endfor %} </datalist>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-start my-3">
-                        <div class="row justify-content-center align-items-start mt-1 mx-1" style="color: #000; font-size: 16px; width:100px;">참조자</div>
-                        <select class="form-control" id="apv_cc" name="approver_list" style="width:240px;" multiple disabled>
-                            {% for position, name, id in approver_list %}
-                                <option value="{{ id }}">{{ position }} - {{ name }}</option>
-                            {% endfor %}
-                        </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="d-flex align-items-center p-2">
+                <i class="fa-solid fa-user-plus fa-lg" style="color: #000;"></i>
+                <span style="color: #000; font-size: 18px; padding-left: 10px;">참조자</span>
+            </div>
+            <div style="border: 1px solid #ddd; margin: auto 20px auto 0; overflow: hidden;">
+                <div class="d-flex justify-content-start" style="height:237px; overflow-y: auto;">
+                    <div class="d-flex justify-content-start px-2" id="apv_cc">
+                        <ul style="list-style-type: none; padding: 0;"></ul>
+
+                        {% comment %}<ul style="list-style-type: none; padding: 0;">
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>허기준 프로</span></div>
+                            </li>
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>김하림 프로</span></div>
+
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>허기준 프로</span></div>
+                            </li>
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>김하림 프로</span></div>
+                            </li>
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>허기준 프로</span></div>
+                            </li>
+                            <li style="display: flex; align-items: center; padding: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
+                                         style="width: 100%; height: 100%;">
+                                </div>
+                                <div><span>전략기획본부<br/>김하림 프로</span></div>
+                            </li>
+                        </ul>{% endcomment %}
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- 하단 세부정보 -->
     <div class="col-12 mt-4">
