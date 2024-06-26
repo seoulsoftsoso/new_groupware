@@ -38,7 +38,8 @@
 
 <div class="template-layout container-fluid">
     <div class="d-flex justify-content-center">
-        <input class="form-control bg-white" id="doc_title" style="color: #000; font-size: 30px; font-weight: 700; border: none; margin-bottom: 10px;" disabled>
+        <input class="form-control bg-white" id="doc_title"
+               style="color: #000; font-size: 30px; font-weight: 700; border: none; margin-bottom: 10px;" disabled>
     </div>
 
     <div class="d-flex">
@@ -50,19 +51,27 @@
             </div>
             <div style="border: 1px solid #ddd; margin: auto 20px auto 0px">
                 <div class="d-flex justify-content-start my-3">
-                    <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">문서번호</div>
+                    <div class="row justify-content-center align-items-center mx-1"
+                         style="color: #000; font-size: 16px; width:100px;">문서번호
+                    </div>
                     <input class="form-control" id="doc_no" style="width:200px;" placeholder="자동으로 생성됩니다" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
-                    <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">작성일</div>
+                    <div class="row justify-content-center align-items-center mx-1"
+                         style="color: #000; font-size: 16px; width:100px;">작성일
+                    </div>
                     <input class="form-control" id="create_date" style="width:200px;" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
-                    <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">작성자</div>
+                    <div class="row justify-content-center align-items-center mx-1"
+                         style="color: #000; font-size: 16px; width:100px;">작성자
+                    </div>
                     <input class="form-control" id="username_md" style="width:200px;" disabled>
                 </div>
                 <div class="d-flex justify-content-start my-3">
-                    <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">부 서</div>
+                    <div class="row justify-content-center align-items-center mx-1"
+                         style="color: #000; font-size: 16px; width:100px;">부 서
+                    </div>
                     <input class="form-control" id="team" style="width:200px;" disabled>
                 </div>
             </div>
@@ -76,7 +85,8 @@
             </div>
             <div style="border: 1px solid #ddd; margin: auto 20px auto 0; overflow: hidden;">
                 <div class="d-flex justify-content-start" style="height:237px;">
-                    <div class="d-flex justify-content-between align-items-center px-3 w-100" id="approval_flow" style="overflow-x: auto;">
+                    <div class="d-flex justify-content-between align-items-center px-3 w-100" id="approval_flow"
+                         style="overflow-x: auto;">
                     </div>
                 </div>
             </div>
@@ -90,52 +100,6 @@
                 <div class="d-flex justify-content-start" style="height:237px; overflow-y: auto;">
                     <div class="d-flex justify-content-start px-2" id="apv_cc">
                         <ul style="list-style-type: none; padding: 0;"></ul>
-
-                        {% comment %}<ul style="list-style-type: none; padding: 0;">
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>허기준 프로</span></div>
-                            </li>
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>김하림 프로</span></div>
-
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>허기준 프로</span></div>
-                            </li>
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>김하림 프로</span></div>
-                            </li>
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>허기준 프로</span></div>
-                            </li>
-                            <li style="display: flex; align-items: center; padding: 10px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                                    <img src="{% static 'renewal/image/mms/_Layer_2.png' %}" alt="Avatar"
-                                         style="width: 100%; height: 100%;">
-                                </div>
-                                <div><span>전략기획본부<br/>김하림 프로</span></div>
-                            </li>
-                        </ul>{% endcomment %}
-
                     </div>
                 </div>
             </div>
@@ -181,24 +145,53 @@
                     <option value="pm">오후</option>
                 </select>
                 <div class="row justify-content-center align-items-center mx-3"></div>
-                <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">휴가 일수 총
+                <div class="row justify-content-center align-items-center mx-1"
+                     style="color: #000; font-size: 16px; width:100px;">휴가 일수 총
                 </div>
                 <input class="form-control" id="period_count"
                        style="text-align: right; width:60px; border: none; padding-left: 0;" disabled>
-                <div class="row justify-content-start align-items-center mx-1" style="color: #000; font-size: 16px; width:50px;"> 일
+                <div class="row justify-content-start align-items-center mx-1"
+                     style="color: #000; font-size: 16px; width:50px;"> 일
                 </div>
 
             </div>
             <div class="d-flex justify-content-start my-3">
-                <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">휴가 사유
+                <div class="row justify-content-center align-items-center mx-1"
+                     style="color: #000; font-size: 16px; width:100px;">휴가 사유
                 </div>
-                <textarea class="form-control" id="special_comment" style="width:80%; height:100px;" disabled></textarea>
+                <textarea class="form-control" id="special_comment" style="width:80%; height:100px;"
+                          disabled></textarea>
             </div>
             <div class="d-flex justify-content-start my-3">
-                <div class="row justify-content-center align-items-center mx-1" style="color: #000; font-size: 16px; width:100px;">관련 첨부
+                <div class="row justify-content-center align-items-center mx-1"
+                     style="color: #000; font-size: 16px; width:100px;">관련 첨부
                 </div>
                 <div id="attached_files"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- 코멘트 -->
+    <div class="col-12 mt-4">
+        <div class="d-flex align-items-center p-2">
+            <i class="fa-solid fa-comment-dots fa-lg" style="color: #000;"></i>
+            <span style="color: #000; font-size: 18px; padding-left: 10px;">추가 의견</span>
+        </div>
+        <div style="border: 1px solid #ddd; margin: auto 20px auto 0; padding: 1.5%;">
+
+            <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;">
+            </div>
+
+            <div class="comment_write d-flex">
+                <img src="/data/{{ request.user.profile_image }}" alt="프로필 사진"
+                     style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
+                <textarea placeholder="추가 의견은 이곳에 남겨보세요"
+                          style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                <button class="btn btn-outline-secondary mx-2">
+                    등록
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

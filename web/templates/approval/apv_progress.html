@@ -110,6 +110,7 @@
                 draw_apv_approval_flow(data);
                 draw_apv_cc_users(data);
                 draw_apv_attached_files(data);
+                draw_comments(data);
 
             })
 
@@ -188,11 +189,11 @@
             return;
         }
 
-        let createCcUserDiv = (username, imageSrc, departmentName) => {
+        let createCcUserDiv = (username, departmentName, profile_image) => {
             return `
             <li style="display: flex; align-items: center; padding: 10px;">
                 <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
-                    <img src="{% static "renewal/image/mms/_Layer_.png" %}" alt="Avatar"
+                    <img src="${profile_image}" alt="Avatar"
                          style="width: 100%; height: 100%;">
                 </div>
                 <div><span style="">${departmentName}<br/>${username}</span></div>
@@ -201,8 +202,7 @@
         };
 
         data.apv_cc.forEach(cc => {
-            apvCcList.innerHTML += createCcUserDiv(cc.username || '{% static "renewal/image/mms/_Layer_.png" %}', cc.departmentName || '');
-            {#apvCcList.innerHTML += createCcUserDiv(cc.username, cc.imageSrc || '{% static "renewal/image/mms/_Layer_.png" %}', cc.departmentName || '');#}
+            apvCcList.innerHTML += createCcUserDiv(cc.username, cc.departmentName || '', cc.profile_image );
         });
     }
 
@@ -231,49 +231,49 @@
                 name: data.created_by.username,
                 date: data.updated_at,
                 status: '완료',
-                imageSrc: '{% static "renewal/image/mms/_Layer_.png" %}'
+                imageSrc: data.created_by.profile_image,
             },
             {
                 title: '승인자1',
                 name: data.approvers[0]?.approver1_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver1_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+                imageSrc: data.approvers[0]?.approver1_img,
             },
             {
                 title: '승인자2',
                 name: data.approvers[0]?.approver2_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver2_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_-1.png" %}'
+                imageSrc: data.approvers[0]?.approver2_img,
             },
             {
                 title: '승인자3',
                 name: data.approvers[0]?.approver3_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver3_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+                imageSrc: data.approvers[0]?.approver3_img,
             },
             {
                 title: '승인자4',
                 name: data.approvers[0]?.approver4_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver4_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_-1.png" %}'
+                imageSrc: data.approvers[0]?.approver4_img,
             },
             {
                 title: '승인자5',
                 name: data.approvers[0]?.approver5_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver5_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_.png" %}'
+                imageSrc: data.approvers[0]?.approver5_img,
             },
             {
                 title: '승인자6',
                 name: data.approvers[0]?.approver6_name,
                 date: data.updated_at,
                 status: data.approvers[0]?.approver6_status,
-                imageSrc: '{% static "renewal/image/mms/_Layer_2.png" %}'
+                imageSrc: data.approvers[0]?.approver6_img,
             }
         ];
 
@@ -287,9 +287,55 @@
         });
     }
 
+    function draw_comments(data) {
+        let commentListDiv = document.getElementById('comment_list');
+        commentListDiv.innerHTML = ''; // 기존 내용을 비움
+
+        if (!data.comments || data.comments.length === 0) {
+            commentListDiv.innerHTML = '<div style="font-size: 16px; color: #999;">등록된 추가 의견이 없습니다.</div>';
+            return;
+        }
+
+        let formatDateTime = (dateString) => {
+            let date = new Date(dateString);
+            let year = date.getFullYear();
+            let month = String(date.getMonth() + 1).padStart(2, '0');
+            let day = String(date.getDate()).padStart(2, '0');
+            let hours = date.getHours();
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            let period = hours < 12 ? '오전' : '오후';
+            hours = hours % 12 || 12; // 12시간제로 변경
+
+            return `${year}-${month}-${day} ${period} ${String(hours).padStart(2, '0')}:${minutes}`;
+        };
+
+        let createCommentDiv = (profile_image, username, date, content) => {
+            return `
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <img src="${profile_image}" alt="프로필 사진"
+                     style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
+                <div style="font-size: 16px;">
+                    <strong>${username}</strong> <span style="color: #999; margin-left: 10px;">${date}</span>
+                    <br>
+                    ${content}
+                </div>
+            </div>
+        `;
+        };
+
+        // createDocumentFragment를 사용하여 성능 개선
+        let fragment = document.createDocumentFragment();
+        data.comments.forEach(comment => {
+            let commentDiv = document.createElement('div');
+            let formattedDate = formatDateTime(comment.created_at);
+            commentDiv.innerHTML = createCommentDiv(comment.created_by.profile_image, comment.created_by.username, formattedDate, comment.content);
+            fragment.appendChild(commentDiv);
+        });
+        commentListDiv.appendChild(fragment);
+    }
 
     function apv_delete() {
-        if (confirm('전자결재를 작성하시겠습니까?')) {
+        if (confirm('전자결재를 삭제하시겠습니까?')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 pk: nullapply(apv_click_id),
@@ -302,6 +348,52 @@
 
         } else {
             alert(txt.cancel);
+        }
+    }
+
+    function create_comment() {
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            document: apv_click_id,
+            content: content,
+        };
+
+        let attachedFiles = document.getElementById('attached_files').files;
+        let fileReadCount = 0;
+
+        function sendApiRequest() {
+            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
+                $('#apv_md_create').modal("hide");
+                apv_nation.page = 1;  // 첫 페이지로
+                search_apv_data();
+                alert(txt.create_ed);
+            });
+        }
+
+        function readFileAndAddToApiData(file, index) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
+                };
+                api_data.attached_files.push(fileData);
+                fileReadCount++;
+                if (fileReadCount === attachedFiles.length) {
+                    sendApiRequest();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        if (attachedFiles.length > 0) {
+            for (let i = 0; i < attachedFiles.length; i++) {
+                readFileAndAddToApiData(attachedFiles[i], i);
+            }
+        } else {
+            sendApiRequest();
         }
     }
 

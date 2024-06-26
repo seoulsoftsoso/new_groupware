@@ -275,7 +275,8 @@
                 </li>
             </ul>
 
-            {% if request.user.is_superuser %}
+{#            {% if request.user.is_superuser %}#}
+            {% if request.user.cs_admin %}
                 <ul class="menu-sub">
                     <li class="menu-item">
                         <a href="{% url 'payQuestionPage' %}" class="menu-link">
@@ -283,6 +284,8 @@
                         </a>
                     </li>
                 </ul>
+            {% endif %}
+            {% if request.user.is_superuser %}
                 <ul class="menu-sub">
                     <li class="menu-item">
                         <a href="{% url 'apv_list' %}" class="menu-link">

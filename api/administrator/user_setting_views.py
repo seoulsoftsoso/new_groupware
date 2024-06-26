@@ -2,9 +2,12 @@ from django.contrib.auth import logout
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.views import LogoutView
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from api.models import UserMaster, FileBoardMaster, sign_upload_path
+from django import forms
+from django.views.decorators.http import require_http_methods
+from django.contrib import messages
 
 
 class UserSettingsPage(View):
@@ -51,3 +54,17 @@ def signature_img_upload(request):
 
     return JsonResponse({'error': 'fail'}, status=400)
 
+
+def profile_img_upload(request):
+    if request.method == 'POST':
+        file_obj = request.FILES.get('profile_image')
+        if file_obj:
+            employee = UserMaster.objects.get(id=request.user.id)
+            employee.profile_image = file_obj
+            employee.save()
+            messages.success(request, '업로드 완료')
+            return redirect('userSettingsPage')
+        else:
+            return JsonResponse({'error': 'No file uploaded'}, status=400)
+
+    return JsonResponse({'error': 'fail'}, status=400)

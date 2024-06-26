@@ -477,7 +477,6 @@ def story_create_page(request):
 def permission_denied_view(request, exception):
     return render(request, 'story/story_403.html', status=403)
 
-
 handler403 = permission_denied_view
 
 
