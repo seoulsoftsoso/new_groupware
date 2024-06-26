@@ -208,6 +208,17 @@
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
 
+            let badgeColor = 'bg-secondary';
+            if (item.apv_status === '진행') {
+                badgeColor = 'bg-primary';
+            } else if (item.apv_status === '완료') {
+                badgeColor = 'bg-success';
+            } else if (item.apv_status === '반려') {
+                badgeColor = 'bg-danger';
+            }
+
+            let ccBadge = item.apv_cc.length > 0 ? '<span class="badge bg-info">참조</span>' : '';
+
             let row = `
             <tr id='${item.id}' apv_status='${item.apv_status}' style='cursor:pointer;'>
             <td name="no" class="d-none">${num + i}</td>
@@ -216,7 +227,7 @@
             <td name='apv_category'>${item.apv_category.name}</td>
             <td name='doc_title'>${item.doc_title}</td>
             <td name='created_by'>${item.created_by.username}</td>
-            <td name='apv_status'>${item.apv_status}</td>
+            <td name='apv_status'><span class="badge ${badgeColor}">${item.apv_status}</span></td>
             <td name='apv_next_approver'>${item.apv_next_approver}</td>
             </tr>`;
 

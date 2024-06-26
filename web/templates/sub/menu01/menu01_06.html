@@ -3,6 +3,7 @@
 {% load static %}
 {% include 'header.html' %}
 <link rel="stylesheet" href="{% static 'admin/css/seoul-soft_main.css' %}">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <!--menu 로드-->
 <style>
 
@@ -88,28 +89,28 @@
                                 <div class="checkbox_all">
                                     <label for="checkbox1" class="option_item">
                                         <input type="radio" class="checkbox1" id="checkbox1" name="Question_type"
-                                               value="MMS" required>
+                                               value="MMS">
                                         <div class="option_inner form-group">
                                             <div class="name">MMS</div>
                                         </div>
                                     </label>
                                     <label for="checkbox2" class="option_item">
                                         <input type="radio" class="checkbox1" id="checkbox2" name="Question_type"
-                                               value="IBT" required>
+                                               value="IBT">
                                         <div class="option_inner form-group">
                                             <div class="name">I.B.T</div>
                                         </div>
                                     </label>
                                     <label for="checkbox3" class="option_item">
                                         <input type="radio" class="checkbox1" id="checkbox3" name="Question_type"
-                                               value="MES" required>
+                                               value="MES">
                                         <div class="option_inner form-group">
                                             <div class="name">MES</div>
                                         </div>
                                     </label>
                                     <label for="checkbox4" class="option_item">
                                         <input type="radio" class="checkbox1" id="checkbox4" name="Question_type"
-                                               value="ETC" required>
+                                               value="ETC">
                                         <div class="option_inner form-group">
                                             <div class="name">ETC</div>
                                         </div>
@@ -186,14 +187,20 @@
                                               required></textarea>
 
                                     <div class="end-area d-flex justify-content-between"
-                                         style="display: flex; align-items: center; margin: 2% 0 0 0;">
+                                         style="display: flex; align-items: center; margin: 1% 0 1% 0;">
                                         <div>
                                             <input type="checkbox" id="agree" name="agree" style="margin-right: 5px;">
                                             <label for="agree" style="font-size: 18px; color: #727171;">
                                                 <a href="/term/" onclick="return openPopup()" style="text-decoration: underline;">개인정보처리방침</a> 동의</label>
                                         </div>
-                                        <button type="submit" style="font-size:18px; width: 131px; height: 43px; padding: 10px; background: #f4f4f4; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"> 문의하기
-                                        </button>
+
+                                         <form action="{% url 'submit_question' %}" method="post">
+                                             {% csrf_token %}
+                                             {{ form.as_p }}
+                                             <div class="g-recaptcha" data-sitekey="6Lcz9v0pAAAAAGByznDCb5vPt4ZvYcMH-EDVcxXF"></div>
+                                             <br/>
+                                             <button type="submit" value="Submit" style="font-size:18px; width: 131px; height: 43px; padding: 10px; background: #f4f4f4; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s;"> 문의하기 </button>
+                                         </form>
                                     </div>
                                 </div>
                             </div>
@@ -217,11 +224,24 @@
 
     function validateForm() {
         let agreeCheckbox = document.getElementById("agree");
+        let recaptchaResponse = grecaptcha.getResponse();
+        let questionTypeChecked = document.querySelector('input[name="Question_type"]:checked');
+
+        if (!questionTypeChecked) {
+            alert("상단의 문의종류(MMS/IBT/MES/ETC) 중 하나를 선택해주시기 바랍니다.");
+            return false;
+        }
 
         if (!agreeCheckbox.checked) {
             alert("개인정보처리방침에 동의해주시기 바랍니다.");
             return false;
         }
+
+        if (recaptchaResponse.length === 0) {
+            alert("[ 로봇이 아닙니다. ]를 체크하여 사용자 검증을 해주시기 바랍니다.");
+            return false;
+        }
+
         alert("문의 접수가 완료되었습니다. 담당자 확인 후 연락드리도록 하겠습니다.");
         return true;
     }

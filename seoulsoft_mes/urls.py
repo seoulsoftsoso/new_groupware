@@ -228,15 +228,17 @@ urlpatterns = [
     path('admins/user_approval', user_approval, name="userApproval"),
     path('admins/user_resignation', user_resignation, name="userResignation"),
     path('admins/user_authority_page', user_authority_page, name="userAuthorityPage"),
+
     # 견적문의
     path('admins/pay_question_page', PayQuestionPage.as_view(), name="payQuestionPage"),
     path('admins/pay_question/detail/<int:question_id>/', PayQuestionDetail.as_view(),
        name="PayQuestionDetail"),
+
     # 내정보 관리
     path('admins/user_settings_page', UserSettingsPage.as_view(), name="userSettingsPage"),
     path('admins/change_password', change_password, name="changePassword"),
     path('admins/signature_img_upload', signature_img_upload, name="signatureImgUpload"),
-    # path('admins/testform', test_form, name="testForm"),
+    path('admins/profile_img_upload/', profile_img_upload, name='profile_img_upload'),
 
     # 메인페이지
     path('menu/<str:menu_num>/', SubView, name='sub'),
@@ -257,11 +259,17 @@ urlpatterns = [
     path('admins/apv/', apv_list, name='apv_list'),
     path('admins/apv/temp_update/<str:document_id>/', apv_temp_update, name='apv_temp_update'),
     path('admins/apv/progress/<str:document_id>/', apv_progress, name='apv_progress'),
+
     path('admins/apv/get/', ApvListView.as_view(), name='apv_get_data'),
     path('admins/apv/create/', ApvCreate.as_view(), name='apv_create'),
     path('admins/apv/update/', ApvUpdate.as_view(), name='apv_update'),
     path('admins/apv/detail/', ApvDetail.as_view(), name='apv_detail'),
     path('admins/apv/delete/', ApvDelete.as_view(), name='apv_delete'),
+
+    path('admins/apv/comment/create/', ApvCommentCreate.as_view(), name='ApvCommentCreate'),
+    # path('admins/apv/comment/update/', ApvCommentUpdate.as_view(), name='ApvCommentUpdate'),
+    # path('admins/apv/comment/delete/', ApvCommentDelete.as_view(), name='ApvCommentDelete'),
+
     path('admins/apv/category/', ApvCategoryList.as_view(), name='apv_category'),
     path('admins/apv/category/<str:category_no>/', apv_template_view, name='ApvTemplateView'),
     path('admins/apv/detail_temp/<str:category_no>/', apv_template_detail, name='ApvTemplateView'),

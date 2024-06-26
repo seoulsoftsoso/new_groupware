@@ -185,9 +185,12 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     research_num = models.CharField(max_length=15, null=True, verbose_name='과학기술인번호')
     place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
                                       verbose_name='근무지')
-    report_auth = models.CharField(max_length=1, null=True, verbose_name='주간업무보고권한설정') #M : 피보고자(팀장), E: 보고자(팀원), C: CEO
+    report_auth = models.CharField(max_length=1, null=True,
+                                   verbose_name='주간업무보고권한설정')  # M : 피보고자(팀장), E: 보고자(팀원), C: CEO
     story_admin = models.BooleanField(default=0, verbose_name='스토리관리자')
-
+    profile_image = models.ImageField(upload_to='profile_image/', null=True, blank=True,
+                                      default='profile_image/profile_default.png', verbose_name="프로필사진")
+    cs_admin = models.BooleanField(default=0, verbose_name='CS관리자')
 
     def __str__(self):
         return self.username
@@ -465,8 +468,10 @@ class WeeklyMember(Model):
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='wm_createdby')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='wm_updatedby')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='wm_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='wm_updatedby')  # 최종작성자
 
 
 class WeeklyMaster(Model):
@@ -475,12 +480,15 @@ class WeeklyMaster(Model):
     p_stay = models.CharField(max_length=256, null=True, verbose_name='사업대기')
     p_fail = models.CharField(max_length=256, null=True, verbose_name='사업실패')
     p_etc = models.CharField(max_length=256, null=True, verbose_name='기타')
-    weekly_no = models.ForeignKey('Weekly', models.CASCADE, null=False, verbose_name='주차', related_name='weeklym_weekly')
+    weekly_no = models.ForeignKey('Weekly', models.CASCADE, null=False, verbose_name='주차',
+                                  related_name='weeklym_weekly')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='weeklym_createdby')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='weeklym_updatedby')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='weeklym_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='weeklym_updatedby')  # 최종작성자
 
 
 class WeeklySub(Model):
@@ -500,19 +508,24 @@ class WeeklySub(Model):
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='ws_createdby')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='ws_updatedby')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='ws_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='ws_updatedby')  # 최종작성자
 
 
 class GradeMaster(Model):
     grade_score = models.FloatField(null=False, verbose_name='평가 점수')
     grade_opinion = models.TextField(null=True, verbose_name='평가 의견')
-    weekly_sub = models.ForeignKey('WeeklySub', models.CASCADE, null=False, verbose_name='상위 Sub', related_name='sub_no')
+    weekly_sub = models.ForeignKey('WeeklySub', models.CASCADE, null=False, verbose_name='상위 Sub',
+                                   related_name='sub_no')
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N : 유지, Y : 삭제
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     update_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='gd_createdby')  # 최초작성자
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='gd_updatedby')  # 최종작성자
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='gd_createdby')  # 최초작성자
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='gd_updatedby')  # 최종작성자
 
 
 class StoryMaster(models.Model):
@@ -524,12 +537,16 @@ class StoryMaster(models.Model):
     story_title = models.CharField(null=False, max_length=100, verbose_name="스토리 제목")
     story_content = models.TextField(null=False, verbose_name="스토리 내용")
     story_picture = models.ImageField(upload_to='story_pictures/', null=True, blank=True, verbose_name="스토리 사진")
-    story_category = models.CharField(max_length=100, choices=STORY_CATEGORY_CHOICES, default='draft', verbose_name="스토리 카테고리")
-    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자', related_name='story_created_by')
-    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자', related_name='story_updated_by')
+    story_category = models.CharField(max_length=100, choices=STORY_CATEGORY_CHOICES, default='draft',
+                                      verbose_name="스토리 카테고리")
+    created_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최초작성자',
+                                   related_name='story_created_by')
+    updated_by = models.ForeignKey('UserMaster', models.SET_NULL, null=True, verbose_name='최종작성자',
+                                   related_name='story_updated_by')
     created_at = models.DateField(auto_now_add=True, verbose_name='최초 작성일')
     updated_at = models.DateField(auto_now=True, verbose_name='최종 작성일')
     views = models.PositiveIntegerField(default=0)
+
 
 class StoryLikes(models.Model):
     story = models.ForeignKey(StoryMaster, related_name='likes', on_delete=models.CASCADE)
@@ -563,7 +580,8 @@ class ApvMaster(models.Model):
 
     doc_no = models.CharField(max_length=50, unique=True, blank=True)
     doc_title = models.CharField(max_length=255, null=True, blank=True)
-    apv_category = models.ForeignKey(ApvCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name="전자결재 카테고리")
+    apv_category = models.ForeignKey(ApvCategory, null=True, blank=True, on_delete=models.SET_NULL,
+                                     verbose_name="전자결재 카테고리")
     apv_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='apv_created_by')
     created_at = models.DateField(auto_now_add=True)
@@ -587,14 +605,13 @@ class ApvMaster(models.Model):
 
 
 class ApvAttachments(models.Model):
-    document = models.ForeignKey(ApvMaster, related_name='attachments', on_delete=models.CASCADE)
+    document = models.ForeignKey(ApvMaster, related_name='apv_dpcs_attachments', on_delete=models.CASCADE)
     file = models.FileField(upload_to='attachments/')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
 class ApvSubItem(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='items')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apc_docs_items')
     item_no = models.IntegerField()
     desc1 = models.CharField(max_length=255)
     desc2 = models.CharField(max_length=255)
@@ -605,9 +622,8 @@ class ApvSubItem(models.Model):
     remarks = models.TextField(blank=True, null=True)
 
 
-
 class ApvComment(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='comments')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_comments')
     content = models.TextField()
     created_by = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -615,23 +631,29 @@ class ApvComment(models.Model):
 
 
 class ApvApprover(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs')
-    approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True, blank=True)
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_approvers')
+    approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True,
+                                  blank=True)
     approver1_status = models.CharField(max_length=50, null=True, blank=True)
     approver1_date = models.DateField(null=True, blank=True)
-    approver2 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver2', null=True, blank=True)
+    approver2 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver2', null=True,
+                                  blank=True)
     approver2_status = models.CharField(max_length=50, null=True, blank=True)
     approver2_date = models.DateField(null=True, blank=True)
-    approver3 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver3', null=True, blank=True)
+    approver3 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver3', null=True,
+                                  blank=True)
     approver3_status = models.CharField(max_length=50, null=True, blank=True)
     approver3_date = models.DateField(null=True, blank=True)
-    approver4 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver4', null=True, blank=True)
+    approver4 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver4', null=True,
+                                  blank=True)
     approver4_status = models.CharField(max_length=50, null=True, blank=True)
     approver4_date = models.DateField(null=True, blank=True)
-    approver5 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver5', null=True, blank=True)
+    approver5 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver5', null=True,
+                                  blank=True)
     approver5_status = models.CharField(max_length=50, null=True, blank=True)
     approver5_date = models.DateField(null=True, blank=True)
-    approver6 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver6', null=True, blank=True)
+    approver6 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver6', null=True,
+                                  blank=True)
     approver6_status = models.CharField(max_length=50, null=True, blank=True)
     approver6_date = models.DateField(null=True, blank=True)
 
@@ -642,6 +664,6 @@ class ApvCC(models.Model):
 
 
 class ApvReadStatus(models.Model):
-    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_read')
+    document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_check')
     user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
     is_read = models.BooleanField(default=False)

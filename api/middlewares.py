@@ -39,7 +39,7 @@ class LoginRequiredMiddleware:
 
             # ADMINS/견적문의
             if request.path == '/admins/pay_question_page':
-                if not request.user.is_superuser:
+                if not request.user.cs_admin:
                     return redirect('/admins/index')
 
         response = self.get_response(request)

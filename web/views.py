@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.conf.urls import handler403
 from django.contrib import messages
+import requests
 
 
 
@@ -197,13 +198,39 @@ def SubView(request, menu_num):
     return render(request, filename, {'menucode1': menucode1, 'menucode2': menucode2})
 
 
+# def submit_question(request):
+#     if request.method == 'POST':
+#         form = QuestionForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#         else:
+#             raise ValidationError('관리자에게 문의 바랍니다.')
+#
+#     return render(request, 'sub/menu01/menu01_06.html')
+
+
 def submit_question(request):
     if request.method == 'POST':
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            form.save()
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        secret_key = '6Lcz9v0pAAAAALzPy5BXnUQ5BalsNZQFL9rNB6nB'
+        data = {
+            'secret': secret_key,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+
+        if result['success']:
+            # reCAPTCHA 검증 성공
+            form = QuestionForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return render(request, 'sub/menu01/menu01_06.html')
+            else:
+                return HttpResponse('이용자 검증 실패. 관리자에게 문의 바랍니다.')
         else:
-            raise ValidationError('관리자에게 문의 바랍니다.')
+            # reCAPTCHA 검증 실패
+            return HttpResponse('reCAPTCHA verification failed. Please try again.')
 
     return render(request, 'sub/menu01/menu01_06.html')
 
@@ -449,7 +476,6 @@ def story_create_page(request):
 
 def permission_denied_view(request, exception):
     return render(request, 'story/story_403.html', status=403)
-
 
 handler403 = permission_denied_view
 
