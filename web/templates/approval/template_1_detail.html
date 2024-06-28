@@ -182,14 +182,11 @@
             <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;">
             </div>
 
-            <div class="comment_write d-flex">
+            <div class="d-flex" id="comment_write">
                 <img src="/data/{{ request.user.profile_image }}" alt="프로필 사진"
                      style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                <textarea placeholder="추가 의견은 이곳에 남겨보세요"
-                          style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
-                <button class="btn btn-outline-secondary mx-2">
-                    등록
-                </button>
+                <textarea placeholder="추가 의견은 이곳에 남겨보세요" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                <button class="btn btn-outline-secondary mx-2" onclick="create_comment()"> 등록 </button>
             </div>
 
         </div>

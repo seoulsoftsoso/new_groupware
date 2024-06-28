@@ -497,7 +497,9 @@ def apv_progress(request, document_id):
     return render(request, 'approval/apv_progress.html', context)
 
 def apv_template_view(request, category_no):
-    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+    user_id = request.COOKIES["user_id"]
+    user = get_object_or_404(UserMaster, id=user_id)
+    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111, user.id])
                      .order_by('department_position', 'username'))
     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
 

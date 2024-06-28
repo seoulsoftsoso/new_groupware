@@ -39,20 +39,26 @@
             <div class="px-4">
                 <div id="template_include" style="border: 1px solid #ddd; padding: 2% 0 2% 0;"></div>
 
-                <div class="d-flex justify-content-end py-4">
-                    <div type="button" class="btn btn-outline-danger mx-2" style="width: 150px;"
-                         onclick="apv_delete()"> 삭 제
+                <div class="d-flex justify-content-between py-4">
+                    <div class="d-flex justify-content-start">
+                        <div type="button" class="btn btn-danger mx-2 d-none" id="adminBtn" style="width: 150px;"
+                             onclick="apv_delete()"> 완전 삭제
+                        </div>
                     </div>
-                    <div type="button" class="btn btn-outline-secondary mx-2" style="width: 150px;"
-                         onclick="apv_tempsave()"> 임시 저장
+                    <div class="d-flex justify-content-end">
+                        <div type="button" class="btn btn-outline-danger mx-2" style="width: 150px;"
+                             onclick="apv_status_delete()"> 삭 제
+                        </div>
+                        <div type="button" class="btn btn-outline-secondary mx-2" style="width: 150px;"
+                             onclick="apv_tempsave()"> 임시 저장
+                        </div>
+                        <div type="button" class="btn btn-outline-info mx-2" style="width: 150px;"
+                             onclick="apv_send_progress()"> 결재 전송
+                        </div>
+                        <a href="/admins/apv/" class="btn btn-outline-warning mx-2" style="width: 150px;">목록 보기</a>
                     </div>
-                    <div type="button" class="btn btn-outline-info mx-2" style="width: 150px;"
-                         onclick="apv_modal_approvalsend()"> 결재 전송
-                    </div>
-                    <a href="{% url 'apv_list' %}" class="btn btn-outline-warning mx-2" style="width: 150px;">목록 보기</a>
                 </div>
             </div>
-
 
         </div>
     </div>
@@ -65,6 +71,13 @@
 
     let currentUrl = window.location.href;
     let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];
+    let isSuperUser = {{ request.user.is_superuser|yesno:"true,false" }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (isSuperUser) {
+            document.getElementById('adminBtn').classList.remove('d-none');
+        }
+    });
 
     $(function () {
         load_apv_temp_update()
@@ -83,6 +96,23 @@
                 calculatePeriod();
             });
             updatePeriodToOptions();
+            checkApproverList();
+        });
+    }
+
+    function checkApproverList() {
+        const approvers = ['approver1', 'approver2', 'approver3', 'approver4', 'approver5', 'approver6'];
+        approvers.forEach(function(approverId) {
+            document.getElementById(approverId).addEventListener('blur', function() {
+                let input = this.value;
+                let dataList = document.getElementById('approver_list');
+                let options = Array.from(dataList.options).map(option => option.value);
+
+                if (!options.includes(input) && input !== "") {
+                    alert('입력된 값이 정확하지 않습니다. 드랍다운목록에서 선택해주시기 바랍니다.');
+                    this.value = ''; // 입력된 값을 초기화
+                }
+            });
         });
     }
 
@@ -201,12 +231,12 @@
                 document.getElementById('create_date').value = data.updated_at;
                 document.getElementById('username_md').value = data.created_by.username;
                 document.getElementById('team').value = data.created_by.department_position;
-                document.getElementById('approver1').value = data.approvers[0]?.approver1_name ? data.approvers[0].approver1_name + ' (' + data.approvers[0].approver1_team + ')' : '';
-                document.getElementById('approver2').value = data.approvers[0]?.approver2_name ? data.approvers[0].approver2_name + ' (' + data.approvers[0].approver2_team + ')' : '';
-                document.getElementById('approver3').value = data.approvers[0]?.approver3_name ? data.approvers[0].approver3_name + ' (' + data.approvers[0].approver3_team + ')' : '';
-                document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name + ' (' + data.approvers[0].approver4_team + ')' : '';
-                document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name + ' (' + data.approvers[0].approver5_team + ')' : '';
-                document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name + ' (' + data.approvers[0].approver6_team + ')' : '';
+                document.getElementById('approver1').value = data.approvers[0]?.approver1_name ? data.approvers[0].approver1_name.split(' ')[0] + ' (' + data.approvers[0].approver1_team + ')' : '';
+                document.getElementById('approver2').value = data.approvers[0]?.approver2_name ? data.approvers[0].approver2_name.split(' ')[0] + ' (' + data.approvers[0].approver2_team + ')' : '';
+                document.getElementById('approver3').value = data.approvers[0]?.approver3_name ? data.approvers[0].approver3_name.split(' ')[0] + ' (' + data.approvers[0].approver3_team + ')' : '';
+                document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name.split(' ')[0] + ' (' + data.approvers[0].approver4_team + ')' : '';
+                document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name.split(' ')[0] + ' (' + data.approvers[0].approver5_team + ')' : '';
+                document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name.split(' ')[0] + ' (' + data.approvers[0].approver6_team + ')' : '';
                 document.getElementById('leave_reason').value = data.leave_reason;
                 document.getElementById('period_from').value = data.period_from;
                 document.getElementById('period_from_half').value = data.period_from_half;
@@ -231,7 +261,9 @@
             });
     }
 
-{% comment %}    function apv_tempsave() {
+
+    // 임시저장 (첨부파일저장안함 + 필수필드없음)
+    function apv_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -260,17 +292,17 @@
 
         function sendApiRequest() {
             api_gp('/admins/apv/update/', 'post', api_data, (done) => {
-                alert(txt.create_ed);
+                alert("임시저장이 완료되었습니다.");
                 location.href = "/admins/apv/";
             });
         }
 
         sendApiRequest();
-    }{% endcomment %}
+    }
 
 
-    // 첨부파일 가능 버전
-    function apv_tempsave() {
+    // 결재전송 (첨부파일저장 + 필수필드누락경고)
+    function apv_send_progress() {
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedValues(apvCcElement);
 
@@ -278,7 +310,7 @@
             csrfmiddlewaretoken: '{{ csrf_token }}',
             pk: nullapply(apv_click_id),
             apv_category_id: nullapply(categoryId),
-            apv_status: '임시',
+            apv_status: '진행',
             doc_no: nullapply($('#doc_no').val()),
             doc_title: nullapply($('#doc_title').val()),
             leave_reason: nullapply($('#leave_reason').val()),
@@ -303,7 +335,7 @@
 
         function sendApiRequest() {
             api_gp('/admins/apv/update/', 'post', api_data, (done) => {
-                alert(txt.create_ed);
+                alert("결재 전송이 완료되었습니다.");
                 location.href = "/admins/apv/";
             });
         }
@@ -326,6 +358,31 @@
             reader.readAsDataURL(file);
         }
 
+        function validateApiData(data, requiredFields) {
+            for (let { key, message } of requiredFields) {
+                if (data[key] === null || data[key] === undefined || data[key] === '') {
+                    alert(message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        const requiredFields = [
+            { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
+            { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
+            { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
+            { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
+            { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
+            { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
+            { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' }
+            // 필요한 필수 항목과 메시지를 여기에 추가
+        ];
+
+        if (!validateApiData(api_data, requiredFields)) {
+            return;
+        }
+
         if (attachedFiles.length > 0) {
             for (let i = 0; i < attachedFiles.length; i++) {
                 readFileAndAddToApiData(attachedFiles[i], i);
@@ -335,15 +392,33 @@
         }
     }
 
+    function apv_status_delete() {
+        if (confirm('기안을 삭제하시겠습니까?')) {
+            let api_data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                apv_id: nullapply(apv_click_id),
+                apv_status: '삭제',
+                }
+
+            api_gp('/admins/apv/status_update/', 'post', api_data, (done) => {
+                    alert("삭제가 완료되었습니다.");
+                    location.href = "/admins/apv/";
+            });
+
+        } else {
+            alert(txt.cancel);
+        }
+    }
+
     function apv_delete() {
-        if (confirm('전자결재를 작성하시겠습니까?')) {
+        if (confirm('전자결재를 완전히 삭제하시겠습니까?')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 pk: nullapply(apv_click_id),
                 }
 
             api_gp('/admins/apv/delete/', 'post', api_data, (done) => {
-                    alert(txt.delete_ed);
+                    alert("완전 삭제가 완료되었습니다.");
                     location.href = "/admins/apv/";
             });
 
