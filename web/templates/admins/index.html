@@ -94,12 +94,25 @@
             <div class="col-12 row " style="padding-left: 25px;">
                 <div class="col-md-6 col-lg-2 mb-3">
                     <div class="card" style="height: 100%;">
-                        <h5 class="card-header">📝 나의 결재</h5>
+                        <a href="/admins/apv" style="color: inherit;">
+                            <h5 class="card-header">📝 나의 결재</h5>
                         <div class="card-body" style="padding-top: 30px;">
                             <blockquote class="blockquote mb-0">
-                                <h6>미결재 문서 : 10건</h6>
+                                <a href="#" class="apv_waiting_docs">
+                                    {% if waiting_docs is 0 %}
+                                        <h6>미결재 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">미결재 문서 : {{ waiting_docs }}건</h6>
+                                    {% endif %}
+                                </a>
                                 <hr>
-                                <h6>결재완료 문서 : 바로가기</h6>
+                                <a href="#" class="apv_unread_docs">
+                                    {% if unread_docs is 0 %}
+                                        <h6>읽지않은 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">읽지않은 문서 : {{ unread_docs }}건</h6>
+                                    {% endif %}
+                                </a>
                             </blockquote>
                         </div>
                     </div>
@@ -723,6 +736,18 @@
             document.getElementById("story_update_btn").classList.remove("d-none");
             document.getElementById("story_delete_btn").classList.remove("d-none");
         }{% endcomment %}
+    })
+
+    // 미결재문서 바로가기
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector('.apv_waiting_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_waiting_docs=true";
+        })
+        document.querySelector('.apv_unread_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_unread_docs=true";
+        });
     });
 
 </script>

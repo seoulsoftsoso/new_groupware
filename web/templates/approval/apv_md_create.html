@@ -254,7 +254,7 @@
         return option.length ? option.data('approver-id') : null;
     }
 
-    function getSelectedValues(selectElement) {
+    function getSelectedCC(selectElement) {
         let selectedValues = [];
         let selectedOptions = selectElement && selectElement.options;
 
@@ -270,7 +270,7 @@
     // 임시저장 (첨부파일저장안함 + 필수필드없음)
     function apv_modal_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
+        let selectedCcValues = getSelectedCC(apvCcElement);
 
         let api_data = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -304,19 +304,22 @@
         sendApiRequest();
     }
 
-    // 결재전송 (첨부파일저장 + 필수필드누락경고)
     function apv_modal_send_progress() {
         let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
+        let selectedCcValues = getSelectedCC(apvCcElement);
 
         let api_data = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
+            pk: nullapply(apv_click_id),
             apv_category_id: nullapply(categoryId),
             apv_status: '진행',
+            doc_no: nullapply($('#apv_md_create #doc_title').val()),
             doc_title: nullapply($('#apv_md_create #doc_title').val()),
             leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
             period_from: nullapply($('#apv_md_create #period_from').val()),
+            period_from_half: nullapply($('#apv_md_create #period_from_half').val()),
             period_to: nullapply($('#apv_md_create #period_to').val()),
+            period_to_half: nullapply($('#apv_md_create #period_to_half').val()),
             period_count: nullapply($('#apv_md_create #period_count').val()),
             special_comment: nullapply($('#apv_md_create #special_comment').val()),
             attached_files: [],
@@ -369,6 +372,15 @@
             return true;
         }
 
+        function checkForDuplicateApprovers(ccList, approvers) {
+            for (let approver of approvers) {
+                if (approver && ccList.includes(String(approver))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         let requiredFields = [
             { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
             { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
@@ -384,6 +396,16 @@
             return;
         }
 
+        let approvers = [
+            api_data.approver1, api_data.approver2, api_data.approver3,
+            api_data.approver4, api_data.approver5, api_data.approver6
+        ];
+
+        if (checkForDuplicateApprovers(selectedCcValues, approvers)) {
+            alert('승인자는 참조목록에 포함될 수 없습니다.');
+            return;
+        }
+
         if (attachedFiles.length > 0) {
             for (let i = 0; i < attachedFiles.length; i++) {
                 readFileAndAddToApiData(attachedFiles[i], i);
@@ -392,5 +414,114 @@
             sendApiRequest();
         }
     }
+
+
+    // 결재전송 (첨부파일저장 + 필수필드누락경고)
+{% comment %}    function apv_modal_send_progress() {
+        let apvCcElement = document.getElementById('apv_cc');
+        let selectedCcValues = getSelectedCC(apvCcElement);
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            apv_category_id: nullapply(categoryId),
+            apv_status: '진행',
+            doc_title: nullapply($('#apv_md_create #doc_title').val()),
+            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
+            period_from: nullapply($('#apv_md_create #period_from').val()),
+            period_to: nullapply($('#apv_md_create #period_to').val()),
+            period_count: nullapply($('#apv_md_create #period_count').val()),
+            special_comment: nullapply($('#apv_md_create #special_comment').val()),
+            attached_files: [],
+            approver1: getApproverId('approver1'),
+            approver2: getApproverId('approver2'),
+            approver3: getApproverId('approver3'),
+            approver4: getApproverId('approver4'),
+            approver5: getApproverId('approver5'),
+            approver6: getApproverId('approver6'),
+            apv_cc: selectedCcValues,
+        };
+
+        let attachedFiles = document.getElementById('attached_files').files;
+        let fileReadCount = 0;
+
+        function sendApiRequest() {
+            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
+                $('#apv_md_create').modal("hide");
+                apv_nation.page = 1;  // 첫 페이지로
+                search_apv_data();
+                alert("결재 전송이 완료되었습니다.");
+            });
+        }
+
+        function readFileAndAddToApiData(file, index) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
+                };
+                api_data.attached_files.push(fileData);
+                fileReadCount++;
+                if (fileReadCount === attachedFiles.length) {
+                    sendApiRequest();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function validateApiData(data, requiredFields) {
+            for (let field of requiredFields) {
+                if (!data[field.key] || data[field.key] === '') {
+                    alert(field.message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function checkForDuplicateApprovers(ccList, approvers) {
+            for (let approver of approvers) {
+                if (ccList.includes(approver)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        let requiredFields = [
+            { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
+            { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
+            { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
+            { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
+            { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
+            { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
+            { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' }
+            // 필요한 필수 항목과 메시지를 여기에 추가
+        ];
+
+        if (!validateApiData(api_data, requiredFields)) {
+            return;
+        }
+
+        let approvers = [
+            api_data.approver1, api_data.approver2, api_data.approver3,
+            api_data.approver4, api_data.approver5, api_data.approver6
+        ];
+
+        if (checkForDuplicateApprovers(selectedCcValues, approvers)) {
+            alert('승인자는 참조목록에 포함될 수 없습니다.');
+            return;
+        }
+
+        if (attachedFiles.length > 0) {
+            for (let i = 0; i < attachedFiles.length; i++) {
+                readFileAndAddToApiData(attachedFiles[i], i);
+            }
+        } else {
+            sendApiRequest();
+        }
+    }{% endcomment %}
 
 </script>

@@ -12,12 +12,12 @@ from api.form import QuestionForm
 from api.models import UserMaster, BoardMaster, FileBoardMaster, CodeMaster, GroupCodeMaster, EventMaster, ProMaster, \
     ProTask, ProMembers, Weekly, ApvMaster
 from api.views import *
+from api.approval import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.conf.urls import handler403
 from django.contrib import messages
 import requests
-
 
 
 class DateDiff(Func):
@@ -59,6 +59,45 @@ def admin_index_page(request):
     # 오늘의 이야기
     today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()
 
+    # 나의 결재
+    user_id = request.COOKIES["user_id"]
+    user = get_object_or_404(UserMaster, id=user_id)
+    qs = ApvMaster.objects.filter()
+
+    # 사용자의 권한에 따라 필터링
+    if user.is_authenticated:
+        if user.is_superuser:  # 슈퍼유저는 모든 게시물 조회 가능
+            pass
+
+        else:
+            # 임시 상태의 문서를 해당 사용자만 볼 수 있도록 필터링, 삭제 상태의 문서를 목록에서 제외
+            qs = qs.filter(
+                Q(created_by=user) |
+                ~Q(apv_status='임시')
+            ).exclude(apv_status='삭제')
+
+            # 사용자가 생성한 게시물, cc_list에 포함된 게시물, 승인자로 포함된 게시물만 필터링
+            qs = qs.filter(
+                Q(created_by=user) |
+                Q(apv_docs_cc__user=user) |
+                Q(apv_docs_approvers__approver1=user) |
+                Q(apv_docs_approvers__approver2=user) |
+                Q(apv_docs_approvers__approver3=user) |
+                Q(apv_docs_approvers__approver4=user) |
+                Q(apv_docs_approvers__approver5=user) |
+                Q(apv_docs_approvers__approver6=user)
+            ).distinct()
+
+    else:  # 인증되지 않은 사용자는 아무 게시물도 조회할 수 없음
+        qs = qs.none()
+
+    waiting_docs = qs.filter(
+        id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user]).count()
+
+    read_status = ApvReadStatus.objects.filter(user=user).values_list('document_id', flat=True)
+    read_documents = set(read_status)
+    unread_docs = qs.exclude(id__in=read_documents).count()
+
     type = request.GET.get('param', None)
     employee_list = get_member_info(type)
 
@@ -67,7 +106,9 @@ def admin_index_page(request):
         'fixed_notice': fixed_notice,
         'fixed_board': fixed_board,
         'employee_list': employee_list['result'],
-        'today_about': today_about
+        'today_about': today_about,
+        'waiting_docs': waiting_docs,
+        'unread_docs': unread_docs,
     }
 
     return render(request, 'admins/index.html', context)
@@ -314,13 +355,14 @@ def project_main_page(request):
 
     userlist = ProMembers.objects.filter(
         task_id__isnull=True, position='PE'
-        ).select_related('member').values('id', 'promaster_id', 'member__username')
+    ).select_related('member').values('id', 'promaster_id', 'member__username')
 
     project_type_select = CodeMaster.objects.filter(group_id=8).values(
         'id', 'code', 'name'
     )
 
-    context = {'project': projects, 'userinfo': userinfo, 'userlist': userlist, 'project_type_select': project_type_select}
+    context = {'project': projects, 'userinfo': userinfo, 'userlist': userlist,
+               'project_type_select': project_type_select}
 
     return render(request, 'admins/project_mgmt/project_main.html', context)
 
@@ -341,7 +383,8 @@ def task_mgmt_page(request):
         ).select_related(
             'pro_parent'
         ).values(
-            'id', 'task_name', 'task_start', 'task_end', 'pro_parent_id', 'task_remain', 'pro_parent__pjcode', 'pro_parent__pjname'
+            'id', 'task_name', 'task_start', 'task_end', 'pro_parent_id', 'task_remain', 'pro_parent__pjcode',
+            'pro_parent__pjname'
         ).order_by('-id')
 
         for task in task:
@@ -350,7 +393,7 @@ def task_mgmt_page(request):
             formatted_project['task_end'] = task['task_end'].strftime('%Y-%m-%d')
             formatted_projects.append(formatted_project)
 
-        #project_name = task.first()['pro_parent__pjname']
+        # project_name = task.first()['pro_parent__pjname']
         project_name = get_object_or_404(ProMaster, pk=pro, delete_flag='N')
 
     userlist = ProMembers.objects.filter(
@@ -477,6 +520,7 @@ def story_create_page(request):
 def permission_denied_view(request, exception):
     return render(request, 'story/story_403.html', status=403)
 
+
 handler403 = permission_denied_view
 
 
@@ -484,17 +528,20 @@ def apv_list(request):
     context = {}
     return render(request, 'approval/apv_list.html', context)
 
+
 def apv_temp_update(request, document_id):
     context = {
         'document_id': document_id
     }
     return render(request, 'approval/apv_temp_update.html', context)
 
+
 def apv_progress(request, document_id):
     context = {
         'document_id': document_id
     }
     return render(request, 'approval/apv_progress.html', context)
+
 
 def apv_template_view(request, category_no):
     user_id = request.COOKIES["user_id"]
@@ -511,6 +558,7 @@ def apv_template_view(request, category_no):
         'approver_list': approver_choices,
     }
     return render(request, create_template, context)
+
 
 def apv_template_detail(request, category_no):
     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])

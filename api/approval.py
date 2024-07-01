@@ -3,9 +3,8 @@ from django.views import View
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db import transaction, DatabaseError
-from django.db.models import Q
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments
+from django.db.models import Q, OuterRef, Subquery
+from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, ApvReadStatus, NotiCenter
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
@@ -27,7 +26,6 @@ class ApvListView(View):
         date_sch_to = request.GET.get('date_sch_to', '')
 
         qs = ApvMaster.objects.filter().order_by('-updated_at', '-doc_no')
-
 
         # 사용자의 권한에 따라 필터링
         if user.is_authenticated:
@@ -56,6 +54,11 @@ class ApvListView(View):
         else:  # 인증되지 않은 사용자는 아무 게시물도 조회할 수 없음
             qs = qs.none()
 
+        # 사용자가 읽은 게시물 ID 목록, 읽지않음과 결재대기 건수
+        read_status = ApvReadStatus.objects.filter(user=user).values_list('document_id', flat=True)
+        read_documents = set(read_status)
+        unread_docs = qs.exclude(id__in=read_documents).count()
+        waiting_docs = qs.filter(id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user]).count()
 
         # 기간 검색
         if date_sch_from:
@@ -73,10 +76,10 @@ class ApvListView(View):
                 keyword = keyword.strip()
                 if keyword:
                     search_condition = (
-                            Q(doc_no__icontains=keyword) |
-                            Q(doc_title__icontains=keyword) |
-                            Q(created_by__username__icontains=keyword) |
-                            Q(apv_category__name__icontains=keyword)
+                        Q(doc_no__icontains=keyword) |
+                        Q(doc_title__icontains=keyword) |
+                        Q(created_by__username__icontains=keyword) |
+                        Q(apv_category__name__icontains=keyword)
                     )
                     search_conditions |= search_condition
             qs = qs.filter(search_conditions)
@@ -90,7 +93,10 @@ class ApvListView(View):
                 qs = qs.filter(created_by_id=user)
             elif apv_status_sch == '결재대기':
                 qs = qs.filter(id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user])
-            elif apv_status_sch == '임시' or '진행' or '완료' or '반려':
+            elif apv_status_sch == '읽지않음':
+                subquery = ApvReadStatus.objects.filter(document=OuterRef('pk'), user=user)
+                qs = qs.filter(Q(apv_docs_check__is_read=False, apv_docs_check__user=user) | ~Q(id__in=subquery.values('document')))
+            elif apv_status_sch in ['임시', '진행', '완료', '반려']:
                 qs = qs.filter(apv_status=apv_status_sch).exclude(apv_docs_cc__user=user)
 
         if _page == '' or _size == '':
@@ -125,20 +131,24 @@ class ApvListView(View):
             result = get_obj(row)
             result['apv_cc'] = cc_data
             result['comment_count'] = comment_data
+            result['is_read'] = row.id in read_documents
             if row.apv_status == '진행':
                 next_approver = ApvDetail.get_next_approver(row)
                 result['next_approver'] = (
                             next_approver.username + ' ' + next_approver.job_position.name) if next_approver else ''
+                result['next_approver_id'] = next_approver.id if next_approver else ''
             else:
                 result['next_approver'] = ''
+                result['next_approver_id'] = ''
             results.append(result)
-
 
         context = {
             'count': qs_ps.paginator.count,
             'previous': url_pre,
             'next': url_next,
-            'results': results
+            'results': results,
+            'unread_docs': unread_docs,
+            'waiting_docs': waiting_docs,
         }
 
         return JsonResponse(context, safe=False)
@@ -257,6 +267,8 @@ class ApvDetail(View):
                 'updated_at': comment.updated_at,
             } for comment in comments]
 
+        # 읽음 상태 업데이트
+        ApvReadStatus.objects.update_or_create(user=user, document=apv_master, defaults={'is_read': True})
 
         results = [get_obj(row) for row in qs]
         for result in results:
@@ -292,24 +304,20 @@ class ApvDetail(View):
             self.reset_approver_status(apv_master)
             apv_master.apv_status = '임시'
             apv_master.save()
+            ApvReadStatus.objects.filter(document=apv_master).delete()
             return JsonResponse({'success': 'Status updated to 임시 and all approvals reset to 대기'}, status=200)
 
         # 승인 버튼을 누른 사용자가 다음 승인자인지 확인
         next_approver = self.get_next_approver(apv_master)
-        if next_approver is None and approver_action == 'approve':
-            apv_master.apv_status = '완료'
-            apv_master.save()
-            return JsonResponse({'success': 'All approvals completed and status updated to 완료'}, status=200)
-
         if next_approver.id != user.id:
             return JsonResponse({'error': 'Unauthorized'}, status=403)
 
+        # 승인을 전달받을때
         if approver_action == 'approve':
             updated = self.update_approver_status(apv_master, user, '승인')
             if not updated:
                 return JsonResponse({'error': 'Failed to update status'}, status=500)
 
-            # Check if there are more pending approvers
             next_approver = self.get_next_approver(apv_master)
             if next_approver is None:
                 apv_master.apv_status = '완료'
@@ -317,11 +325,13 @@ class ApvDetail(View):
 
             return JsonResponse({'success': 'Status updated'}, status=200)
 
+        # 반려를 전달받을때
         elif approver_action == 'reject':
             updated = self.update_approver_status(apv_master, user, '반려')
             if updated:
                 apv_master.apv_status = '반려'
                 apv_master.save()
+
             if not updated:
                 return JsonResponse({'error': 'Failed to update status'}, status=500)
             return JsonResponse({'success': 'Status updated to 반려'}, status=200)
@@ -415,6 +425,9 @@ class ApvCreate(View):
                 ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
 
             self.save_attachments(request, ApvMaster_obj)
+
+            # 본인이 작성한 글은 항상 is_read가 True
+            ApvReadStatus.objects.create(user=user, document=ApvMaster_obj, is_read=True)
 
             if ApvMaster_obj:
                 context = get_res(context, ApvMaster_obj)

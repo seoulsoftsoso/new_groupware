@@ -85,7 +85,10 @@
         if (isSuperUser) {
             document.getElementById('adminBtn').classList.remove('d-none');
         }
+        comment_hotkey();
     });
+
+
 
     $(function () {
         load_apv_detail()
@@ -322,7 +325,8 @@
             if (approver.name) {
                 approvalFlowDiv.innerHTML += createApproverDiv(approver.title, approver.name, approver.date, approver.status, approver.imageSrc);
                 if (index < approvers.length - 1 && approvers[index + 1].name) {
-                    approvalFlowDiv.innerHTML += `<div style="font-size: 24px; color: #999; margin: 0 10px 0 10px;">→</div>`;
+                    approvalFlowDiv.innerHTML += `<div style="font-size: 24px; color: #999; margin: 0 15px 0 15px;">
+                                                  <i class="fa-solid fa-arrow-right-long fa-xl"></i></div>`;
                 }
             }
         });
@@ -515,6 +519,31 @@
                 let data = done.results[0];
                 draw_comments(data);
             });
+        });
+    }
+
+    function comment_hotkey() {
+        let observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        let textarea = node.querySelector('#comment_write textarea');
+                        if (textarea) {
+                            textarea.addEventListener('keydown', function (event) {
+                                if (event.key === 'Enter' && !event.shiftKey) {
+                                    event.preventDefault();
+                                    create_comment();
+                                }
+                            });
+                            observer.disconnect();
+                        }
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
         });
     }
 

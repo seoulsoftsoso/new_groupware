@@ -672,3 +672,13 @@ class ApvReadStatus(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_check')
     user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
     is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class NotiCenter(models.Model):
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='noti_user')
+    apv_docs = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='noti_apv_docs', null=True, blank=True)
+    content = models.CharField(max_length=255, null=True, blank=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

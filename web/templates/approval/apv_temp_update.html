@@ -195,7 +195,7 @@
         return option.length ? option.data('approver-id') : null;
     }
 
-    function getSelectedValues(selectElement) {
+    function getSelectedCC(selectElement) {
         const selectedValues = [];
         const selectedOptions = selectElement && selectElement.options;
 
@@ -265,7 +265,7 @@
     // 임시저장 (첨부파일저장안함 + 필수필드없음)
     function apv_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
+        let selectedCcValues = getSelectedCC(apvCcElement);
 
         let api_data = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -304,7 +304,7 @@
     // 결재전송 (첨부파일저장 + 필수필드누락경고)
     function apv_send_progress() {
         let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedValues(apvCcElement);
+        let selectedCcValues = getSelectedCC(apvCcElement);
 
         let api_data = {
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -368,7 +368,16 @@
             return true;
         }
 
-        const requiredFields = [
+        function checkForDuplicateApprovers(ccList, approvers) {
+            for (let approver of approvers) {
+                if (approver && ccList.includes(String(approver))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        let requiredFields = [
             { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
             { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
             { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
@@ -380,6 +389,16 @@
         ];
 
         if (!validateApiData(api_data, requiredFields)) {
+            return;
+        }
+
+        let approvers = [
+            api_data.approver1, api_data.approver2, api_data.approver3,
+            api_data.approver4, api_data.approver5, api_data.approver6
+        ];
+
+        if (checkForDuplicateApprovers(selectedCcValues, approvers)) {
+            alert('승인자는 참조목록에 포함될 수 없습니다.');
             return;
         }
 
