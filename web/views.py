@@ -60,8 +60,8 @@ def admin_index_page(request):
     today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()
 
     # 나의 결재
-    user_id = request.COOKIES["user_id"]
-    user = get_object_or_404(UserMaster, id=user_id)
+    # user_id = request.COOKIES["user_id"]
+    user = get_object_or_404(UserMaster, id=request.user.id)
     qs = ApvMaster.objects.filter()
 
     # 사용자의 권한에 따라 필터링
@@ -544,8 +544,8 @@ def apv_progress(request, document_id):
 
 
 def apv_template_view(request, category_no):
-    user_id = request.COOKIES["user_id"]
-    user = get_object_or_404(UserMaster, id=user_id)
+    # user_id = request.COOKIES["user_id"]
+    user = get_object_or_404(UserMaster, id=request.user.id)
     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111, user.id])
                      .order_by('department_position', 'username'))
     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
