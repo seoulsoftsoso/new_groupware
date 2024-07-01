@@ -9,17 +9,18 @@
 {#<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
 {#<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
 <header id="page-topbar">
-    <div class="navbar-header layout-navbar d-flex justify-content-between">
-        <div class="d-flex justify-content-start align-items-center p-3 px-5">
+    <div class="navbar-header layout-navbar d-flex justify-content-between align-items-center p-0">
+        <div class="d-flex justify-content-start align-items-center px-4">
             {#            왼쪽 공간#}
         </div>
-        <div class="d-flex justify-content-end align-items-center p-3 px-5">
+        <div class="d-flex justify-content-end align-items-center px-4">
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon waves-effect"
-                        id="page-header-notifications-dropdown"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bx bx-bell bx-tada" style="font-size: 30px;"></i>
-                    <span class="badge bg-danger rounded-pill" style="font-size: 12px;">3</span>
+                <button type="button" class="btn header-item noti-icon waves-effect p-2"
+                        id="notiCenter" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" style="position: relative;">
+                    <i class="bx bx-bell" style="font-size: 36px;"></i>
+                    <span class="badge bg-danger rounded-pill" id="notiCount"
+                          style="position: absolute; top: 5px; right: 5px; font-size: 10px;"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                      aria-labelledby="page-header-notifications-dropdown">
@@ -103,19 +104,21 @@
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {% if request.user.profile_image %}
-                    <img src="/data/{{ request.user.profile_image }}" style="width: 40px; height: 40px; border: 2px
-                    solid #bbbbbb; border-radius: 100%; margin-right: 10px;" alt="profile_image">
-                {% else %}
-                    <i class='bx bxs-user-circle' style='font-size: 36px;'></i>
-                {% endif %}
-                <span class="d-none d-xl-inline-block ms-1" id="username"
-                      style="color: #697a8d; font-size: 18px;">{{ request.user.username }} 님 &nbsp;</span>
-                <i class="fa-solid fa-chevron-down"></i>
+                        <img src="/data/{{ request.user.profile_image }}" style="width: 40px; height: 40px; border-radius: 100%;" alt="profile_image">
+                    {% else %}
+                        <i class='bx bxs-user-circle' style='font-size: 36px;'></i>
+                    {% endif %}
+                    {% comment %}<div class="mt-1" id="username" style="font-size: 16px; font-weight: bold; color: #777;">
+                        <div class="d-flex justify-content-start">{{ request.user.department_position.name }}</div>
+                        <div class="d-flex justify-content-start">{{ request.user.username }} 님 &nbsp;</div>
+                    </div>
+                    &nbsp;&nbsp;<i class="fa-solid fa-chevron-down fa-lg"></i>{% endcomment %}
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{% url 'userSettingsPage' %}"><i
-                            class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
+                    <a class="dropdown-item d-flex" href="{% url 'userSettingsPage' %}">
+                        <i class="bx bx-user font-size-14 align-middle me-2"></i>
+                        <span key="t-profile">{{ request.user.username }} 님</span></a>
                     {% comment %}<a class="dropdown-item" href="#"><i
                             class="bx bx-wallet font-size-16 align-middle me-1"></i> <span
                             key="t-my-wallet">My Wallet</span></a>
@@ -125,10 +128,10 @@
                     <a class="dropdown-item" href="#"><i
                             class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span
                             key="t-lock-screen">Lock screen</span></a>{% endcomment %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
-                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
-                            key="t-logout">로그아웃</span></a>
+                    <div class="dropdown-divider m-1"></div>
+                    <a class="dropdown-item d-flex text-danger" href="{% url 'logout' %}">
+                        <i class="bx bx-power-off font-size-14 align-middle me-1 text-danger"></i>
+                        <span key="t-logout">로그아웃</span></a>
                 </div>
             </div>
         </div>
@@ -153,5 +156,16 @@
         document.cookie = 'enterprise_name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let notiCount = document.getElementById("notiCount").textContent.trim();
+        let notiCenter = document.getElementById("notiCenter");
+
+        if (notiCount !== "") {
+            notiCenter.classList.add("bx-tada");
+        } else {
+            notiCenter.classList.remove("bx-tada");
+        }
+    });
 
 </script>

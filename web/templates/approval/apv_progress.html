@@ -44,21 +44,27 @@
             <div class="px-4">
                 <div id="template_include" style="border: 1px solid #ddd; padding: 2% 0 2% 0;"></div>
 
-                <div class="d-flex justify-content-end py-4">
-                    <div type="button" class="btn btn-outline-danger mx-2" style="width: 150px;"
-                         onclick="apv_delete()"> 삭 제
+                <div class="d-flex justify-content-between py-4" id="controlBtn">
+                    <div class="d-flex justify-content-start">
+                        <div type="button" class="btn btn-danger mx-2 d-none" id="adminBtn" style="width: 150px;"
+                             onclick="apv_delete()"> 완전 삭제
+                        </div>
                     </div>
-                    <div type="button" class="btn btn-outline-secondary mx-2" style="width: 150px;"
-                         onclick="apv_tempsave()"> 임시 저장
+                    <div class="d-flex justify-content-end">
+                        <div type="button" class="btn btn-outline-danger mx-2 d-none" id="selfCancel" style="width: 150px;"
+                             onclick="apv_return_temp()"> 기안 취소
+                        </div>
+                        <div type="button" class="btn btn-outline-danger mx-2 d-none" id="userReject" style="width: 150px;"
+                             onclick="apv_user_reject()"> 결재 반려
+                        </div>
+                        <div type="button" class="btn btn-outline-info mx-2 d-none" id="userApprove" style="width: 150px;"
+                             onclick="apv_user_approve()"> 결재 승인
+                        </div>
+                        <a href="/admins/apv/" class="btn btn-outline-warning mx-2" style="width: 150px;">목록 보기</a>
                     </div>
-                    <div type="button" class="btn btn-outline-info mx-2" style="width: 150px;"
-                         onclick="apv_modal_approvalsend()"> 결재 전송
-                    </div>
-                    <a href="{% url 'apv_list' %}" class="btn btn-outline-warning mx-2" style="width: 150px;">목록 보기</a>
                 </div>
+
             </div>
-
-
         </div>
     </div>
 </div>
@@ -70,6 +76,19 @@
 
     let currentUrl = window.location.href;
     let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];
+    let currentUserId = {{ request.user.id }};
+    let created_by_id = null;
+    let isSuperUser = {{ request.user.is_superuser|yesno:"true,false" }};
+    let next_approver = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (isSuperUser) {
+            document.getElementById('adminBtn').classList.remove('d-none');
+        }
+        comment_hotkey();
+    });
+
+
 
     $(function () {
         load_apv_detail()
@@ -89,6 +108,24 @@
     function draw_apv_detail(done) {
         console.log("draw_apv_temp_update: ", done);
         let data = done.results[0];
+        next_approver = done.next_approver;
+        currentUserId = done.current_user_id;
+        created_by_id = data.created_by.id;
+
+        // 기안취소 버튼 보이기
+        if (data.apv_status !== '완료') {
+            if (created_by_id === currentUserId || isSuperUser) {
+                document.getElementById('selfCancel').classList.remove('d-none');
+            }
+        }
+
+        // 기안승인/반려 버튼 보이기
+        if (data.apv_status == '진행') {
+            if (next_approver === currentUserId) {
+                document.getElementById('userApprove').classList.remove('d-none');
+                document.getElementById('userReject').classList.remove('d-none');
+            }
+        }
 
         categoryId = data.apv_category.id;
         fetch(`/admins/apv/detail_temp/${categoryId}`)
@@ -212,7 +249,14 @@
         approvalFlowDiv.innerHTML = ''; // 기존 내용을 비움
 
         let createApproverDiv = (title, name, date, status, imageSrc) => {
-            let statusBadge = status === '완료' ? 'text-bg-success' : 'text-bg-primary';
+            let statusBadge;
+            if (status === '승인' || status === '완료') {
+                statusBadge = 'text-bg-success';
+            } else if (status === '반려') {
+                statusBadge = 'text-bg-danger';
+            } else {
+                statusBadge = 'text-bg-primary';
+            }
             return `
             <div class="px-3" style="text-align: center;">
                 <div class="my-1" style="font-size: 14px; font-weight: bold; color: #555;">${title}</div>
@@ -281,10 +325,28 @@
             if (approver.name) {
                 approvalFlowDiv.innerHTML += createApproverDiv(approver.title, approver.name, approver.date, approver.status, approver.imageSrc);
                 if (index < approvers.length - 1 && approvers[index + 1].name) {
-                    approvalFlowDiv.innerHTML += `<div style="font-size: 24px; color: #999; margin: 0 10px 0 10px;">→</div>`;
+                    approvalFlowDiv.innerHTML += `<div style="font-size: 24px; color: #999; margin: 0 15px 0 15px;">
+                                                  <i class="fa-solid fa-arrow-right-long fa-xl"></i></div>`;
                 }
             }
         });
+    }
+
+    function apv_delete() {
+        if (confirm('전자결재를 삭제하시겠습니까?')) {
+            let api_data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                pk: nullapply(apv_click_id),
+                }
+
+            api_gp('/admins/apv/delete/', 'post', api_data, (done) => {
+                    alert(txt.delete_ed);
+                    location.href = "/admins/apv/";
+            });
+
+        } else {
+            alert(txt.cancel);
+        }
     }
 
     function draw_comments(data) {
@@ -309,40 +371,192 @@
             return `${year}-${month}-${day} ${period} ${String(hours).padStart(2, '0')}:${minutes}`;
         };
 
-        let createCommentDiv = (profile_image, username, date, content) => {
+        let createCommentDiv = (comment) => {
+            let profile_image = comment.created_by.profile_image;
+            let username = comment.created_by.username;
+            let date = "";
+            if (comment.created_at === comment.updated_at) {
+                date = formatDateTime(comment.created_at);
+            } else {
+                date = formatDateTime(comment.created_at) + '  (최근 수정됨: ' + formatDateTime(comment.updated_at) + ')';
+            }
+            let content = comment.content;
+            let comment_id = comment.id;
+            let created_by_id = comment.created_by.id;
+
+            let editDeleteButtons = '';
+            if (created_by_id === currentUserId) {
+                editDeleteButtons = `
+                <button id="edit_button_${comment_id}" onclick="editComment(${comment_id})" style="margin-left: 10px; background: none; border: none; cursor: pointer;">
+                    <i class="fa-solid fa-eraser fa-sm" style="color: #999;"></i>
+                </button>
+                <button id="delete_button_${comment_id}" onclick="deleteComment(${comment_id})" style="margin-left: -5px; background: none; border: none; cursor: pointer;">
+                    <i class="fa-solid fa-trash-can fa-sm" style="color: #999;"></i>
+                </button>
+            `;
+            }
+
             return `
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <img src="${profile_image}" alt="프로필 사진"
-                     style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                <div style="font-size: 16px;">
-                    <strong>${username}</strong> <span style="color: #999; margin-left: 10px;">${date}</span>
-                    <br>
-                    ${content}
+                <div id="comment_${comment_id}" style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <img src="${profile_image}" alt="프로필 사진"
+                         style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
+                    <div style="font-size: 16px;">
+                        <strong>${username}</strong> <span style="color: #999; margin-left: 10px;">${date}${editDeleteButtons}</span>
+                        <br>
+                        <span id="comment_content_${comment_id}" style="color: #343a40;">${content}</span>
+
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
         };
 
-        // createDocumentFragment를 사용하여 성능 개선
         let fragment = document.createDocumentFragment();
         data.comments.forEach(comment => {
             let commentDiv = document.createElement('div');
-            let formattedDate = formatDateTime(comment.created_at);
-            commentDiv.innerHTML = createCommentDiv(comment.created_by.profile_image, comment.created_by.username, formattedDate, comment.content);
+            commentDiv.innerHTML = createCommentDiv(comment);
             fragment.appendChild(commentDiv);
         });
         commentListDiv.appendChild(fragment);
     }
 
-    function apv_delete() {
-        if (confirm('전자결재를 삭제하시겠습니까?')) {
+    function create_comment() {
+        let textarea = document.querySelector('#comment_write textarea');
+        let content = textarea.value;
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            document: apv_click_id,
+            content: content,
+        };
+
+        api_gp('/admins/apv/comment/create/', 'post', api_data, (done) => {
+            if (done.error) {
+                alert(done.message || '댓글 등록에 실패했습니다.');
+                return;
+            }
+
+            let query = "?apv_id=" + apv_click_id;
+            api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
+                let data = done.results[0];
+                draw_comments(data);
+                textarea.value = ''; // 댓글 등록 후 textarea 초기화
+            });
+        });
+    }
+
+    function editComment(comment_id) {
+        let contentSpan = document.getElementById(`comment_content_${comment_id}`);
+        if (!contentSpan) {
+            console.error(`Element with id comment_content_${comment_id} not found.`);
+            return;
+        }
+
+        let originalContent = contentSpan.textContent.trim();
+        contentSpan.classList.add('d-flex');
+        contentSpan.innerHTML = `
+            <textarea id="edit_content_${comment_id}" style="height: auto; min-width: 1000px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">${originalContent}</textarea>
+            <button class="btn btn-outline-secondary mx-2" onclick="saveComment(${comment_id})">저장</button>
+            <button class="btn btn-outline-danger mx-0" onclick="cancelEdit(${comment_id}, \`${originalContent}\`)">취소</button>
+        `;
+
+        // 수정, 삭제 버튼 숨김 처리
+        document.getElementById(`edit_button_${comment_id}`).style.display = 'none';
+        document.getElementById(`delete_button_${comment_id}`).style.display = 'none';
+    }
+
+    function saveComment(comment_id) {
+        let newContent = document.getElementById(`edit_content_${comment_id}`).value;
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            comment_id: comment_id,
+            content: newContent,
+        };
+
+        api_gp('/admins/apv/comment/update/', 'post', api_data, (done) => {
+            if (done.error) {
+                alert(done.message || '댓글 수정에 실패했습니다.');
+                return;
+            }
+
+            let query = "?apv_id=" + apv_click_id;
+            api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
+                let data = done.results[0];
+                draw_comments(data);
+            });
+        });
+
+        // 수정, 삭제 버튼 보이도록 처리
+        document.getElementById(`edit_button_${comment_id}`).style.display = 'inline';
+        document.getElementById(`delete_button_${comment_id}`).style.display = 'inline';
+    }
+
+    function cancelEdit(comment_id, originalContent) {
+        let contentSpan = document.getElementById(`comment_content_${comment_id}`);
+        contentSpan.innerHTML = `${originalContent}`;
+
+        // 수정, 삭제 버튼 보이도록 처리
+        document.getElementById(`edit_button_${comment_id}`).style.display = 'inline';
+        document.getElementById(`delete_button_${comment_id}`).style.display = 'inline';
+    }
+
+    function deleteComment(comment_id) {
+        if (!confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            return;
+        }
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            comment_id: comment_id,
+        };
+
+        api_gp('/admins/apv/comment/delete/', 'post', api_data, (done) => {
+            if (done.error) {
+                alert(done.message || '댓글 삭제에 실패했습니다.');
+                return;
+            }
+
+            let query = "?apv_id=" + apv_click_id;
+            api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
+                let data = done.results[0];
+                draw_comments(data);
+            });
+        });
+    }
+
+    function comment_hotkey() {
+        let observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        let textarea = node.querySelector('#comment_write textarea');
+                        if (textarea) {
+                            textarea.addEventListener('keydown', function (event) {
+                                if (event.key === 'Enter' && !event.shiftKey) {
+                                    event.preventDefault();
+                                    create_comment();
+                                }
+                            });
+                            observer.disconnect();
+                        }
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    function apv_return_temp() {
+        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인은 초기화됩니다.')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
-                pk: nullapply(apv_click_id),
+                apv_id: nullapply(apv_click_id),
+                approver_action: 'return_temp',
                 }
 
-            api_gp('/admins/apv/delete/', 'post', api_data, (done) => {
-                    alert(txt.delete_ed);
+            api_gp('/admins/apv/detail/', 'post', api_data, (done) => {
+                    alert("기안이 취소되었습니다.");
                     location.href = "/admins/apv/";
             });
 
@@ -351,50 +565,43 @@
         }
     }
 
-    function create_comment() {
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            document: apv_click_id,
-            content: content,
-        };
-
-        let attachedFiles = document.getElementById('attached_files').files;
-        let fileReadCount = 0;
-
-        function sendApiRequest() {
-            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
-                $('#apv_md_create').modal("hide");
-                apv_nation.page = 1;  // 첫 페이지로
-                search_apv_data();
-                alert(txt.create_ed);
-            });
-        }
-
-        function readFileAndAddToApiData(file, index) {
-            let reader = new FileReader();
-            reader.onload = function(event) {
-                let fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
-                };
-                api_data.attached_files.push(fileData);
-                fileReadCount++;
-                if (fileReadCount === attachedFiles.length) {
-                    sendApiRequest();
+    function apv_user_approve() {
+        if (confirm('결재를 승인하시겠습니까?')) {
+            let api_data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                apv_id: nullapply(apv_click_id),
+                approver_action: 'approve',
                 }
-            };
-            reader.readAsDataURL(file);
-        }
 
-        if (attachedFiles.length > 0) {
-            for (let i = 0; i < attachedFiles.length; i++) {
-                readFileAndAddToApiData(attachedFiles[i], i);
-            }
+            api_gp('/admins/apv/detail/', 'post', api_data, (done) => {
+                alert("결재를 승인하였습니다.");
+                location.href = "/admins/apv/";
+            });
+
         } else {
-            sendApiRequest();
+            alert(txt.cancel);
         }
     }
+
+    function apv_user_reject() {
+        if (confirm('결재를 반려하시겠습니까?')) {
+            let api_data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                apv_id: nullapply(apv_click_id),
+                approver_action: 'reject'
+                }
+
+            api_gp('/admins/apv/detail/', 'post', api_data, (done) => {
+                    alert("결재를 반려하였습니다.");
+                    location.href = "/admins/apv/";
+            });
+
+        } else {
+            alert(txt.cancel);
+        }
+    }
+
+
+
 
 </script>

@@ -40,12 +40,17 @@
 
             <div class="control-buttons d-flex justify-content-between" style="padding: 0 2% 0 2%;">
                 <div class="d-flex justify-content-start">
-                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px;" aria-selected="true" data-status="전체">전체</a>
-                    <a href="#" class="apv_status_sch btn btn-outline-secondary p-0 me-2" style="width: 65px;" aria-selected="false" data-status="임시">임시</a>
-                    <a href="#" class="apv_status_sch btn btn-outline-primary p-0 me-2" style="width: 65px;" aria-selected="false" data-status="진행">진행</a>
-                    <a href="#" class="apv_status_sch btn btn-outline-success p-0 me-2" style="width: 65px;" aria-selected="false" data-status="완료">완료</a>
-                    <a href="#" class="apv_status_sch btn btn-outline-danger p-0 me-2" style="width: 65px;" aria-selected="false" data-status="반려">반려</a>
-                    <a href="#" class="apv_view_cc btn btn-outline-warning p-0 me-2" style="width: 65px;">참조</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-instagram p-0 me-2" style="width: 110px;" aria-selected="false" data-status="내문서">내 문서</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-facebook p-0 me-2" id="apvwaitBtn" style="width: 110px;" aria-selected="false" data-status="결재대기">결재 대기</a>
+                    <a href="#" class="apv_status_sch btn btn-outline-info p-0 me-2" id="unreadBtn" style="width: 110px; margin-right: 30px !important;" aria-selected="false" data-status="읽지않음">읽지않음</a>
+{#                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px;" aria-selected="true" data-status="전체">전체</a>#}
+                    <div class="btn-group" role="group" aria-label="Approval Status Filter">
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary p-0" style="width: 60px;" aria-selected="false" data-status="임시">임시</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-primary p-0" style="width: 60px;" aria-selected="false" data-status="진행">진행</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-success p-0" style="width: 60px;" aria-selected="false" data-status="완료">완료</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-danger p-0" style="width: 60px;" aria-selected="false" data-status="반려">반려</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-warning p-0" style="width: 60px; margin-right: 30px !important;" aria-selected="false" data-status="참조">참조</a>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -59,7 +64,7 @@
                         </select>
                     </div>
                     <div style="padding: 0 5px 0 5px;">
-                        <div class="input-group input-daterange" style="width:300px;" title="검색기간 설정">
+                        <div class="input-group input-daterange" style="width:280px;" title="검색기간 설정">
                             <input id="date_sch_from" placeholder="시작 날짜" class="form-control btn-outline-secondary"
                                    name="date_sch_from" autocomplete="off" onchange="search_apv_click()"
                                    style="text-align: left; height: 40px;" type="text"/>
@@ -68,7 +73,7 @@
                                    style="text-align: left; height: 40px;" type="text"/>
                         </div>
                     </div>
-                    <div style="padding: 0 50px 0 5px;">
+                    <div class="px-4">
                         <div class="d-flex position-relative">
                             <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색"
                                    id="apv_all_sch" style="border-radius: 6px 0px 0px 6px;"
@@ -79,7 +84,7 @@
                                 <span class="bx bx-search-alt"></span></button>
                         </div>
                     </div>
-                    <div style="padding: 0 0 0 50px;">
+                    <div>
                         <div class="btn btn-info p-0 me-2" style="width: 100px; height: 40px;" data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성</div>
                     </div>
                 </div>
@@ -90,13 +95,13 @@
                        style="border-left: none; border-right: none;">
                     <thead>
                     <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">최종수정일</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서번호</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">최종 수정일</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서 번호</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 30%;">제목</th>
                         <th style="color: #000; font-size: medium; font-weight: bold; width: 15%;">작성자</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재상태</th>
-                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재대기</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 상태</th>
+                        <th style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
                     </tr>
                     </thead>
                     <tbody id="apv_tbody"></tbody>
@@ -129,6 +134,9 @@
     let date_sch_to = '';
     let apv_click_id = '';
     let apv_click_status = '';
+    let total_unread = '';
+    let total_next_approver = '';
+    let currentUserId = {{ request.user.id }};
     let apv_nation_data = {
         cname: 'apv_nation',  // 인스턴스 명과 일치해야함
         nation_id: 'apv_nation_id',
@@ -159,6 +167,22 @@
     function refresh() {
         location.href = "/admins/apv/";
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 페이지 로드 시 URL 파라미터 확인 후 버튼 클릭
+        if (new URLSearchParams(window.location.search).has('apv_waiting_docs')) {
+            const apvWaitBtn = document.getElementById('apvwaitBtn');
+            if (apvWaitBtn) {
+                apvWaitBtn.click();
+            }
+        }
+        if (new URLSearchParams(window.location.search).has('apv_unread_docs')) {
+            const apvWaitBtn = document.getElementById('unreadBtn');
+            if (apvWaitBtn) {
+                apvWaitBtn.click();
+            }
+        }
+    });
 
     document.querySelectorAll('.apv_status_sch').forEach(tab => {
         tab.addEventListener('click', function () {
@@ -200,11 +224,18 @@
 
     function draw_apv_table(done) {
         console.log("draw_apv_table: ", done);
+        total_unread = done.unread_docs;
+        total_next_approver = done.waiting_docs;
 
         let data = done.results;
         let num = (((apv_nation.page * 1) - 1) * apv_nation_data.page_size) + 1;
+        document.getElementById('unreadBtn').text = '읽지않음 (' + total_unread + ')';
+        document.getElementById('apvwaitBtn').text = '결재 대기 (' + total_next_approver + ')';
 
         let rows = "";
+        if (data.length === 0) {
+        rows = `<tr><td colspan="8" class="text-center">불러올 문서가 없습니다</td></tr>`;
+        }
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
 
@@ -217,18 +248,22 @@
                 badgeColor = 'bg-danger';
             }
 
-            let ccBadge = item.apv_cc.length > 0 ? '<span class="badge bg-info">참조</span>' : '';
+            let isUserInCC = item.apv_cc.some(cc => cc.user_id === currentUserId);
+            let ccBadge = isUserInCC ? '<span class="badge bg-warning" style="margin-left: 8px;">참조</span>' : '';
+            let docTitle = item.apv_status === '임시' ? item.doc_title : `${item.doc_title} &nbsp; <span class="badge text-bg-secondary" style="font-size: 10px;">${item.comment_count}</span>`;
+            let unreadClass = item.is_read ? '' : 'fw-bold bg-info-subtle';
 
             let row = `
-            <tr id='${item.id}' apv_status='${item.apv_status}' style='cursor:pointer;'>
+            <tr id='${item.id}' apv_status='${item.apv_status}' class='${unreadClass}' style='cursor:pointer;'>
+            {% comment %}<tr id='${item.id}' apv_status='${item.apv_status}' style='cursor:pointer;'>{% endcomment %}
             <td name="no" class="d-none">${num + i}</td>
             <td name='updated_at'>${item.updated_at}</td>
             <td name='doc_no'>${item.doc_no}</td>
             <td name='apv_category'>${item.apv_category.name}</td>
-            <td name='doc_title'>${item.doc_title}</td>
+            <td name='doc_title'>${docTitle}</td>
             <td name='created_by'>${item.created_by.username}</td>
-            <td name='apv_status'><span class="badge ${badgeColor}">${item.apv_status}</span></td>
-            <td name='apv_next_approver'>${item.apv_next_approver}</td>
+            <td name='apv_status'><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
+            <td name='apv_next_approver'>${item.next_approver}</td>
             </tr>`;
 
             rows += row;

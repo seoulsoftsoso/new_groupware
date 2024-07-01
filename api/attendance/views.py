@@ -176,7 +176,7 @@ class admin_work_schedule_page(ListView):
         )
 
         if search_to and search_from:
-            attendance_queryset = attendance_queryset.filter(date__lte=search_from, end_date__gte=search_to)
+            attendance_queryset = attendance_queryset.filter(date__lte=search_from, date__gte=search_to)
 
         if search_title == 'name' and search_content:
             attendance_queryset = attendance_queryset.filter(create_by__username__contains=str(search_content))

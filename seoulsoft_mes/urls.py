@@ -265,10 +265,11 @@ urlpatterns = [
     path('admins/apv/update/', ApvUpdate.as_view(), name='apv_update'),
     path('admins/apv/detail/', ApvDetail.as_view(), name='apv_detail'),
     path('admins/apv/delete/', ApvDelete.as_view(), name='apv_delete'),
+    path('admins/apv/status_update/', ApvStatusUpdate.as_view(), name='apv_delete'),
 
     path('admins/apv/comment/create/', ApvCommentCreate.as_view(), name='ApvCommentCreate'),
-    # path('admins/apv/comment/update/', ApvCommentUpdate.as_view(), name='ApvCommentUpdate'),
-    # path('admins/apv/comment/delete/', ApvCommentDelete.as_view(), name='ApvCommentDelete'),
+    path('admins/apv/comment/update/', ApvCommentUpdate.as_view(), name='ApvCommentUpdate'),
+    path('admins/apv/comment/delete/', ApvCommentDelete.as_view(), name='ApvCommentDelete'),
 
     path('admins/apv/category/', ApvCategoryList.as_view(), name='apv_category'),
     path('admins/apv/category/<str:category_no>/', apv_template_view, name='ApvTemplateView'),

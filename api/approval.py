@@ -3,9 +3,8 @@ from django.views import View
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db import transaction, DatabaseError
-from django.db.models import Q
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments
+from django.db.models import Q, OuterRef, Subquery
+from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, ApvReadStatus, NotiCenter
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
@@ -28,16 +27,19 @@ class ApvListView(View):
 
         qs = ApvMaster.objects.filter().order_by('-updated_at', '-doc_no')
 
-
         # 사용자의 권한에 따라 필터링
         if user.is_authenticated:
             if user.is_superuser:  # 슈퍼유저는 모든 게시물 조회 가능
                 pass
 
-            # elif user.department_position:
-            #     qs = qs.filter(created_by__department_position=user.department_position)
+            else:
+                # 임시 상태의 문서를 해당 사용자만 볼 수 있도록 필터링, 삭제 상태의 문서를 목록에서 제외
+                qs = qs.filter(
+                    Q(created_by=user) |
+                    ~Q(apv_status='임시')
+                ).exclude(apv_status='삭제')
 
-            else:  # 사용자가 생성한 게시물, cc_list에 포함된 게시물, 승인자로 포함된 게시물만 필터링
+                # 사용자가 생성한 게시물, cc_list에 포함된 게시물, 승인자로 포함된 게시물만 필터링
                 qs = qs.filter(
                     Q(created_by=user) |
                     Q(apv_docs_cc__user=user) |
@@ -52,6 +54,11 @@ class ApvListView(View):
         else:  # 인증되지 않은 사용자는 아무 게시물도 조회할 수 없음
             qs = qs.none()
 
+        # 사용자가 읽은 게시물 ID 목록, 읽지않음과 결재대기 건수
+        read_status = ApvReadStatus.objects.filter(user=user).values_list('document_id', flat=True)
+        read_documents = set(read_status)
+        unread_docs = qs.exclude(id__in=read_documents).count()
+        waiting_docs = qs.filter(id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user]).count()
 
         # 기간 검색
         if date_sch_from:
@@ -69,18 +76,28 @@ class ApvListView(View):
                 keyword = keyword.strip()
                 if keyword:
                     search_condition = (
-                            Q(doc_no__icontains=keyword) |
-                            Q(doc_title__icontains=keyword) |
-                            Q(created_by__username__icontains=keyword) |
-                            Q(apv_category__name__icontains=keyword)
+                        Q(doc_no__icontains=keyword) |
+                        Q(doc_title__icontains=keyword) |
+                        Q(created_by__username__icontains=keyword) |
+                        Q(apv_category__name__icontains=keyword)
                     )
                     search_conditions |= search_condition
             qs = qs.filter(search_conditions)
 
         # 결재상태 검색
         apv_status_sch = request.GET.get('apv_status_sch', '')
-        if apv_status_sch and apv_status_sch != '전체':
-            qs = qs.filter(apv_status=apv_status_sch)
+        if apv_status_sch:
+            if apv_status_sch == '참조':
+                qs = qs.filter(apv_docs_cc__user=user)
+            elif apv_status_sch == '내문서':
+                qs = qs.filter(created_by_id=user)
+            elif apv_status_sch == '결재대기':
+                qs = qs.filter(id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user])
+            elif apv_status_sch == '읽지않음':
+                subquery = ApvReadStatus.objects.filter(document=OuterRef('pk'), user=user)
+                qs = qs.filter(Q(apv_docs_check__is_read=False, apv_docs_check__user=user) | ~Q(id__in=subquery.values('document')))
+            elif apv_status_sch in ['임시', '진행', '완료', '반려']:
+                qs = qs.filter(apv_status=apv_status_sch).exclude(apv_docs_cc__user=user)
 
         if _page == '' or _size == '':
             results = [get_obj(row) for row in qs]
@@ -108,15 +125,30 @@ class ApvListView(View):
                 'username': cc.user.username if cc.user else '',
             } for cc in cc_list]
 
+            comments = ApvComment.objects.filter(document=row)
+            comment_data = comments.count()
+
             result = get_obj(row)
             result['apv_cc'] = cc_data
+            result['comment_count'] = comment_data
+            result['is_read'] = row.id in read_documents
+            if row.apv_status == '진행':
+                next_approver = ApvDetail.get_next_approver(row)
+                result['next_approver'] = (
+                            next_approver.username + ' ' + next_approver.job_position.name) if next_approver else ''
+                result['next_approver_id'] = next_approver.id if next_approver else ''
+            else:
+                result['next_approver'] = ''
+                result['next_approver_id'] = ''
             results.append(result)
 
         context = {
             'count': qs_ps.paginator.count,
             'previous': url_pre,
             'next': url_next,
-            'results': results
+            'results': results,
+            'unread_docs': unread_docs,
+            'waiting_docs': waiting_docs,
         }
 
         return JsonResponse(context, safe=False)
@@ -124,11 +156,35 @@ class ApvListView(View):
 
 
 class ApvDetail(View):
-    @transaction.atomic
     def get(self, request, *args, **kwargs):
+        user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=user_id)
         apv_id = request.GET.get('apv_id', '')
+
         if apv_id:
-            apv_master = ApvMaster.objects.get(id=apv_id)
+            apv_master = get_object_or_404(ApvMaster, id=apv_id)
+
+            # 권한 검사: 슈퍼유저, 생성자, CC 리스트에 포함된 사용자, 승인자로 포함된 사용자
+            if apv_master.apv_status == '임시':
+                is_authorized = user.is_superuser or apv_master.created_by == user
+            else:
+                is_authorized = (
+                        user.is_superuser or
+                        apv_master.created_by == user or
+                        apv_master.apv_docs_cc.filter(user=user).exists() or
+                        apv_master.apv_docs_approvers.filter(
+                            Q(approver1=user) |
+                            Q(approver2=user) |
+                            Q(approver3=user) |
+                            Q(approver4=user) |
+                            Q(approver5=user) |
+                            Q(approver6=user)
+                        ).exists()
+                )
+
+            if not is_authorized:
+                return JsonResponse({'error': 'Forbidden'}, status=403)
+
             qs = [apv_master]
 
             # 세부항목 로딩
@@ -145,71 +201,41 @@ class ApvDetail(View):
             } for item in sub_items]
 
             # approver 로딩
-            approvers = ApvApprover.objects.filter(document=apv_master)
+            approvers = ApvApprover.objects.filter(document=apv_master).select_related(
+                'approver1', 'approver2', 'approver3', 'approver4', 'approver5', 'approver6'
+            )
 
             approver_data = []
+            next_approver = None
+
             for approver in approvers:
                 data = {}
                 for i in range(1, 7):
                     approver_obj = getattr(approver, f'approver{i}', None)
+                    status = getattr(approver, f'approver{i}_status', None)
                     if approver_obj is not None:
-                        data[f'approver{i}_id'] = approver_obj.id
-                        data[f'approver{i}_name'] = f"{approver_obj.username} {approver_obj.job_position.name}"
-                        profile_image = getattr(approver_obj, 'profile_image', None)
-                        data[f'approver{i}_img'] = profile_image.url if profile_image else None
-                        data[f'approver{i}_team'] = approver_obj.department_position.name
-                        data[f'approver{i}_status'] = getattr(approver, f'approver{i}_status', None)
-                        data[f'approver{i}_date'] = getattr(approver, f'approver{i}_date', None)
+                        data.update({
+                            f'approver{i}_id': approver_obj.id,
+                            f'approver{i}_name': f"{approver_obj.username} {approver_obj.job_position.name}",
+                            f'approver{i}_img': approver_obj.profile_image.url if approver_obj.profile_image else None,
+                            f'approver{i}_team': approver_obj.department_position.name,
+                            f'approver{i}_status': status,
+                            f'approver{i}_date': getattr(approver, f'approver{i}_date', None)
+                        })
                     else:
-                        data[f'approver{i}_id'] = None
-                        data[f'approver{i}_name'] = None
-                        data[f'approver{i}_img'] = None
-                        data[f'approver{i}_team'] = None
-                        data[f'approver{i}_status'] = None
-                        data[f'approver{i}_date'] = None
+                        data.update({
+                            f'approver{i}_id': None,
+                            f'approver{i}_name': None,
+                            f'approver{i}_img': None,
+                            f'approver{i}_team': None,
+                            f'approver{i}_status': None,
+                            f'approver{i}_date': None
+                        })
+
+                    if status == '대기' and next_approver is None:
+                        next_approver = approver_obj.id
 
                 approver_data.append(data)
-
-            # approver_data = []
-            # for approver in approvers:
-            #     approver_data.append({
-            #         'approver1_id': approver.approver1.id if approver.approver1 is not None else None,
-            #         'approver1_name': approver.approver1.username + ' ' + approver.approver1.job_position.name if approver.approver1 is not None else None,
-            #         'approver1_img': approver.approver1.profile_image.url if approver.approver1 is not None else None,
-            #         'approver1_team': approver.approver1.department_position.name if approver.approver1 is not None else None,
-            #         'approver1_status': approver.approver1_status,
-            #         'approver1_date': approver.approver1_date,
-            #         'approver2_id': approver.approver2.id if approver.approver2 is not None else None,
-            #         'approver2_name': approver.approver2.username + ' ' + approver.approver2.job_position.name if approver.approver2 is not None else None,
-            #         'approver2_img': approver.approver2.profile_image.url if approver.approver2 is not None else None,
-            #         'approver2_team': approver.approver2.department_position.name if approver.approver2 is not None else None,
-            #         'approver2_status': approver.approver2_status,
-            #         'approver2_date': approver.approver2_date,
-            #         'approver3_id': approver.approver3.id if approver.approver3 is not None else None,
-            #         'approver3_name': approver.approver3.username + ' ' + approver.approver3.job_position.name if approver.approver3 is not None else None,
-            #         'approver3_img': approver.approver3.profile_image.url if approver.approver3 is not None else None,
-            #         'approver3_team': approver.approver3.department_position.name if approver.approver3 is not None else None,
-            #         'approver3_status': approver.approver3_status,
-            #         'approver3_date': approver.approver3_date,
-            #         'approver4_id': approver.approver4.id if approver.approver4 is not None else None,
-            #         'approver4_name': approver.approver4.username + ' ' + approver.approver4.job_position.name if approver.approver4 is not None else None,
-            #         'approver4_img': approver.approver4.profile_image.url if approver.approver4 is not None else None,
-            #         'approver4_team': approver.approver4.department_position.name if approver.approver4 is not None else None,
-            #         'approver4_status': approver.approver4_status,
-            #         'approver4_date': approver.approver4_date,
-            #         'approver5_id': approver.approver5.id if approver.approver5 is not None else None,
-            #         'approver5_name': approver.approver5.username + ' ' + approver.approver5.job_position.name if approver.approver5 is not None else None,
-            #         'approver5_img': approver.approver5.profile_image.url if approver.approver5 is not None else None,
-            #         'approver5_team': approver.approver5.department_position.name if approver.approver5 is not None else None,
-            #         'approver5_status': approver.approver5_status,
-            #         'approver5_date': approver.approver5_date,
-            #         'approver6_id': approver.approver6.id if approver.approver6 is not None else None,
-            #         'approver6_name': approver.approver6.username + ' ' + approver.approver6.job_position.name if approver.approver6 is not None else None,
-            #         'approver6_img': approver.approver6.profile_image.url if approver.approver6 is not None else None,
-            #         'approver6_team': approver.approver6.department_position.name if approver.approver6 is not None else None,
-            #         'approver6_status': approver.approver6_status,
-            #         'approver6_date': approver.approver6_date,
-            #     })
 
             # cc목록 로딩
             cc_list = ApvCC.objects.filter(document=apv_master)
@@ -230,6 +256,7 @@ class ApvDetail(View):
             # 댓글 로딩
             comments = ApvComment.objects.filter(document=apv_master)
             comment_data = [{
+                'id': comment.id,
                 'content': comment.content,
                 'created_by': {
                     'id': comment.created_by.id,
@@ -240,6 +267,8 @@ class ApvDetail(View):
                 'updated_at': comment.updated_at,
             } for comment in comments]
 
+        # 읽음 상태 업데이트
+        ApvReadStatus.objects.update_or_create(user=user, document=apv_master, defaults={'is_read': True})
 
         results = [get_obj(row) for row in qs]
         for result in results:
@@ -250,11 +279,94 @@ class ApvDetail(View):
             result['comments'] = comment_data
 
         context = {
-            'results': results
+            'results': results,
+            'current_user_id': user.id,
+            'next_approver': next_approver,
         }
 
         return JsonResponse(context, safe=False)
 
+    def post(self, request, *args, **kwargs):
+        user_id = request.COOKIES.get("user_id")
+        if not user_id:
+            return JsonResponse({'error': 'User ID not found in cookies'}, status=400)
+
+        user = get_object_or_404(UserMaster, id=user_id)
+        apv_id = request.POST.get('apv_id', '')
+        if not apv_id:
+            return JsonResponse({'error': 'APV ID is required'}, status=400)
+
+        apv_master = get_object_or_404(ApvMaster, id=apv_id)
+        approver_action = request.POST.get('approver_action', '')
+
+        # 기안취소
+        if approver_action == 'return_temp':
+            self.reset_approver_status(apv_master)
+            apv_master.apv_status = '임시'
+            apv_master.save()
+            ApvReadStatus.objects.filter(document=apv_master).delete()
+            return JsonResponse({'success': 'Status updated to 임시 and all approvals reset to 대기'}, status=200)
+
+        # 승인 버튼을 누른 사용자가 다음 승인자인지 확인
+        next_approver = self.get_next_approver(apv_master)
+        if next_approver.id != user.id:
+            return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+        # 승인을 전달받을때
+        if approver_action == 'approve':
+            updated = self.update_approver_status(apv_master, user, '승인')
+            if not updated:
+                return JsonResponse({'error': 'Failed to update status'}, status=500)
+
+            next_approver = self.get_next_approver(apv_master)
+            if next_approver is None:
+                apv_master.apv_status = '완료'
+                apv_master.save()
+
+            return JsonResponse({'success': 'Status updated'}, status=200)
+
+        # 반려를 전달받을때
+        elif approver_action == 'reject':
+            updated = self.update_approver_status(apv_master, user, '반려')
+            if updated:
+                apv_master.apv_status = '반려'
+                apv_master.save()
+
+            if not updated:
+                return JsonResponse({'error': 'Failed to update status'}, status=500)
+            return JsonResponse({'success': 'Status updated to 반려'}, status=200)
+
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+
+    @staticmethod
+    def get_next_approver(apv_master):
+        approvers = ApvApprover.objects.filter(document=apv_master)
+        for approver in approvers:
+            for i in range(1, 7):
+                status = getattr(approver, f'approver{i}_status', None)
+                approver_obj = getattr(approver, f'approver{i}', None)
+                if status == '대기':
+                    return approver_obj
+        return None
+
+    def update_approver_status(self, apv_master, user, status):
+        approvers = ApvApprover.objects.filter(document=apv_master)
+        for approver in approvers:
+            for i in range(1, 7):
+                approver_obj = getattr(approver, f'approver{i}', None)
+                if approver_obj == user:
+                    setattr(approver, f'approver{i}_status', status)
+                    approver.save()
+                    return True
+        return False
+
+    def reset_approver_status(self, apv_master):
+        approvers = ApvApprover.objects.filter(document=apv_master)
+        for approver in approvers:
+            for i in range(1, 7):
+                setattr(approver, f'approver{i}_status', '대기')
+            approver.save()
 
 
 class ApvCreate(View):
@@ -313,6 +425,9 @@ class ApvCreate(View):
                 ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
 
             self.save_attachments(request, ApvMaster_obj)
+
+            # 본인이 작성한 글은 항상 is_read가 True
+            ApvReadStatus.objects.create(user=user, document=ApvMaster_obj, is_read=True)
 
             if ApvMaster_obj:
                 context = get_res(context, ApvMaster_obj)
@@ -536,6 +651,7 @@ def get_obj(obj):
         } if obj.apv_category else '',
         'apv_status': obj.apv_status if obj.apv_status is not None else '',
         'created_by': {
+            'id': obj.created_by.id,
             'username': obj.created_by.username,
             'department_position': obj.created_by.department_position.name,
             'profile_image': obj.created_by.profile_image.url,
@@ -561,6 +677,32 @@ def get_obj(obj):
     }
 
 
+class ApvStatusUpdate(View):
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        user_id = request.COOKIES.get("user_id")
+        if not user_id:
+            return JsonResponse({'error': 'User not authenticated'}, status=403)
+
+        user = get_object_or_404(UserMaster, id=user_id)
+        apv_id = request.POST.get('apv_id')
+        new_status = request.POST.get('apv_status')
+
+        if not apv_id or not new_status:
+            return JsonResponse({'error': 'Invalid request'}, status=400)
+
+        apv_master = get_object_or_404(ApvMaster, id=apv_id)
+
+        # 권한 검사: 슈퍼유저이거나 생성자이거나 다른 특정 권한이 있는 사용자만 상태 변경 가능
+        if not (user.is_superuser or apv_master.created_by == user):
+            return JsonResponse({'error': 'Permission denied'}, status=403)
+
+        apv_master.apv_status = new_status
+        apv_master.save()
+
+        return JsonResponse({'success': True, 'new_status': apv_master.apv_status})
+
+
 class ApvCategoryList(View):
     def get(self, request, *args, **kwargs):
         qs = ApvCategory.objects.all().order_by('name')
@@ -576,12 +718,14 @@ class ApvCommentCreate(View):
         user = get_object_or_404(UserMaster, id=user_id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
-        document = request.POST.get('document', '')
+        document_id = request.POST.get('document', '')
         content = request.POST.get('content', '')
 
         context = {}
 
         try:
+            document = get_object_or_404(ApvMaster, id=document_id)
+
             ApvComment_obj = ApvComment.objects.create(
                 document=document,
                 content=content,
@@ -591,7 +735,7 @@ class ApvCommentCreate(View):
             )
 
             if ApvComment_obj:
-                context = get_res(context, ApvComment_obj)
+                context = get_res_comment(context, ApvComment_obj)
             else:
                 msg = "등록 실패했습니다.\n"
                 return JsonResponse({'error': True, 'message': msg})
@@ -609,64 +753,83 @@ class ApvCommentCreate(View):
         return JsonResponse(context)
 
 
-# class ApvCommentUpdate(View):
-#     def get(self, request, pk):
-#         comment = get_object_or_404(ApvComment, pk=pk)
-#         form = ApvCommentForm(instance=comment)
-#         return render(request, 'approval/apv_progress.html', {'form': form})
-#
-#     def post(self, request, pk):
-#         comment = get_object_or_404(ApvComment, pk=pk)
-#         form = ApvCommentForm(request.POST, instance=comment)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('apv_comment_list')
-#         return render(request, 'approval/apv_progress.html', {'form': form})
-#
-#
-# class ApvCommentDelete(View):
-#     def get(self, request, pk):
-#         comment = get_object_or_404(ApvComment, pk=pk)
-#         return render(request, 'approval/apv_progress.html', {'comment': comment})
-#
-#     def post(self, request, pk):
-#         comment = get_object_or_404(ApvComment, pk=pk)
-#         comment.delete()
-#         return redirect('apv_comment_list')
+def get_res_comment(context, comment):
+    context['id'] = comment.id
+    context['document_id'] = comment.document.id
+    context['content'] = comment.content
+    context['created_by'] = {
+        'id': comment.created_by.id,
+        'username': comment.created_by.username,
+        'profile_image': comment.created_by.profile_image.url if comment.created_by.profile_image else '',
+    }
+    context['created_at'] = comment.created_at
+    context['updated_at'] = comment.updated_at
+
+    return context
 
 
+class ApvCommentUpdate(View):
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=user_id)
+        d_today = datetime.today().strftime('%Y-%m-%d')
+
+        comment_id = request.POST.get('comment_id', '')
+        content = request.POST.get('content', '')
+
+        if not comment_id:
+            return JsonResponse({'error': True, 'message': '댓글 ID가 필요합니다.'})
+
+        context = {}
+
+        try:
+            comment = get_object_or_404(ApvComment, id=comment_id)
+
+            if comment.created_by != user:
+                return JsonResponse({'error': True, 'message': '수정 권한이 없습니다.'})
+
+            comment.content = content
+            comment.updated_at = d_today
+            comment.save()
+
+            context = get_res_comment(context, comment)
+
+        except Exception as e:
+            print('Exception 오류 발생')
+            print(e)
+            msg = "입력한 데이터에 오류가 존재합니다.\n"
+            for i in e.args:
+                if i == 1062:
+                    msg = '중복된 데이터가 존재합니다.'
+
+            return JsonResponse({'error': True, 'message': msg})
+
+        return JsonResponse(context)
 
 
-# class ApproveDocumentView(View):
-#     def post(self, request, *args, **kwargs):
-#         doc_id = self.kwargs.get('pk')
-#         document = get_object_or_404(ApvMaster, pk=doc_id)
-#         approver = document.apv_docs.filter(approver=request.user).first()
-#
-#         if approver and approver.approver_status != 'approved':
-#             approver.approver_status = 'approved'
-#             approver.approver_date = datetime.now()
-#             approver.save()
-#
-#             # 모든 승인자가 승인했는지 확인
-#             if all(a.approver_status == 'approved' for a in document.apv_docs.all()):
-#                 document.apv_status = 'approved'
-#                 document.save()
-#
-#         return JsonResponse({'status': 'success'})
-#
-#
-# class RejectDocumentView(View):
-#     def post(self, request, *args, **kwargs):
-#         doc_id = self.kwargs.get('pk')
-#         document = get_object_or_404(ApvMaster, pk=doc_id)
-#         approver = document.apv_docs.filter(approver=request.user).first()
-#
-#         if approver and approver.approver_status != 'rejected':
-#             approver.approver_status = 'rejected'
-#             approver.approver_date = datetime.now()
-#             approver.save()
-#             document.apv_status = 'rejected'
-#             document.save()
-#
-#         return JsonResponse({'status': 'success'})
+class ApvCommentDelete(View):
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=user_id)
+
+        comment_id = request.POST.get('comment_id', '')
+
+        if not comment_id:
+            return JsonResponse({'error': True, 'message': '댓글 ID가 필요합니다.'})
+
+        try:
+            comment = get_object_or_404(ApvComment, id=comment_id)
+
+            if comment.created_by != user:
+                return JsonResponse({'error': True, 'message': '삭제 권한이 없습니다.'})
+
+            comment.delete()
+
+            return JsonResponse({'success': True, 'message': '댓글이 삭제되었습니다.'})
+
+        except Exception as e:
+            print('Exception 오류 발생')
+            print(e)
+            return JsonResponse({'error': True, 'message': '댓글 삭제 중 오류가 발생했습니다.'})

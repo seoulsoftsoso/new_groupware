@@ -631,30 +631,35 @@ class ApvComment(models.Model):
 
 
 class ApvApprover(models.Model):
+    APPROVER_STATUS_CHOICES = [
+        ('waiting', '대기'),
+        ('approved', '완료'),
+        ('rejected', '반려'),
+    ]
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_approvers')
     approver1 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver1', null=True,
                                   blank=True)
-    approver1_status = models.CharField(max_length=50, null=True, blank=True)
+    approver1_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver1_date = models.DateField(null=True, blank=True)
     approver2 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver2', null=True,
                                   blank=True)
-    approver2_status = models.CharField(max_length=50, null=True, blank=True)
+    approver2_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver2_date = models.DateField(null=True, blank=True)
     approver3 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver3', null=True,
                                   blank=True)
-    approver3_status = models.CharField(max_length=50, null=True, blank=True)
+    approver3_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver3_date = models.DateField(null=True, blank=True)
     approver4 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver4', null=True,
                                   blank=True)
-    approver4_status = models.CharField(max_length=50, null=True, blank=True)
+    approver4_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver4_date = models.DateField(null=True, blank=True)
     approver5 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver5', null=True,
                                   blank=True)
-    approver5_status = models.CharField(max_length=50, null=True, blank=True)
+    approver5_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver5_date = models.DateField(null=True, blank=True)
     approver6 = models.ForeignKey(UserMaster, on_delete=models.SET_NULL, related_name='approver6', null=True,
                                   blank=True)
-    approver6_status = models.CharField(max_length=50, null=True, blank=True)
+    approver6_status = models.CharField(max_length=10, choices=APPROVER_STATUS_CHOICES, null=True, blank=True)
     approver6_date = models.DateField(null=True, blank=True)
 
 
@@ -667,3 +672,13 @@ class ApvReadStatus(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apv_docs_check')
     user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='read_users')
     is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class NotiCenter(models.Model):
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE, related_name='noti_user')
+    apv_docs = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='noti_apv_docs', null=True, blank=True)
+    content = models.CharField(max_length=255, null=True, blank=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
