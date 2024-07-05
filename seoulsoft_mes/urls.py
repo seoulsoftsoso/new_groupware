@@ -257,8 +257,9 @@ urlpatterns = [
 
     # 전자결재
     path('admins/apv/', apv_list, name='apv_list'),
-    path('admins/apv/temp_update/<str:document_id>/', apv_temp_update, name='apv_temp_update'),
-    path('admins/apv/progress/<str:document_id>/', apv_progress, name='apv_progress'),
+    path('admins/apv/docs_create/<str:category_no>/', apv_docs_create, name='apv_docs_create'),
+    path('admins/apv/docs_create/<str:category_no>/<str:document_id>/', apv_docs_create, name='apv_docs_update'),
+    path('admins/apv/progress/<str:category_no>/<str:document_id>/', apv_docs_progress, name='apv_docs_progress'),
 
     path('admins/apv/get/', ApvListView.as_view(), name='apv_get_data'),
     path('admins/apv/create/', ApvCreate.as_view(), name='apv_create'),
@@ -272,8 +273,7 @@ urlpatterns = [
     path('admins/apv/comment/delete/', ApvCommentDelete.as_view(), name='ApvCommentDelete'),
 
     path('admins/apv/category/', ApvCategoryList.as_view(), name='apv_category'),
-    path('admins/apv/category/<str:category_no>/', apv_template_view, name='ApvTemplateView'),
-    path('admins/apv/detail_temp/<str:category_no>/', apv_template_detail, name='ApvTemplateView'),
+    # path('admins/apv/detail_temp/<str:category_no>/', apv_template_detail, name='ApvTemplateView'),
 
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

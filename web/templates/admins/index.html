@@ -113,6 +113,14 @@
                                         <h6 style="color: darkred; font-weight: bold;">읽지않은 문서 : {{ unread_docs }}건</h6>
                                     {% endif %}
                                 </a>
+                                <hr>
+                                <a href="#" class="apv_my_temp_docs">
+                                    {% if my_temp_docs is 0 %}
+                                        <h6>작성중인 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">작성중인 문서 : {{ my_temp_docs }}건</h6>
+                                    {% endif %}
+                                </a>
                             </blockquote>
                         </div>
                     </div>
@@ -747,6 +755,10 @@
         document.querySelector('.apv_unread_docs').addEventListener('click', function (event) {
             event.preventDefault();
             window.location.href = "/admins/apv/?apv_unread_docs=true";
+        });
+        document.querySelector('.apv_my_temp_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_my_temp_docs=true";
         });
     });
 

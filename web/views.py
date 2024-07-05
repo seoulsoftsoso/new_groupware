@@ -18,6 +18,7 @@ from django.core.exceptions import PermissionDenied
 from django.conf.urls import handler403
 from django.contrib import messages
 import requests
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 
 
 class DateDiff(Func):
@@ -62,7 +63,7 @@ def admin_index_page(request):
     # 나의 결재
     # user_id = request.COOKIES["user_id"]
     user = get_object_or_404(UserMaster, id=request.user.id)
-    qs = ApvMaster.objects.filter()
+    qs = ApvMaster.objects.filter().exclude(apv_status='삭제')
 
     # 사용자의 권한에 따라 필터링
     if user.is_authenticated:
@@ -97,6 +98,7 @@ def admin_index_page(request):
     read_status = ApvReadStatus.objects.filter(user=user).values_list('document_id', flat=True)
     read_documents = set(read_status)
     unread_docs = qs.exclude(id__in=read_documents).count()
+    my_temp_docs = qs.filter(apv_status='임시').exclude(apv_docs_cc__user=user).count()
 
     type = request.GET.get('param', None)
     employee_list = get_member_info(type)
@@ -109,6 +111,7 @@ def admin_index_page(request):
         'today_about': today_about,
         'waiting_docs': waiting_docs,
         'unread_docs': unread_docs,
+        'my_temp_docs': my_temp_docs,
     }
 
     return render(request, 'admins/index.html', context)
@@ -499,10 +502,6 @@ def user_authority_page(request):
     return render(request, 'admins/administrator/user_authority/user_authority.html', context)
 
 
-# def test_form(request):
-#     context = {}
-#     return render(request, 'admins/administrator/test_form.html', context)
-
 
 def check_story_admin(user):
     if user.story_admin:
@@ -524,50 +523,49 @@ def permission_denied_view(request, exception):
 handler403 = permission_denied_view
 
 
+
 def apv_list(request):
     context = {}
     return render(request, 'approval/apv_list.html', context)
 
 
-def apv_temp_update(request, document_id):
-    context = {
-        'document_id': document_id
-    }
-    return render(request, 'approval/apv_temp_update.html', context)
+def apv_docs_create(request, category_no, document_id=None):
+    if document_id:
+        # 업데이트
+        apv_document = get_object_or_404(ApvMaster, id=document_id)
+        apv_status = apv_document.apv_status
+        if apv_status != '임시':
+            return HttpResponseForbidden("잘못된 요청입니다.")
+    else:
+        # 신규생성
+        apv_document = None
 
-
-def apv_progress(request, document_id):
-    context = {
-        'document_id': document_id
-    }
-    return render(request, 'approval/apv_progress.html', context)
-
-
-def apv_template_view(request, category_no):
-    # user_id = request.COOKIES["user_id"]
     user = get_object_or_404(UserMaster, id=request.user.id)
     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111, user.id])
                      .order_by('department_position', 'username'))
     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
-
     leave_choices = ApvMaster.LEAVE_CHOICES
+    category_name = ApvCategory.objects.get(id=category_no).name
     create_template = 'approval/template_' + category_no + '_create.html'
     context = {
         'category_no': category_no,
+        'category_name': category_name,
+        'document_id': document_id,
         'leave_choices': leave_choices,
         'approver_list': approver_choices,
+        'apv_document': apv_document,
     }
     return render(request, create_template, context)
 
 
-def apv_template_detail(request, category_no):
+def apv_docs_progress(request, category_no, document_id):
     approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
                      .order_by('department_position', 'username'))
     approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
-
     leave_choices = ApvMaster.LEAVE_CHOICES
     detail_template = 'approval/template_' + category_no + '_detail.html'
     context = {
+        'document_id': document_id,
         'category_no': category_no,
         'leave_choices': leave_choices,
         'approver_list': approver_choices,

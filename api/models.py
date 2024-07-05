@@ -557,6 +557,8 @@ class StoryLikes(models.Model):
 # 전자결재
 class ApvCategory(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    desc = models.CharField(max_length=255, null=True, blank=True)
+    custom_order = models.IntegerField(null=True, blank=True)
 
 
 class ApvMaster(models.Model):
@@ -613,12 +615,12 @@ class ApvAttachments(models.Model):
 class ApvSubItem(models.Model):
     document = models.ForeignKey(ApvMaster, on_delete=models.CASCADE, related_name='apc_docs_items')
     item_no = models.IntegerField()
-    desc1 = models.CharField(max_length=255)
-    desc2 = models.CharField(max_length=255)
-    desc3 = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    qty = models.DecimalField(max_digits=10, decimal_places=2)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    desc1 = models.CharField(max_length=255, null=True, blank=True)
+    desc2 = models.CharField(max_length=255, null=True, blank=True)
+    desc3 = models.CharField(max_length=255, null=True, blank=True)
+    price = models.BigIntegerField(null=True, blank=True)
+    qty = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     remarks = models.TextField(blank=True, null=True)
 
 
