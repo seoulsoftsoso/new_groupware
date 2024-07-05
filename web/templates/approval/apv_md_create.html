@@ -21,40 +21,24 @@
         border-color: #0079fb;
         color: #ffffff;
     }
-
-    .list-group-item.active {
-        background-color: #0079fb !important;
-        border-color: #0079fb !important;
-        color: #ffffff !important;
-    }
 </style>
 
 <div class="modal-content">
     <div class="modal-header" style="background:white; height: 50px;">
         <strong style="color: #000; font-size: x-large; margin: 10px 0 0 20px; font-family: Pretendard;">신규 결재 작성</strong></a>
     </div>
-    <div class="modal-body w-100 d-flex" style="height:750px;">
+    <div class="modal-body w-100 d-flex" style="height:500px;">
         <!-- 결재 종류 선택 영역 -->
-        <div class="col-12 d-flex">
-            <div class="col-2">
-                <div class="d-flex align-items-center p-2">
-                    <i class="fa-regular fa-folder-open fa-lg" style="color: #000;"></i>
-                    <span style="color: #000; font-size: 18px; padding-left: 10px;">결재양식 선택</span>
-                </div>
-                <div class="p-1" id="category_list"
-                     style="border: 1px solid #ddd; width:80%; max-height: 600px; overflow-y: auto;"></div>
+        <div>
+            <div class="d-flex align-items-center p-2">
+                <i class="fa-regular fa-folder-open fa-lg" style="color: #000;"></i>
+                <span style="color: #000; font-size: 18px; padding-left: 10px;">결재양식 선택</span>
             </div>
-            <div class="col-10">
-                <div id="template_include" data-temp-update="template_temp_update" style="overflow-y: auto;">
-                    <div class="d-flex justify-content-center" style="margin-top: 25%;">결재양식을 선택해 주세요</div>
-                </div>
-            </div>
+            <div class="p-2" id="category_list" style="border: 1px solid #ddd; max-height: 400px; overflow-y: auto;"></div>
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-end">
         <div class="col-6 d-flex justify-content-end">
-            <div type="button" class="btn btn-outline-secondary mx-2" style="width: 150px;" onclick="apv_modal_tempsave()"> 임시 저장 </div>
-            <div type="button" class="btn btn-outline-info mx-2" style="width: 150px;" onclick="apv_modal_send_progress()"> 결재 전송 </div>
             <div type="button" class="btn btn-outline-danger mx-2" style="width: 150px;" data-bs-dismiss="modal"> 닫기 </div>
         </div>
     </div>
@@ -77,451 +61,40 @@
             categoryList.innerHTML = ''; // 기존 항목 초기화
 
             done.forEach(category => {
-                let listItem = document.createElement('a');
-                listItem.className = 'list-group-item list-group-item-action';
-                listItem.textContent = ' ' + category.name;
-                listItem.href = "javascript:void(0);";
-
-                let icon = document.createElement('i');
-                icon.className = 'fa-regular fa-file';
-                listItem.prepend(icon);
-
-                listItem.onclick = function () {
-                    if (confirm(`${category.name} 전자결재를 작성하시겠습니까?\n현재 작성중인 문서는 초기화됩니다.`)) {
-                        document.querySelectorAll('.list-group-item').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        this.classList.add('active');
-
-                        categoryName = category.name;
-                        categoryId = category.id;
-
-                        loadCategoryTemplate();
-                    }
-                };
+                let listItem = createCategoryItem(category);
                 categoryList.appendChild(listItem);
             });
+        }, (error) => {
+            console.error("Error fetching categories:", error);
+            alert("카테고리를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
         });
     }
 
-    function loadCategoryTemplate() {
-        fetch(`category/${categoryId}`)
-            .then(response => response.text())
-            .then(templateCreate => {
-                document.getElementById('template_include').innerHTML = templateCreate;
-                loadTemplateScripts();
-            })
-            .catch(error => {
-                console.error('Error loading category detail:', error);
-            });
-    }
+    function createCategoryItem(category) {
+        let listItem = document.createElement('a');
+        listItem.className = 'list-group-item list-group-item-action';
+        listItem.href = "javascript:void(0);";
+        listItem.style.border = "1px solid #ddd";
+        listItem.style.borderRadius = "6px";
+        listItem.style.padding = "15px";
+        listItem.style.marginBottom = "10px";
+        listItem.style.display = "block";
 
-    function loadTemplateScripts() {
-        $(document).ready(function () {
-            $('#period_from, #period_to').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-            });
+        listItem.innerHTML = `
+            <i class="fa-regular fa-file" style="margin-right: 5px;"></i>
+            <span style="font-weight: bold;">${category.name}</span>
+            <div class="category-description" style="font-size: 14px; margin-top: 10px;">${category.desc}</div>
+        `;
 
-            $('#period_from, #period_to, #period_from_half, #period_to_half').change(function () {
-                updatePeriodToOptions();
-                calculatePeriod();
-            });
-            updatePeriodToOptions();
-        });
-
-        loadCreateDate();
-        checkApproverList();
-    }
-
-    function checkApproverList() {
-        let approvers = ['approver1', 'approver2', 'approver3', 'approver4', 'approver5', 'approver6'];
-        approvers.forEach(function(approverId) {
-            document.getElementById(approverId).addEventListener('blur', function() {
-                let input = this.value;
-                let dataList = document.getElementById('approver_list');
-                let options = Array.from(dataList.options).map(option => option.value);
-
-                if (!options.includes(input) && input !== "") {
-                    alert('입력된 값이 정확하지 않습니다. 드랍다운목록에서 선택해주시기 바랍니다.');
-                    this.value = ''; // 입력된 값을 초기화
-                }
-            });
-        });
-    }
-
-
-    function loadCreateDate() {
-        let createDateInput = document.getElementById('create_date');
-        let days = ['일', '월', '화', '수', '목', '금', '토'];
-        let now = new Date();
-        let year = now.getFullYear();
-        let month = ('0' + (now.getMonth() + 1)).slice(-2);
-        let day = ('0' + now.getDate()).slice(-2);
-        let weekDay = days[now.getDay()];
-        let formattedDate = year + '-' + month + '-' + day + ' (' + weekDay + ')';
-        let simepleDate = year.toString().slice(-2) + month + day
-        createDateInput.value = formattedDate;
-
-        document.getElementById('username_md').value = loginInfo.username;
-        document.getElementById('team').value = loginInfo.department_position_name;
-        if (categoryName === "휴가신청서") {
-            document.getElementById('doc_title').value = '[' + categoryName + '] ' + loginInfo.department_position_name + ' ' + loginInfo.username + ' ' + simepleDate;
-        }
-        if (categoryName === "지출결의서") {
-            document.getElementById('doc_title').value =  '[' + categoryName + '] ' + '이 곳을 클릭하여 제목을 입력하세요';
-        }
-
-    }
-
-    function calculatePeriod() {
-        let periodFrom = $('#period_from').val();
-        let periodTo = $('#period_to').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half').val();
-        let periodCount = $('#period_count');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date(periodTo);
-
-        if (isNaN(fromDate) || isNaN(toDate)) {
-            periodCount.val('');
-            return;
-        }
-
-        if (fromDate > toDate) {
-            alert("시작 날짜는 종료 날짜보다 나중일 수 없습니다.");
-            periodCount.val('');
-            return;
-        }
-
-        let daysDiff = 0;
-        let currentDate = fromDate;
-        while (currentDate <= toDate) {
-            let dayOfWeek = currentDate.getDay();
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 일요일(0)과 토요일(6) 제외
-                daysDiff++;
+        listItem.onclick = function () {
+            if (confirm(`${category.name} 전자결재를 작성하시겠습니까?`)) {
+                categoryName = category.name;
+                categoryId = category.id;
+                window.location.href = `/admins/apv/docs_create/${categoryId}`;
             }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            if (periodFromHalf === 'am' && periodToHalf === 'pm') {
-                daysDiff = 1; // 같은 날 오전과 오후를 선택하면 1일로 계산
-            } else if (periodFromHalf === 'pm' && periodToHalf === 'am') {
-                daysDiff = 0; // 같은 날 오후와 오전을 선택하면 0일로 계산
-            } else if (periodFromHalf !== periodToHalf) {
-                daysDiff = 0.5; // 같은 날 오전과 오후가 다른 경우 반나절로 계산
-            }
-        } else {
-            if (periodFromHalf === 'pm') {
-                daysDiff -= 0.5; // 시작일이 오후면 반나절 차감
-            }
-            if (periodToHalf === 'am') {
-                daysDiff -= 0.5; // 종료일이 오전이면 반나절 차감
-            }
-        }
-
-        if (daysDiff >= 0.5) {
-            periodCount.val(daysDiff.toFixed(1));
-        } else {
-            periodCount.val('');
-        }
-    }
-
-    function updatePeriodToOptions() {
-        let periodFrom = $('#period_from').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date($('#period_to').val());
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            periodToHalf.val(periodFromHalf).prop('disabled', true);
-        } else {
-            periodToHalf.prop('disabled', false);
-        }
-    }
-
-    function getApproverId(approverInputId) {
-        let approverName = $(`#${approverInputId}`).val();
-        let option = $(`#approver_list option`).filter(function() {
-            return $(this).val() === approverName;
-        });
-
-        return option.length ? option.data('approver-id') : null;
-    }
-
-    function getSelectedCC(selectElement) {
-        let selectedValues = [];
-        let selectedOptions = selectElement && selectElement.options;
-
-        for (let i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i].selected) {
-                selectedValues.push(selectedOptions[i].value);
-            }
-        }
-
-        return selectedValues.length > 0 ? selectedValues : null;
-    }
-
-    // 임시저장 (첨부파일저장안함 + 필수필드없음)
-    function apv_modal_tempsave() {
-        let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedCC(apvCcElement);
-
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            apv_category_id: nullapply(categoryId),
-            apv_status: '임시',
-            doc_title: nullapply($('#apv_md_create #doc_title').val()),
-            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
-            period_from: nullapply($('#apv_md_create #period_from').val()),
-            period_from_half: nullapply($('#apv_md_create #period_from_half').val()),
-            period_to: nullapply($('#apv_md_create #period_to').val()),
-            period_to_half: nullapply($('#apv_md_create #period_to_half').val()),
-            period_count: nullapply($('#apv_md_create #period_count').val()),
-            special_comment: nullapply($('#apv_md_create #special_comment').val()),
-            approver1: getApproverId('approver1'),
-            approver2: getApproverId('approver2'),
-            approver3: getApproverId('approver3'),
-            approver4: getApproverId('approver4'),
-            approver5: getApproverId('approver5'),
-            approver6: getApproverId('approver6'),
-            apv_cc: selectedCcValues,
         };
 
-        function sendApiRequest() {
-            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
-                $('#apv_md_create').modal("hide");
-                apv_nation.page = 1;  // 첫 페이지로
-                search_apv_data();
-                alert("임시저장이 완료되었습니다.");
-            });
-        }
-        sendApiRequest();
+        return listItem;
     }
-
-    function apv_modal_send_progress() {
-        let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedCC(apvCcElement);
-
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            pk: nullapply(apv_click_id),
-            apv_category_id: nullapply(categoryId),
-            apv_status: '진행',
-            doc_no: nullapply($('#apv_md_create #doc_title').val()),
-            doc_title: nullapply($('#apv_md_create #doc_title').val()),
-            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
-            period_from: nullapply($('#apv_md_create #period_from').val()),
-            period_from_half: nullapply($('#apv_md_create #period_from_half').val()),
-            period_to: nullapply($('#apv_md_create #period_to').val()),
-            period_to_half: nullapply($('#apv_md_create #period_to_half').val()),
-            period_count: nullapply($('#apv_md_create #period_count').val()),
-            special_comment: nullapply($('#apv_md_create #special_comment').val()),
-            attached_files: [],
-            approver1: getApproverId('approver1'),
-            approver2: getApproverId('approver2'),
-            approver3: getApproverId('approver3'),
-            approver4: getApproverId('approver4'),
-            approver5: getApproverId('approver5'),
-            approver6: getApproverId('approver6'),
-            apv_cc: selectedCcValues,
-        };
-
-        let attachedFiles = document.getElementById('attached_files').files;
-        let fileReadCount = 0;
-
-        function sendApiRequest() {
-            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
-                $('#apv_md_create').modal("hide");
-                apv_nation.page = 1;  // 첫 페이지로
-                search_apv_data();
-                alert("결재 전송이 완료되었습니다.");
-            });
-        }
-
-        function readFileAndAddToApiData(file, index) {
-            let reader = new FileReader();
-            reader.onload = function(event) {
-                let fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
-                };
-                api_data.attached_files.push(fileData);
-                fileReadCount++;
-                if (fileReadCount === attachedFiles.length) {
-                    sendApiRequest();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function validateApiData(data, requiredFields) {
-            for (let { key, message } of requiredFields) {
-                if (data[key] === null || data[key] === undefined || data[key] === '') {
-                    alert(message);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function checkForDuplicateApprovers(ccList, approvers) {
-            for (let approver of approvers) {
-                if (approver && ccList.includes(String(approver))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        let requiredFields = [
-            { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
-            { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
-            { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
-            { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
-            { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
-            { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
-            { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' }
-            // 필요한 필수 항목과 메시지를 여기에 추가
-        ];
-
-        if (!validateApiData(api_data, requiredFields)) {
-            return;
-        }
-
-        let approvers = [
-            api_data.approver1, api_data.approver2, api_data.approver3,
-            api_data.approver4, api_data.approver5, api_data.approver6
-        ];
-
-        if (checkForDuplicateApprovers(selectedCcValues, approvers)) {
-            alert('승인자는 참조목록에 포함될 수 없습니다.');
-            return;
-        }
-
-        if (attachedFiles.length > 0) {
-            for (let i = 0; i < attachedFiles.length; i++) {
-                readFileAndAddToApiData(attachedFiles[i], i);
-            }
-        } else {
-            sendApiRequest();
-        }
-    }
-
-
-    // 결재전송 (첨부파일저장 + 필수필드누락경고)
-{% comment %}    function apv_modal_send_progress() {
-        let apvCcElement = document.getElementById('apv_cc');
-        let selectedCcValues = getSelectedCC(apvCcElement);
-
-        let api_data = {
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            apv_category_id: nullapply(categoryId),
-            apv_status: '진행',
-            doc_title: nullapply($('#apv_md_create #doc_title').val()),
-            leave_reason: nullapply($('#apv_md_create #leave_reason').val()),
-            period_from: nullapply($('#apv_md_create #period_from').val()),
-            period_to: nullapply($('#apv_md_create #period_to').val()),
-            period_count: nullapply($('#apv_md_create #period_count').val()),
-            special_comment: nullapply($('#apv_md_create #special_comment').val()),
-            attached_files: [],
-            approver1: getApproverId('approver1'),
-            approver2: getApproverId('approver2'),
-            approver3: getApproverId('approver3'),
-            approver4: getApproverId('approver4'),
-            approver5: getApproverId('approver5'),
-            approver6: getApproverId('approver6'),
-            apv_cc: selectedCcValues,
-        };
-
-        let attachedFiles = document.getElementById('attached_files').files;
-        let fileReadCount = 0;
-
-        function sendApiRequest() {
-            api_gp('/admins/apv/create/', 'post', api_data, (done) => {
-                $('#apv_md_create').modal("hide");
-                apv_nation.page = 1;  // 첫 페이지로
-                search_apv_data();
-                alert("결재 전송이 완료되었습니다.");
-            });
-        }
-
-        function readFileAndAddToApiData(file, index) {
-            let reader = new FileReader();
-            reader.onload = function(event) {
-                let fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: event.target.result.split(',')[1] // Base64 데이터 부분만 추출
-                };
-                api_data.attached_files.push(fileData);
-                fileReadCount++;
-                if (fileReadCount === attachedFiles.length) {
-                    sendApiRequest();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function validateApiData(data, requiredFields) {
-            for (let field of requiredFields) {
-                if (!data[field.key] || data[field.key] === '') {
-                    alert(field.message);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function checkForDuplicateApprovers(ccList, approvers) {
-            for (let approver of approvers) {
-                if (ccList.includes(approver)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        let requiredFields = [
-            { key: 'apv_category_id', message: '카테고리가 누락되었습니다.' },
-            { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
-            { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
-            { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
-            { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
-            { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
-            { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' }
-            // 필요한 필수 항목과 메시지를 여기에 추가
-        ];
-
-        if (!validateApiData(api_data, requiredFields)) {
-            return;
-        }
-
-        let approvers = [
-            api_data.approver1, api_data.approver2, api_data.approver3,
-            api_data.approver4, api_data.approver5, api_data.approver6
-        ];
-
-        if (checkForDuplicateApprovers(selectedCcValues, approvers)) {
-            alert('승인자는 참조목록에 포함될 수 없습니다.');
-            return;
-        }
-
-        if (attachedFiles.length > 0) {
-            for (let i = 0; i < attachedFiles.length; i++) {
-                readFileAndAddToApiData(attachedFiles[i], i);
-            }
-        } else {
-            sendApiRequest();
-        }
-    }{% endcomment %}
 
 </script>

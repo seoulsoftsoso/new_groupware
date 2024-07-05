@@ -3,14 +3,16 @@ from django.views import View
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db import transaction, DatabaseError
-from django.db.models import Q, OuterRef, Subquery
+from django.db.models import Q, OuterRef, Subquery, Max
 from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, ApvReadStatus, NotiCenter
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
 from django.utils import timezone
 import base64
+import json
 from django.core.files.base import ContentFile
+from api.holiday.views import HolidayCheckView
 
 
 
@@ -18,18 +20,19 @@ class ApvListView(View):
 
     @transaction.atomic
     def get(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         _page = request.GET.get('page', '')
         _size = request.GET.get('page_size', '')
         date_sch_from = request.GET.get('date_sch_from', '')
         date_sch_to = request.GET.get('date_sch_to', '')
 
-        qs = ApvMaster.objects.filter().order_by('-updated_at', '-doc_no')
+        # apv_status 삭제는 모두에게 보이지 않도록
+        qs = ApvMaster.objects.filter().exclude(apv_status='삭제').order_by('-updated_at', '-doc_no')
 
         # 사용자의 권한에 따라 필터링
         if user.is_authenticated:
-            if user.is_superuser:  # 슈퍼유저는 모든 게시물 조회 가능
+            if user.is_master:  # 마스터유저는 모든 게시물 조회 가능 (추후 필요시 is_superuser로 변경)
                 pass
 
             else:
@@ -157,8 +160,8 @@ class ApvListView(View):
 
 class ApvDetail(View):
     def get(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         apv_id = request.GET.get('apv_id', '')
 
         if apv_id:
@@ -270,8 +273,15 @@ class ApvDetail(View):
         # 읽음 상태 업데이트
         ApvReadStatus.objects.update_or_create(user=user, document=apv_master, defaults={'is_read': True})
 
+        # 잔여연차 로딩
+        holiday_instance = HolidayCheckView()
+        holiday_instance.request = request  # request 객체 설정
+        leave_balance_queryset = holiday_instance.get_user_holiday()
+        leave_balance = list(leave_balance_queryset)  # QuerySet을 리스트로 변환
+
         results = [get_obj(row) for row in qs]
         for result in results:
+            result['leave_balance'] = leave_balance
             result['sub_items'] = sub_item_data
             result['approvers'] = approver_data
             result['apv_cc'] = cc_data
@@ -287,7 +297,8 @@ class ApvDetail(View):
         return JsonResponse(context, safe=False)
 
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES.get("user_id")
+        # user_id = request.COOKIES.get("user_id")
+        user_id = request.user.id
         if not user_id:
             return JsonResponse({'error': 'User ID not found in cookies'}, status=400)
 
@@ -301,6 +312,8 @@ class ApvDetail(View):
 
         # 기안취소
         if approver_action == 'return_temp':
+            if apv_master.created_by != user:
+                return JsonResponse({'error': '권한이 없습니다.'}, status=403)
             self.reset_approver_status(apv_master)
             apv_master.apv_status = '임시'
             apv_master.save()
@@ -309,8 +322,12 @@ class ApvDetail(View):
 
         # 승인 버튼을 누른 사용자가 다음 승인자인지 확인
         next_approver = self.get_next_approver(apv_master)
+        if next_approver is None:
+            return JsonResponse({'error': '잘못된 접근입니다.'}, status=400)
+
+        # 현재 유저가 다음 승인자가 아닌 경우 에러 반환
         if next_approver.id != user.id:
-            return JsonResponse({'error': 'Unauthorized'}, status=403)
+            return JsonResponse({'error': '권한이 없습니다.'}, status=403)
 
         # 승인을 전달받을때
         if approver_action == 'approve':
@@ -370,11 +387,25 @@ class ApvDetail(View):
 
 
 class ApvCreate(View):
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(UserMaster, id=request.user.id)
+
+        # 잔여연차 로딩
+        holiday_instance = HolidayCheckView()
+        holiday_instance.request = request  # request 객체 설정
+        leave_balance_queryset = holiday_instance.get_user_holiday()
+        leave_balance = list(leave_balance_queryset)  # QuerySet을 리스트로 변환
+
+        context = {
+            'leave_balance': leave_balance,
+        }
+
+        return JsonResponse(context, safe=False)
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
         doc_no = generate_doc_no()
@@ -388,12 +419,17 @@ class ApvCreate(View):
         period_to_half = request.POST.get('period_to_half', '')
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
+        related_project = request.POST.get('related_project', '')
+        payment_method = request.POST.get('payment_method', '')
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
         approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
 
         apv_cc_ids = request.POST.getlist('apv_cc[]', [])
         apv_cc_users = UserMaster.objects.filter(pk__in=apv_cc_ids) if apv_cc_ids else []
+
+        table_data = request.POST.get('table_data', '[]')
+        table_data = json.loads(table_data)
 
         context = {}
 
@@ -410,6 +446,8 @@ class ApvCreate(View):
                 period_to_half=period_to_half,
                 period_count=period_count,
                 special_comment=special_comment,
+                related_project=related_project,
+                payment_method=payment_method,
                 created_by=user,
                 created_at=d_today,
                 updated_at=d_today,
@@ -423,6 +461,16 @@ class ApvCreate(View):
 
             for apv_cc_user in apv_cc_users:
                 ApvCC.objects.create(document=ApvMaster_obj, user=apv_cc_user)
+
+            for item in table_data:
+                ApvSubItem.objects.create(
+                    document=ApvMaster_obj,
+                    item_no=item['item_no'],
+                    desc1=item['desc1'],
+                    desc2=item['desc2'],
+                    price=item['price'],
+                    remarks=item['remarks']
+                )
 
             self.save_attachments(request, ApvMaster_obj)
 
@@ -495,14 +543,25 @@ def get_res(context, obj):
 
 
 def generate_doc_no():
-    # today = date.today()
     today = timezone.now().date()
-    count_today = ApvMaster.objects.filter(
+    prefix = f'AP{today.strftime("%y%m%d")}-'
+
+    # 해당 날짜의 가장 큰 번호 찾기
+    max_doc_no = ApvMaster.objects.filter(
         created_at__year=today.year,
         created_at__month=today.month,
-        created_at__day=today.day
-    ).count() + 1
-    doc_no = f'AP{today.strftime("%y%m%d")}-{count_today:03d}'
+        created_at__day=today.day,
+        doc_no__startswith=prefix
+    ).aggregate(Max('doc_no'))['doc_no__max']
+
+    if max_doc_no:
+        # 가장 큰 번호에서 숫자 부분만 추출
+        last_count = int(max_doc_no.split('-')[-1])
+        count_today = last_count + 1
+    else:
+        count_today = 1
+
+    doc_no = f'{prefix}{count_today:03d}'
     return doc_no
 
 
@@ -511,11 +570,11 @@ class ApvUpdate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('pk')
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
-        doc_no = request.POST.get('doc_no', '')
+        # doc_no = request.POST.get('doc_no', '')
         apv_category_id = request.POST.get('apv_category_id', '')
         apv_status = request.POST.get('apv_status', '')
         doc_title = request.POST.get('doc_title', '')
@@ -526,6 +585,8 @@ class ApvUpdate(View):
         period_to_half = request.POST.get('period_to_half', '')
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
+        related_project = request.POST.get('related_project', '')
+        payment_method = request.POST.get('payment_method', '')
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
         approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
@@ -533,13 +594,16 @@ class ApvUpdate(View):
         apv_cc_ids = request.POST.getlist('apv_cc[]', [])
         apv_cc_users = UserMaster.objects.filter(pk__in=apv_cc_ids) if apv_cc_ids else []
 
+        table_data = request.POST.get('table_data', '[]')
+        table_data = json.loads(table_data)
+
         context = {}
 
         try:
             obj = get_object_or_404(ApvMaster, pk=int(pk))
             obj.apv_category_id = apv_category_id
             obj.apv_status = apv_status
-            obj.doc_no = doc_no
+            # obj.doc_no = doc_no
             obj.doc_title = doc_title
             obj.leave_reason = leave_reason
             obj.period_from = period_from
@@ -548,6 +612,8 @@ class ApvUpdate(View):
             obj.period_to_half = period_to_half
             obj.period_count = period_count
             obj.special_comment = special_comment
+            obj.related_project = related_project
+            obj.payment_method = payment_method
             obj.created_by = user
             obj.created_at = d_today
             obj.updated_at = d_today
@@ -560,16 +626,23 @@ class ApvUpdate(View):
                 **{f'approver{i}_status': '대기' for i in range(1, len(approvers) + 1)}
             )
             approver_data = {'document': obj}
-            # for i, approver in enumerate(approvers, start=1):
-            #     approver_data[f'approver{i}'] = approver
-            #     approver_data[f'approver{i}_status'] = '대기'
-            # ApvApprover.objects.create(**approver_data)
 
             ApvCC.objects.filter(document=obj).delete()
             for apv_cc_user in apv_cc_users:
                 ApvCC.objects.update_or_create(
                     document=obj,
                     user=apv_cc_user
+                )
+
+            ApvSubItem.objects.filter(document=obj).delete()
+            for item in table_data:
+                ApvSubItem.objects.create(
+                    document=obj,
+                    item_no=item['item_no'],
+                    desc1=item['desc1'],
+                    desc2=item['desc2'],
+                    price=item['price'],
+                    remarks=item['remarks']
                 )
 
             self.save_attachments(request, obj)
@@ -680,11 +753,11 @@ def get_obj(obj):
 class ApvStatusUpdate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES.get("user_id")
-        if not user_id:
+        # user_id = request.COOKIES.get("user_id")
+        user = get_object_or_404(UserMaster, id=request.user.id)
+        if not user:
             return JsonResponse({'error': 'User not authenticated'}, status=403)
 
-        user = get_object_or_404(UserMaster, id=user_id)
         apv_id = request.POST.get('apv_id')
         new_status = request.POST.get('apv_status')
 
@@ -705,8 +778,8 @@ class ApvStatusUpdate(View):
 
 class ApvCategoryList(View):
     def get(self, request, *args, **kwargs):
-        qs = ApvCategory.objects.all().order_by('name')
-        categories = list(qs.values('id', 'name'))
+        qs = ApvCategory.objects.all().order_by('custom_order')
+        categories = list(qs.values('id', 'name', 'desc'))
         return JsonResponse(categories, safe=False)
 
 
@@ -714,8 +787,8 @@ class ApvCategoryList(View):
 class ApvCommentCreate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
         document_id = request.POST.get('document', '')
@@ -771,8 +844,8 @@ def get_res_comment(context, comment):
 class ApvCommentUpdate(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
         d_today = datetime.today().strftime('%Y-%m-%d')
 
         comment_id = request.POST.get('comment_id', '')
@@ -811,8 +884,8 @@ class ApvCommentUpdate(View):
 class ApvCommentDelete(View):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        user_id = request.COOKIES["user_id"]
-        user = get_object_or_404(UserMaster, id=user_id)
+        # user_id = request.COOKIES["user_id"]
+        user = get_object_or_404(UserMaster, id=request.user.id)
 
         comment_id = request.POST.get('comment_id', '')
 
