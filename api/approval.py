@@ -338,7 +338,7 @@ class ApvDetail(View):
             next_approver = self.get_next_approver(apv_master)
             if next_approver is None:
                 apv_master.apv_status = '완료'
-                apv_master.save()
+                apv_master.save(update_fields=['apv_status'])
 
             return JsonResponse({'success': 'Status updated'}, status=200)
 
@@ -347,7 +347,7 @@ class ApvDetail(View):
             updated = self.update_approver_status(apv_master, user, '반려')
             if updated:
                 apv_master.apv_status = '반려'
-                apv_master.save()
+                apv_master.save(update_fields=['apv_status'])
 
             if not updated:
                 return JsonResponse({'error': 'Failed to update status'}, status=500)
@@ -374,15 +374,18 @@ class ApvDetail(View):
                 approver_obj = getattr(approver, f'approver{i}', None)
                 if approver_obj == user:
                     setattr(approver, f'approver{i}_status', status)
+                    setattr(approver, f'approver{i}_date', timezone.now().date())
                     approver.save()
                     return True
         return False
+
 
     def reset_approver_status(self, apv_master):
         approvers = ApvApprover.objects.filter(document=apv_master)
         for approver in approvers:
             for i in range(1, 7):
                 setattr(approver, f'approver{i}_status', '대기')
+                setattr(approver, f'approver{i}_date', None)
             approver.save()
 
 
@@ -420,6 +423,7 @@ class ApvCreate(View):
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
         related_project = request.POST.get('related_project', '')
+        related_info = request.POST.get('related_info', '')
         payment_method = request.POST.get('payment_method', '')
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
@@ -447,6 +451,7 @@ class ApvCreate(View):
                 period_count=period_count,
                 special_comment=special_comment,
                 related_project=related_project,
+                related_info=related_info,
                 payment_method=payment_method,
                 created_by=user,
                 created_at=d_today,
@@ -468,6 +473,7 @@ class ApvCreate(View):
                     item_no=item['item_no'],
                     desc1=item['desc1'],
                     desc2=item['desc2'],
+                    desc3=item['desc3'],
                     price=item['price'],
                     remarks=item['remarks']
                 )
@@ -586,6 +592,7 @@ class ApvUpdate(View):
         period_count = self.get_float_from_string(request.POST.get('period_count', ''))
         special_comment = request.POST.get('special_comment', '')
         related_project = request.POST.get('related_project', '')
+        related_info = request.POST.get('related_info', '')
         payment_method = request.POST.get('payment_method', '')
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
@@ -613,6 +620,7 @@ class ApvUpdate(View):
             obj.period_count = period_count
             obj.special_comment = special_comment
             obj.related_project = related_project
+            obj.related_info = related_info
             obj.payment_method = payment_method
             obj.created_by = user
             obj.created_at = d_today
@@ -641,6 +649,7 @@ class ApvUpdate(View):
                     item_no=item['item_no'],
                     desc1=item['desc1'],
                     desc2=item['desc2'],
+                    desc3=item['desc3'],
                     price=item['price'],
                     remarks=item['remarks']
                 )
@@ -728,6 +737,7 @@ def get_obj(obj):
             'username': obj.created_by.username,
             'department_position': obj.created_by.department_position.name,
             'profile_image': obj.created_by.profile_image.url,
+            'job_position': obj.created_by.job_position.name,
         } if obj.created_by else '',
         'created_at': obj.created_at if obj.created_at is not None else '',
         'updated_at': obj.updated_at if obj.updated_at is not None else '',

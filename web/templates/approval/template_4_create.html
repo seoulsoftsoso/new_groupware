@@ -9,41 +9,6 @@
         white-space: nowrap;
     }
 
-    .custom-select {
-        position: relative;
-        display: inline-block;
-        width: 200px;
-    }
-
-    .custom-select select {
-        display: inline-block;
-        width: 100%;
-        height: 35px;
-        margin: 0;
-        padding: 0 10px;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-
-    .custom-select::after {
-        content: '▼';
-        position: absolute;
-        top: 45%;
-        right: 10px;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: #495057;
-        font-size: 10px;
-    }
-
     .approver_group2 {
         display: block;
     }
@@ -56,12 +21,10 @@
                 flex: 0 0 100%;
                 max-width: 100%;
             }
-
         .basic_info_area, .approval_info_area, .cc_info_area,
         .detail_info_area, .check_info_area {
             margin-right: 0 !important;
         }
-
         .control-buttons {
             display: flex;
             width: 100%;
@@ -74,11 +37,9 @@
             margin-right: 0 !important;
             margin-left: 0 !important;
         }
-
         input[id="doc_title"] {
             font-size: 20px !important;
         }
-
         input[id="approver1"],
         input[id="approver2"],
         input[id="approver3"],
@@ -87,11 +48,6 @@
         input[id="approver6"] {
             width: 180px !important;
         }
-
-        .select_period {
-            flex-direction: column;
-        }
-
         .cc_box {
             height: 130px !important;
         }
@@ -102,8 +58,6 @@
         }
         .mobile_align_left {
             justify-content: flex-start !important;
-            padding-top: 10px;
-            padding-left: 0 !important;
         }
         .approver_group2 {
             display: none;
@@ -237,7 +191,7 @@
                                 </div>
 
                             </div>
-                            
+
                             <div class="col-md-3 col-lg-3 mb-3">
                                 <div class="d-flex align-items-center p-2">
                                     <i class="fa-solid fa-user-check fa-lg" style="color: #000;"></i>
@@ -262,60 +216,35 @@
                         <div class="col-12 col-md-12 col-lg-12 my-4">
                             <div class="d-flex align-items-center p-2">
                                 <i class="fa-regular fa-file-lines fa-lg" style="color: #000;"></i>
-                                <span style="color: #000; font-size: 18px; padding-left: 10px;">휴가신청 정보</span>
+                                <span style="color: #000; font-size: 18px; padding-left: 10px;">신청서 세부사항</span>
                             </div>
                             <div class="detail_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
 
                                 <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
-                                    <div class="d-flex justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 종류</div>
-                                    <div class="custom-select m-1">
-                                        <select class="form-control" id="leave_reason" name="leave_reason">
-                                            <option value="">클릭 후 선택하세요</option>
-                                            {% for value, display in leave_choices %}
-                                                <option value="{{ value }}">{{ display }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 제목</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="related_info">
+                                        </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 기간</div>
-                                    <div class="d-flex select_period">
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">관련 사업</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="related_project">
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 기한</div>
                                         <div class="d-flex align-items-center m-1">
-                                            <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                            <select id="period_from_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;">
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
-                                        </div>
-                                        <div class="d-flex align-items-center m-1">
-                                            <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                            <select id="period_to_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;">
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
-                                        <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                            <div class="m-1" style="width:100px;">휴가 일수 총</div>
-                                            <input class="form-control" id="period_count" style="text-align: right; width:60px; padding-left: 0; margin-left: 5px;">
-                                            <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center my-1 mobile_align_left">
-                                        <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                            <span class="m-1">(기존 잔여연차 :</span>
-                                            <input class="form-control border-none" id="leave_balance" style="text-align: right; width:25px; padding: 0; margin-left: 5px;" readonly>
-                                            <span class="m-1" style="width:20px; margin-left: 5px;">일)</span>
+                                            <input id="period_to" placeholder="클릭하여 선택" class="form-control" name="period_to" autocomplete="off" type="text"/>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 사유</div>
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
                                     <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;"></textarea>
                                 </div>
 
@@ -333,17 +262,16 @@
                             </div>
                             <div class="check_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
                                 <ul class="m-2" style="color:#000">
-                                    <li><strong>[예비군/민방위 신청시]</strong> 통지서 스캔하여 파일 첨부</li>
-                                    <li><strong>[경조휴가 신청시]</strong> 각종 증빙서류 스캔하여 파일 첨부 (예: 청첩장, 등본 등)</li>
-                                    <li>기타 필요한 내용은 '상세 설명'란에 기입</li>
+                                    <li>신청하고자 하는 세부 내용은 '신청 내용'란에 기입</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div style="padding: 0 2% 0 2%;">
-                <div class="d-flex justify-content-end my-3">
+                <div class="d-flex justify-content-end my-3 control-buttons">
                     <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" style="width: 150px;" id="deleteBtn" onclick="apv_delete()"> 삭 제 </div>
                     <div type="button" class="btn btn-outline-secondary m-2 px-1" style="width: 150px;" onclick="apv_tempsave()"> 임시 저장 </div>
                     <div type="button" class="btn btn-outline-info m-2 px-1" style="width: 150px;" onclick="apv_send_progress()"> 결재 전송 </div>
@@ -370,26 +298,20 @@
     let apv_category_id = null;
 
     $(document).ready(function () {
-        $('#period_from, #period_to').datepicker({
+        $('#period_to').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
             todayHighlight: true
         });
 
-        $('#period_from, #period_to, #period_from_half, #period_to_half').change(function () {
-            updatePeriodToOptions();
-            calculatePeriod();
-        });
-
-        updatePeriodToOptions();
         loadCreateDate();
         checkApproverList();
 
         if(documentId) {
             load_apv_temp_data();
-            document.getElementById('deleteBtn').classList.remove('d-none');
-        } else {
-            load_apv_create_data();
+            if (documentId) {
+                document.getElementById('deleteBtn').classList.remove('d-none');
+            }
         }
     });
 
@@ -433,76 +355,6 @@
         document.getElementById('doc_title').value = '['+ categoryName +'] ' + userteam + ' ' + username + ' ' + simepleDate;
     }
 
-    function calculatePeriod() {
-        let periodFrom = $('#period_from').val();
-        let periodTo = $('#period_to').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half').val();
-        let periodCount = $('#period_count');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date(periodTo);
-
-        if (isNaN(fromDate) || isNaN(toDate)) {
-            periodCount.val('');
-            return;
-        }
-
-        if (fromDate > toDate) {
-            alert("시작 날짜는 종료 날짜보다 나중일 수 없습니다.");
-            periodCount.val('');
-            return;
-        }
-
-        let daysDiff = 0;
-        let currentDate = fromDate;
-        while (currentDate <= toDate) {
-            let dayOfWeek = currentDate.getDay();
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 일요일(0)과 토요일(6) 제외
-                daysDiff++;
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            if (periodFromHalf === 'am' && periodToHalf === 'pm') {
-                daysDiff = 1; // 같은 날 오전과 오후를 선택하면 1일로 계산
-            } else if (periodFromHalf === 'pm' && periodToHalf === 'am') {
-                daysDiff = 0; // 같은 날 오후와 오전을 선택하면 0일로 계산
-            } else if (periodFromHalf !== periodToHalf) {
-                daysDiff = 0.5; // 같은 날 오전과 오후가 다른 경우 반나절로 계산
-            }
-        } else {
-            if (periodFromHalf === 'pm') {
-                daysDiff -= 0.5; // 시작일이 오후면 반나절 차감
-            }
-            if (periodToHalf === 'am') {
-                daysDiff -= 0.5; // 종료일이 오전이면 반나절 차감
-            }
-        }
-
-        if (daysDiff >= 0.5) {
-            periodCount.val(daysDiff.toFixed(1));
-        } else {
-            periodCount.val('');
-        }
-    }
-
-    function updatePeriodToOptions() {
-        let periodFrom = $('#period_from').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date($('#period_to').val());
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            periodToHalf.val(periodFromHalf).prop('disabled', true);
-        } else {
-            periodToHalf.prop('disabled', false);
-        }
-    }
-
     function getApproverId(approverInputId) {
         let approverName = $(`#${approverInputId}`).val();
         let option = $(`#approver_list option`).filter(function() {
@@ -525,19 +377,6 @@
         return selectedValues.length > 0 ? selectedValues : null;
     }
 
-    function load_apv_create_data() {
-        api_gp("/admins/apv/create/", "get", {}, (done) => {
-            console.log("load_apv_create_data: ", done);
-            let data = done;
-            try {
-                let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
-                document.getElementById('leave_balance').value = leave_balance;
-            } catch (error) {
-                document.getElementById('leave_balance').value = 'x'; // 오류 발생 시 x으로 설정
-            }
-        })
-    }
-
     function load_apv_temp_data() {
         let query = "?apv_id=" + documentId;
         api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
@@ -545,18 +384,11 @@
         })
     }
 
-
     function draw_apv_temp_data(done) {
         console.log("draw_apv_temp_update: ", done);
         let data = done.results[0];
         apv_category_id = data.apv_category.id;
         preventAccess();
-        try {
-            let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
-            document.getElementById('leave_balance').value = leave_balance;
-        } catch (error) {
-            document.getElementById('leave_balance').value = 'x'; // 오류 발생 시 x으로 설정
-        }
 
         document.getElementById('doc_title').value = data.doc_title;
         document.getElementById('doc_no').value = data.doc_no;
@@ -569,12 +401,9 @@
         document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name.split(' ')[0] + ' (' + data.approvers[0].approver4_team + ')' : '';
         document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name.split(' ')[0] + ' (' + data.approvers[0].approver5_team + ')' : '';
         document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name.split(' ')[0] + ' (' + data.approvers[0].approver6_team + ')' : '';
-        document.getElementById('leave_reason').value = data.leave_reason;
-        document.getElementById('period_from').value = data.period_from;
-        document.getElementById('period_from_half').value = data.period_from_half;
+        document.getElementById('related_project').value = data.related_project;
+        document.getElementById('related_info').value = data.related_info;
         document.getElementById('period_to').value = data.period_to;
-        document.getElementById('period_to_half').value = data.period_to_half;
-        document.getElementById('period_count').value = data.period_count;
         document.getElementById('special_comment').value = data.special_comment;
 
         let apvCcSelect = document.getElementById('apv_cc');
@@ -588,7 +417,6 @@
         });
     }
 
-
     // 임시저장 (첨부파일저장안함 + 필수필드없음)
     function apv_tempsave() {
         let apvCcElement = document.getElementById('apv_cc');
@@ -600,12 +428,9 @@
             apv_category_id: categoryId,
             apv_status: '임시',
             doc_title: nullapply($('#doc_title').val()),
-            leave_reason: nullapply($('#leave_reason').val()),
-            period_from: nullapply($('#period_from').val()),
-            period_from_half: nullapply($('#period_from_half').val()),
+            related_project: nullapply($('#related_project').val()),
+            related_info: nullapply($('#related_info').val()),
             period_to: nullapply($('#period_to').val()),
-            period_to_half: nullapply($('#period_to_half').val()),
-            period_count: nullapply($('#period_count').val()),
             special_comment: nullapply($('#special_comment').val()),
             approver1: getApproverId('approver1'),
             approver2: getApproverId('approver2'),
@@ -643,12 +468,9 @@
                 apv_status: '진행',
                 doc_no: nullapply($('#doc_no').val()),
                 doc_title: nullapply($('#doc_title').val()),
-                leave_reason: nullapply($('#leave_reason').val()),
-                period_from: nullapply($('#period_from').val()),
-                period_from_half: nullapply($('#period_from_half').val()),
+                related_project: nullapply($('#related_project').val()),
+                related_info: nullapply($('#related_info').val()),
                 period_to: nullapply($('#period_to').val()),
-                period_to_half: nullapply($('#period_to_half').val()),
-                period_count: nullapply($('#period_count').val()),
                 special_comment: nullapply($('#special_comment').val()),
                 attached_files: [],
                 approver1: getApproverId('approver1'),
@@ -716,10 +538,6 @@
 
             let requiredFields = [
                 { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
-                { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
-                { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
-                { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
-                { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
                 { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' }
                 // 필요한 필수 항목과 메시지를 여기에 추가
             ];
@@ -772,6 +590,5 @@
         additionalApprovers.style.display = 'block';
         this.style.display = 'none';
     });
-
 
 </script>

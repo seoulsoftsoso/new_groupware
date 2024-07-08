@@ -25,7 +25,8 @@
                 max-width: 100%;
             }
 
-        .basic_info_area, .approval_info_area, .cc_info_area, .detail_info_area {
+        .basic_info_area, .approval_info_area, .cc_info_area,
+        .detail_info_area, .check_info_area {
             margin-right: 0 !important;
         }
 
@@ -94,7 +95,7 @@
             {% include 'admins/topnav.html' %}
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
-                <div class="mb-xl-0 mb-4">
+                <div>
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
                             <strong style="color: #000; font-size: x-large; font-family: Pretendard;"></i><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
@@ -272,8 +273,8 @@
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
-                                    <textarea class="form-control mb-3" id="special_comment" style="max-width:90%; height:100px;"></textarea>
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
+                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;"></textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
@@ -283,16 +284,27 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-md-12 col-lg-12 my-4">
+                            <div class="d-flex align-items-center p-2">
+                                <i class="fa-solid fa-list-check fa-lg" style="color: #000;"></i>
+                                <span style="color: #000; font-size: 18px; padding-left: 10px;">참고사항</span>
+                            </div>
+                            <div class="check_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
+                                <ul class="m-2" style="color:#000">
+                                    <li>기타 필요한 내용은 '상세 설명'란에 기입</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="px-4">
+            <div style="padding: 0 2% 0 2%;">
                 <div class="d-flex justify-content-end my-3 control-buttons">
-                    <div type="button" class="btn btn-outline-danger m-2 d-none" style="width: 150px;" id="deleteBtn" onclick="apv_delete()"> 삭 제 </div>
-                    <div type="button" class="btn btn-outline-secondary m-2" style="width: 150px;" onclick="apv_tempsave()"> 임시 저장 </div>
-                    <div type="button" class="btn btn-outline-info m-2" style="width: 150px;" onclick="apv_send_progress()"> 결재 전송 </div>
-                    <div type="button" class="btn btn-outline-warning m-2" style="width: 150px;" onclick="location.href='/admins/apv/'">목록 보기</div>
+                    <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" style="width: 150px;" id="deleteBtn" onclick="apv_delete()"> 삭 제 </div>
+                    <div type="button" class="btn btn-outline-secondary m-2 px-1" style="width: 150px;" onclick="apv_tempsave()"> 임시 저장 </div>
+                    <div type="button" class="btn btn-outline-info m-2 px-1" style="width: 150px;" onclick="apv_send_progress()"> 결재 전송 </div>
+                    <div type="button" class="btn btn-outline-warning m-2 px-1" style="width: 150px;" onclick="location.href='/admins/apv/'">목록 보기</div>
                 </div>
             </div>
         </div>
@@ -443,11 +455,13 @@
 
         items.forEach((item, index) => {
             let row = document.createElement("tr");
+            let price = item.price ? formatNumber(item.price) : '';
             row.innerHTML = `
                 <td>${index + 1}</td>
+                <td><input class="form-control" type="text" id="desc3${index + 1}" value="${item.desc3}"></td>
                 <td><input class="form-control" type="text" id="desc1${index + 1}" value="${item.desc1}"></td>
                 <td><input class="form-control" type="text" id="desc2${index + 1}" value="${item.desc2}"></td>
-                <td><input class="form-control" type="text" id="price${index + 1}" value="${formatNumber(item.price)}" oninput="formatInput(event); calculateTotal()"></td>
+                <td><input class="form-control" type="text" id="price${index + 1}" value="${price}" oninput="formatInput(event); calculateTotal()"></td>
                 <td><input class="form-control" type="text" id="remarks${index + 1}" value="${item.remarks}"></td>
             `;
             tbody.appendChild(row);
@@ -654,6 +668,7 @@
             let row = document.createElement("tr");
             row.innerHTML = `
                 <td>${rowCount}</td>
+                <td><input class="form-control" type="text" placeholder="YYYY-MM-DD" id="desc3${rowCount}"></td>
                 <td><input class="form-control" type="text" id="desc1${rowCount}"></td>
                 <td><input class="form-control" type="text" id="desc2${rowCount}"></td>
                 <td><input class="form-control" type="text" id="price${rowCount}" oninput="formatInput(event); calculateTotal()"></td>
@@ -676,7 +691,8 @@
         thead.innerHTML = `
             <tr>
                 <th id="item_no" style="color: #000; font-size: small; width: 3%;">No</th>
-                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 25%;">내 용</th>
+                <th id="desc3" style="text-align: center; color: #000; font-size: small; width: 12%;">관련일자</th>
+                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 35%;">내 용</th>
                 <th id="desc2" style="text-align: center; color: #000; font-size: small; width: 15%;">지출처</th>
                 <th id="price" style="text-align: center; color: #000; font-size: small; width: 10%;">금 액(원)</th>
                 <th id="remarks" style="text-align: center; color: #000; font-size: small; width: 25%;">비 고</th>
@@ -744,6 +760,7 @@
         let items = [];
 
         rows.forEach((row, index) => {
+            let desc3 = row.querySelector(`#desc3${index + 1}`).value;
             let desc1 = row.querySelector(`#desc1${index + 1}`).value;
             let desc2 = row.querySelector(`#desc2${index + 1}`).value;
             let price = row.querySelector(`#price${index + 1}`).value;
@@ -751,6 +768,7 @@
 
             items.push({
                 item_no: index + 1,
+                desc3: desc3,
                 desc1: desc1,
                 desc2: desc2,
                 price: parseFloat(price.replace(/,/g, '')), // Remove commas for number conversion

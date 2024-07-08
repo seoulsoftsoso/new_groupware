@@ -31,16 +31,22 @@
         }
 
         .my_docs_filter a {
-            width: 1000px !important;
+            width: 35% !important;
+            max-width: 125px !important;
             margin: 0 !important;
         }
 
         div[id="createBtn"] {
-            width: 125px !important;
+            width: 35% !important;
+            max-width: 125px !important;
+        }
+
+        .search_filter {
+            width: 65% !important;
         }
 
         input[id="apv_all_sch"] {
-            width: 200px !important;
+            width: 100% !important;
         }
 
         div[id="status_filter"],
@@ -88,7 +94,7 @@
             {% include 'admins/topnav.html' %}
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
-                <div class="mb-xl-0 mb-4">
+                <div>
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
                             <strong style="color: #000; font-size: x-large; font-family: Pretendard;"></i><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
@@ -132,7 +138,7 @@
                                    style="text-align: left; height: 40px;" type="text"/>
                         </div>
                     </div>
-                    <div id="search_filter">
+                    <div class="search_filter" id="search_filter">
                         <div class="d-flex position-relative">
                             <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색"
                                    id="apv_all_sch" style="width: 150px; border-radius: 6px 0px 0px 6px;"
@@ -143,9 +149,7 @@
                                 <span class="bx bx-search-alt"></span></button>
                         </div>
                     </div>
-                    <div>
-                        <div class="btn btn-info p-0" style="width: 100px; height: 40px;" id="createBtn" data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성</div>
-                    </div>
+                    <div class="btn btn-info p-0" style="width: 100px; height: 40px;" id="createBtn" data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성</div>
                 </div>
             </div>
 

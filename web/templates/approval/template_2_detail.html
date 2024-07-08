@@ -64,7 +64,7 @@
             gap:10px;
         }
         .control-buttons div {
-            width: 1000px !important;
+            width: 150px !important;
             margin-right: 0 !important;
             margin-left: 0 !important;
         }
@@ -75,6 +75,9 @@
         }
         textarea[id="special_comment"] {
             max-width: 100% !important;
+        }
+        .desktop_hide {
+            display: block;
         }
     }
 </style>
@@ -89,7 +92,7 @@
             {% include 'admins/topnav.html' %}
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
-                <div class="mb-xl-0 mb-4">
+                <div>
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
                             <strong style="color: #000; font-size: x-large; font-family: Pretendard;"></i><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
@@ -208,8 +211,8 @@
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
-                                    <textarea class="form-control mb-3" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea>
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
+                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
@@ -235,14 +238,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="px-4">
-                        <div class="d-flex justify-content-end my-3 control-buttons">
-                            <div type="button" class="btn btn-outline-danger m-2 d-none" id="selfCancel" style="width: 150px;" onclick="apv_return_temp()"> 기안 취소 </div>
-                            <div type="button" class="btn btn-outline-danger m-2 d-none" id="userReject" style="width: 150px;" onclick="apv_user_reject()"> 결재 반려 </div>
-                            <div type="button" class="btn btn-outline-info m-2 d-none" id="userApprove" style="width: 150px;" onclick="apv_user_approve()"> 결재 승인 </div>
-                            <div type="button" class="btn btn-outline-warning m-2" style="width: 150px;" onclick="location.href='/admins/apv/'">목록 보기 </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            <div style="padding: 0 2% 0 2%;">
+                <div class="d-flex justify-content-end my-3 control-buttons">
+                    <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" id="selfCancel" style="width: 150px;" onclick="apv_return_temp()"> 기안 취소 </div>
+                    <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" id="userReject" style="width: 150px;" onclick="apv_user_reject()"> 결재 반려 </div>
+                    <div type="button" class="btn btn-outline-info m-2 px-1 d-none" id="userApprove" style="width: 150px;" onclick="apv_user_approve()"> 결재 승인 </div>
+                    <div type="button" class="btn btn-outline-warning m-2 px-1" style="width: 150px;" onclick="location.href='/admins/apv/'">목록 보기 </div>
                 </div>
             </div>
         </div>
@@ -335,11 +338,13 @@
 
         items.forEach((item, index) => {
             let row = document.createElement("tr");
+            let price = item.price ? formatNumber(item.price) : '';
             row.innerHTML = `
                 <td>${index + 1}</td>
+                <td><input class="form-control" type="text" id="desc3${index + 1}" value="${item.desc3}" disabled></td>
                 <td><input class="form-control" type="text" id="desc1${index + 1}" value="${item.desc1}" disabled></td>
                 <td><input class="form-control" type="text" id="desc2${index + 1}" value="${item.desc2}" disabled></td>
-                <td><input class="form-control" type="text" id="price${index + 1}" value="${formatNumber(item.price)}" oninput="formatInput(event); calculateTotal()" disabled></td>
+                <td><input class="form-control" type="text" id="price${index + 1}" value="${price}" oninput="formatInput(event); calculateTotal()" disabled></td>
                 <td><input class="form-control" type="text" id="remarks${index + 1}" value="${item.remarks}" disabled></td>
             `;
             tbody.appendChild(row);
@@ -469,7 +474,7 @@
         let approvers = [
             {
                 title: '작성자',
-                name: data.created_by.username,
+                name: data.created_by.username + ' ' + data.created_by.job_position,
                 date: data.updated_at,
                 status: '완료',
                 imageSrc: data.created_by.profile_image,
@@ -480,12 +485,16 @@
             let approverName = data.approvers[0]?.[`approver${i}_name`];
             let approverStatus = data.approvers[0]?.[`approver${i}_status`];
             let approverImg = data.approvers[0]?.[`approver${i}_img`];
+            let approverDate = data.approvers[0]?.[`approver${i}_date`];
+            if (approverDate === null) {
+                approverDate = '결재 대기중'
+            }
 
             if (approverName) {
                 approvers.push({
                     title: `승인자${i}`,
                     name: approverName,
-                    date: data.updated_at,
+                    date: approverDate,
                     status: approverStatus,
                     imageSrc: approverImg,
                 });
@@ -568,10 +577,10 @@
             }
 
             return `
-                <div id="comment_${comment_id}" style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div id="comment_${comment_id}" style="display: flex; align-items: start; margin-bottom: 20px;">
                     <img class="user_profile" src="${profile_image}" alt="프로필 사진"
                          style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                    <div class="user_comment" style="font-size: 16px;">
+                    <div class="user_comment w-100" style="font-size: 16px;">
                         <strong>${username}</strong> <span style="color: #999; margin-left: 10px;">${date}${editDeleteButtons}</span>
                         <br>
                         <span id="comment_content_${comment_id}" style="color: #343a40;">${content}</span>
@@ -622,11 +631,11 @@
         }
 
         let originalContent = contentSpan.textContent.trim();
-        contentSpan.classList.add('d-flex');
+        {#contentSpan.classList.add('d-flex');#}
         contentSpan.innerHTML = `
-            <textarea id="edit_content_${comment_id}" style="height: auto; min-width: 1000px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">${originalContent}</textarea>
-            <button class="btn btn-outline-secondary mx-2" onclick="saveComment(${comment_id})">저장</button>
-            <button class="btn btn-outline-danger mx-0" onclick="cancelEdit(${comment_id}, \`${originalContent}\`)">취소</button>
+            <textarea id="edit_content_${comment_id}" style="height: auto; width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">${originalContent}</textarea>
+            <button class="btn btn-outline-secondary my-2" onclick="saveComment(${comment_id})">저장</button>
+            <button class="btn btn-outline-danger m-0" onclick="cancelEdit(${comment_id}, \`${originalContent}\`)">취소</button>
         `;
 
         // 수정, 삭제 버튼 숨김 처리
@@ -799,6 +808,7 @@
             let row = document.createElement("tr");
             row.innerHTML = `
                 <td>${rowCount}</td>
+                <td><input class="form-control" type="text" id="desc3${rowCount}"></td>
                 <td><input class="form-control" type="text" id="desc1${rowCount}"></td>
                 <td><input class="form-control" type="text" id="desc2${rowCount}"></td>
                 <td><input class="form-control" type="text" id="price${rowCount}" oninput="formatInput(event); calculateTotal()"></td>
@@ -811,8 +821,6 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         let tableContainer = document.getElementById("table_container");
-        let addRowButton = document.getElementById("add_row");
-        let removeRowButton = document.getElementById("remove_row");
 
         let table = document.createElement("table");
         table.classList.add("table", "table-sm", "table-striped", "m-0");
@@ -821,7 +829,8 @@
         thead.innerHTML = `
             <tr>
                 <th id="item_no" style="color: #000; font-size: small; width: 3%;">No</th>
-                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 25%;">내 용</th>
+                <th id="desc3" style="text-align: center; color: #000; font-size: small; width: 12%;">관련일자</th>
+                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 35%;">내 용</th>
                 <th id="desc2" style="text-align: center; color: #000; font-size: small; width: 15%;">지출처</th>
                 <th id="price" style="text-align: center; color: #000; font-size: small; width: 10%;">금 액(원)</th>
                 <th id="remarks" style="text-align: center; color: #000; font-size: small; width: 25%;">비 고</th>
@@ -842,19 +851,6 @@
         `;
         table.appendChild(tfoot);
         tableContainer.appendChild(table);
-
-        addRowButton.addEventListener("click", addRow);
-        removeRowButton.addEventListener("click", function() {
-            if (rowCount > 1) {
-                tbody.removeChild(tbody.lastChild);
-                rowCount--;
-                calculateTotal();
-            }
-        });
-
-        for (let i = 0; i < 1; i++) {
-            addRow();
-        }
     });
 
 
