@@ -9,47 +9,11 @@
         white-space: nowrap;
     }
 
-    .attached_hover:hover {
-        text-decoration: underline;
-        color: midnightblue !important;
+    .desktop_hide {
+        display: none;
     }
 
-    .custom-select {
-        position: relative;
-        display: inline-block;
-        width: 200px;
-    }
-
-    .custom-select select {
-        display: inline-block;
-        width: 100%;
-        height: 35px;
-        margin: 0;
-        padding: 0 10px;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-
-    .custom-select::after {
-        content: '▼';
-        position: absolute;
-        top: 45%;
-        right: 10px;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: #495057;
-        font-size: 10px;
-    }
-
-    @media (max-width: 1000px) {
+    @media (max-width: 900px) {
 
         input[id="doc_title"] {
             font-size: 20px !important;
@@ -60,17 +24,17 @@
             padding-top: 10px;
         }
 
+        .col-lg-2, .col-lg-3, .col-lg-7, .col-lg-12 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
         .basic_info_area, .approval_info_area, .cc_info_area, .detail_info_area, .comment_info_area {
             margin-right: 0 !important;
         }
 
         .comment_info_area {
             padding: 1% !important;
-        }
-
-        .col-lg-2, .col-lg-3, .col-lg-7, .col-lg-12 {
-            flex: 0 0 100%;
-            max-width: 100%;
         }
 
         .user_comment {
@@ -85,10 +49,6 @@
         .user_profile {
             width: 36px !important;
             height: 36px !important;
-        }
-
-        .select_period {
-            flex-direction: column;
         }
 
         .cc_box {
@@ -115,6 +75,9 @@
         }
         textarea[id="special_comment"] {
             max-width: 100% !important;
+        }
+        .desktop_hide {
+            display: block;
         }
     }
 </style>
@@ -204,60 +167,35 @@
                         <div class="col-12 col-md-12 col-lg-12 my-4">
                             <div class="d-flex align-items-center p-2">
                                 <i class="fa-regular fa-file-lines fa-lg" style="color: #000;"></i>
-                                <span style="color: #000; font-size: 18px; padding-left: 10px;">휴가신청 정보</span>
+                                <span style="color: #000; font-size: 18px; padding-left: 10px;">신청서 세부사항</span>
                             </div>
                             <div class="detail_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
 
                                 <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 종류</div>
-                                    <div class="custom-select m-1">
-                                        <select class="form-control" id="leave_reason" name="leave_reason" disabled>
-                                            <option value="">클릭 후 선택하세요</option>
-                                            {% for value, display in leave_choices %}
-                                                <option value="{{ value }}">{{ display }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 제목</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="related_info" disabled>
+                                        </div>
                                     </div>
 
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 기간</div>
-                                    <div class="d-flex select_period">
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">관련 사업</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="related_project" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 기한</div>
                                         <div class="d-flex align-items-center m-1">
-                                            <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                            <select id="period_from_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
-                                        </div>
-                                        <div class="d-flex align-items-center m-1">
-                                            <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                            <select id="period_to_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
+                                            <input id="period_to" placeholder="클릭하여 선택" class="form-control" name="period_to" autocomplete="off" type="text" disabled/>
                                         </div>
                                     </div>
-
-{% comment %}                                    <div class="d-flex justify-content-start align-items-center my-1">
-                                        <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 일수 총</div>
-                                        <input class="form-control" id="period_count" style="text-align: right; width:60px; padding-left: 0;" disabled>
-                                        <div class="row justify-content-start align-items-center m-1" style="color: #000; font-size: 16px; width:50px;"> 일</div>
-                                    </div>{% endcomment %}
-
-                                    <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
-                                        <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                            <div class="m-1" style="width:100px;">휴가 일수 총</div>
-                                            <input class="form-control" id="period_count" style="text-align: right; width:60px; padding-left: 0; margin-left: 5px;" disabled>
-                                            <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
-                                        </div>
-                                    </div>
-
-
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 사유</div>
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
                                     <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea>
                                 </div>
 
@@ -266,20 +204,20 @@
                                     <div id="attached_files" class="my-2"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- 코멘트 -->
-                            <div class="col-12 col-md-12 col-lg-12 my-4">
-                                <div class="d-flex align-items-center p-2">
-                                    <i class="fa-solid fa-comment-dots fa-lg" style="color: #000;"></i>
-                                    <span style="color: #000; font-size: 18px; padding-left: 10px;">추가 의견</span>
-                                </div>
-                                <div class="comment_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0; padding: 1.5%;">
-                                    <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
-                                    <div class="d-flex" id="comment_write">
-                                        <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                                        <textarea placeholder="추가 의견은 이곳에 남겨보세요" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
-                                        <button class="btn btn-outline-secondary mx-2 p-0" style="width: 10%;" onclick="create_comment()"> 등록 </button>
-                                    </div>
+                        <!-- 코멘트 -->
+                        <div class="col-12 col-md-12 col-lg-12 my-4">
+                            <div class="d-flex align-items-center p-2">
+                                <i class="fa-solid fa-comment-dots fa-lg" style="color: #000;"></i>
+                                <span style="color: #000; font-size: 18px; padding-left: 10px;">추가 의견</span>
+                            </div>
+                            <div class="comment_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0; padding: 1.5%;">
+                                <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
+                                <div class="d-flex" id="comment_write">
+                                    <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
+                                    <textarea placeholder="추가 의견은 이곳에 남겨보세요" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                                    <button class="btn btn-outline-secondary mx-2 p-0" style="width: 10%;" onclick="create_comment()"> 등록 </button>
                                 </div>
                             </div>
                         </div>
@@ -302,14 +240,12 @@
 
 <script>
 
-    {#let currentUrl = window.location.href;#}
-    {#let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];#}
+    let currentUserId = {{ request.user.id }};
+    let username = '{{ request.user }}';
+    let userteam = '{{ request.user.department_position }}';
     let categoryId = {% if category_no %} {{ category_no }} {% else %} null {% endif %};
     let documentId = {% if document_id %} {{ document_id }} {% else %} null {% endif %};
-    let currentUserId = {{ request.user.id }};
-    let created_by_id = null;
     let isSuperUser = {{ request.user.is_superuser|yesno:"true,false" }};
-    let next_approver = null;
     let categoryName = '{{ category_name }}';
     let currentUrl = window.location.href;
     let urlCategory = currentUrl.split('/')[6];
@@ -366,10 +302,9 @@
         document.getElementById('create_date').value = data.updated_at;
         document.getElementById('username_md').value = data.created_by.username;
         document.getElementById('team').value = data.created_by.department_position;
-        document.getElementById('leave_reason').value = data.leave_reason;
-        document.getElementById('period_from').value = data.period_from;
+        document.getElementById('related_project').value = data.related_project;
+        document.getElementById('related_info').value = data.related_info;
         document.getElementById('period_to').value = data.period_to;
-        document.getElementById('period_count').value = data.period_count;
         document.getElementById('special_comment').value = data.special_comment;
 
         draw_apv_approval_flow(data);
@@ -819,9 +754,4 @@
         }
     }
 
-
 </script>
-
-
-
-
