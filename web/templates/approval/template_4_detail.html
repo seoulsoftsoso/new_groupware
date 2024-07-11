@@ -64,7 +64,7 @@
             gap:10px;
         }
         .control-buttons div {
-            width: 150px !important;
+            width: 1000px !important;
             margin-right: 0 !important;
             margin-left: 0 !important;
         }
@@ -78,6 +78,9 @@
         }
         .desktop_hide {
             display: block;
+        }
+        div[id="printPage"] {
+            display: none;
         }
     }
 </style>
@@ -167,7 +170,7 @@
                         <div class="col-12 col-md-12 col-lg-12 my-4">
                             <div class="d-flex align-items-center p-2">
                                 <i class="fa-regular fa-file-lines fa-lg" style="color: #000;"></i>
-                                <span style="color: #000; font-size: 18px; padding-left: 10px;">신청서 세부사항</span>
+                                <span style="color: #000; font-size: 18px; padding-left: 10px;">세부 정보</span>
                             </div>
                             <div class="detail_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
 
@@ -224,7 +227,10 @@
                     </div>
                 </div>
             </div>
-            <div style="padding: 0 2% 0 2%;">
+            <div class="d-flex justify-content-between" style="padding: 0 2% 0 2%;">
+                <div class="d-flex justify-content-start my-3">
+                    <div type="button" class="btn btn-outline-success m-2 px-1 d-none" id="printPage" style="width: 150px;" onclick="apv_print_page()">인쇄</div>
+                </div>
                 <div class="d-flex justify-content-end my-3 control-buttons">
                     <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" id="selfCancel" style="width: 150px;" onclick="apv_return_temp()"> 기안 취소 </div>
                     <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" id="userReject" style="width: 150px;" onclick="apv_user_reject()"> 결재 반려 </div>
@@ -281,6 +287,11 @@
         created_by_id = data.created_by.id;
         apv_category_id = data.apv_category.id;
         preventAccess();
+
+        // 기안완료시 인쇄버튼 보이기
+        if (data.apv_status == '완료') {
+            document.getElementById('printPage').classList.remove('d-none');
+        }
 
         // 기안취소 버튼 보이기
         if (data.apv_status !== '완료') {
@@ -751,6 +762,14 @@
 
         } else {
             alert(txt.cancel);
+        }
+    }
+
+    function apv_print_page(){
+        let newWindow = window.open(`/admins/apv/print/${categoryId}/${documentId}`, 'print_page', 'width=1200, height=1000');
+
+        if (newWindow && newWindow.innerWidth) {
+            newWindow.document.documentElement.webkitRequestFullscreen();
         }
     }
 

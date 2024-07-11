@@ -181,7 +181,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(default=timezone.now, verbose_name='마지막로그인')
     useremailreceive = models.BooleanField(default=False)
     userintro = models.TextField(blank=True, null=True)
-    signature_file_path = models.FileField(upload_to=sign_upload_path, default=None, null=True, verbose_name='전자서명')
+    signature_file_path = models.FileField(upload_to=sign_upload_path, default='sign/stamp_approved.png', null=True, verbose_name='전자서명')
     research_num = models.CharField(max_length=15, null=True, verbose_name='과학기술인번호')
     place_of_work = models.ForeignKey('CodeMaster', models.PROTECT, null=True, related_name='place_of_work',
                                       verbose_name='근무지')

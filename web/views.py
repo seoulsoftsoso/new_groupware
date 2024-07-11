@@ -571,3 +571,18 @@ def apv_docs_progress(request, category_no, document_id):
         'approver_list': approver_choices,
     }
     return render(request, detail_template, context)
+
+
+def apv_print_page(request, category_no, document_id):
+    approver_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+                     .order_by('department_position', 'username'))
+    approver_choices = [(approver.department_position, approver.username, approver.id) for approver in approver_list]
+    leave_choices = ApvMaster.LEAVE_CHOICES
+    detail_template = 'approval/template_' + category_no + '_print.html'
+    context = {
+        'document_id': document_id,
+        'category_no': category_no,
+        'leave_choices': leave_choices,
+        'approver_list': approver_choices,
+    }
+    return render(request, detail_template, context)
