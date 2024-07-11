@@ -221,6 +221,7 @@ class ApvDetail(View):
                             f'approver{i}_id': approver_obj.id,
                             f'approver{i}_name': f"{approver_obj.username} {approver_obj.job_position.name}",
                             f'approver{i}_img': approver_obj.profile_image.url if approver_obj.profile_image else None,
+                            f'approver{i}_sign': approver_obj.signature_file_path.url if approver_obj.signature_file_path else None,
                             f'approver{i}_team': approver_obj.department_position.name,
                             f'approver{i}_status': status,
                             f'approver{i}_date': getattr(approver, f'approver{i}_date', None)
@@ -230,6 +231,7 @@ class ApvDetail(View):
                             f'approver{i}_id': None,
                             f'approver{i}_name': None,
                             f'approver{i}_img': None,
+                            f'approver{i}_sign': None,
                             f'approver{i}_team': None,
                             f'approver{i}_status': None,
                             f'approver{i}_date': None
@@ -736,8 +738,9 @@ def get_obj(obj):
             'id': obj.created_by.id,
             'username': obj.created_by.username,
             'department_position': obj.created_by.department_position.name,
-            'profile_image': obj.created_by.profile_image.url,
+            'profile_image': obj.created_by.profile_image.url if obj.created_by.profile_image else '',
             'job_position': obj.created_by.job_position.name,
+            'signature_file_path': obj.created_by.signature_file_path.url if obj.created_by.signature_file_path else '',
         } if obj.created_by else '',
         'created_at': obj.created_at if obj.created_at is not None else '',
         'updated_at': obj.updated_at if obj.updated_at is not None else '',

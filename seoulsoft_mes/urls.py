@@ -260,6 +260,7 @@ urlpatterns = [
     path('admins/apv/docs_create/<str:category_no>/', apv_docs_create, name='apv_docs_create'),
     path('admins/apv/docs_create/<str:category_no>/<str:document_id>/', apv_docs_create, name='apv_docs_update'),
     path('admins/apv/progress/<str:category_no>/<str:document_id>/', apv_docs_progress, name='apv_docs_progress'),
+    path('admins/apv/print/<str:category_no>/<str:document_id>/', apv_print_page, name='apv_print_page'),
 
     path('admins/apv/get/', ApvListView.as_view(), name='apv_get_data'),
     path('admins/apv/create/', ApvCreate.as_view(), name='apv_create'),
