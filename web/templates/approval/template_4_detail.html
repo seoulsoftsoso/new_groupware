@@ -3,6 +3,7 @@
 
 <meta charset="UTF-8">
 {% include 'admins/admin_header.html' %}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <style>
     /* 모바일웹 텍스트 줄바꿈 방지 */
     .table td, .table th {
@@ -199,7 +200,8 @@
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
-                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea>
+                                    <div id="special_comment" aria-label="special_comment"></div>
+{#                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea></textarea>#}
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
@@ -243,7 +245,7 @@
 </div>
 </body>
 {% include 'admins/admin_footer.html' %}
-
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
 
     let currentUserId = {{ request.user.id }};
@@ -259,6 +261,53 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         comment_hotkey();
+    });
+
+    $(document).ready(function () {
+        $('#special_comment').summernote({
+            height: 400, // 에디터 높이
+            width: 1200,
+            minHeight: null, // 최소 높이
+            maxHeight: null, // 최대 높이
+            focus: false, // 에디터 로딩후 포커스를 맞출지 여부
+            lang: 'ko-KR', // 한글 설정
+            tabDisable: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['fontstyle', ['fontname', 'fontsize', 'color']],
+                ['para', ['paragraph']],
+                {#['para', ['ul', 'ol', 'paragraph']],#}
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['hr', 'link', 'picture', 'video']],
+                ['view', ['help']]
+                {#['view', ['fullscreen', 'codeview', 'help']]#}
+            ],
+            callbacks: {
+                onInit: function () {
+                    adjustHeight();
+                    $('.note-editable').on('keyup', adjustHeight); // 내용이 변경될 때마다 높이를 조정
+                    // 'More Color' 드롭다운 버튼을 제외한 모든 'note-icon-caret' 요소 제거
+                    $('.note-icon-caret').not(function () {
+                        return $(this).closest('button[aria-label="More Color"]').length;
+                    }).remove();
+                },
+                onChange: function () {
+                    adjustHeight();
+                },
+                onPaste: function () {
+                    setTimeout(adjustHeight, 10); // 붙여넣기 후 높이 조정
+                }
+            }
+        });
+
+        function adjustHeight() {
+            let editableArea = $('.note-editable');
+            editableArea.css('height', 'auto'); // 높이를 자동으로 설정하여 내용이 확장되도록 함
+            let newHeight = editableArea[0].scrollHeight; // 실제 내용 높이 가져오기
+            editableArea.css('height', newHeight + 'px'); // 내용에 맞게 높이 설정
+        }
     });
 
     $(function () {
@@ -316,7 +365,8 @@
         document.getElementById('related_project').value = data.related_project;
         document.getElementById('related_info').value = data.related_info;
         document.getElementById('period_to').value = data.period_to;
-        document.getElementById('special_comment').value = data.special_comment;
+        $('#special_comment').summernote('code', data.special_comment);
+        $('#special_comment').summernote('disable');
 
         draw_apv_approval_flow(data);
         draw_apv_cc_users(data);
@@ -712,7 +762,7 @@
     }
 
     function apv_return_temp() {
-        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인은 초기화됩니다.')) {
+        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인과 첨부파일은 초기화됩니다.')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 apv_id: nullapply(documentId),

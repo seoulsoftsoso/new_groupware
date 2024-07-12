@@ -44,8 +44,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
     let categoryName = '';
     let categoryId = '';
 
@@ -87,11 +87,24 @@
         `;
 
         listItem.onclick = function () {
-            if (confirm(`${category.name} 전자결재를 작성하시겠습니까?`)) {
-                categoryName = category.name;
-                categoryId = category.id;
-                window.location.href = `/admins/apv/docs_create/${categoryId}`;
-            }
+            Swal.fire({
+                title: `<span class="fs-3">${category.name} 전자결재를 작성하시겠습니까?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                customClass: {
+                    confirmButton: 'btn btn-lg btn-primary',
+                    cancelButton: 'btn btn-lg btn-secondary'
+                },
+            buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    categoryName = category.name;
+                    categoryId = category.id;
+                    window.location.href = `/admins/apv/docs_create/${categoryId}`;
+                }
+            });
         };
 
         return listItem;

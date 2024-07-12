@@ -3,6 +3,7 @@
 
 <meta charset="UTF-8">
 {% include 'admins/admin_header.html' %}
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <style>
     /* 모바일웹 텍스트 줄바꿈 방지 */
     .table td, .table th {
@@ -21,10 +22,12 @@
                 flex: 0 0 100%;
                 max-width: 100%;
             }
+
         .basic_info_area, .approval_info_area, .cc_info_area,
         .detail_info_area, .check_info_area {
             margin-right: 0 !important;
         }
+
         .control-buttons {
             display: flex;
             width: 100%;
@@ -37,9 +40,11 @@
             margin-right: 0 !important;
             margin-left: 0 !important;
         }
+
         input[id="doc_title"] {
             font-size: 20px !important;
         }
+
         input[id="approver1"],
         input[id="approver2"],
         input[id="approver3"],
@@ -48,6 +53,7 @@
         input[id="approver6"] {
             width: 180px !important;
         }
+
         .cc_box {
             height: 130px !important;
         }
@@ -67,6 +73,27 @@
         }
         textarea[id="special_comment"] {
             max-width: 100% !important;
+        }
+        div[id="check_attached_area"] {
+            padding: 0 8px !important;
+        }
+        div[id="file_list"] {
+            width: 100%;
+        }
+        .file-list-item {
+            max-width: 100% !important;
+            font-size: 12px;
+            justify-content: start !important;
+            display: flex;
+            width: 100%;
+        }
+        .file-list-item span {
+            margin-left: 0 !important;
+        }
+        .file-list-item button {
+            width: 20px !important;
+            height: 20px !important;
+            padding: 2px !important;
         }
     }
 </style>
@@ -245,13 +272,18 @@
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
-                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;"></textarea>
+                                    <div id="special_comment" aria-label="special_comment"></div>
                                 </div>
 
-                                <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
+                                <div class="d-flex justify-content-start mt-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width: 100px; min-height: 40px;">관련 첨부</div>
-                                    <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" multiple>
-                                    <span class="row align-items-center mx-3"> * 첨부파일은 임시저장에서 제외, 결재 전송시에만 첨부 (기안취소시 기존 첨부파일은 남아있으니 재첨부할 필요 없음)</span>
+                                    <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" onchange="updateFileList(event)" multiple>
+                                    <span class="row align-items-center mx-3" style="font-size: 13px;">
+                                    * 첨부는 임시저장불가, 결재전송시 첨부요망<br/>
+                                    * 드래그앤드롭 혹은 파일선택으로 첨부 가능 (최대 5MB)</span>
+                                </div>
+                                <div class="d-flex justify-content-start mb-3" style="padding-left: 115px;" id="check_attached_area">
+                                    <div id="file_list"></div>
                                 </div>
                             </div>
                         </div>
@@ -283,7 +315,7 @@
 </div>
 </body>
 {% include 'admins/admin_footer.html' %}
-
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
 
     let currentUserId = {{ request.user.id }};
@@ -298,6 +330,36 @@
     let apv_category_id = null;
 
     $(document).ready(function () {
+        $('#special_comment').summernote({
+            height: 400, // 에디터 높이
+            width: 1200,
+            minHeight: null, // 최소 높이
+            maxHeight: null, // 최대 높이
+            focus: false, // 에디터 로딩후 포커스를 맞출지 여부
+            lang: 'ko-KR', // 한글 설정
+            tabDisable: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['fontstyle', ['fontname', 'fontsize', 'color']],
+                ['para', ['paragraph']],
+                {#['para', ['ul', 'ol', 'paragraph']],#}
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['hr', 'link', 'picture', 'video']],
+                ['view', ['help']]
+                {#['view', ['fullscreen', 'codeview', 'help']]#}
+            ],
+            callbacks: {
+                onInit: function () {
+                    // 'More Color' 드롭다운 버튼을 제외한 모든 'note-icon-caret' 요소 제거
+                    $('.note-icon-caret').not(function () {
+                        return $(this).closest('button[aria-label="More Color"]').length;
+                    }).remove();
+                }
+            }
+        });
+
         $('#period_to').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
@@ -309,9 +371,7 @@
 
         if(documentId) {
             load_apv_temp_data();
-            if (documentId) {
-                document.getElementById('deleteBtn').classList.remove('d-none');
-            }
+            document.getElementById('deleteBtn').classList.remove('d-none');
         }
     });
 
@@ -404,7 +464,7 @@
         document.getElementById('related_project').value = data.related_project;
         document.getElementById('related_info').value = data.related_info;
         document.getElementById('period_to').value = data.period_to;
-        document.getElementById('special_comment').value = data.special_comment;
+        $('#special_comment').summernote('code', data.special_comment);
 
         let apvCcSelect = document.getElementById('apv_cc');
         let selectedCcIds = data.apv_cc.map(cc => cc.user_id);
@@ -431,7 +491,7 @@
             related_project: nullapply($('#related_project').val()),
             related_info: nullapply($('#related_info').val()),
             period_to: nullapply($('#period_to').val()),
-            special_comment: nullapply($('#special_comment').val()),
+            special_comment: nullapply($('#special_comment').summernote('code')),
             approver1: getApproverId('approver1'),
             approver2: getApproverId('approver2'),
             approver3: getApproverId('approver3'),
@@ -471,7 +531,7 @@
                 related_project: nullapply($('#related_project').val()),
                 related_info: nullapply($('#related_info').val()),
                 period_to: nullapply($('#period_to').val()),
-                special_comment: nullapply($('#special_comment').val()),
+                special_comment: nullapply($('#special_comment').summernote('code')),
                 attached_files: [],
                 approver1: getApproverId('approver1'),
                 approver2: getApproverId('approver2'),
@@ -590,5 +650,79 @@
         additionalApprovers.style.display = 'block';
         this.style.display = 'none';
     });
+
+    // 첨부파일 렌더링
+    function updateFileList(event) {
+        let fileList = document.getElementById('file_list');
+        fileList.innerHTML = ''; // 기존 목록 초기화
+        let filesArray = Array.from(event.target.files);
+
+        // 파일 용량 체크
+        for (let file of filesArray) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB 초과 파일 검사
+                alert('첨부된 파일의 용량이 5MB를 초과할 수 없습니다.');
+                event.target.value = ''; // input 파일 목록 초기화
+                fileList.innerHTML = ''; // 파일 리스트 초기화
+                return; // 함수 종료
+            }
+        }
+
+        let iconClassMap = {
+            'default': 'fa-regular fa-file fa-lg',
+            'txt': 'fa-regular fa-file-lines fa-lg',
+            'hwp': 'fa-regular fa-file-lines fa-lg',
+            'hwpx': 'fa-regular fa-file-lines fa-lg',
+            'jpg': 'fa-regular fa-file-image fa-lg',
+            'png': 'fa-regular fa-file-image fa-lg',
+            'pdf': 'fa-regular fa-file-powerpoint fa-lg',
+            'doc': 'fa-regular fa-file-word fa-lg',
+            'docx': 'fa-regular fa-file-word fa-lg',
+            'ppt': 'fa-regular fa-file-powerpoint fa-lg',
+            'pptx': 'fa-regular fa-file-powerpoint fa-lg',
+            'xls': 'fa-regular fa-file-excel fa-lg',
+            'xlsx': 'fa-regular fa-file-excel fa-lg',
+            'zip': 'fa-regular fa-file-zipper fa-lg',
+        };
+
+        filesArray.forEach((file, index) => {
+            let fileContainer = document.createElement('div');
+            fileContainer.className = 'file-list-item';
+            fileContainer.style = 'display: flex; align-items: center; justify-content: space-between; width: 500px; padding: 5px 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;';
+
+            let fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB'; // 파일 크기 계산
+
+            let fileName = document.createElement('span');
+            fileName.textContent = `${file.name} (${fileSizeMB})`;
+            fileName.style = 'flex-grow: 1; margin-left: 10px;';
+
+            let removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.textContent = 'x';
+            removeButton.addEventListener('click', () => {
+                filesArray.splice(index, 1);
+                updateFileInput(filesArray, event.target);
+                updateFileList({ target: event.target }); // 파일 삭제 후 파일 리스트 업데이트
+            });
+
+            let fileExtension = file.name.split('.').pop().toLowerCase();
+            let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
+            let iconElement = document.createElement('i');
+            iconElement.className = iconClass;
+            iconElement.style.marginRight = '8px';
+
+            fileContainer.appendChild(iconElement);
+            fileContainer.appendChild(fileName);
+            fileContainer.appendChild(removeButton);
+            fileList.appendChild(fileContainer);
+        });
+    }
+
+    function updateFileInput(filesArray, inputElement) {
+        let dataTransfer = new DataTransfer();
+        filesArray.forEach(file => dataTransfer.items.add(file));
+        inputElement.files = dataTransfer.files;
+    }
+
+    document.getElementById('attached_files').addEventListener('change', updateFileList);
 
 </script>

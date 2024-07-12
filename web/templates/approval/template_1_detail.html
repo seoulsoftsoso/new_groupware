@@ -242,12 +242,6 @@
                                         </div>
                                     </div>
 
-{% comment %}                                    <div class="d-flex justify-content-start align-items-center my-1">
-                                        <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 일수 총</div>
-                                        <input class="form-control" id="period_count" style="text-align: right; width:60px; padding-left: 0;" disabled>
-                                        <div class="row justify-content-start align-items-center m-1" style="color: #000; font-size: 16px; width:50px;"> 일</div>
-                                    </div>{% endcomment %}
-
                                     <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
                                         <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
                                             <div class="m-1" style="width:100px;">휴가 일수 총</div>
@@ -255,8 +249,6 @@
                                             <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
@@ -280,7 +272,7 @@
                                     <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
                                     <div class="d-flex" id="comment_write">
                                         <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                                        <textarea placeholder="추가 의견은 이곳에 남겨보세요" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                                        <textarea placeholder="추가 의견은 이곳에 남겨보세요" rows="10" cols="30" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
                                         <button class="btn btn-outline-secondary mx-2 p-0" style="width: 10%;" onclick="create_comment()"> 등록 </button>
                                     </div>
                                 </div>
@@ -597,7 +589,7 @@
             } else {
                 date = formatDateTime(comment.created_at) + '  (최근 수정됨: ' + formatDateTime(comment.updated_at) + ')';
             }
-            let content = comment.content;
+            let content = comment.content.replace(/\n/g, '<br>'); // 줄바꿈을 <br>로 변환
             let comment_id = comment.id;
             let created_by_id = comment.created_by.id;
 
@@ -777,7 +769,7 @@
     }
 
     function apv_return_temp() {
-        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인은 초기화됩니다.')) {
+        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인과 첨부파일은 초기화됩니다.')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 apv_id: nullapply(documentId),

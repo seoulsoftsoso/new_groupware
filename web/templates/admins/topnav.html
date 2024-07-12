@@ -20,7 +20,7 @@
             {#            왼쪽 공간#}
         </div>
         <div class="userinfo_area d-flex justify-content-end align-items-center px-3">
-            <div class="dropdown d-inline-block">
+            {% comment %}<div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect p-2"
                         id="notiCenter" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="position: relative;">
@@ -101,7 +101,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div>{% endcomment %}
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
@@ -160,7 +160,7 @@
         document.cookie = 'order_company=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    {% comment %}document.addEventListener("DOMContentLoaded", function () {
         let notiCount = document.getElementById("notiCount").textContent.trim();
         let notiCenter = document.getElementById("notiCenter");
 
@@ -169,6 +169,6 @@
         } else {
             notiCenter.classList.remove("bx-tada");
         }
-    });
+    });{% endcomment %}
 
 </script>

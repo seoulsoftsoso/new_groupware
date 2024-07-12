@@ -320,6 +320,7 @@ class ApvDetail(View):
             apv_master.apv_status = '임시'
             apv_master.save()
             ApvReadStatus.objects.filter(document=apv_master).delete()
+            ApvAttachments.objects.filter(document=apv_master).delete()
             return JsonResponse({'success': 'Status updated to 임시 and all approvals reset to 대기'}, status=200)
 
         # 승인 버튼을 누른 사용자가 다음 승인자인지 확인
