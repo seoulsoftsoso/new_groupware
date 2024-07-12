@@ -66,6 +66,8 @@
         }
         .mobile_align_left {
             justify-content: flex-start !important;
+            padding-top: 5px;
+            padding-left: 10px !important;
         }
         .approver_group2 {
             display: none;
@@ -791,22 +793,89 @@
         return JSON.stringify(items);
     }
 
-    // 첨부파일 렌더링
-    function updateFileList(event) {
-        let fileList = document.getElementById('file_list');
-        fileList.innerHTML = ''; // 기존 목록 초기화
-        let filesArray = Array.from(event.target.files);
+    // 파일 첨부 이벤트 처리
+    document.getElementById('attached_files').addEventListener('change', handleFileSelect);
 
-        // 파일 용량 체크
-        for (let file of filesArray) {
-            if (file.size > 5 * 1024 * 1024) { // 5MB 초과 파일 검사
-                alert('첨부된 파일의 용량이 5MB를 초과할 수 없습니다.');
-                event.target.value = ''; // input 파일 목록 초기화
-                fileList.innerHTML = ''; // 파일 리스트 초기화
-                return; // 함수 종료
+    let accumulatedFiles = [];
+
+    function handleFileSelect(event) {
+        let newFiles = Array.from(event.target.files);
+        let totalSize = accumulatedFiles.reduce((acc, file) => acc + file.size, 0);
+
+        // 새로운 파일을 배열에 추가하기 전에 용량 체크
+        let validFiles = [];
+        for (let file of newFiles) {
+            if (totalSize + file.size > 5 * 1024 * 1024) { // 총 5MB 초과 파일 검사
+                alert(`첨부 파일의 총 용량은 5MB를 초과할 수 없습니다.`);
+            } else {
+                validFiles.push(file);
+                totalSize += file.size;
             }
         }
 
+        accumulatedFiles = accumulatedFiles.concat(validFiles);
+
+        // 중복 파일 제거
+        accumulatedFiles = removeDuplicateFiles(accumulatedFiles);
+
+        // 파일 목록을 업데이트
+        updateFileList();
+
+        // 업데이트된 파일 배열을 input 요소에 반영
+        updateFileInput(accumulatedFiles, event.target);
+    }
+
+    function removeDuplicateFiles(files) {
+        let uniqueFiles = [];
+        let fileNames = new Set();
+
+        files.forEach(file => {
+            if (!fileNames.has(file.name)) {
+                uniqueFiles.push(file);
+                fileNames.add(file.name);
+            }
+        });
+
+        return uniqueFiles;
+    }
+
+    function updateFileList() {
+        let fileList = document.getElementById('file_list');
+        fileList.innerHTML = ''; // 기존 목록 초기화
+
+        // 파일 리스트를 UI에 업데이트
+        accumulatedFiles.forEach((file, index) => {
+            let fileContainer = document.createElement('div');
+            fileContainer.className = 'file-list-item';
+            fileContainer.style = 'display: flex; align-items: center; justify-content: space-between; width: 500px; padding: 5px 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;';
+
+            let fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB'; // 파일 크기 계산
+
+            let fileName = document.createElement('span');
+            fileName.textContent = `${file.name} (${fileSizeMB})`;
+            fileName.style = 'flex-grow: 1; margin-left: 10px;';
+
+            let removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.textContent = 'x';
+            removeButton.addEventListener('click', () => {
+                accumulatedFiles.splice(index, 1);
+                updateFileList();
+                updateFileInput(accumulatedFiles, document.getElementById('attached_files'));
+            });
+
+            let iconElement = document.createElement('i');
+            iconElement.className = getFileIconClass(file.name);
+            iconElement.style.marginRight = '8px';
+
+            fileContainer.appendChild(iconElement);
+            fileContainer.appendChild(fileName);
+            fileContainer.appendChild(removeButton);
+            fileList.appendChild(fileContainer);
+        });
+    }
+
+    function getFileIconClass(fileName) {
         let iconClassMap = {
             'default': 'fa-regular fa-file fa-lg',
             'txt': 'fa-regular fa-file-lines fa-lg',
@@ -823,38 +892,8 @@
             'xlsx': 'fa-regular fa-file-excel fa-lg',
             'zip': 'fa-regular fa-file-zipper fa-lg',
         };
-
-        filesArray.forEach((file, index) => {
-            let fileContainer = document.createElement('div');
-            fileContainer.className = 'file-list-item';
-            fileContainer.style = 'display: flex; align-items: center; justify-content: space-between; width: 500px; padding: 5px 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;';
-
-            let fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB'; // 파일 크기 계산
-
-            let fileName = document.createElement('span');
-            fileName.textContent = `${file.name} (${fileSizeMB})`;
-            fileName.style = 'flex-grow: 1; margin-left: 10px;';
-
-            let removeButton = document.createElement('button');
-            removeButton.className = 'btn btn-danger btn-sm';
-            removeButton.textContent = 'x';
-            removeButton.addEventListener('click', () => {
-                filesArray.splice(index, 1);
-                updateFileInput(filesArray, event.target);
-                updateFileList({ target: event.target }); // 파일 삭제 후 파일 리스트 업데이트
-            });
-
-            let fileExtension = file.name.split('.').pop().toLowerCase();
-            let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
-            let iconElement = document.createElement('i');
-            iconElement.className = iconClass;
-            iconElement.style.marginRight = '8px';
-
-            fileContainer.appendChild(iconElement);
-            fileContainer.appendChild(fileName);
-            fileContainer.appendChild(removeButton);
-            fileList.appendChild(fileContainer);
-        });
+        let fileExtension = fileName.split('.').pop().toLowerCase();
+        return iconClassMap[fileExtension] || iconClassMap['default'];
     }
 
     function updateFileInput(filesArray, inputElement) {
@@ -862,7 +901,5 @@
         filesArray.forEach(file => dataTransfer.items.add(file));
         inputElement.files = dataTransfer.files;
     }
-
-    document.getElementById('attached_files').addEventListener('change', updateFileList);
 
 </script>

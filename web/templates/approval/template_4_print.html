@@ -178,6 +178,13 @@
     let doc_title = null;
     let doc_no = null;
 
+    $(document).ready(function () {
+        $('#special_comment').summernote({
+            width: 1200,
+            toolbar: [],
+        });
+    });
+
     $(function () {
         load_apv_detail();
     });

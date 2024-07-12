@@ -88,14 +88,15 @@
 
         listItem.onclick = function () {
             Swal.fire({
-                title: `<span class="fs-3">${category.name} 전자결재를 작성하시겠습니까?`,
+                title: `<span class="fs-3">[${category.name}]\n전자결재를 작성하시겠습니까?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '확인',
                 cancelButtonText: '취소',
                 customClass: {
-                    confirmButton: 'btn btn-lg btn-primary',
-                    cancelButton: 'btn btn-lg btn-secondary'
+                    confirmButton: 'btn btn-lg btn-info mx-2',
+                    cancelButton: 'btn btn-lg btn-secondary mx-2',
+                    popup: 'swal2-custom-popup'  // 추가 스타일을 위한 클래스
                 },
             buttonsStyling: false
             }).then((result) => {
@@ -106,6 +107,13 @@
                 }
             });
         };
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .swal2-custom-popup .swal2-confirm, .swal2-custom-popup .swal2-cancel {
+                width: 140px;
+            }
+        `;
+        document.head.appendChild(style);
 
         return listItem;
     }

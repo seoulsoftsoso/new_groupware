@@ -49,7 +49,7 @@
         font-size: 10px;
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 900px) {
 
         input[id="doc_title"] {
             font-size: 20px !important;
@@ -60,17 +60,17 @@
             padding-top: 10px;
         }
 
+        .col-lg-2, .col-lg-3, .col-lg-7, .col-lg-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
         .basic_info_area, .approval_info_area, .cc_info_area, .detail_info_area, .comment_info_area {
             margin-right: 0 !important;
         }
 
         .comment_info_area {
             padding: 1% !important;
-        }
-
-        .col-lg-2, .col-lg-3, .col-lg-7, .col-lg-12 {
-            flex: 0 0 100%;
-            max-width: 100%;
         }
 
         .user_comment {
@@ -93,7 +93,7 @@
 
         .cc_box {
             height: auto !important;
-            max-height: 200px;
+            max-height: 180px !important;
         }
 
         .control-buttons {
@@ -110,8 +110,8 @@
         }
         .mobile_align_left {
             justify-content: flex-start !important;
-            padding-top: 10px;
-            padding-left: 0 !important;
+            padding-top: 5px;
+            padding-left: 10px !important;
         }
         textarea[id="special_comment"] {
             max-width: 100% !important;
@@ -193,10 +193,10 @@
                                     <i class="fa-solid fa-user-plus fa-lg" style="color: #000;"></i>
                                     <span style="color: #000; font-size: 18px; padding-left: 10px;">참조자</span>
                                 </div>
-                                <div class="cc_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0; overflow: hidden;">
-                                    <div class="d-flex justify-content-start cc_box" style="height:237px; overflow-y: auto;">
-                                        <div class="d-flex justify-content-start px-2" id="apv_cc">
-                                            <ul style="list-style-type: none; padding: 0;"></ul>
+                                <div class="cc_info_area p-2" style="border: 1px solid #ddd; margin: auto 20px auto 0; overflow: hidden;">
+                                    <div class="d-flex justify-content-start cc_box" style="width: 100%; height:220px; overflow-y: auto;">
+                                        <div class="d-flex justify-content-start w-100" id="apv_cc">
+                                            <ul style="width: 100%; list-style-type: none; padding: 0 2px;"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -283,7 +283,7 @@
             </div>
             <div class="d-flex justify-content-between" style="padding: 0 2% 0 2%;">
                 <div class="d-flex justify-content-start my-3">
-                    <div type="button" class="btn btn-outline-success m-2 px-1 d-none" id="printPage" style="width: 150px;" onclick="apv_print_page()">인쇄</div>
+                    <div type="button" class="btn btn-outline-success m-2 px-1" id="printPage" style="width: 150px;" onclick="apv_print_page()">인쇄</div>
                 </div>
                 <div class="d-flex justify-content-end my-3 control-buttons">
                     <div type="button" class="btn btn-outline-danger m-2 px-1 d-none" id="selfCancel" style="width: 150px;" onclick="apv_return_temp()"> 기안 취소 </div>
@@ -343,11 +343,6 @@
         created_by_id = data.created_by.id;
         apv_category_id = data.apv_category.id;
         preventAccess();
-
-        // 기안완료시 인쇄버튼 보이기
-        if (data.apv_status == '완료') {
-            document.getElementById('printPage').classList.remove('d-none');
-        }
 
         // 기안취소 버튼 보이기
         if (data.apv_status !== '완료') {
@@ -459,12 +454,12 @@
 
         let createCcUserDiv = (username, departmentName, profile_image) => {
             return `
-            <li style="display: flex; align-items: center; padding: 10px;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+            <li class="w-100" style="background-color: rgba(255, 171, 0, 0.3); display: flex; align-items: center; padding: 10px; border-radius: 6px; margin: 4px 0;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
                     <img src="${profile_image}" alt="Avatar"
                          style="width: 100%; height: 100%;">
                 </div>
-                <div><span style="">${departmentName}<br/>${username}</span></div>
+                <div><span style="color:#222;">${departmentName}<br/>${username}</span></div>
             </li>
         `;
         };
@@ -488,14 +483,24 @@
             } else {
                 statusBadge = 'text-bg-primary';
             }
+
+            let imageStyle = '';
+            if (status === '승인' || status === '완료') {
+                imageStyle = 'border: 6px solid #71DD37;';
+            } else if (status === '대기') {
+                imageStyle = 'border: 6px solid #696CFF;';
+            } else if (status === '반려') {
+                imageStyle = 'border: 6px solid #FF3E1D;';
+            }
+
             return `
             <div class="px-3" style="text-align: center;">
                 <div class="my-1" style="font-size: 14px; font-weight: bold; color: #555;">${title}</div>
                 <img class="mb-3" src="${imageSrc}" alt="${name}"
-                     style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover; display: block; margin: 0 auto;">
+                     style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover; display: block; margin: 0 auto; ${imageStyle}">
                 <div class="my-0" style="font-weight: bold; white-space: nowrap;">${name}</div>
                 <div class="my-0" style="font-size: 14px; color: #555;">${date}</div>
-                <div class="my-2" style="font-size: 16px; color: #555;"><span class="badge ${statusBadge}">${status}</span></div>
+                <div class="my-2" style="font-size: 20px; color: #555;"><span class="badge ${statusBadge}">${status}</span></div>
             </div>
         `;
         };
@@ -830,9 +835,4 @@
         }
     }
 
-
 </script>
-
-
-
-

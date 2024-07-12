@@ -61,13 +61,12 @@ def admin_index_page(request):
     today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()
 
     # 나의 결재
-    # user_id = request.COOKIES["user_id"]
     user = get_object_or_404(UserMaster, id=request.user.id)
     qs = ApvMaster.objects.filter().exclude(apv_status='삭제')
 
     # 사용자의 권한에 따라 필터링
     if user.is_authenticated:
-        if user.is_superuser:  # 슈퍼유저는 모든 게시물 조회 가능
+        if user.is_master:  # 마스터유저는 모든 게시물 조회 가능 (추후 필요시 is_superuser로 변경)
             pass
 
         else:
@@ -93,7 +92,9 @@ def admin_index_page(request):
         qs = qs.none()
 
     waiting_docs = qs.filter(
-        id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user]).count()
+        apv_status='진행',
+        id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user]
+    ).count()
 
     read_status = ApvReadStatus.objects.filter(user=user).values_list('document_id', flat=True)
     read_documents = set(read_status)
