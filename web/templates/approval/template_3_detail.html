@@ -562,7 +562,7 @@
             } else {
                 date = formatDateTime(comment.created_at) + '  (최근 수정됨: ' + formatDateTime(comment.updated_at) + ')';
             }
-            let content = comment.content;
+            let content = comment.content.replace(/\n/g, '<br>'); // 줄바꿈을 <br>로 변환
             let comment_id = comment.id;
             let created_by_id = comment.created_by.id;
 
