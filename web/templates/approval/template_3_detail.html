@@ -742,7 +742,7 @@
     }
 
     function apv_return_temp() {
-        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인은 초기화됩니다.')) {
+        if (confirm('기안을 취소하시겠습니까?\n전자결재가 임시상태로 변경되며 모든 승인과 첨부파일은 초기화됩니다.')) {
             let api_data = {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 apv_id: nullapply(documentId),

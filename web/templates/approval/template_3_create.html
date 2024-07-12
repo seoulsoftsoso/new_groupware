@@ -82,6 +82,27 @@
         textarea[id="special_comment"] {
             max-width: 100% !important;
         }
+        div[id="check_attached_area"] {
+            padding: 0 8px !important;
+        }
+        div[id="file_list"] {
+            width: 100%;
+        }
+        .file-list-item {
+            max-width: 100% !important;
+            font-size: 12px;
+            justify-content: start !important;
+            display: flex;
+            width: 100%;
+        }
+        .file-list-item span {
+            margin-left: 0 !important;
+        }
+        .file-list-item button {
+            width: 20px !important;
+            height: 20px !important;
+            padding: 2px !important;
+        }
     }
 </style>
 <body>
@@ -271,10 +292,15 @@
                                     <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;"></textarea>
                                 </div>
 
-                                <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
+                                <div class="d-flex justify-content-start mt-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width: 100px; min-height: 40px;">관련 첨부</div>
-                                    <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" multiple>
-                                    <span class="row align-items-center mx-3"> * 첨부파일은 임시저장에서 제외, 결재 전송시에만 첨부 (기안취소시 기존 첨부파일은 남아있으니 재첨부할 필요 없음)</span>
+                                    <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" onchange="updateFileList(event)" multiple>
+                                    <span class="row align-items-center mx-3" style="font-size: 13px;">
+                                    * 첨부는 임시저장불가, 결재전송시 첨부요망<br/>
+                                    * 드래그앤드롭 혹은 파일선택으로 첨부 가능 (최대 5MB)</span>
+                                </div>
+                                <div class="d-flex justify-content-start mb-3" style="padding-left: 115px;" id="check_attached_area">
+                                    <div id="file_list"></div>
                                 </div>
                             </div>
                         </div>
@@ -329,9 +355,7 @@
 
         if(documentId) {
             load_apv_temp_data();
-            if (documentId) {
-                document.getElementById('deleteBtn').classList.remove('d-none');
-            }
+            document.getElementById('deleteBtn').classList.remove('d-none');
         }
     });
 
@@ -679,8 +703,8 @@
         thead.innerHTML = `
             <tr>
                 <th id="item_no" style="color: #000; font-size: small; width: 3%;">No</th>
-                <th id="desc3" style="text-align: center; color: #000; font-size: small; width: 12%;">사용일자</th>
-                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 35%;">내용</th>
+                <th id="desc3" style="text-align: center; color: #000; font-size: small; width: 12%;">관련일자</th>
+                <th id="desc1" style="text-align: center; color: #000; font-size: small; width: 35%;">내 용</th>
                 <th id="desc2" style="text-align: center; color: #000; font-size: small; width: 15%;">지출처</th>
                 <th id="price" style="text-align: center; color: #000; font-size: small; width: 10%;">금 액(원)</th>
                 <th id="remarks" style="text-align: center; color: #000; font-size: small; width: 25%;">비 고</th>
@@ -766,5 +790,79 @@
 
         return JSON.stringify(items);
     }
+
+    // 첨부파일 렌더링
+    function updateFileList(event) {
+        let fileList = document.getElementById('file_list');
+        fileList.innerHTML = ''; // 기존 목록 초기화
+        let filesArray = Array.from(event.target.files);
+
+        // 파일 용량 체크
+        for (let file of filesArray) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB 초과 파일 검사
+                alert('첨부된 파일의 용량이 5MB를 초과할 수 없습니다.');
+                event.target.value = ''; // input 파일 목록 초기화
+                fileList.innerHTML = ''; // 파일 리스트 초기화
+                return; // 함수 종료
+            }
+        }
+
+        let iconClassMap = {
+            'default': 'fa-regular fa-file fa-lg',
+            'txt': 'fa-regular fa-file-lines fa-lg',
+            'hwp': 'fa-regular fa-file-lines fa-lg',
+            'hwpx': 'fa-regular fa-file-lines fa-lg',
+            'jpg': 'fa-regular fa-file-image fa-lg',
+            'png': 'fa-regular fa-file-image fa-lg',
+            'pdf': 'fa-regular fa-file-powerpoint fa-lg',
+            'doc': 'fa-regular fa-file-word fa-lg',
+            'docx': 'fa-regular fa-file-word fa-lg',
+            'ppt': 'fa-regular fa-file-powerpoint fa-lg',
+            'pptx': 'fa-regular fa-file-powerpoint fa-lg',
+            'xls': 'fa-regular fa-file-excel fa-lg',
+            'xlsx': 'fa-regular fa-file-excel fa-lg',
+            'zip': 'fa-regular fa-file-zipper fa-lg',
+        };
+
+        filesArray.forEach((file, index) => {
+            let fileContainer = document.createElement('div');
+            fileContainer.className = 'file-list-item';
+            fileContainer.style = 'display: flex; align-items: center; justify-content: space-between; width: 500px; padding: 5px 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;';
+
+            let fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB'; // 파일 크기 계산
+
+            let fileName = document.createElement('span');
+            fileName.textContent = `${file.name} (${fileSizeMB})`;
+            fileName.style = 'flex-grow: 1; margin-left: 10px;';
+
+            let removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.textContent = 'x';
+            removeButton.addEventListener('click', () => {
+                filesArray.splice(index, 1);
+                updateFileInput(filesArray, event.target);
+                updateFileList({ target: event.target }); // 파일 삭제 후 파일 리스트 업데이트
+            });
+
+            let fileExtension = file.name.split('.').pop().toLowerCase();
+            let iconClass = iconClassMap[fileExtension] || iconClassMap['default'];
+            let iconElement = document.createElement('i');
+            iconElement.className = iconClass;
+            iconElement.style.marginRight = '8px';
+
+            fileContainer.appendChild(iconElement);
+            fileContainer.appendChild(fileName);
+            fileContainer.appendChild(removeButton);
+            fileList.appendChild(fileContainer);
+        });
+    }
+
+    function updateFileInput(filesArray, inputElement) {
+        let dataTransfer = new DataTransfer();
+        filesArray.forEach(file => dataTransfer.items.add(file));
+        inputElement.files = dataTransfer.files;
+    }
+
+    document.getElementById('attached_files').addEventListener('change', updateFileList);
 
 </script>
