@@ -20,7 +20,6 @@ class ApvListView(View):
 
     @transaction.atomic
     def get(self, request, *args, **kwargs):
-        # user_id = request.COOKIES["user_id"]
         user = get_object_or_404(UserMaster, id=request.user.id)
         _page = request.GET.get('page', '')
         _size = request.GET.get('page_size', '')
@@ -92,8 +91,6 @@ class ApvListView(View):
         if apv_status_sch:
             if apv_status_sch == '참조':
                 qs = qs.filter(apv_docs_cc__user=user)
-            elif apv_status_sch == '내문서':
-                qs = qs.filter(created_by_id=user)
             elif apv_status_sch == '결재대기':
                 qs = qs.filter(id__in=[apv.id for apv in qs if ApvDetail.get_next_approver(apv) == user])
             elif apv_status_sch == '읽지않음':
@@ -101,6 +98,10 @@ class ApvListView(View):
                 qs = qs.filter(Q(apv_docs_check__is_read=False, apv_docs_check__user=user) | ~Q(id__in=subquery.values('document')))
             elif apv_status_sch in ['임시', '진행', '완료', '반려']:
                 qs = qs.filter(apv_status=apv_status_sch).exclude(apv_docs_cc__user=user)
+
+        # '내문서' 버튼이 눌려있다면 항상 created_by=user 조건 추가
+        if request.GET.get('mydocs', '') == 'true':
+            qs = qs.filter(created_by=user)
 
         if _page == '' or _size == '':
             results = [get_obj(row) for row in qs]
