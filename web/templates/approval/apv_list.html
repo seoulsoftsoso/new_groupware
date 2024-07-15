@@ -15,19 +15,16 @@
         text-overflow: ellipsis;
     }
 
-    @media (max-width: 900px) {
-        .my_docs_filter {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            gap:10px;
-        }
+    .pagination a {
+        cursor: pointer; /* 손모양 커서 */
+    }
 
-        .sch_and_new  {
+    @media (max-width: 900px) {
+        .my_docs_filter, .sch_and_new {
             display: flex;
             width: 100%;
             justify-content: space-between;
-            gap:10px;
+            gap: 10px;
         }
 
         .my_docs_filter a {
@@ -63,7 +60,9 @@
         th[id="apv_next_approver"],
         td[name="apv_next_approver"],
         th[id="apv_category"],
-        td[name="apv_category"] {
+        td[name="apv_category"],
+        th[id="check_box"],
+        td[name="check_box"] {
             display: none !important;
         }
 
@@ -80,6 +79,9 @@
             display: table-cell !important;
             width: 20% !important;
         }
+        div[id="printPage"] {
+            display: none;
+        }
     }
 </style>
 <body>
@@ -90,14 +92,14 @@
         {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
-        <div class="layout-page" style="">
+        <div class="layout-page">
             {% include 'admins/topnav.html' %}
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
                 <div>
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
-                            <strong style="color: #000; font-size: x-large; font-family: Pretendard;"></i><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
+                            <strong style="color: #000; font-size: x-large; font-family: Pretendard;"><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
                     </div>
                 </div>
             </div>
@@ -158,16 +160,17 @@
                 <table class="dt-multilingual table border-top table table-hover"
                        style="border-left: none; border-right: none; table-layout: fixed; width: 100%;">
                     <thead>
-                    <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                        <th id='updated_at' style="color: #000; font-size: medium; font-weight: bold; width: 12%;">최종 수정일</th>
-                        <th id='doc_no' style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서 번호</th>
-                        <th id='apv_category' style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
-                        <th id='doc_title' style="color: #000; font-size: medium; font-weight: bold; width: 33%;">제목</th>
-                        <th id='created_by' style="color: #000; font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                        <th id='apv_status' style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 상태</th>
-                        <th id='apv_status_wocc' style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태</th>
-                        <th id='apv_next_approver' style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
-                    </tr>
+                        <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                            <th id="check_box" style="text-align: center; width: 5%;"><input type="checkbox" style="width: 18px; height: 18px;" id="select_all"></th>
+                            <th id="updated_at" style="color: #000; font-size: medium; font-weight: bold; width: 12%;">최종 수정일</th>
+                            <th id="doc_no" style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서 번호</th>
+                            <th id="apv_category" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
+                            <th id="doc_title" style="color: #000; font-size: medium; font-weight: bold; width: 33%;">제목</th>
+                            <th id="created_by" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">작성자</th>
+                            <th id="apv_status" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 상태</th>
+                            <th id="apv_status_wocc" style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태</th>
+                            <th id="apv_next_approver" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
+                        </tr>
                     </thead>
                     <tbody id="apv_tbody"></tbody>
                 </table>
@@ -175,6 +178,10 @@
 
             <div class="apv-nation d-flex justify-content-center" style="padding: 1% 2% 1% 2%;">
                 <div id="apv_nation_id"></div>
+            </div>
+
+            <div onclick="saveSelectedPDFs()" style="width: 150px; margin-left: 2%; margin-top: -100px;"
+                 id="printPage" class="btn btn-success d-none" type="button">PDF 저장
             </div>
         </div>
     </div>
@@ -199,7 +206,7 @@
     let date_sch_from = '';
     let date_sch_to = '';
     let apv_click_id = '';
-    let apv_click_category ='';
+    let apv_click_category = '';
     let apv_click_status = '';
     let total_unread = '';
     let total_next_approver = '';
@@ -248,7 +255,6 @@
         }
         search_apv_data();
     });
-
 
     document.addEventListener("DOMContentLoaded", function () {
         // 페이지 로드 시 URL 파라미터 확인 후 버튼 클릭
@@ -321,8 +327,9 @@
 
         let rows = "";
         if (data.length === 0) {
-        rows = `<tr><td colspan="8" class="text-center">불러올 문서가 없습니다</td></tr>`;
+            rows = `<tr><td colspan="9" class="text-center">불러올 문서가 없습니다</td></tr>`;
         }
+
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
 
@@ -342,15 +349,17 @@
 
             let row = `
             <tr id='${item.id}' apv_status='${item.apv_status}' apv_category_id='${item.apv_category.id}' class='${unreadClass}' style='cursor:pointer;'>
+            <td name="check_box" style="text-align: center; height: 50px; display: flex; align-items: center; justify-content: center;">
+                <input type="checkbox" class="select_doc" style="width: 18px; height: 18px;" value="${item.id}" data-apv-category="${item.apv_category.id}"></td>
             <td name="no" class="d-none">${num + i}</td>
-            <td name='updated_at'>${item.updated_at}</td>
-            <td name='doc_no'>${item.doc_no}</td>
-            <td name='apv_category'>${item.apv_category.name}</td>
-            <td name='doc_title'>${docTitle}</td>
-            <td name='created_by'>${item.created_by.username}</td>
-            <td name='apv_status'><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
-            <td name='apv_status_wocc' style="display: none;"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
-            <td name='apv_next_approver'>${item.next_approver}</td>
+            <td name='updated_at' class="clickable">${item.updated_at}</td>
+            <td name='doc_no' class="clickable">${item.doc_no}</td>
+            <td name='apv_category' class="clickable">${item.apv_category.name}</td>
+            <td name='doc_title' class="clickable">${docTitle}</td>
+            <td name='created_by' class="clickable">${item.created_by.username}</td>
+            <td name='apv_status' class="clickable"><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
+            <td name='apv_status_wocc' style="display: none;" class="clickable"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
+            <td name='apv_next_approver' class="clickable">${item.next_approver}</td>
             </tr>`;
 
             rows += row;
@@ -359,8 +368,21 @@
         apv_nation.nation_display(done);
         $('#apv_tbody').html(rows);
 
-        $('#apv_tbody > tr').on('click', function () {
-            if ($(this).attr("id") == null) {
+        document.querySelectorAll('.select_doc').forEach(checkbox => {
+            checkbox.addEventListener('click', function (e) {
+                e.stopPropagation();
+                // 선택된 체크박스가 있는 행에 bg-success 클래스 추가/제거
+                if (this.checked) {
+                    this.closest('tr').classList.add('bg-success-subtle');
+                } else {
+                    this.closest('tr').classList.remove('bg-success-subtle');
+                }
+            });
+        });
+
+        $('#apv_tbody').on('click', 'tr', function (e) {
+            // 클릭한 요소가 체크박스이거나 클릭 가능한 열이 아닌 경우 이벤트를 중단
+            if (e.target.type === 'checkbox' || !$(e.target).hasClass('clickable')) {
                 return;
             }
             $(this).parent().find('tr').removeClass('clicked');
@@ -375,6 +397,91 @@
                 location.href = `/admins/apv/progress/${apv_click_category}/${apv_click_id}`;
             }
         });
+    }
+
+    // 다중 PDF 저장
+    document.addEventListener('DOMContentLoaded', function () {
+        let apvTbody = document.getElementById('apv_tbody');
+        let printPage = document.getElementById('printPage');
+
+        if (apvTbody && printPage) {
+            // 처음 로드 시에 bg-success-subtle 클래스를 가진 요소가 있는지 확인
+            let selectedboxes = apvTbody.querySelectorAll('.bg-success-subtle');
+            if (selectedboxes.length > 0) {
+                printPage.classList.remove('d-none');
+            }
+
+            // MutationObserver를 설정하여 #apv_tbody 내의 변화를 감지
+            let observer = new MutationObserver(function (mutationsList) {
+                // 각 변화를 확인
+                mutationsList.forEach(function (mutation) {
+                    if (mutation.type === 'childList' || mutation.type === 'attributes') {
+                        // #apv_tbody 내에 bg-success-subtle 클래스를 가진 요소가 있는지 확인
+                        let selectedboxes = apvTbody.querySelectorAll('.bg-success-subtle');
+                        if (selectedboxes.length > 0) {
+                            printPage.classList.remove('d-none');
+                        } else {
+                            printPage.classList.add('d-none');
+                        }
+                    }
+                });
+            });
+
+            // 감시할 대상과 옵션을 설정
+            observer.observe(apvTbody, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']});
+        }
+    });
+
+    document.getElementById('select_all').addEventListener('change', function (e) {
+        let checkboxes = document.querySelectorAll('.select_doc');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = e.target.checked;
+            // 모두 선택할 때 모든 행에 bg-success 클래스 추가/제거
+            if (e.target.checked) {
+                checkbox.closest('tr').classList.add('bg-success-subtle');
+            } else {
+                checkbox.closest('tr').classList.remove('bg-success-subtle');
+            }
+        });
+    });
+
+    function saveSelectedPDFs() {
+        let selectedCheckboxes = document.querySelectorAll('.select_doc:checked');
+        if (selectedCheckboxes.length === 0) {
+            alert('저장할 항목을 선택하세요.');
+            return;
+        }
+
+        let processNext = (index) => {
+            if (index >= selectedCheckboxes.length) {
+                alert('선택된 항목이 PDF로 저장되었습니다.');
+                return;
+            }
+
+            let checkbox = selectedCheckboxes[index];
+            let pk = checkbox.value;
+            let pk_cat = checkbox.getAttribute('data-apv-category');
+            let printUrl = `/admins/apv/print/${pk_cat}/${pk}/`;
+
+            let popup = window.open(printUrl, 'Print', 'width=400,height=10');
+            popup.onload = () => {
+                setTimeout(() => {
+                    try {
+                        popup.save_pdf();
+                        setTimeout(() => {
+                            popup.close();
+                            processNext(index + 1); // 다음 항목 처리
+                        }, 3000); // save_pdf 실행 후 약간의 지연 시간
+                    } catch (error) {
+                        console.error('PDF 저장 중 오류 발생:', error);
+                        popup.close();
+                        processNext(index + 1); // 오류 발생 시에도 다음 항목 처리
+                    }
+                }, 500); // 페이지 로드 후 약간의 지연 시간
+            };
+        };
+
+        processNext(0); // 첫 번째 항목부터 시작
     }
 
 </script>

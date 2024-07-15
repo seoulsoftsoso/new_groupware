@@ -38,7 +38,7 @@
         }
 
         .user_comment {
-            font-size: 12px !important;
+            font-size: 14px !important;
         }
 
         div[id="comment_write"] {
@@ -201,8 +201,6 @@
                                     <div class="d-flex addrowBtn flex-column">
                                         <div class="row justify-content-center align-items-start mx-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">세부 항목</div>
                                         <div class="d-flex justify-content-center my-1 mobile_align_left">
-                                            {% comment %}<button type="button" id="add_row" class="btn btn-sm btn-outline-secondary" style="width: 30px; height: 30px;">+</button>
-                                            <button type="button" id="remove_row" class="btn btn-sm btn-outline-secondary mx-1" style="width: 30px; height: 30px;">-</button>{% endcomment %}
                                             <span class="row align-items-center mx-1 desktop_hide" style="font-size: 12px;"> * 모바일 이용시 가로화면에서 더 크게 보입니다. </span>
                                         </div>
                                     </div>
@@ -235,8 +233,8 @@
                                 <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
                                 <div class="d-flex" id="comment_write">
                                     <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                                    <textarea placeholder="추가 의견은 이곳에 남겨보세요" style="height: 60px; width: 90%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
-                                    <button class="btn btn-outline-secondary mx-2 p-0" style="width: 10%;" onclick="create_comment()"> 등록 </button>
+                                    <textarea placeholder="추가 의견은 이곳에 남겨보세요" rows="10" cols="30" style="height: 60px; width: 80%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                                    <button class="btn btn-outline-secondary mx-2 p-0" style="width: 80px;" onclick="create_comment()"> 등록 </button>
                                 </div>
                             </div>
                         </div>
@@ -583,7 +581,7 @@
             let editDeleteButtons = '';
             if (created_by_id === currentUserId) {
                 editDeleteButtons = `
-                <button id="edit_button_${comment_id}" onclick="editComment(${comment_id})" style="margin-left: 10px; background: none; border: none; cursor: pointer;">
+                <button id="edit_button_${comment_id}" onclick="editComment(${comment_id})" style="background: none; border: none; cursor: pointer;">
                     <i class="fa-solid fa-eraser fa-sm" style="color: #999;"></i>
                 </button>
                 <button id="delete_button_${comment_id}" onclick="deleteComment(${comment_id})" style="margin-left: -5px; background: none; border: none; cursor: pointer;">
@@ -719,6 +717,11 @@
     }
 
     function comment_hotkey() {
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            console.log('모바일에서는 실행되지 않는 기능입니다..');
+            return;
+        }
+
         let textarea = document.querySelector('#comment_write textarea');
         if (textarea) {
             textarea.addEventListener('keydown', function (event) {
@@ -728,7 +731,7 @@
                 }
             });
         } else {
-            console.warn('Textarea not found for comment hotkey binding.');
+            console.warn('Textarea를 찾을 수 없음');
         }
 
         let observer = new MutationObserver(function (mutations) {
