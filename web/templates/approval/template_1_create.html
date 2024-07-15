@@ -554,7 +554,7 @@
 
     function load_apv_create_data() {
         api_gp("/admins/apv/create/", "get", {}, (done) => {
-            console.log("load_apv_create_data: ", done);
+            // console.log("load_apv_create_data: ", done);
             let data = done;
             try {
                 let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
@@ -573,7 +573,7 @@
     }
 
     function draw_apv_temp_data(done) {
-        console.log("draw_apv_temp_update: ", done);
+        // console.log("draw_apv_temp_update: ", done);
         let data = done.results[0];
         apv_category_id = data.apv_category.id;
         preventAccess();
