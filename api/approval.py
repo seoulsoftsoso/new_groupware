@@ -99,8 +99,9 @@ class ApvListView(View):
             elif apv_status_sch in ['임시', '진행', '완료', '반려']:
                 qs = qs.filter(apv_status=apv_status_sch).exclude(apv_docs_cc__user=user)
 
-        # '내문서' 버튼이 눌려있다면 항상 created_by=user 조건 추가
-        if request.GET.get('mydocs', '') == 'true':
+        # '내문서' 버튼이 눌려있다면 항상 created_by=user 조건 추가 (참조제외)
+        mydocs = request.GET.get('mydocs', '')
+        if apv_status_sch != '참조' and mydocs == 'true':
             qs = qs.filter(created_by=user)
 
         if _page == '' or _size == '':
