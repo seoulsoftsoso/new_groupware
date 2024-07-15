@@ -19,6 +19,18 @@
         cursor: pointer; /* 손모양 커서 */
     }
 
+    td[id="status_badge"] span {
+        font-size: 15px;
+    }
+
+    input[type="text"] {
+        text-align: center;
+    }
+
+    ::placeholder {
+        text-align: center;
+    }
+
     @media (max-width: 900px) {
         .my_docs_filter, .sch_and_new {
             display: flex;
@@ -123,7 +135,7 @@
                 <div class="d-flex justify-content-between my-2 sch_and_new" style="gap: 10px;">
                     <div id="page_filter">
                         <select class="form-control m-0 h-100 btn-outline-secondary" name="page_size"
-                                style="width: 80px; height: 40px; display: block;" id="page_size"
+                                style="text-align: center; width: 80px; height: 40px; display: block;" id="page_size"
                                 title="페이지당 목록 수 설정" onchange="search_apv_click()">
                             <option value="10">10개</option>
                             <option value="20" selected>20개</option>
@@ -162,14 +174,14 @@
                     <thead>
                         <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
                             <th id="check_box" style="text-align: center; width: 5%;"><input type="checkbox" style="width: 18px; height: 18px;" id="select_all"></th>
-                            <th id="updated_at" style="color: #000; font-size: medium; font-weight: bold; width: 12%;">최종 수정일</th>
-                            <th id="doc_no" style="color: #000; font-size: medium; font-weight: bold; width: 15%;">문서 번호</th>
-                            <th id="apv_category" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
-                            <th id="doc_title" style="color: #000; font-size: medium; font-weight: bold; width: 33%;">제목</th>
-                            <th id="created_by" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                            <th id="apv_status" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 상태</th>
+                            <th id="updated_at" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">최종 수정일</th>
+                            <th id="doc_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">문서 번호</th>
+                            <th id="apv_category" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
+                            <th id="doc_title" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 36%;">제 목</th>
+                            <th id="created_by" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">작성자</th>
+                            <th id="apv_status" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">결재 상태</th>
                             <th id="apv_status_wocc" style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태</th>
-                            <th id="apv_next_approver" style="color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
+                            <th id="apv_next_approver" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
                         </tr>
                     </thead>
                     <tbody id="apv_tbody"></tbody>
@@ -194,7 +206,6 @@
         {% include 'approval/apv_md_create.html' %}
     </div>
 </div>
-
 </body>
 {% include 'admins/admin_footer.html' %}
 
@@ -316,7 +327,7 @@
     }
 
     function draw_apv_table(done) {
-        console.log("draw_apv_table: ", done);
+        // console.log("draw_apv_table: ", done);
         total_unread = done.unread_docs;
         total_next_approver = done.waiting_docs;
 
@@ -343,7 +354,7 @@
             }
 
             let isUserInCC = item.apv_cc.some(cc => cc.user_id === currentUserId);
-            let ccBadge = isUserInCC ? '<span class="badge bg-warning" style="margin-left: 8px;">참조</span>' : '';
+            let ccBadge = isUserInCC ? '<span class="badge bg-warning" style="font-size: 15px; margin-left: 8px;">참조</span>' : '';
             let docTitle = item.apv_status === '임시' ? item.doc_title : `${item.doc_title} &nbsp; <span class="badge text-bg-secondary" style="font-size: 10px;">${item.comment_count}</span>`;
             let unreadClass = item.is_read ? '' : 'fw-bold bg-info-subtle';
 
@@ -351,15 +362,15 @@
             <tr id='${item.id}' apv_status='${item.apv_status}' apv_category_id='${item.apv_category.id}' class='${unreadClass}' style='cursor:pointer;'>
             <td name="check_box" style="text-align: center; height: 50px; display: flex; align-items: center; justify-content: center;">
                 <input type="checkbox" class="select_doc" style="width: 18px; height: 18px;" value="${item.id}" data-apv-category="${item.apv_category.id}"></td>
-            <td name="no" class="d-none">${num + i}</td>
-            <td name='updated_at' class="clickable">${item.updated_at}</td>
-            <td name='doc_no' class="clickable">${item.doc_no}</td>
-            <td name='apv_category' class="clickable">${item.apv_category.name}</td>
+            <td name="no" class="d-none" style="text-align:center;">${num + i}</td>
+            <td name='updated_at' class="clickable" style="text-align:center;">${item.updated_at}</td>
+            <td name='doc_no' class="clickable" style="text-align:center;">${item.doc_no}</td>
+            <td name='apv_category' class="clickable" style="text-align:center;">${item.apv_category.name}</td>
             <td name='doc_title' class="clickable">${docTitle}</td>
-            <td name='created_by' class="clickable">${item.created_by.username}</td>
-            <td name='apv_status' class="clickable"><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
-            <td name='apv_status_wocc' style="display: none;" class="clickable"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
-            <td name='apv_next_approver' class="clickable">${item.next_approver}</td>
+            <td name='created_by' class="clickable" style="text-align:center;">${item.created_by.username}</td>
+            <td name='apv_status' class="clickable" id="status_badge" style="text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
+            <td name='apv_status_wocc' style="display: none;" class="clickable" style="text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
+            <td name='apv_next_approver' class="clickable" style="text-align:center;">${item.next_approver}</td>
             </tr>`;
 
             rows += row;

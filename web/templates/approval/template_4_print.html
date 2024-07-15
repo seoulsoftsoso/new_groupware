@@ -197,7 +197,7 @@
     }
 
     function draw_apv_detail(done) {
-        console.log("draw_apv_detail: ", done);
+        // console.log("draw_apv_detail: ", done);
         let data = done.results[0];
         next_approver = done.next_approver;
         currentUserId = done.current_user_id;
@@ -293,8 +293,17 @@
         approvalFlowDiv.innerHTML = ''; // 기존 내용을 비움
 
         let createApproverDiv = (title, name, date, status, imageSrc) => {
-            let imageClass = date === '결재 대기중' ? 'd-none' : '';
-            let imagePlaceholder = date === '결재 대기중' ? '<div style="height: 54px; margin: 5px auto;"></div>' : `<img class="${imageClass}" src="${imageSrc}" alt="${name}" style="object-fit: cover; max-width: 70px; height: 50px; margin: 5px auto;">`;
+            let imagePlaceholder;
+
+            if (status === '승인') {
+                imagePlaceholder = `<img src="${imageSrc}" alt="${name}" style="object-fit: cover; max-width: 70px; height: 50px; margin: 5px auto;">`;
+            } else if (status === '반려') {
+                imagePlaceholder = '<img src="{% static '/img/stamp_rejected.png' %}" alt="반려" style="object-fit: cover; max-width: 70px; height: 50px; margin: 5px auto;">';
+            } else if (title === '작성자') {
+                imagePlaceholder = `<img src="${imageSrc}" alt="${name}" style="object-fit: cover; max-width: 70px; height: 50px; margin: 5px auto;">`;
+            } else {
+                imagePlaceholder = '<div style="height: 54px; margin: 5px auto;"></div>';
+            }
 
             return `
             <div class="py-2" style="text-align: center; width: 130px; overflow: hidden; margin: 5px;">

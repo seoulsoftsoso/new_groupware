@@ -55,7 +55,7 @@
 
     function get_apv_category() {
         api_gp("/admins/apv/category/", "get", {}, (done) => {
-            console.log("category :", done);
+            // console.log("category :", done);
 
             let categoryList = document.getElementById('category_list');
             categoryList.innerHTML = ''; // 기존 항목 초기화
