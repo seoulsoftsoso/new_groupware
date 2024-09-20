@@ -39,7 +39,7 @@
 
                 <div style="width: 98%; margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: x-large; margin-left: 40px">{{ board.title }}</span>
-                    {% if request.user.is_superuser or request.user.user_id == board.created_by %}
+{#                    {% if request.user.is_superuser or request.user.user_id == board.created_by %}#}
                         <div class="dropdown" style="margin-top: 10px; margin-right: 20px;">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow btn-lg" data-bs-toggle="dropdown">
                                 <img src="{% static 'admin/img/indexImg/menu.png' %}">
@@ -53,7 +53,7 @@
                                 </a>
                             </div>
                         </div>
-                    {% endif %}
+{#                    {% endif %}#}
                 </div>
 
                 <div style="margin-left: 30px; margin-bottom: 30px;">
@@ -89,12 +89,25 @@
                         <!--댓글 표시되는 div-->
                         <div class="card my-3 comments" style="justify-content: center">
                             {% for reply in replies %}
-                                <div class="card-body">
-                                    <p class="card-text">{{ reply.reply }}</p>
-                                    <p class="card-text">
-                                        <small class="text-muted" style="margin-right: 5px;">{{ reply.created_by.username }}</small>
+                                <div class="card-body" id="reply-{{ reply.id }}">
+                                    <div class="card-text" id="reply-text-{{ reply.id }}">{{ reply.reply }}</div>
+                                    <div class="card-text d-flex">
+                                        <small class="text-muted"
+                                               style="margin-right: 5px;">{{ reply.created_by.username }}</small>
                                         <small class="text-muted">{{ reply.created_at|date:"Y년 m월 d일 A g:i" }}</small>
-                                    </p>
+
+                                        <!-- 댓글 수정 및 삭제 버튼 -->
+                                        {% if request.user.is_authenticated and request.user == reply.created_by %}
+                                        <div style="display: flex;">
+                                            <button class="btn btn-sm btn-outline-primary mx-2 p-0" style="width: 30px; height: 18px; font-size: 10px;"
+                                                    id="edit-btn-{{ reply.id }}" onclick="editReply({{ reply.id }})">수정
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger mx-0 p-0" style="width: 30px; height: 18px; font-size: 10px;"
+                                                    id="delete-btn-{{ reply.id }}" onclick="deleteReply({{ reply.id }})">삭제
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -180,11 +193,88 @@
             },
             success: function() {
                 commentInput.value = "";
+                window.location.reload();  // 페이지 새로고침
             },
             error: function(error) {
                 console.error("실패 ", error);
             }
         });
+    }
+
+    // 댓글 수정 기능
+    function editReply(replyId) {
+        var replyTextElement = document.getElementById('reply-text-' + replyId);
+        var currentText = replyTextElement.textContent;
+
+        // 수정/삭제 버튼 숨기기
+        document.getElementById('edit-btn-' + replyId).style.display = 'none';
+        document.getElementById('delete-btn-' + replyId).style.display = 'none';
+
+        // 입력 폼으로 변경
+        replyTextElement.innerHTML = `
+        <input type="text" id="edit-reply-input-${replyId}" value="${currentText}" style="width: 80%; margin-right: 10px;" />
+        <button class="btn btn-primary btn-sm" onclick="saveReply(${replyId})">저장</button>
+        <button class="btn btn-secondary btn-sm" onclick="cancelEditReply(${replyId}, '${currentText}')">취소</button>
+    `;
+    }
+
+    // 댓글 수정 취소
+    function cancelEditReply(replyId, originalText) {
+        var replyTextElement = document.getElementById('reply-text-' + replyId);
+        replyTextElement.textContent = originalText;
+
+        // 수정/삭제 버튼 다시 보이기
+        document.getElementById('edit-btn-' + replyId).style.display = 'inline-block';
+        document.getElementById('delete-btn-' + replyId).style.display = 'inline-block';
+    }
+
+    // 댓글 저장 기능
+    function saveReply(replyId) {
+        var newReplyText = document.getElementById('edit-reply-input-' + replyId).value;
+
+        $.ajax({
+            url: "{% url 'replyEdit' %}",
+            method: 'POST',
+            data: {
+                'reply_id': replyId,
+                'new_reply': newReplyText,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                if (response.status === 'ok') {
+                    document.getElementById('reply-text-' + replyId).textContent = newReplyText;
+
+                    // 수정/삭제 버튼 다시 보이기
+                    document.getElementById('edit-btn-' + replyId).style.display = 'inline-block';
+                    document.getElementById('delete-btn-' + replyId).style.display = 'inline-block';
+                }
+            },
+            error: function (error) {
+                console.error("댓글 수정 실패", error);
+            }
+        });
+    }
+
+    // 댓글 삭제 기능
+    function deleteReply(replyId) {
+        if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: "{% url 'replyDelete' %}",
+                method: 'POST',
+                data: {
+                    'reply_id': replyId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.status === 'ok') {
+                        document.getElementById('reply-' + replyId).remove();
+                    }
+                },
+                error: function (error) {
+                    console.error("댓글 삭제 실패", error);
+                }
+            });
+        }
     }
 </script>
 {% include 'admins/admin_footer.html' %}

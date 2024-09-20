@@ -138,6 +138,8 @@ urlpatterns = [
 
     # 댓글
     path('admins/reply_add/', reply_add, name="replyAdd"),
+    path('reply/edit/', reply_edit, name='replyEdit'),
+    path('reply/delete/', reply_delete, name='replyDelete'),
 
     # 파일첨부
     path('download/<int:file_id>/', download_File, name='download_file'),

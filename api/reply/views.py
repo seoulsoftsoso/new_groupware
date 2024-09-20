@@ -29,3 +29,23 @@ def reply_add(request):
             'status': 'success',
             'message': '댓글이 성공적으로 추가되었습니다.',
         })
+
+def reply_edit(request):
+    if request.method == 'POST':
+        reply_id = request.POST.get('reply_id')
+        new_reply = request.POST.get('new_reply')
+
+        reply = get_object_or_404(ReplyMaster, id=reply_id, created_by=request.user)
+        reply.reply = new_reply
+        reply.save()
+
+        return JsonResponse({'status': 'ok'})
+
+def reply_delete(request):
+    if request.method == 'POST':
+        reply_id = request.POST.get('reply_id')
+
+        reply = get_object_or_404(ReplyMaster, id=reply_id, created_by=request.user)
+        reply.delete()
+
+        return JsonResponse({'status': 'ok'})
