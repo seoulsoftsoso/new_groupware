@@ -163,15 +163,15 @@
             </div>
 
             <div class="apv_buttons d-flex justify-content-between flex-wrap" style="padding: 0 2% 0 2%;">
-                <div class="d-flex justify-content-between my-2 my_docs_filter" style="gap: 10px;">
+                <div class="d-flex justify-content-between my-2 my_docs_filter" style="gap: 4px;">
                     <input type="checkbox" class="d-none" id="mydocsBtn" data-status="내문서">
                     <label class="btn btn-outline-instagram tooltip_tr" data-tooltip="내가 작성한 결재 문서만 보여주는 토글버튼입니다."
-                           for="mydocsBtn" style="width: 110px; height: 40px; margin-right: 16px;">내 문서</label>
+                           for="mydocsBtn" style="width: 110px; height: 40px; margin-right: 10px;">내 문서</label>
                     <a href="#" class="apv_status_sch btn btn-outline-facebook p-0 tooltip_tr" id="apvwaitBtn"
                        data-tooltip="내가 결재해야하는 문서만 보여주는 필터버튼입니다."
                        style="width: 110px; height: 40px;" aria-selected="false" data-status="결재대기">결재 대기</a>
 
-                    <a href="#" class="apv_status_sch btn btn-outline-info p-0 tooltip_tl" id="unreadBtn"
+                    <a href="#" class="apv_status_sch btn btn-outline-info p-0 tooltip_tr" id="unreadBtn"
                        data-tooltip="내가 아직 읽지않은 문서만 보여주는 필터버튼입니다."
                        style="width: 110px; height: 40px;" aria-selected="false" data-status="읽지않음">읽지않음</a>
                     {#                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px; height: 40px;" aria-selected="true" data-status="전체">전체</a>#}
@@ -211,7 +211,7 @@
                         </div>
                     </div>
                     <div class="search_filter" id="search_filter">
-                        <div class="d-flex position-relative tooltip_top" data-tooltip="문서번호 / 카테고리 / 제목 / 작성자로 결재문서 검색">
+                        <div class="d-flex position-relative tooltip_tr" data-tooltip="문서번호 / 카테고리 / 제목 / 작성자로 결재문서 검색">
                             <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색"
                                    id="apv_all_sch" style="width: 150px; border-radius: 6px 0px 0px 6px;">
                             <button class="btn btn-secondary"
@@ -595,5 +595,20 @@
 
         processNext(0); // 첫 번째 항목부터 시작
     }
+
+    // 반응형 툴팁 사이즈 최소화
+    function updateTooltip() {
+        let apvwaitBtn_el = document.getElementById('apvwaitBtn');
+        let unreadBtn_el = document.getElementById('unreadBtn');
+        if (window.innerWidth <= 900) {
+            apvwaitBtn_el.setAttribute('data-tooltip', ' ');
+            unreadBtn_el.setAttribute('data-tooltip', ' ');
+        } else {
+            apvwaitBtn_el.setAttribute('data-tooltip', '내가 결재해야하는 문서만 보여주는 필터버튼입니다.');
+            unreadBtn_el.setAttribute('data-tooltip', '내가 아직 읽지않은 문서만 보여주는 필터버튼입니다.');
+        }
+    }
+    window.addEventListener('load', updateTooltip);
+    window.addEventListener('resize', updateTooltip);
 
 </script>
