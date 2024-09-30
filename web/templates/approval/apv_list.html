@@ -31,6 +31,43 @@
         text-align: center;
     }
 
+    /* 필터 버튼 */
+    .apv_status_sch:hover[data-status="임시"],
+    .apv_status_sch.active[data-status="임시"] {
+        color: white !important;
+        background-color: #8491a2 !important;
+        border-color: #8491a2 !important;
+    }
+
+    .apv_status_sch:hover[data-status="진행"],
+    .apv_status_sch.active[data-status="진행"] {
+        color: white !important;
+        background-color: #696cfd !important;
+        border-color: #696cfd !important;
+    }
+
+    .apv_status_sch:hover[data-status="완료"],
+    .apv_status_sch.active[data-status="완료"] {
+        color: white !important;
+        background-color: #70dc37 !important;
+        border-color: #70dc37 !important;
+
+    }
+
+    .apv_status_sch:hover[data-status="반려"],
+    .apv_status_sch.active[data-status="반려"] {
+        color: white !important;
+        background-color: #fd0000 !important;
+        border-color: #fd0000 !important;
+    }
+
+    .apv_status_sch:hover[data-status="참조"],
+    .apv_status_sch.active[data-status="참조"] {
+        color: white !important;
+        background-color: #fda400 !important;
+        border-color: #fda400 !important;
+    }
+
     @media (max-width: 900px) {
         .my_docs_filter, .sch_and_new {
             display: flex;
@@ -91,6 +128,7 @@
             display: table-cell !important;
             width: 20% !important;
         }
+
         div[id="printPage"] {
             display: none;
         }
@@ -107,36 +145,54 @@
         <div class="layout-page">
             {% include 'admins/topnav.html' %}
 
-            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2"
+                 style="padding: 0 2% 0 2%;">
                 <div>
                     <div class="d-flex svg-illustration mb-2 gap-2">
                         <a href="{% url 'apv_list' %}">
-                            <strong style="color: #000; font-size: x-large; font-family: Pretendard;"><i class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp; 전자결재</strong></a>
+                            <strong style="color: #000; font-size: x-large; font-family: Pretendard;"><i
+                                    class="fa-regular fa-file-lines" style="color: #000000;"></i>&nbsp;
+                                전자결재</strong></a>
                     </div>
                 </div>
             </div>
 
             <div class="apv_buttons d-flex justify-content-between flex-wrap" style="padding: 0 2% 0 2%;">
-                <div class="d-flex justify-content-between my-2 my_docs_filter" style="gap: 10px;">
-                    <input type="checkbox" class="d-none" id="mydocsBtn" data-status="내문서">
-                    <label class="btn btn-outline-instagram" for="mydocsBtn" style="width: 110px; height: 40px;">내 문서</label>
-                    <a href="#" class="apv_status_sch btn btn-outline-facebook p-0" id="apvwaitBtn" style="width: 110px; height: 40px;" aria-selected="false" data-status="결재대기">결재 대기</a>
-                    <a href="#" class="apv_status_sch btn btn-outline-info p-0" id="unreadBtn" style="width: 110px; height: 40px;" aria-selected="false" data-status="읽지않음">읽지않음</a>
-{#                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px; height: 40px;" aria-selected="true" data-status="전체">전체</a>#}
-                    <div class="btn-group px-3" id="status_filter" role="group" aria-label="Approval Status Filter">
-                        <a href="#" class="apv_status_sch btn btn-outline-secondary p-0" id="tempBtn" style="width: 60px; height: 40px;" aria-selected="false" data-status="임시">임시</a>
-                        <a href="#" class="apv_status_sch btn btn-outline-primary p-0" style="width: 60px; height: 40px;" aria-selected="false" data-status="진행">진행</a>
-                        <a href="#" class="apv_status_sch btn btn-outline-success p-0" style="width: 60px; height: 40px;" aria-selected="false" data-status="완료">완료</a>
-                        <a href="#" class="apv_status_sch btn btn-outline-danger p-0" style="width: 60px; height: 40px;" aria-selected="false" data-status="반려">반려</a>
-                        <a href="#" class="apv_status_sch btn btn-outline-warning p-0" style="width: 60px; height: 40px;" aria-selected="false" data-status="참조">참조</a>
+                <div class="d-flex justify-content-start my-2 my_docs_filter">
+                    <div class="me-4">
+                        <input type="checkbox" class="d-none" id="mydocsBtn" data-status="내문서">
+                        <label class="btn btn-outline-instagram tooltip_tr" data-tooltip="내가 작성한 결재 문서만 보여주는 토글버튼입니다."
+                               for="mydocsBtn" style="width: 110px; height: 40px;">내 문서</label>
+                    </div>
+                    <div class="me-2">
+                        <a href="#" class="apv_status_sch btn btn-outline-facebook p-0 tooltip_tr" id="apvwaitBtn"
+                           data-tooltip="내가 결재해야하는 문서만 보여주는 필터버튼입니다."
+                           style="width: 110px; height: 40px;" aria-selected="false" data-status="결재대기">결재 대기</a>
+
+                        <a href="#" class="apv_status_sch btn btn-outline-info p-0 tooltip_tr" id="unreadBtn"
+                           data-tooltip="내가 아직 읽지않은 문서만 보여주는 필터버튼입니다."
+                           style="width: 110px; height: 40px;" aria-selected="false" data-status="읽지않음">읽지않음</a>
+                    </div>
+                    {#                    <a href="#" class="apv_status_sch btn btn-outline-dark p-0 me-2" style="width: 65px; height: 40px;" aria-selected="true" data-status="전체">전체</a>#}
+                    <div class="btn-group px-3 tooltip_top" id="status_filter"
+                         data-tooltip="결재진행 상태에 따라 문서를 보여주는 필터버튼입니다." role="group" aria-label="Approval Status Filter">
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary text-secondary p-0" id="tempBtn"
+                           style="width: 60px; height: 40px;" aria-selected="false" data-status="임시">임시</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary text-primary p-0"
+                           style="width: 60px; height: 40px;" aria-selected="false" data-status="진행">진행</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary text-success p-0"
+                           style="width: 60px; height: 40px;" aria-selected="false" data-status="완료">완료</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary text-danger p-0"
+                           style="width: 60px; height: 40px;" aria-selected="false" data-status="반려">반려</a>
+                        <a href="#" class="apv_status_sch btn btn-outline-secondary text-warning p-0"
+                           style="width: 60px; height: 40px;" aria-selected="false" data-status="참조">참조</a>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between my-2 sch_and_new" style="gap: 10px;">
-                    <div id="page_filter">
+                    <div id="page_filter" class="tooltip_top" data-tooltip="페이지당 보여줄 목록 수 설정">
                         <select class="form-control m-0 h-100 btn-outline-secondary" name="page_size"
-                                style="text-align: center; width: 80px; height: 40px; display: block;" id="page_size"
-                                title="페이지당 목록 수 설정" onchange="search_apv_click()">
+                                style="text-align: center; width: 80px; height: 40px; display: block;" id="page_size" onchange="search_apv_click()">
                             <option value="10">10개</option>
                             <option value="20" selected>20개</option>
                             <option value="50">50개</option>
@@ -144,7 +200,7 @@
                         </select>
                     </div>
                     <div id="date_filter">
-                        <div class="input-group input-daterange" style="width:260px;" title="검색기간 설정">
+                        <div class="input-group input-daterange tooltip_top" style="width:260px;" data-tooltip="결재문서 작성일자로 검색">
                             <input id="date_sch_from" placeholder="시작 날짜" class="form-control btn-outline-secondary"
                                    name="date_sch_from" autocomplete="off" onchange="search_apv_click()"
                                    style="text-align: left; height: 40px;" type="text"/>
@@ -154,17 +210,18 @@
                         </div>
                     </div>
                     <div class="search_filter" id="search_filter">
-                        <div class="d-flex position-relative">
+                        <div class="d-flex position-relative tooltip_top" data-tooltip="문서번호 / 카테고리 / 제목 / 작성자로 결재문서 검색">
                             <input type="text" class="form-control btn-outline-secondary" placeholder="전자결재 검색"
-                                   id="apv_all_sch" style="width: 150px; border-radius: 6px 0px 0px 6px;"
-                                   title="문서번호 / 카테고리 / 제목 / 작성자 검색">
+                                   id="apv_all_sch" style="width: 150px; border-radius: 6px 0px 0px 6px;">
                             <button class="btn btn-secondary"
                                     style="width:60px; height:40px; border-radius: 0px 6px 6px 0px;"
                                     onclick="search_apv_click()">
                                 <span class="bx bx-search-alt"></span></button>
                         </div>
                     </div>
-                    <div class="btn btn-info p-0" style="width: 100px; height: 40px;" id="createBtn" data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성</div>
+                    <div class="btn btn-info p-0" style="width: 100px; height: 40px;" id="createBtn"
+                         data-bs-toggle="modal" data-bs-target="#apv_md_create">새 결재 작성
+                    </div>
                 </div>
             </div>
 
@@ -172,17 +229,42 @@
                 <table class="dt-multilingual table border-top table table-hover"
                        style="border-left: none; border-right: none; table-layout: fixed; width: 100%;">
                     <thead>
-                        <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                            <th id="check_box" style="text-align: center; width: 5%;"><input type="checkbox" style="width: 18px; height: 18px;" id="select_all"></th>
-                            <th id="updated_at" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">최종 수정일</th>
-                            <th id="doc_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">문서 번호</th>
-                            <th id="apv_category" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">카테고리</th>
-                            <th id="doc_title" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 36%;">제 목</th>
-                            <th id="created_by" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">작성자</th>
-                            <th id="apv_status" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">결재 상태</th>
-                            <th id="apv_status_wocc" style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태</th>
-                            <th id="apv_next_approver" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 대기</th>
-                        </tr>
+                    <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                        <th id="check_box" style="text-align: center; width: 5%;"><input type="checkbox"
+                                                                                         style="width: 18px; height: 18px;"
+                                                                                         id="select_all"></th>
+                        <th id="updated_at"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
+                            최종 수정일
+                        </th>
+                        <th id="doc_no"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">
+                            문서 번호
+                        </th>
+                        <th id="apv_category"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
+                            카테고리
+                        </th>
+                        <th id="doc_title"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 36%;">제
+                            목
+                        </th>
+                        <th id="created_by"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
+                            작성자
+                        </th>
+                        <th id="apv_status"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">
+                            결재 상태
+                        </th>
+                        <th id="apv_status_wocc"
+                            style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태
+                        </th>
+                        <th id="apv_next_approver"
+                            style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
+                            결재 대기
+                        </th>
+                    </tr>
                     </thead>
                     <tbody id="apv_tbody"></tbody>
                 </table>
@@ -289,8 +371,26 @@
         }
     });
 
+    {% comment %}document.querySelectorAll('.apv_status_sch').forEach(tab => {
+        tab.addEventListener('click', function () {
+            apv_status_sch = this.getAttribute('data-status');
+            apv_nation.page = 1;
+            search_apv_data();
+        });
+    });{% endcomment %}
+
+
     document.querySelectorAll('.apv_status_sch').forEach(tab => {
         tab.addEventListener('click', function () {
+            // 모든 버튼에서 active 클래스 제거
+            document.querySelectorAll('.apv_status_sch').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 현재 클릭된 버튼에 active 클래스 추가
+            this.classList.add('active');
+
+            // apv_status_sch 업데이트
             apv_status_sch = this.getAttribute('data-status');
             apv_nation.page = 1;
             search_apv_data();
