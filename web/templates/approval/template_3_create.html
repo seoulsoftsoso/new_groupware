@@ -573,7 +573,7 @@
             }
 
 
-            function readFileAndAddToApiData(file, index) {
+            function readFileAndAddToApiData(file, index, pk) {
                 let reader = new FileReader();
                 reader.onload = function(event) {
                     let fileData = {
@@ -585,7 +585,7 @@
                     api_data.attached_files.push(fileData);
                     fileReadCount++;
                     if (fileReadCount === attachedFiles.length) {
-                        sendApiRequest();
+                        sendApiRequest(pk);
                     }
                 };
                 reader.readAsDataURL(file);
@@ -633,7 +633,7 @@
 
             if (attachedFiles.length > 0) {
                 for (let i = 0; i < attachedFiles.length; i++) {
-                    readFileAndAddToApiData(attachedFiles[i], i);
+                    readFileAndAddToApiData(attachedFiles[i], i, api_data.pk);
                 }
             } else {
                 sendApiRequest(api_data.pk);
