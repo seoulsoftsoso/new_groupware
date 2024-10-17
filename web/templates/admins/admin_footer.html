@@ -54,6 +54,14 @@
 <script src="{% static 'sneat/assets/js/forms-selects.js' %}"></script>
 
 
-
-
-
+<script>
+    function set_autocomplete(val) {
+        if (['on', 'off'].includes(val)) {
+            // 모든 <input>에 autocomplete on/off 설정
+            const inputElements = document.querySelectorAll('input');
+            inputElements.forEach(inputElement => {
+                inputElement.setAttribute('autocomplete', val);
+            });
+        }
+    }
+</script>

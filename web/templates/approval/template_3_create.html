@@ -354,7 +354,8 @@
 
         loadCreateDate();
         checkApproverList();
-
+        set_autocomplete('off');
+        
         if(documentId) {
             load_apv_temp_data();
             document.getElementById('deleteBtn').classList.remove('d-none');
