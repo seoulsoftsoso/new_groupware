@@ -104,8 +104,29 @@
         opacity: 1;
         visibility: visible;
     }
+    
+    /* 부트스트랩 툴팁 */
+    .tooltip-inner {
+        font-size: 12px; /* 글자 크기 작게 */
+        background-color: #000; /* 회색 배경색 */
+    }
+    .tooltip {
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    
 
     @media (max-width: 900px) {
+        #page-topbar {
+            transform: scale(0.7) !important; /* 페이지를 60% 크기로 축소 */
+            transform-origin: top right !important; /* 축소할 기준점을 오른쪽 상단으로 설정 */
+            width: 150% !important; /* 가로 크기를 늘려서 공간을 채움 */
+            position: fixed !important; /* 화면의 고정된 위치에 배치 */
+            top: 0 !important; /* 화면 최상단에 위치 */
+            right: 0 !important; /* 화면의 오른쪽에 위치 */
+            z-index: 9999 !important; /* 다른 요소들 위에 나타나도록 z-index 설정 */
+        }
+        
         .userinfo_area {
             padding: 0 !important;
         }
@@ -204,6 +225,22 @@
                 </div>
             </div>{% endcomment %}
 
+            <div class="d-flex justify-content-end align-items-center mx-2" id="currentDateTime" style="font-size: 14px; font-weight: bold; color: #444;">loading..</div>
+        
+            <div class="d-flex justify-content-end align-items-center mx-2 my-0" style="font-size: 26px; color: #ccc;">|</div>
+        
+            <button class="fa-regular fa-bell-slash fa-xl mx-1"
+                    style="color: #444; background-color: transparent; border: none;" type="button"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="알림 기능 추후 업데이트 예정"
+                    onclick="url_click('/userguide/', 'sm-47');"></button>
+        
+            <button class="fa-solid fa-expand fa-xl mx-1"
+                    style="color: #444; background-color: transparent; border: none;" id="fullscreen"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="전체화면 전환"
+                    type="button" onclick="fs_toggle_click();"></button>
+        
+            <div class="d-flex justify-content-end align-items-center mx-1 my-0" style="font-size: 26px; color: #ccc; margin-left: 14px !important;">|</div>
+
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -212,17 +249,16 @@
                     {% else %}
                         <i class='bx bxs-user-circle' style='font-size: 36px;'></i>
                     {% endif %}
-                    {% comment %}<div class="mt-1" id="username" style="font-size: 16px; font-weight: bold; color: #777;">
+                    <div class="mt-1 mx-2" id="username" style="font-size: 14px; font-weight: bold; color: #444;">
                         <div class="d-flex justify-content-start">{{ request.user.department_position.name }}</div>
-                        <div class="d-flex justify-content-start">{{ request.user.username }} 님 &nbsp;</div>
+                        <div class="d-flex justify-content-start">{{ request.user.username }} 님</div>
                     </div>
-                    &nbsp;&nbsp;<i class="fa-solid fa-chevron-down fa-lg"></i>{% endcomment %}
+                    <i class="fa-solid fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item d-flex" href="{% url 'userSettingsPage' %}">
-                        <i class="bx bx-user font-size-14 align-middle me-2"></i>
-                        <span key="t-profile">{{ request.user.username }} 님</span></a>
+                    <a class="dropdown-item d-flex" href="{% url 'userSettingsPage' %}" style="font-weight: bold; color: #444;">
+                        <span key="t-profile"><i class="fa-solid fa-user-gear fa-lg me-2"></i>{{ request.user.username }} 님</span></a>
                     {% comment %}<a class="dropdown-item" href="#"><i
                             class="bx bx-wallet font-size-16 align-middle me-1"></i> <span
                             key="t-my-wallet">My Wallet</span></a>
@@ -233,9 +269,8 @@
                             class="bx bx-lock-open font-size-16 align-middle me-1"></i> <span
                             key="t-lock-screen">Lock screen</span></a>{% endcomment %}
                     <div class="dropdown-divider m-1"></div>
-                    <a class="dropdown-item d-flex text-danger" href="{% url 'logout' %}">
-                        <i class="bx bx-power-off font-size-14 align-middle me-1 text-danger"></i>
-                        <span key="t-logout">로그아웃</span></a>
+                    <a class="dropdown-item d-flex text-danger" href="{% url 'logout' %}" style="font-weight: bold; color: red;">
+                        <span key="t-logout"><i class="fa-solid fa-power-off fa-lg me-2"></i>&nbsp;로그아웃</span></a>
                 </div>
             </div>
         </div>
@@ -271,5 +306,72 @@
             notiCenter.classList.remove("bx-tada");
         }
     });{% endcomment %}
+    
+    
+    function fs_toggle_click() {
+        const elem = document.documentElement;
+        const btn = document.getElementById('fullscreen');
+
+        if (!document.fullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            btn.classList.remove('fa-expand');
+            btn.classList.add('fa-compress');
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+            btn.classList.remove('fa-compress');
+            btn.classList.add('fa-expand');
+        }
+    }
+
+    document.getElementById('fullscreen').addEventListener('click', fs_toggle_click);
+    document.addEventListener('fullscreenchange', (event) => {
+        const btn = document.getElementById('fullscreen');
+        if (!document.fullscreenElement) {
+            btn.classList.remove('fa-compress');
+            btn.classList.add('fa-expand');
+        }
+    });
+    
+    
+    function updateTime() {
+        let currentDateTimeElement = document.getElementById('currentDateTime');
+        let now = new Date();
+
+        let year = now.getFullYear();
+        let month = ('0' + (now.getMonth() + 1)).slice(-2);
+        let date = ('0' + now.getDate()).slice(-2);
+        let hours = ('0' + now.getHours()).slice(-2);
+        let minutes = ('0' + now.getMinutes()).slice(-2);
+        let seconds = ('0' + now.getSeconds()).slice(-2);
+
+        let calendarIcon = '<i class="fa-regular fa-calendar-days" style="margin-right: 4px;"></i>';
+        let clockIcon = '<i class="fa-regular fa-clock" style="margin: 0 4px 0 16px;"></i>';
+
+        let formattedTime = `${calendarIcon} ${year}-${month}-${date} ${clockIcon} ${hours}:${minutes}:${seconds}`;
+
+        currentDateTimeElement.innerHTML = formattedTime;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 </script>

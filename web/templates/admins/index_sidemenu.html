@@ -283,7 +283,7 @@
                     </li>
                 </ul>
             {% endif %}
-            {% if request.user.is_superuser %}
+            {% comment %}{% if request.user.is_superuser %}
                 <ul class="menu-sub">
                     <li class="menu-item">
                         <a href="{% url 'apv_list' %}" class="menu-link">
@@ -291,7 +291,7 @@
                         </a>
                     </li>
                 </ul>
-            {% endif %}
+            {% endif %}{% endcomment %}
         </li>
 
         <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
