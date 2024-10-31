@@ -151,7 +151,7 @@
         <div class="layout-page" style="">
             {% include 'admins/topnav.html' %}
 
-            <div class="status-banner" id="document_status"></div>
+            <div class="status-banner d-none" id="document_status"></div>
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
                 <div>
@@ -267,7 +267,7 @@
                                     <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
                                         <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
                                             <div class="m-1" style="width:100px;">휴가 일수 총</div>
-                                            <input class="form-control" id="period_count" style="text-align: right; width:60px; padding-left: 0; margin-left: 5px;" disabled>
+                                            <input class="form-control" id="period_count" style="text-align: right; width:70px; padding-left: 0; margin-left: 5px;" disabled>
                                             <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
                                         </div>
                                     </div>
@@ -388,10 +388,15 @@
         document.getElementById('team').value = data.created_by.department_position;
         document.getElementById('leave_reason').value = data.leave_reason;
         document.getElementById('period_from').value = data.period_from;
+        document.getElementById('period_from_half').value = data.period_from_half;
         document.getElementById('period_to').value = data.period_to;
+        document.getElementById('period_to_half').value = data.period_to_half;
         document.getElementById('period_count').value = data.period_count;
         document.getElementById('special_comment').value = data.special_comment;
-        document.getElementById('document_status').textContent = '결재 ' + data.apv_status;
+        if (data.apv_status !== "진행") {
+            document.getElementById('document_status').classList.remove('d-none');
+            document.getElementById('document_status').textContent = '결재 ' + data.apv_status;
+        }
 
         draw_apv_approval_flow(data);
         draw_apv_cc_users(data);
