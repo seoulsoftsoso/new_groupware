@@ -328,9 +328,7 @@
 
                                     <div class="d-flex align-items-center my-1 mobile_align_left">
                                         <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                            <span class="m-1">(기존 잔여연차 :</span>
-                                            <input class="form-control border-none" id="leave_balance" style="text-align: right; width:25px; padding: 0; margin-left: 5px;" readonly>
-                                            <span class="m-1" style="width:20px; margin-left: 5px;">일)</span>
+                                            <span id="leave_balance" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="캘린더에 등록된 모든 연차를 제외하고 남은 연차"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -555,13 +553,13 @@
 
     function load_apv_create_data() {
         api_gp("/admins/apv/create/", "get", {}, (done) => {
-            // console.log("load_apv_create_data: ", done);
+            console.log("load_apv_create_data: ", done);
             let data = done;
             try {
                 let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
-                document.getElementById('leave_balance').value = leave_balance;
+                document.getElementById('leave_balance').textContent = "(기존 잔여연차 " + leave_balance + " 일)"; 
             } catch (error) {
-                document.getElementById('leave_balance').value = 'x'; // 오류 발생 시 x으로 설정
+                document.getElementById('leave_balance').textContent = ''; // 오류 발생 시 빈칸으로 설정
             }
         })
     }
