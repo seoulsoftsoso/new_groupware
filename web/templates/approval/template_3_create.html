@@ -806,8 +806,8 @@
         // 새로운 파일을 배열에 추가하기 전에 용량 체크
         let validFiles = [];
         for (let file of newFiles) {
-            if (totalSize + file.size > 5 * 1024 * 1024) { // 총 5MB 초과 파일 검사
-                alert(`첨부 파일의 총 용량은 5MB를 초과할 수 없습니다.`);
+            if (totalSize + file.size > 30 * 1024 * 1024) { // 총 30MB 초과 파일 검사
+                alert(`첨부 파일의 총 용량은 30MB를 초과할 수 없습니다.`);
             } else {
                 validFiles.push(file);
                 totalSize += file.size;
