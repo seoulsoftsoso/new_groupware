@@ -305,7 +305,7 @@
                                     <input type="file" class="form-control" id="attached_files" name="attached_files" style="width:500px;" onchange="updateFileList(event)" multiple>
                                     <span class="row align-items-center mx-3" style="font-size: 13px;">
                                     * 첨부는 임시저장불가, 결재전송시 첨부요망<br/>
-                                    * 드래그앤드롭 혹은 파일선택으로 첨부 가능 (최대 30MB)</span>
+                                    * 드래그앤드롭 혹은 파일선택으로 첨부 가능 (최대 20MB)</span>
                                 </div>
                                 <div class="d-flex justify-content-start mb-3" style="padding-left: 115px;" id="check_attached_area">
                                     <div id="file_list"></div>
@@ -818,8 +818,8 @@
         // 새로운 파일을 배열에 추가하기 전에 용량 체크
         let validFiles = [];
         for (let file of newFiles) {
-            if (totalSize + file.size > 30 * 1024 * 1024) { // 총 30MB 초과 파일 검사
-                alert(`첨부 파일의 총 용량은 30MB를 초과할 수 없습니다.`);
+            if (totalSize + file.size > 20 * 1024 * 1024) { // 총 20MB 초과 파일 검사
+                alert(`첨부 파일의 총 용량은 20MB를 초과할 수 없습니다.`);
             } else {
                 validFiles.push(file);
                 totalSize += file.size;
