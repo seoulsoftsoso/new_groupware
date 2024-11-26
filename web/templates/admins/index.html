@@ -755,8 +755,10 @@
         });
         const selectAllCheckbox = document.getElementById('selectAll');
         if (selectAllCheckbox) {
-            selectAllCheckbox.click(); // 체크 해제
-            selectAllCheckbox.click(); // 다시 체크
+            selectAllCheckbox.click();
+            setTimeout(function () {
+                selectAllCheckbox.click();
+            }, 500);
         }
     });
 </script>
