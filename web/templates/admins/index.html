@@ -422,6 +422,7 @@
 </div>
 
 </body>
+</html>
 
 <!--footer-->
 {% include 'admins/admin_footer.html' %}
@@ -736,14 +737,6 @@
         }
 
         displayLoginInfo();
-
-        {% comment %}let user_id = getCookie('user_id')
-        let allowed_ids = ['1111', '3227', '3189', '3186'];
-
-        if (allowed_ids.includes(user_id)) {
-            document.getElementById("story_update_btn").classList.remove("d-none");
-            document.getElementById("story_delete_btn").classList.remove("d-none");
-        }{% endcomment %}
     })
 
     // 미결재문서 바로가기
@@ -760,8 +753,11 @@
             event.preventDefault();
             window.location.href = "/admins/apv/?apv_my_temp_docs=true";
         });
+        const selectAllCheckbox = document.getElementById('selectAll');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.click(); // 체크 해제
+            selectAllCheckbox.click(); // 다시 체크
+        }
     });
-
 </script>
 
-</html>
