@@ -313,10 +313,13 @@ def admin_boardEdit_page(request, board_id):
 
 
 def organization_page(request):
-    depart = CodeMaster.objects.filter(group_id=1).values('id', 'code', 'name')
+    depart = CodeMaster.objects.filter(group_id=1).values('id', 'code', 'name').exclude(
+        Q(id=99) | Q(id=55))
 
     users = UserMaster.objects.filter(
         is_staff=True, department_position_id__isnull=False
+    ).exclude(
+        Q(department_position_id=99) | Q(department_position_id=55)
     ).prefetch_related('job_position').order_by(
         F('department_position_id').asc(nulls_last=True),
         F('job_position_id').asc(nulls_last=True),
