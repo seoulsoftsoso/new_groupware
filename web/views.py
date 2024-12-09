@@ -49,7 +49,7 @@ def admin_index_page(request):
     today = timezone.now()
 
     events = EventMaster.objects.select_related('vehicle').prefetch_related('participant_set').filter(
-        start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday"], delete_flag="N")
+        start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday", "Family"], delete_flag="N")
 
     # 공지사항
     fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").order_by('-id')[:4]

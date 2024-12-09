@@ -59,15 +59,23 @@
                 </div>
                 <div class="col-md-6 col-lg-6 mb-3">
                     <div class="card" style="height: 100%;">
-                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
-                                <span style="margin-right: 10px;">⭕ 오늘 연차 : </span>
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🎡️ 오늘 연차 : </span>
                                 {% for event in events %}
                                     {% if event.event_type == "Holiday" %}
                                         <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🎠 오늘 반차 : </span>
+                                {% for event in events %}
+                                    {% if event.event_type == "Family" %}
+                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
                                 <span style="margin-right: 10px;">💼 오늘 출장 : </span>
                                 {% for event in events %}
                                     {% if event.event_type == "Business" %}
@@ -78,7 +86,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body d-flex flex-row" style="border-bottom: lightgrey 1px solid;">
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
                                 <span style="margin-right: 10px;">🚗 법인차량 사용 : </span>
                                 {% for obj in events %}
                                     {% if obj.vehicle %}
