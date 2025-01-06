@@ -4,6 +4,7 @@ let events_data = []
       return new Promise((resolve, reject) => {
 
           api_gp("/event/get_event_all/", "GET", {}, (done) => {
+              // console.log(done);
               if (done.error) {
                   reject('Error');
               } else {
@@ -28,7 +29,10 @@ let events_data = []
                               created_by: item.create_by__username,
                               guests: participants,
                               vehicle: item.vehicleSelect,
-                              vehicleName: item.vehicleName
+                              vehicleName: item.vehicleName,
+                              apv_id: item.apv_id,
+                              apv_category_id: item.apv_category_id,
+                              apv_status: item.apv_status,
                           },
                           businessPair: item.businessPair,
                       };

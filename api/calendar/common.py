@@ -46,6 +46,9 @@ class get_eventDataAll(View):
                 'vehicleSelect': event.vehicle.code if event.vehicle else None,
                 'vehicleName': event.vehicle.name if event.vehicle else None,
                 'businessPair': event.business_pair,
+                'apv_id': event.apv_id,
+                'apv_category_id': event.apv.apv_category_id if event.apv and event.apv.apv_category else None,
+                'apv_status': event.apv.apv_status if event.apv else None,
             }
             data.append(event_data)
 

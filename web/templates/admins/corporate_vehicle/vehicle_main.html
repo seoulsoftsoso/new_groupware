@@ -169,7 +169,7 @@
                                 <th style="font-size: medium; font-weight: bold">사용 시작일</th>
                                 <th style="font-size: medium; font-weight: bold">사용 종료일</th>
                                 <th style="font-size: medium; font-weight: bold">사용자</th>
-                                <th style="font-size: medium; font-weight: bold">참가자</th>
+                                <th style="font-size: medium; font-weight: bold">참석자</th>
                                 <th style="text-align: center; font-size: medium; font-weight: bold">목적</th>
                                 <th style="text-align: center; font-size: medium; font-weight: bold">장소</th>
                                 <th style="text-align: center; font-size: medium; font-weight: bold">사용확인</th>
@@ -188,7 +188,7 @@
                                         {{ participant.cuser }}{% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td style="text-align: center;">{{ obj.description }}</td>
+                                <td class="text-wrap" style="text-align: left; white-space: pre-wrap;">{{ obj.description|linebreaksbr }}</td>
                                 <td style="text-align: center;">{{ obj.location }}</td>
                                 {% if obj.corporatemgmt_set.exists %}
                                     <td style="text-align: center">

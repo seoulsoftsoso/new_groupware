@@ -139,6 +139,16 @@
             right: 20px;
             font-size: 24px;
         }
+        input[id="away_from"],
+        input[id="away_to"] {
+            width: 120px !important;
+        }
+        
+        input[id="away_from_time"],
+        input[id="away_to_time"] {
+            flex-grow: 1 !important;
+            width: auto !important;
+        }
     }
 </style>
 <body>
@@ -244,37 +254,55 @@
                                         </select>
                                     </div>
 
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 기간</div>
-                                    <div class="d-flex select_period">
-                                        <div class="d-flex align-items-center m-1">
-                                            <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                            <select id="period_from_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
-                                        </div>
-                                        <div class="d-flex align-items-center m-1">
-                                            <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                            <select id="period_to_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                                <option value="full">종일</option>
-                                                <option value="am">오전</option>
-                                                <option value="pm">오후</option>
-                                            </select>
+                                    <!-- 일반적인 날짜 입력 -->
+                                    <div id="default_datefield" style="display: flex;">
+                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 기간</div>
+                                        <div class="d-flex select_period">
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <select id="period_from_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
+                                                    <option value="full">종일</option>
+                                                    <option value="am">오전</option>
+                                                    <option value="pm">오후</option>
+                                                </select>
+                                            </div>
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <select id="period_to_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;" disabled>
+                                                    <option value="full">종일</option>
+                                                    <option value="am">오전</option>
+                                                    <option value="pm">오후</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
+                                                <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
+                                                    <div class="m-1" style="width:100px;">휴가 일수 총</div>
+                                                    <input class="form-control" id="period_count" style="text-align: right; width:70px; padding-left: 0; margin-left: 5px;" disabled>
+                                                    <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
-                                        <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                            <div class="m-1" style="width:100px;">휴가 일수 총</div>
-                                            <input class="form-control" id="period_count" style="text-align: right; width:70px; padding-left: 0; margin-left: 5px;" disabled>
-                                            <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
+                                    
+                                    <!-- 자리비움 전용필드 -->
+                                    <div id="afk_datefield" class="d-none" style="display: flex;">
+                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;"> 자리비움 시간</div>
+                                        <div class="d-flex select_period">
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="away_from" placeholder="시작 날짜" class="form-control" name="away_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <input id="away_from_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;" disabled>
+                                            </div>
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="away_to" placeholder="종료 날짜" class="form-control" name="away_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <input id="away_to_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;" disabled>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 사유</div>
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
                                     <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea>
                                 </div>
 
@@ -366,19 +394,30 @@
         apv_category_id = data.apv_category.id;
         preventAccess();
 
-        // 기안취소 버튼 보이기
-        if (data.apv_status !== '완료') {
-            if (created_by_id === currentUserId) {
-                document.getElementById('selfCancel').classList.remove('d-none');
-            }
-        }
-
-        // 기안승인/반려 버튼 보이기
-        if (data.apv_status == '진행') {
+        // 진행상태에서 기안승인/반려/취소 버튼 보이기
+        if (data.apv_status === '진행') {
             if (next_approver === currentUserId) {
                 document.getElementById('userApprove').classList.remove('d-none');
                 document.getElementById('userReject').classList.remove('d-none');
             }
+            if (created_by_id === currentUserId) {
+                document.getElementById('selfCancel').classList.remove('d-none');
+            }
+        }
+        
+        let leave_reason = data.leave_reason;
+        if (leave_reason === "자리비움") {
+            $('#default_datefield').addClass('d-none');
+            $('#afk_datefield').removeClass('d-none');
+            $('#away_from').val(data.period_from);
+            let timeFrom = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
+            $('#away_from_time').val(timeFrom);
+            $('#away_to').val(data.period_to);
+            let timeTo = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
+            $('#away_to_time').val(timeTo);
+        } else {
+            $('#default_datefield').removeClass('d-none');
+            $('#afk_datefield').addClass('d-none');
         }
 
         document.getElementById('doc_title').value = data.doc_title;

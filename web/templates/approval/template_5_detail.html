@@ -3,7 +3,6 @@
 
 <meta charset="UTF-8">
 {% include 'admins/admin_header.html' %}
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <style>
     /* 모바일웹 텍스트 줄바꿈 방지 */
     .table td, .table th {
@@ -23,8 +22,44 @@
         background-color: rgba(255, 0, 0, 0.2);
     }
 
-    .desktop_hide {
-        display: none;
+    .attached_hover:hover {
+        text-decoration: underline;
+        color: midnightblue !important;
+    }
+
+    .custom-select {
+        position: relative;
+        display: inline-block;
+        width: 200px;
+    }
+
+    .custom-select select {
+        display: inline-block;
+        width: 100%;
+        height: 35px;
+        margin: 0;
+        padding: 0 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    .custom-select::after {
+        content: '▼';
+        position: absolute;
+        top: 45%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #495057;
+        font-size: 10px;
     }
 
     @media (max-width: 900px) {
@@ -65,6 +100,10 @@
             height: 36px !important;
         }
 
+        .select_period {
+            flex-direction: column;
+        }
+
         .cc_box {
             height: auto !important;
             max-height: 180px !important;
@@ -90,9 +129,6 @@
         textarea[id="special_comment"] {
             max-width: 100% !important;
         }
-        .desktop_hide {
-            display: block;
-        }
         div[id="printPage"] {
             display: none;
         }
@@ -102,6 +138,16 @@
             top: 90px;
             right: 20px;
             font-size: 24px;
+        }
+        input[id="period_from_date"],
+        input[id="period_to_date"] {
+            width: 120px !important;
+        }
+        
+        input[id="period_from_time"],
+        input[id="period_to_time"] {
+            flex-grow: 1 !important;
+            width: auto !important;
         }
     }
 </style>
@@ -199,52 +245,68 @@
 
                                 <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
                                     <div class="d-flex justify-content-start flex-wrap">
-                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 제목</div>
-                                        <div class="m-1">
-                                            <input class="form-control" id="related_info" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-start flex-wrap">
                                         <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">관련 사업</div>
                                         <div class="m-1">
                                             <input class="form-control" id="related_project" disabled>
                                         </div>
                                     </div>
 
+                                    <div style="display: flex;">
+                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;"> 출장 시간</div>
+                                        <div class="d-flex select_period">
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="period_from_date" placeholder="시작 날짜" class="form-control" name="period_from_date" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <input id="period_from_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;" disabled>
+                                            </div>
+                                            <div class="d-flex align-items-center m-1">
+                                                <input id="period_to_date" placeholder="종료 날짜" class="form-control" name="period_to_date" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                                <input id="period_to_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
                                     <div class="d-flex justify-content-start flex-wrap">
-                                        <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 기한</div>
-                                        <div class="d-flex align-items-center m-1">
-                                            <input id="period_to" placeholder="클릭하여 선택" class="form-control" name="period_to" autocomplete="off" type="text" disabled/>
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">출장 차량</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="vehicle_select" disabled>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
-                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
-                                    <div id="special_comment" aria-label="special_comment"></div>
-{#                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea></textarea>#}
+                                    <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
+                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:200px;" disabled></textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width: 100px; min-height: 40px;">관련 첨부</div>
                                     <div id="attached_files" class="my-2"></div>
                                 </div>
+                                
+                                <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
+                                    <div class="row justify-content-center align-items-center mx-1 mobile_align_left" style="color: #000; font-size: 16px; width: 100px; min-height: 40px;">출장 보고서</div>
+                                    <div id="board_link" class="my-2"></div>
+                                    <div class="d-flex align-items-center mx-3 mobile_align_left" style="font-size: 12px; color: #697a8d;">
+                                        * 기안취소 및 반려시 출장보고서는 삭제되니 주의하시길 바랍니다.
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- 코멘트 -->
-                        <div class="col-12 col-md-12 col-lg-12 my-4">
-                            <div class="d-flex align-items-center p-2">
-                                <i class="fa-solid fa-comment-dots fa-lg" style="color: #000;"></i>
-                                <span style="color: #000; font-size: 18px; padding-left: 10px;">추가 의견</span>
-                            </div>
-                            <div class="comment_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0; padding: 1.5%;">
-                                <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
-                                <div class="d-flex" id="comment_write">
-                                    <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
-                                    <textarea placeholder="추가 의견은 이곳에 남겨보세요" rows="10" cols="30" style="height: 60px; width: 80%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
-                                    <button class="btn btn-outline-secondary mx-2 p-0" style="width: 80px;" onclick="create_comment()"> 등록 </button>
+                            <!-- 코멘트 -->
+                            <div class="col-12 col-md-12 col-lg-12 my-4">
+                                <div class="d-flex align-items-center p-2">
+                                    <i class="fa-solid fa-comment-dots fa-lg" style="color: #000;"></i>
+                                    <span style="color: #000; font-size: 18px; padding-left: 10px;">추가 의견</span>
+                                </div>
+                                <div class="comment_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0; padding: 1.5%;">
+                                    <div class="d-flex justify-content-start" id="comment_list" style="flex-direction: column; margin-bottom: 20px;"></div>
+                                    <div class="d-flex" id="comment_write">
+                                        <img class="user_profile" src="/data/{{ request.user.profile_image }}" alt="프로필 사진" style="border-radius: 50%; width: 50px; height: 50px; margin-right: 10px;">
+                                        <textarea placeholder="추가 의견은 이곳에 남겨보세요" rows="10" cols="30" style="height: 60px; width: 80%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                                        <button class="btn btn-outline-secondary mx-2 p-0" style="width: 80px;" onclick="create_comment()"> 등록 </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -267,15 +329,17 @@
 </div>
 </body>
 {% include 'admins/admin_footer.html' %}
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
 <script>
 
-    let currentUserId = {{ request.user.id }};
-    let username = '{{ request.user }}';
-    let userteam = '{{ request.user.department_position }}';
+    {#let currentUrl = window.location.href;#}
+    {#let apv_click_id = currentUrl.split("/").slice(-2, -1)[0];#}
     let categoryId = {% if category_no %} {{ category_no }} {% else %} null {% endif %};
     let documentId = {% if document_id %} {{ document_id }} {% else %} null {% endif %};
+    let currentUserId = {{ request.user.id }};
+    let created_by_id = null;
     let isSuperUser = {{ request.user.is_superuser|yesno:"true,false" }};
+    let next_approver = null;
     let categoryName = '{{ category_name }}';
     let currentUrl = window.location.href;
     let urlCategory = currentUrl.split('/')[6];
@@ -283,13 +347,6 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         comment_hotkey();
-    });
-
-    $(document).ready(function () {
-        $('#special_comment').summernote({
-            width: 1200,
-            toolbar: [],
-        });
     });
 
     $(function () {
@@ -318,6 +375,19 @@
         created_by_id = data.created_by.id;
         apv_category_id = data.apv_category.id;
         preventAccess();
+        
+        let period_from_time = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
+        let period_to_time = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
+        let vehicle_select = "사용 안함";
+        if (data.related_info === "CQM3") {
+            vehicle_select = "QM3";
+        } else if (data.related_info === "CSPO") {
+            vehicle_select = "스포티지";
+        } else if (data.related_info === "CETC") {
+            vehicle_select = "기타(렌트차량)";
+        } else if (data.related_info === "ETC") {
+            vehicle_select = "모닝";
+        }
 
         // 진행상태에서 기안승인/반려/취소 버튼 보이기
         if (data.apv_status === '진행') {
@@ -329,21 +399,28 @@
                 document.getElementById('selfCancel').classList.remove('d-none');
             }
         }
-
+        
         document.getElementById('doc_title').value = data.doc_title;
         document.getElementById('doc_no').value = data.doc_no;
         document.getElementById('create_date').value = data.updated_at;
         document.getElementById('username_md').value = data.created_by.username;
         document.getElementById('team').value = data.created_by.department_position;
+        
         document.getElementById('related_project').value = data.related_project;
-        document.getElementById('related_info').value = data.related_info;
-        document.getElementById('period_to').value = data.period_to;
-        $('#special_comment').summernote('code', data.special_comment);
-        $('#special_comment').summernote('disable');
+        document.getElementById('vehicle_select').value = vehicle_select;
+        document.getElementById('period_from_date').value = data.period_from;
+        document.getElementById('period_from_time').value = period_from_time;
+        document.getElementById('period_to_date').value = data.period_to;
+        document.getElementById('period_to_time').value = period_to_time;
+        document.getElementById('special_comment').value = data.special_comment;
         if (data.apv_status !== "진행") {
             document.getElementById('document_status').classList.remove('d-none');
             document.getElementById('document_status').textContent = '결재 ' + data.apv_status;
         }
+        let boardLinkElement = document.getElementById('board_link');
+        boardLinkElement.innerHTML = data.board_link
+            ? `<a href="/admins/board/detail/${data.board_link}/" target="_blank" rel="noopener noreferrer"><div class="btn btn-sm btn-secondary"><i class="fa-regular fa-folder-open me-1"></i>바로 가기</div></a>`
+            : "";
 
         draw_apv_approval_flow(data);
         draw_apv_cc_users(data);

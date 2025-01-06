@@ -228,6 +228,7 @@ class BoardMaster(models.Model):
                                    verbose_name='수정자')
     updated_at = models.DateTimeField(auto_now_add=True, verbose_name='수정일')
     boardcode = models.ForeignKey('CodeMaster', models.CASCADE, related_name='board_code', verbose_name='게시판구분')
+    apv = models.ForeignKey('ApvMaster', models.CASCADE, null=True, related_name='board_apv', verbose_name='전자결재연동')
 
     def get_reply_count(self):
         return ReplyMaster.objects.filter(parent_id=self.id).count()
@@ -326,6 +327,8 @@ class EventMaster(Model):
     update_at = models.DateTimeField(null=True, auto_now_add=True)
     delete_flag = models.CharField(max_length=1, default='N', null=False, verbose_name='삭제여부')  # N: 삭제안함, Y: 삭제
     etc = models.TextField(null=True, verbose_name='비고')  # 비고란 (외부참석자 등 특이사항)
+    apv = models.ForeignKey('ApvMaster', models.CASCADE, null=True, related_name='event_apv', verbose_name='전자결재연동')
+    period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
 
 
 class Participant(Model):
@@ -571,6 +574,7 @@ class ApvMaster(models.Model):
     ]
     LEAVE_CHOICES = [
         ('연차', '연차'),
+        ('자리비움', '자리비움'),
         ('결혼', '결혼'),
         ('사망', '사망'),
         ('출산', '출산'),
@@ -598,9 +602,9 @@ class ApvMaster(models.Model):
     related_project = models.CharField(max_length=255, null=True, blank=True)
     related_info = models.CharField(max_length=255, null=True, blank=True)
     total_cost = models.CharField(max_length=255, null=True, blank=True)
-    period_from = models.DateField(null=True, blank=True)
+    period_from = models.DateTimeField(null=True, blank=True)
     period_from_half = models.CharField(max_length=255, null=True, blank=True)
-    period_to = models.DateField(null=True, blank=True)
+    period_to = models.DateTimeField(null=True, blank=True)
     period_to_half = models.CharField(max_length=255, null=True, blank=True)
     period_count = models.DecimalField(max_digits=10, decimal_places=1, null=True, blank=True)
     leave_reason = models.CharField(max_length=255, choices=LEAVE_CHOICES, default='연차', null=True, blank=True)

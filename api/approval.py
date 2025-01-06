@@ -4,7 +4,10 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db import transaction, DatabaseError
 from django.db.models import Q, OuterRef, Subquery, Max
-from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, ApvReadStatus, NotiCenter
+from scripts.regsetup import description
+
+from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, \
+    ApvReadStatus, NotiCenter, EventMaster, CodeMaster, BoardMaster
 from django import forms
 from lib import Pagenation
 from datetime import datetime, date
@@ -13,7 +16,7 @@ import base64
 import json
 from django.core.files.base import ContentFile
 from api.holiday.views import HolidayCheckView
-
+from django.http import HttpResponse
 
 
 class ApvListView(View):
@@ -188,7 +191,7 @@ class ApvDetail(View):
                 )
 
             if not is_authorized:
-                return JsonResponse({'error': 'Forbidden'}, status=403)
+                return JsonResponse({'error': '해당 문서에 접근 권한이 없습니다.'}, status=403)
 
             qs = [apv_master]
 
@@ -323,6 +326,8 @@ class ApvDetail(View):
             apv_master.save()
             ApvReadStatus.objects.filter(document=apv_master).delete()
             ApvAttachments.objects.filter(document=apv_master).delete()
+            EventMaster.objects.filter(apv=apv_master).delete()
+            BoardMaster.objects.filter(apv=apv_master).delete()
             return JsonResponse({'success': 'Status updated to 임시 and all approvals reset to 대기'}, status=200)
 
         # 승인 버튼을 누른 사용자가 다음 승인자인지 확인
@@ -353,6 +358,9 @@ class ApvDetail(View):
             if updated:
                 apv_master.apv_status = '반려'
                 apv_master.save(update_fields=['apv_status'])
+                # 연차신청 반려시 캘린더 데이터 삭제
+                EventMaster.objects.filter(apv=apv_master).delete()
+                BoardMaster.objects.filter(apv=apv_master).delete()
 
             if not updated:
                 return JsonResponse({'error': 'Failed to update status'}, status=500)
@@ -430,6 +438,10 @@ class ApvCreate(View):
         related_project = request.POST.get('related_project', '')
         related_info = request.POST.get('related_info', '')
         payment_method = request.POST.get('payment_method', '')
+        away_from_time = request.POST.get('away_from_time', None)
+        away_from_time_dt = datetime.strptime(away_from_time, "%H:%M") if away_from_time else None
+        away_to_time = request.POST.get('away_to_time', None)
+        away_to_time_dt = datetime.strptime(away_to_time, "%H:%M") if away_to_time else None
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
         approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
@@ -443,15 +455,35 @@ class ApvCreate(View):
         context = {}
 
         try:
+            start_date = period_from
+            end_date = period_to
+            if apv_category_id == "1":
+                start_date = period_from.strftime("%Y-%m-%d") if period_from else None
+                end_date = period_to.strftime("%Y-%m-%d") if period_to else None
+
+                if start_date:
+                    start_date += " 09:00:00"
+                if end_date:
+                    end_date += " 18:00:00"
+
+                if period_from_half == "am" and end_date:
+                    end_date = period_to.strftime("%Y-%m-%d") + " 13:00:00"
+                elif period_from_half == "pm" and start_date:
+                    start_date = period_from.strftime("%Y-%m-%d") + " 14:00:00"
+
+                if leave_reason == "자리비움" and period_from and period_to:
+                    start_date = period_from.strftime("%Y-%m-%d") + away_from_time_dt.strftime(" %H:%M")
+                    end_date = period_to.strftime("%Y-%m-%d") + away_to_time_dt.strftime(" %H:%M")
+
             ApvMaster_obj = ApvMaster.objects.create(
                 apv_category_id=apv_category_id,
                 apv_status=apv_status,
                 doc_no=doc_no,
                 doc_title=doc_title,
                 leave_reason=leave_reason,
-                period_from=period_from,
+                period_from=start_date,
                 period_from_half=period_from_half,
-                period_to=period_to,
+                period_to=end_date,
                 period_to_half=period_to_half,
                 period_count=period_count,
                 special_comment=special_comment,
@@ -488,6 +520,102 @@ class ApvCreate(View):
             # 본인이 작성한 글은 항상 is_read가 True
             ApvReadStatus.objects.create(user=user, document=ApvMaster_obj, is_read=True)
 
+            # 연차신청시 캘린더에 자동 등록
+            if apv_category_id == "1" and apv_status != "임시":
+                title = leave_reason + " (" + user.username  + ")"
+                allDay = 1
+                event_type = "Holiday"
+                description = special_comment if special_comment else ""
+                if leave_reason != "연차":
+                    period_count = 0
+                if leave_reason == "자리비움":
+                    allDay = 0
+                    event_type ="Personal"
+                if period_count == 0.5:
+                    title = "반차(" + user.username + ")"
+                    allDay = 0
+                    event_type = "Family"
+
+                create_event = EventMaster.objects.create(
+                    url='',
+                    title=title,
+                    start_date=start_date,
+                    end_date=end_date,
+                    allDay=allDay,
+                    event_type=event_type,
+                    create_by=user,
+                    updated_by=user,
+                    description=description,
+                    apv_id=ApvMaster_obj.id,
+                    period_count=period_count,
+                )
+
+            # 출장신청시 캘린더에 자동 등록
+            if apv_category_id == "5" and apv_status != "임시":
+                title = "출장 (" + user.username + ")"
+                event_type = "Business"
+                description = special_comment if special_comment else ""
+                vehicle = CodeMaster.objects.filter(code=related_info, group=4).first()
+
+                create_event = EventMaster.objects.create(
+                    url='',
+                    title=title,
+                    start_date=start_date,
+                    end_date=end_date,
+                    allDay=0,
+                    event_type=event_type,
+                    create_by=user,
+                    updated_by=user,
+                    description=description,
+                    apv_id=ApvMaster_obj.id,
+                    vehicle=vehicle,
+                    location=related_project
+                )
+
+                if vehicle and any(code in vehicle.code for code in ["CQM3", "CSPO", "MOR"]):
+                    create_event.business_pair = create_event.id
+                    create_event.save()
+
+                # 출장보고서 자동 생성
+                board_title = "[출장보고] " + user.username + "_" + related_project + "(" + start_date.strftime(
+                    "%Y-%m-%d") + ")"
+                board_code = CodeMaster.objects.filter(name="출장보고서", group=3).first()
+                base_ops = [
+                    {"attributes": {"bold": True},
+                     "insert": "---- 출장 보고 ----------------------------------------------"},
+                    {"insert": "\n■ 출장 내용\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 특이 사항\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 전달 사항\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 사용 경비\n숙박비 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "유류비 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "출장식대 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "기타 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"}
+                ]
+                if special_comment:
+                    try:
+                        special_ops = json.loads(special_comment).get("ops", [])
+                    except json.JSONDecodeError:
+                        special_ops = [{"insert": f"{special_comment}\n\n"}]
+                    combined_ops = special_ops + base_ops
+                else:
+                    combined_ops = base_ops
+                board_desc = json.dumps({"ops": combined_ops})
+
+                create_board_obj = BoardMaster.objects.create(
+                    title=board_title,
+                    content=board_desc,
+                    boardcode=board_code,
+                    created_by=user,
+                    apv_id=ApvMaster_obj.id,
+                )
+
             if ApvMaster_obj:
                 context = get_res(context, ApvMaster_obj)
             else:
@@ -509,7 +637,11 @@ class ApvCreate(View):
     @staticmethod
     def get_date_from_string(date_str):
         try:
-            return datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+            if not date_str:
+                return None
+            if len(date_str) == 10:
+                date_str += " 00:00"
+            return datetime.strptime(date_str, '%Y-%m-%d %H:%M')
         except ValueError:
             return None
 
@@ -577,7 +709,6 @@ def generate_doc_no():
 
 
 class ApvUpdate(View):
-
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('pk')
@@ -599,6 +730,10 @@ class ApvUpdate(View):
         related_project = request.POST.get('related_project', '')
         related_info = request.POST.get('related_info', '')
         payment_method = request.POST.get('payment_method', '')
+        away_from_time = request.POST.get('away_from_time', None)
+        away_from_time_dt = datetime.strptime(away_from_time, "%H:%M") if away_from_time else None
+        away_to_time = request.POST.get('away_to_time', None)
+        away_to_time_dt = datetime.strptime(away_to_time, "%H:%M") if away_to_time else None
 
         approver_ids = [request.POST.get(f'approver{i}', None) for i in range(1, 7)]
         approvers = [get_object_or_404(UserMaster, pk=id) for id in approver_ids if id]
@@ -612,15 +747,35 @@ class ApvUpdate(View):
         context = {}
 
         try:
+            start_date = period_from
+            end_date = period_to
+            if apv_category_id == "1":
+                start_date = period_from.strftime("%Y-%m-%d") if period_from else None
+                end_date = period_to.strftime("%Y-%m-%d") if period_to else None
+
+                if start_date:
+                    start_date += " 09:00:00"
+                if end_date:
+                    end_date += " 18:00:00"
+
+                if period_from_half == "am" and end_date:
+                    end_date = period_to.strftime("%Y-%m-%d") + " 13:00:00"
+                elif period_from_half == "pm" and start_date:
+                    start_date = period_from.strftime("%Y-%m-%d") + " 14:00:00"
+
+                if leave_reason == "자리비움" and period_from and period_to:
+                    start_date = period_from.strftime("%Y-%m-%d") + away_from_time_dt.strftime(" %H:%M")
+                    end_date = period_to.strftime("%Y-%m-%d") + away_to_time_dt.strftime(" %H:%M")
+
             obj = get_object_or_404(ApvMaster, pk=int(pk))
             obj.apv_category_id = apv_category_id
             obj.apv_status = apv_status
             # obj.doc_no = doc_no
             obj.doc_title = doc_title
             obj.leave_reason = leave_reason
-            obj.period_from = period_from
+            obj.period_from = start_date
             obj.period_from_half = period_from_half
-            obj.period_to = period_to
+            obj.period_to = end_date
             obj.period_to_half = period_to_half
             obj.period_count = period_count
             obj.special_comment = special_comment
@@ -659,6 +814,105 @@ class ApvUpdate(View):
                     remarks=item['remarks']
                 )
 
+            # 연차신청 수정시 캘린더 데이터 삭제 후 재등록
+            EventMaster.objects.filter(apv=obj).delete()
+            BoardMaster.objects.filter(apv=obj).delete()
+            if apv_category_id == "1" and apv_status != "임시":
+                title = leave_reason + " (" + user.username + ")"
+                allDay = 1
+                event_type = "Holiday"
+                description = special_comment if special_comment else ""
+                if leave_reason != "연차":
+                    period_count = 0
+                if leave_reason == "자리비움":
+                    allDay = 0
+                    event_type = "Personal"
+                if period_count == 0.5:
+                    title = "반차(" + user.username + ")"
+                    allDay = 0
+                    event_type = "Family"
+
+                create_event = EventMaster.objects.create(
+                    url='',
+                    title=title,
+                    start_date=start_date,
+                    end_date=end_date,
+                    allDay=allDay,
+                    event_type=event_type,
+                    create_by=user,
+                    updated_by=user,
+                    description=description,
+                    apv_id=obj.id,
+                    period_count=period_count,
+                    # location=request.POST.get('eventLocation'),
+                    # vehicle=selected_vehicle
+                )
+
+            # 출장신청 수정시 캘린더 데이터 삭제 후 재등록
+            if apv_category_id == "5" and apv_status != "임시":
+                title = "출장 (" + user.username + ")"
+                event_type = "Business"
+                description = special_comment if special_comment else ""
+                vehicle = CodeMaster.objects.filter(code=related_info, group=4).first()
+
+                create_event = EventMaster.objects.create(
+                    url='',
+                    title=title,
+                    start_date=start_date,
+                    end_date=end_date,
+                    allDay=0,
+                    event_type=event_type,
+                    create_by=user,
+                    updated_by=user,
+                    description=description,
+                    apv_id=obj.id,
+                    vehicle=vehicle,
+                    location=related_project,
+                )
+
+                if vehicle and any(code in vehicle.code for code in ["CQM3", "CSPO", "MOR"]):
+                    create_event.business_pair = create_event.id
+                    create_event.save()
+
+                # 출장보고서 자동 생성
+                board_title = "[출장보고] " + user.username +"_"+ related_project +"("+ start_date.strftime("%Y-%m-%d") +")"
+                board_code = CodeMaster.objects.filter(name="출장보고서", group=3).first()
+                base_ops = [
+                    {"attributes": {"bold": True},
+                     "insert": "---- 출장 보고 ----------------------------------------------"},
+                    {"insert": "\n■ 출장 내용\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 특이 사항\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 전달 사항\n"},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "■ 사용 경비\n숙박비 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "유류비 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "출장식대 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"},
+                    {"insert": "기타 : "},
+                    {"attributes": {"list": "bullet"}, "insert": "\n"}
+                ]
+                if special_comment:
+                    try:
+                        special_ops = json.loads(special_comment).get("ops", [])
+                    except json.JSONDecodeError:
+                        special_ops = [{"insert": f"{special_comment}\n\n"}]
+                    combined_ops = special_ops + base_ops
+                else:
+                    combined_ops = base_ops
+                board_desc = json.dumps({"ops": combined_ops})
+
+                create_board_obj = BoardMaster.objects.create(
+                    title=board_title,
+                    content=board_desc,
+                    boardcode=board_code,
+                    created_by=user,
+                    apv_id = obj.id,
+                )
+
             self.save_attachments(request, obj)
 
             context = get_res(context, obj)
@@ -678,7 +932,11 @@ class ApvUpdate(View):
     @staticmethod
     def get_date_from_string(date_str):
         try:
-            return datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+            if not date_str:
+                return None
+            if len(date_str) == 10:
+                date_str += " 00:00"
+            return datetime.strptime(date_str, '%Y-%m-%d %H:%M')
         except ValueError:
             return None
 
@@ -728,6 +986,9 @@ class ApvDelete(View):
 
 
 def get_obj(obj):
+    board_item = BoardMaster.objects.filter(apv=obj).first()
+    board_link = board_item.id if board_item else None
+
     return {
         'id': obj.id,
         'doc_no': obj.doc_no if obj.doc_no is not None else '',
@@ -757,12 +1018,15 @@ def get_obj(obj):
         'related_project': obj.related_project if obj.related_project is not None else '',
         'related_info': obj.related_info if obj.related_info else '',
         'total_cost': obj.total_cost if obj.total_cost is not None else '',
-        'period_from': obj.period_from if obj.period_from is not None else '',
+        'period_from': obj.period_from.date() if obj.period_from is not None else '',
+        'period_from_datetime': obj.period_from if obj.period_from is not None else '',
         'period_from_half': obj.period_from_half if obj.period_from_half is not None else '',
-        'period_to': obj.period_to if obj.period_to is not None else '',
+        'period_to': obj.period_to.date() if obj.period_to is not None else '',
+        'period_to_datetime': obj.period_to if obj.period_to is not None else '',
         'period_to_half': obj.period_to_half if obj.period_to_half is not None else '',
         'period_count': obj.period_count if obj.period_count is not None else '',
         'leave_reason': obj.leave_reason if obj.leave_reason is not None else '',
+        'board_link': board_link
     }
 
 

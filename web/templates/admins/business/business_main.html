@@ -108,8 +108,8 @@
                                         {{ participant.cuser }}{% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
+                                <td class="text-wrap" style="text-align: left; white-space: pre-wrap;">{{ obj.description|linebreaksbr }}</td>
                                 <td>{{ obj.location }}</td>
-                                <td>{{ obj.description }}</td>
                                 {% if obj.vehicle_id %}
                                     <td>사용</td>
                                 {% else %}

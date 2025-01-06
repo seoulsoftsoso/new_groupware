@@ -135,13 +135,13 @@
             height: 20px !important;
             padding: 2px !important;
         }
-        input[id="away_from"],
-        input[id="away_to"] {
+        input[id="period_from_date"],
+        input[id="period_to_date"] {
             width: 120px !important;
         }
         
-        input[id="away_from_time"],
-        input[id="away_to_time"] {
+        input[id="period_from_time"],
+        input[id="period_to_time"] {
             flex-grow: 1 !important;
             width: auto !important;
         }
@@ -298,72 +298,45 @@
                             <div class="detail_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
 
                                 <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
-                                    <div class="d-flex justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 종류</div>
-                                    <div class="custom-select m-1">
-                                        <select class="form-control" id="leave_reason" name="leave_reason" onchange="update_doc_title(this.value)">
-                                            <option value="">클릭 후 선택하세요</option>
-                                            {% for value, display in leave_choices %}
-                                                <option value="{{ value }}">{{ display }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">관련 사업</div>
+                                        <div class="m-1">
+                                            <input class="form-control" id="related_project" onchange="update_doc_title(this.value);">
+                                        </div>
                                     </div>
 
-                                    <!-- 일반적인 날짜 입력 -->
-                                    <div id="default_datefield" style="display: flex;">
-                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">휴가 기간</div>
+                                    <div style="display: flex;">
+                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;"> 출장 시간</div>
                                         <div class="d-flex select_period">
                                             <div class="d-flex align-items-center m-1">
-                                                <input id="period_from" placeholder="시작 날짜" class="form-control" name="period_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                                <select id="period_from_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;">
-                                                    <option value="full">종일</option>
-                                                    <option value="am">오전</option>
-                                                    <option value="pm">오후</option>
-                                                </select>
+                                                <input id="period_from_date" placeholder="시작 날짜" class="form-control" name="period_from_date" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
+                                                <input id="period_from_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;">
                                             </div>
                                             <div class="d-flex align-items-center m-1">
-                                                <input id="period_to" placeholder="종료 날짜" class="form-control" name="period_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                                <select id="period_to_half" class="form-control" style="width:70px; border-radius: 0 6px 6px 0;">
-                                                    <option value="full">종일</option>
-                                                    <option value="am">오전</option>
-                                                    <option value="pm">오후</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="d-flex align-items-center my-1 mobile_align_left" style="padding-left: 30px;">
-                                                <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                                    <div class="m-1" style="width:100px;">휴가 일수 총</div>
-                                                    <input class="form-control" id="period_count" style="text-align: right; width:70px; padding-left: 0; margin-left: 5px;">
-                                                    <div class="m-1" style="width:20px; margin-left: 5px;">일</div>
-                                                </div>
-                                            </div>
-    
-                                            <div class="d-flex align-items-center my-1 mobile_align_left">
-                                                <div class="d-flex align-items-center" style="color: #000; font-size: 16px;">
-                                                    <span id="leave_balance" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="캘린더에 등록된 모든 연차를 제외하고 남은 연차"></span>
-                                                </div>
+                                                <input id="period_to_date" placeholder="종료 날짜" class="form-control" name="period_to_date" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
+                                                <input id="period_to_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;">
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <!-- 자리비움 전용필드 -->
-                                    <div id="afk_datefield" class="d-none" style="display: flex;">
-                                        <div class="d-flex justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;"> 자리비움 시간</div>
-                                        <div class="d-flex select_period">
-                                            <div class="d-flex align-items-center m-1">
-                                                <input id="away_from" placeholder="시작 날짜" class="form-control" name="away_from" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                                <input id="away_from_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;">
-                                            </div>
-                                            <div class="d-flex align-items-center m-1">
-                                                <input id="away_to" placeholder="종료 날짜" class="form-control" name="away_to" autocomplete="off" style="width:150px; border-radius: 6px 0 0 6px;" type="text"/>
-                                                <input id="away_to_time" type="time" class="form-control" style="border-radius: 0 6px 6px 0;">
-                                            </div>
+                                </div>
+
+                                <div class="d-flex justify-content-start align-items-center my-3 px-2 flex-wrap">
+                                    <div class="d-flex justify-content-start flex-wrap">
+                                        <div class="row justify-content-center align-items-center m-1 flex-wrap mobile_align_left" style="color: #000; font-size: 16px; width:100px;">출장 차량</div>
+                                        <div class="m-1">
+                                            <select class="select2 select-event-guests form-select" id="vehicle_select" name="vehicle_select"></select>
+                                            <p id="vehicle_select_label" class="form-label">* 출장 날짜/시간 입력 후 차량조회</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">상세 설명</div>
-                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;"></textarea>
+                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:200px;">1. 출장 목적 : 
+2. 출장 장소 : 
+3. 참석 인원 : 
+4. 약속 시간 : 
+5. 기타 내용 : </textarea>
                                 </div>
 
                                 <div class="d-flex justify-content-start mt-3 px-2 flex-wrap">
@@ -385,9 +358,15 @@
                             </div>
                             <div class="check_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0">
                                 <ul class="m-2" style="color:#000">
-                                    <li><strong>[예비군/민방위 신청시]</strong> 통지서 스캔하여 파일 첨부</li>
-                                    <li><strong>[경조휴가 신청시]</strong> 각종 증빙서류 스캔하여 파일 첨부 (예: 청첩장, 등본 등)</li>
-                                    <li>기타 필요한 내용은 '상세 설명'란에 기입</li>
+                                    {% comment %}<li>'임시 저장' 혹은 '기안 취소' 후에는 차량의 예약 가능여부를 확인하기 위해 일정/차량을 다시 선택하여 확인해야 합니다.</li>{% endcomment %}
+                                    <li>'상세 설명'란에 <strong>목적, 장소, 참석자, 약속 시간</strong> 반드시 기입</li>
+                                    <li>예시<br>
+                                        1. 출장 목적 : 춘천시민버스 ERP 개발 진행 보고<br>
+                                        2. 출장 장소 : [강원/춘천] 춘천시민버스<br>
+                                        3. 참석 인원 : 홍길동, 임꺽정, 고라니<br>
+                                        4. 약속 시간 : 오전 10시<br>
+                                        5. 기타 내용 : 업체 측에서 미팅 요청<br>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -409,6 +388,7 @@
 </body>
 {% include 'admins/admin_footer.html' %}
 
+<script src="{% static 'js/api_corporate_vehicle_check.js' %}"></script>
 <script>
 
     let currentUserId = {{ request.user.id }};
@@ -423,18 +403,12 @@
     let apv_category_id = null;
 
     $(document).ready(function () {
-        $('#period_from, #period_to, #away_from, #away_to').datepicker({
+        $('#period_from_date, #period_to_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
             todayHighlight: true
         });
 
-        $('#period_from, #period_to, #period_from_half, #period_to_half').change(function () {
-            updatePeriodToOptions();
-            calculatePeriod();
-        });
-
-        updatePeriodToOptions();
         loadCreateDate();
         checkApproverList();
         set_autocomplete('off');
@@ -442,8 +416,6 @@
         if(documentId) {
             load_apv_temp_data();
             document.getElementById('deleteBtn').classList.remove('d-none');
-        } else {
-            load_apv_create_data();
         }
     });
 
@@ -487,83 +459,11 @@
         let current_time = `${hours}:${minutes}`;
 
         createDateInput.value = formattedDate;
-        document.getElementById('away_from').value = today;
-        document.getElementById('away_from_time').value = current_time;
-        document.getElementById('away_to').value = today;
-        document.getElementById('away_to_time').value = current_time;
+        document.getElementById('period_from_time').value = current_time;
+        document.getElementById('period_to_time').value = current_time;
         document.getElementById('username_md').value = username;
         document.getElementById('team').value = userteam;
         document.getElementById('doc_title').value = '['+ categoryName +'] ' + userteam + ' ' + username + ' ' + simepleDate;
-    }
-
-    function calculatePeriod() {
-        let periodFrom = $('#period_from').val();
-        let periodTo = $('#period_to').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half').val();
-        let periodCount = $('#period_count');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date(periodTo);
-
-        if (isNaN(fromDate) || isNaN(toDate)) {
-            periodCount.val('');
-            return;
-        }
-
-        if (fromDate > toDate) {
-            alert("시작 날짜는 종료 날짜보다 나중일 수 없습니다.");
-            periodCount.val('');
-            return;
-        }
-
-        let daysDiff = 0;
-        let currentDate = fromDate;
-        while (currentDate <= toDate) {
-            let dayOfWeek = currentDate.getDay();
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 일요일(0)과 토요일(6) 제외
-                daysDiff++;
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            if (periodFromHalf === 'am' && periodToHalf === 'pm') {
-                daysDiff = 1; // 같은 날 오전과 오후를 선택하면 1일로 계산
-            } else if (periodFromHalf === 'pm' && periodToHalf === 'am') {
-                daysDiff = 0; // 같은 날 오후와 오전을 선택하면 0일로 계산
-            } else if (periodFromHalf !== periodToHalf) {
-                daysDiff = 0.5; // 같은 날 오전과 오후가 다른 경우 반나절로 계산
-            }
-        } else {
-            if (periodFromHalf === 'pm') {
-                daysDiff -= 0.5; // 시작일이 오후면 반나절 차감
-            }
-            if (periodToHalf === 'am') {
-                daysDiff -= 0.5; // 종료일이 오전이면 반나절 차감
-            }
-        }
-
-        if (daysDiff >= 0.5) {
-            periodCount.val(daysDiff.toFixed(1));
-        } else {
-            periodCount.val('');
-        }
-    }
-
-    function updatePeriodToOptions() {
-        let periodFrom = $('#period_from').val();
-        let periodFromHalf = $('#period_from_half').val();
-        let periodToHalf = $('#period_to_half');
-
-        let fromDate = new Date(periodFrom);
-        let toDate = new Date($('#period_to').val());
-
-        if (fromDate.getTime() === toDate.getTime()) {
-            periodToHalf.val(periodFromHalf).prop('disabled', true);
-        } else {
-            periodToHalf.prop('disabled', false);
-        }
     }
 
     function getApproverId(approverInputId) {
@@ -588,19 +488,6 @@
         return selectedValues.length > 0 ? selectedValues : null;
     }
 
-    function load_apv_create_data() {
-        api_gp("/admins/apv/create/", "get", {}, (done) => {
-            console.log("load_apv_create_data: ", done);
-            let data = done;
-            try {
-                let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
-                document.getElementById('leave_balance').textContent = "(기존 잔여연차 " + leave_balance + " 일)"; 
-            } catch (error) {
-                document.getElementById('leave_balance').textContent = ''; // 오류 발생 시 빈칸으로 설정
-            }
-        })
-    }
-
     function load_apv_temp_data() {
         let query = "?apv_id=" + documentId;
         api_gp("/admins/apv/detail/" + query, "get", {}, (done) => {
@@ -614,27 +501,8 @@
         apv_category_id = data.apv_category.id;
         preventAccess();
         
-        let leave_reason = data.leave_reason;
-        if (leave_reason === "자리비움") {
-            $('#default_datefield').addClass('d-none');
-            $('#afk_datefield').removeClass('d-none');
-            $('#away_from').val(data.period_from);
-            let timeFrom = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
-            $('#away_from_time').val(timeFrom);
-            $('#away_to').val(data.period_to);
-            let timeTo = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
-            $('#away_to_time').val(timeTo);
-        } else {
-            $('#default_datefield').removeClass('d-none');
-            $('#afk_datefield').addClass('d-none');
-        }
-
-        try {
-            let leave_balance = (data.leave_balance && data.leave_balance[0] && data.leave_balance[0].residual_holiday) || '?';
-            document.getElementById('leave_balance').value = leave_balance;
-        } catch (error) {
-            document.getElementById('leave_balance').value = 'x'; // 오류 발생 시 x으로 설정
-        }
+        let period_from_time = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
+        let period_to_time = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
 
         document.getElementById('doc_title').value = data.doc_title;
         document.getElementById('doc_no').value = data.doc_no;
@@ -647,12 +515,12 @@
         document.getElementById('approver4').value = data.approvers[0]?.approver4_name ? data.approvers[0].approver4_name.split(' ')[0] + ' (' + data.approvers[0].approver4_team + ')' : '';
         document.getElementById('approver5').value = data.approvers[0]?.approver5_name ? data.approvers[0].approver5_name.split(' ')[0] + ' (' + data.approvers[0].approver5_team + ')' : '';
         document.getElementById('approver6').value = data.approvers[0]?.approver6_name ? data.approvers[0].approver6_name.split(' ')[0] + ' (' + data.approvers[0].approver6_team + ')' : '';
-        document.getElementById('leave_reason').value = data.leave_reason;
-        document.getElementById('period_from').value = data.period_from;
-        document.getElementById('period_from_half').value = data.period_from_half;
-        document.getElementById('period_to').value = data.period_to;
-        document.getElementById('period_to_half').value = data.period_to_half;
-        document.getElementById('period_count').value = data.period_count;
+        
+        document.getElementById('related_project').value = data.related_project;
+        document.getElementById('period_from_date').value = data.period_from;
+        document.getElementById('period_from_time').value = period_from_time;
+        document.getElementById('period_to_date').value = data.period_to;
+        document.getElementById('period_to_time').value = period_to_time;
         document.getElementById('special_comment').value = data.special_comment;
 
         let apvCcSelect = document.getElementById('apv_cc');
@@ -664,20 +532,31 @@
                 option.selected = false;
             }
         });
+        
+        checkAndTriggerAvailability();
+        setTimeout(() => {
+            $('#vehicle_select').val(data.related_info).trigger('change');
+        }, 10); // select2 로딩 후 비동기 로딩을 위해 약간의 시간차 부여
     }
 
 
     // 임시저장 (첨부파일저장안함 + 필수필드없음)
     function apv_tempsave() {
-        let leave_reason_value = document.getElementById('leave_reason').value;
-        let period_from_value = nullapply($('#period_from').val());
-        let period_to_value = nullapply($('#period_to').val());
-        
-        if (leave_reason_value === "자리비움") {
-            period_from_value = nullapply($('#away_from').val());
-            period_to_value = nullapply($('#away_to').val());
+        let startDate = $("#period_from_date").val();
+        let startTime = $("#period_from_time").val();
+        let endDate = $("#period_to_date").val();
+        let endTime = $("#period_to_time").val();
+        let startDateTime;
+        let endDateTime;
+
+        if (startDate && startTime) {
+            startDateTime = startDate + " " + startTime;
         }
         
+        if (endDate && endTime) {
+            endDateTime = endDate + " " + endTime;
+        }
+
         let apvCcElement = document.getElementById('apv_cc');
         let selectedCcValues = getSelectedCC(apvCcElement);
 
@@ -687,14 +566,10 @@
             apv_category_id: categoryId,
             apv_status: '임시',
             doc_title: nullapply($('#doc_title').val()),
-            leave_reason: nullapply($('#leave_reason').val()),
-            period_from: period_from_value,
-            period_from_half: nullapply($('#period_from_half').val()),
-            away_from_time: nullapply($('#away_from_time').val()),
-            away_to_time: nullapply($('#away_to_time').val()),
-            period_to: period_to_value,
-            period_to_half: nullapply($('#period_to_half').val()),
-            period_count: nullapply($('#period_count').val()),
+            related_project: nullapply($('#related_project').val()),
+            related_info: nullapply($('#vehicle_select').val()),
+            period_from: startDateTime,
+            period_to: endDateTime,
             special_comment: nullapply($('#special_comment').val()),
             approver1: getApproverId('approver1'),
             approver2: getApproverId('approver2'),
@@ -722,15 +597,21 @@
     // 결재전송 (첨부파일저장 + 필수필드누락경고)
     function apv_send_progress() {
         if (confirm('승인 요청을 전송하시겠습니까?')) {
-            let leave_reason_value = document.getElementById('leave_reason').value;
-            let period_from_value = nullapply($('#period_from').val());
-            let period_to_value = nullapply($('#period_to').val());
-            
-            if (leave_reason_value === "자리비움") {
-                period_from_value = nullapply($('#away_from').val());
-                period_to_value = nullapply($('#away_to').val());
+            let startDate = $("#period_from_date").val();
+            let startTime = $("#period_from_time").val();
+            let endDate = $("#period_to_date").val();
+            let endTime = $("#period_to_time").val();
+            let startDateTime;
+            let endDateTime;
+    
+            if (startDate && startTime) {
+                startDateTime = startDate + " " + startTime;
             }
-        
+            
+            if (endDate && endTime) {
+                endDateTime = endDate + " " + endTime;
+            }
+            
             let apvCcElement = document.getElementById('apv_cc');
             let selectedCcValues = getSelectedCC(apvCcElement);
 
@@ -741,14 +622,10 @@
                 apv_status: '진행',
                 doc_no: nullapply($('#doc_no').val()),
                 doc_title: nullapply($('#doc_title').val()),
-                leave_reason: nullapply($('#leave_reason').val()),
-                period_from: period_from_value,
-                period_from_half: nullapply($('#period_from_half').val()),
-                away_from_time: nullapply($('#away_from_time').val()),
-                away_to_time: nullapply($('#away_to_time').val()),
-                period_to: period_to_value,
-                period_to_half: nullapply($('#period_to_half').val()),
-                period_count: nullapply($('#period_count').val()),
+                related_project: nullapply($('#related_project').val()),
+                related_info: nullapply($('#vehicle_select').val()),
+                period_from: startDateTime,
+                period_to: endDateTime,
                 special_comment: nullapply($('#special_comment').val()),
                 attached_files: [],
                 approver1: getApproverId('approver1'),
@@ -814,25 +691,13 @@
                 return false;
             }
 
-            let requiredFields = [];
-            if (api_data.leave_reason === '자리비움') {
-                requiredFields = [
+            let requiredFields = [
                     { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
-                    { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
-                    { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' },
-                    { key: 'away_from_time', message: '자리비움 시작시간이 선택되지 않았습니다.' },
-                    { key: 'away_to_time', message: '자리비움 복귀시간이 선택되지 않았습니다.' },
-                ];
-            } else {
-                requiredFields = [
-                    { key: 'doc_title', message: '문서제목이 입력되지 않았습니다.' },
-                    { key: 'leave_reason', message: '휴가종류가 선택되지 않았습니다.' },
                     { key: 'approver1', message: '최소 한명의 승인자가 필요합니다.' },
                     { key: 'period_from', message: '시작기간이 선택되지 않았습니다.' },
                     { key: 'period_to', message: '종료기간이 선택되지 않았습니다.' },
-                    { key: 'period_count', message: '기간 일수가 누락되었습니다.' },
+                    { key: 'special_comment', message: '상세 설명이 입력되지 않았습니다.' },
                 ];
-            }
 
             if (!validateApiData(api_data, requiredFields)) {
                 return;
@@ -992,7 +857,7 @@
         inputElement.files = dataTransfer.files;
     }
 
-    function update_doc_title(leave_reason) {
+    function update_doc_title(related_project) {
         let createDateInput = document.getElementById('create_date');
         let days = ['일', '월', '화', '수', '목', '금', '토'];
         let now = new Date();
@@ -1004,15 +869,33 @@
         let simepleDate = year.toString().slice(-2) + month + day
         createDateInput.value = formattedDate;
 
-        document.getElementById('doc_title').value = '['+ categoryName +'] ' + userteam + ' ' + username + ' ' + simepleDate + ' (' + leave_reason + ')';
-        
-        if (leave_reason === "자리비움") {
-            $('#default_datefield').addClass('d-none');
-            $('#afk_datefield').removeClass('d-none');
+        document.getElementById('doc_title').value = '['+ categoryName +'] ' + userteam + ' ' + username + ' ' + simepleDate + ' (' + related_project + ')';
+    }
+
+    function checkAndTriggerAvailability() {
+        let startDate = $("#period_from_date").val();
+        let startTime = $("#period_from_time").val();
+        let endDate = $("#period_to_date").val();
+        let endTime = $("#period_to_time").val();
+
+        if (startDate && startTime && endDate && endTime) {
+            let startDateTime = startDate + " " + startTime;
+            let endDateTime = endDate + " " + endTime;
+            checkVehicleAvailability(startDateTime, endDateTime);
+            $('#vehicle_select_label').removeClass('text-danger');
         } else {
-            $('#default_datefield').removeClass('d-none');
-            $('#afk_datefield').addClass('d-none');
+            $('#vehicle_select_label').addClass('text-danger');
         }
     }
 
+    // 초기 로딩 시 실행
+    $(document).ready(function () {
+        checkAndTriggerAvailability();
+
+        // 변경 시에도 실행
+        $('#period_from_date, #period_from_time, #period_to_date, #period_to_time').on('change', function () {
+            checkAndTriggerAvailability();
+        });
+    });
+    
 </script>

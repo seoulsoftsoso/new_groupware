@@ -216,12 +216,12 @@
 {#            {% endif %}#}
 {#        </li>#}
 
-        <li class="menu-item">
+        {% comment %}<li class="menu-item">
             <a href="{% url 'calendarPage' %}" class="menu-link normal-menu">
                 <i class='bx bx-calendar'></i>
                 <div class="text-truncate" style="margin-left: 10px;" data-i18n="캘린더">캘린더</div>
             </a>
-        </li>
+        </li>{% endcomment %}
 
         <li class="menu-item">
             <a href="{% url 'apv_list' %}" class="menu-link">
@@ -293,6 +293,8 @@
                 </ul>
             {% endif %}{% endcomment %}
         </li>
+    
+        <div id="toast_popup_area"></div>
 
         <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
             <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>

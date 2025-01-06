@@ -20,6 +20,8 @@ if (isRtl) {
 let calendar;
 
 let updateEventId;
+let apvId;
+let apvIdCate;
 let event_creat_id;
 
   function handleEventsData(data) {
@@ -192,6 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
       eventToUpdate = info.event;
       // console.log('eve_update2', eventToUpdate)
       updateEventId= eventToUpdate._def.publicId
+      apvId= eventToUpdate.extendedProps.apv_id;
+      apvIdCate= eventToUpdate.extendedProps.apv_category_id;
       // if (eventToUpdate.url) {
       //   info.jsEvent.preventDefault();
       //   window.open(eventToUpdate.url, '_blank');
@@ -320,8 +324,14 @@ document.addEventListener('DOMContentLoaded', function () {
         let guests = event.extendedProps.guests
         let eventuser = event.extendedProps.created_by
         let eventallday = event.allDay
+        let apvStatus = event.extendedProps.apv_status
+        let apvStatusLogo = "❔"
 
-        if (eventType==="business"){
+        if (apvStatus === "완료") {
+          apvStatusLogo = '✔';
+        }
+
+        if (eventType === "business") {
           eventType = "출장"
         } else if(eventType==="personal"){
           eventType = "자리비움"
@@ -342,7 +352,13 @@ document.addEventListener('DOMContentLoaded', function () {
           guests = "외 " + guests.length + "명"
         }
 
-        event.title = `${eventallday} ${eventType} (${eventuser} ${guests})`;
+        /*event.title = `${eventallday} ${eventType} (${eventuser} ${guests})`;*/
+
+        // event.title = `${event.title} ${apvStatusLogo}`;
+
+        if (!event.title.includes(apvStatusLogo)) {
+            event.title = `${event.title} ${apvStatusLogo}`.trim();
+        }
 
         return event;
       });
@@ -657,17 +673,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Hide left sidebar if the right sidebar is open
-    btnToggleSidebar.addEventListener('click', e => {
-      if (offcanvasTitle) {
-        offcanvasTitle.innerHTML = 'Add Event';
-      }
-      btnSubmit.innerHTML = 'Add';
-      btnSubmit.classList.remove('btn-update-event');
-      btnSubmit.classList.add('btn-add-event');
-      btnDeleteEvent.classList.add('d-none');
-      appCalendarSidebar.classList.remove('show');
-      appOverlay.classList.remove('show');
-    });
+    // btnToggleSidebar.addEventListener('click', e => {
+    //   if (offcanvasTitle) {
+    //     offcanvasTitle.innerHTML = 'Add Event';
+    //   }
+    //   btnSubmit.innerHTML = 'Add';
+    //   btnSubmit.classList.remove('btn-update-event');
+    //   btnSubmit.classList.add('btn-add-event');
+    //   btnDeleteEvent.classList.add('d-none');
+    //   appCalendarSidebar.classList.remove('show');
+    //   appOverlay.classList.remove('show');
+    // });
 
     // Calender filter functionality
     // ------------------------------------------------

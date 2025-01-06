@@ -140,7 +140,9 @@ def check_vehicle_availability(request):
     end_date = request.GET.get('end_date')
     # print('sta', start_date)
     # print('end', end_date)
-    vehicle_list = []
+    vehicle_list = [
+        {'code': 'N/A', 'name': '사용 안함', 'is_available': True}
+    ]
     for vehicle in CodeMaster.objects.filter(code__in=["CQM3", "CSPO", "CETC", "MOR"]):
         if vehicle.code == "CETC":
             is_available = True

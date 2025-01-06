@@ -1,3 +1,5 @@
+<!-- 대시보드 캘린더 -->
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="ko">
@@ -11,6 +13,33 @@
 <style>
     .flatpickr-calendar {
         box-shadow: 0 0 0 0 !important;
+    }
+    
+    .animate-slide-in {
+        animation: slide-in 0.5s forwards;
+    }
+    .animate-slide-out {
+        animation: slide-out 0.5s forwards;
+    }
+    @keyframes slide-in {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slide-out {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
     }
 </style>
 <body>
@@ -175,7 +204,8 @@
                   <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" style="width: 18%">
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                       <div class="d-grid">
-                        <button
+                          <div style="height: 39px;"> </div>
+                        {% comment %}<button
                           class="btn btn-outline-primary btn-toggle-sidebar"
                           style="width: 255px; margin-left: -5px;"
                           data-bs-toggle="offcanvas"
@@ -183,7 +213,7 @@
                           aria-controls="addEventSidebar">
                           <i class="bx bx-plus me-1"></i>
                           <span class="align-middle">일정 추가</span>
-                        </button>
+                        </button>{% endcomment %}
                       </div>
                     </div>
                     <div class="p-4">
@@ -399,16 +429,18 @@
                           </div>
                           <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
                             <div>
-                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">등록</button>
+                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1 d-none">등록</button>
+                              <button class="btn btn-primary me-sm-3 me-1" id="approvalButton">전자결재 이동</button>
                               <button
                                 type="reset"
                                 class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
+                                id="hide_offcanvas"
                                 data-bs-dismiss="offcanvas">
-                                Cancel
+                                돌아가기
                               </button>
                             </div>
 
-                                <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+                                <div><button id="delete_btn" class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
 
                           </div>
                         </form>
@@ -470,7 +502,7 @@
         $('#eventLabel, #customCheckTemp3').change(function () {
             toggleRadioGroup($('#eventLabel').val());
         });
-
+        $('#delete_btn').css('display', 'none');
     });
 
     function toggleRadioGroup(selectedValue) {
@@ -769,5 +801,72 @@
             }, 1000);
         }
     });
+
+
+    {% comment %}document.getElementById('approvalButton').addEventListener('click', function () {
+        if (!apvIdCate || !apvId) {
+            alert('전자결재 문서를 찾을 수 없습니다.');
+            return;
+        }
+
+        let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
+        window.open(url, '_blank', 'width=1500,height=1000,scrollbars=yes,resizable=yes');
+    });{% endcomment %}
+    
+    document.getElementById('approvalButton').addEventListener('click', function () {
+        if (!apvIdCate || !apvId) {
+            showToast('전자결재 문서를 찾을 수 없습니다.');
+            document.getElementById('hide_offcanvas').click();
+            return;
+        }
+    
+        let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
+        let newWindow = window.open(url, '_blank', 'width=1500,height=1000,scrollbars=yes,resizable=yes');
+    
+        fetch(`/admins/apv/detail/?apv_id=${apvId}`)
+            .then(response => {
+            if (response.status === 403) {
+                newWindow.close();
+                showToast('전자결재 문서에 접근 권한이 없습니다.');
+                document.getElementById('hide_offcanvas').click();
+            }
+        })
+    });
+    
+    
+    // 토스트 팝업 생성 함수
+    function showToast(message, options = {}) {
+        const {
+            position = 'bottom: 1rem; left: 1rem;',
+            delay = 1500,
+            width = '350px',
+        } = options;
+    
+        const toastId = `toast_${Date.now()}`;
+    
+        $('#toast_popup_area').append(`
+            <div id="${toastId}" class="toast position-fixed animate-slide-in" style="${position} z-index: 10000; width: ${width}; border: 1px solid rgba(0, 0, 0, 0.1);">
+              <div class="toast-header bg-dark text-white p-2">
+                <strong class="me-auto"><i class="fa-solid fa-bell me-2"></i>알 림</strong>
+              </div>
+              <div class="toast-body">
+                ${message}
+              </div>
+            </div>
+        `);
+    
+        const toastElement = $(`#${toastId}`);
+        toastElement.toast({ delay });
+        toastElement.toast('show');
+    
+        setTimeout(function () {
+            toastElement
+                .removeClass('animate-slide-in')
+                .addClass('animate-slide-out');
+            setTimeout(function () {
+                toastElement.remove();
+            }, 500); // 애니메이션 시간(0.5초) 후 삭제
+        }, delay);
+    }
 </script>
 

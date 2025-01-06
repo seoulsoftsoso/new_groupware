@@ -108,72 +108,38 @@
 
                         <div class="d-flex align-items-center m-0 px-2" style="height: 40px;">
                             <div class="col-1 d-flex justify-content-start align-items-center p-2">
-                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">휴가 종류</div>
+                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">관련 사업</div>
                             </div>
                             <div class="col-5 d-flex justify-content-start align-items-center p-2">
-                                <div class="custom-select">
-                                    <select class="form-control border-none bg-white" id="leave_reason" name="leave_reason" style="font-size: 14px;" disabled>
-                                        <option value="">클릭 후 선택하세요</option>
-                                        {% for value, display in leave_choices %}
-                                            <option value="{{ value }}">{{ display }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                                <div id="related_project"></div>
                             </div>
                         </div>
-
-                        <!-- 일반적인 날짜 입력 -->
-                        <div id="default_datefield" class="m-0 px-2" style="height: 40px; display: flex;">
+                        
+                        <div class="m-0 px-2" style="height: 40px; display: flex;">
                             <div class="col-1 d-flex justify-content-start align-items-center p-2">
-                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">휴가 기간</div>
+                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">출장 시간</div>
                             </div>
                             <div class="col-7 d-flex justify-content-start align-items-center p-2">
                                 <div class="d-flex select_period">
                                     <div class="d-flex align-items-center">
-                                        <input id="period_from" placeholder="시작 날짜" class="form-control bg-white" name="period_from" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                        <select id="period_from_half" class="form-control bg-white" style="font-size: 14px; width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                            <option value="full">종일</option>
-                                            <option value="am">오전</option>
-                                            <option value="pm">오후</option>
-                                        </select>
+                                        <input id="period_from_date" placeholder="시작 날짜" class="form-control bg-white" name="away_from" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                        <input id="period_from_time" type="time" class="form-control bg-white" style="font-size: 14px; border-radius: 0 6px 6px 0;" disabled>
                                     </div>
                                     <div class="row justify-content-start align-items-center mx-2" style="color: #000; font-size: 18px; width:10px;">~</div>
                                     <div class="d-flex align-items-center">
-                                        <input id="period_to" placeholder="종료 날짜" class="form-control bg-white" name="period_to" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                        <select id="period_to_half" class="form-control bg-white" style="font-size: 14px; width:70px; border-radius: 0 6px 6px 0;" disabled>
-                                            <option value="full">종일</option>
-                                            <option value="am">오전</option>
-                                            <option value="pm">오후</option>
-                                        </select>
+                                        <input id="period_to_date" placeholder="종료 날짜" class="form-control bg-white" name="away_to" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
+                                        <input id="period_to_time" type="time" class="form-control bg-white" style="font-size: 14px; border-radius: 0 6px 6px 0;" disabled>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-1 d-flex justify-content-start align-items-center p-2">
-                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">휴가 일수 총</div>
-                            </div>
-                            <div class="col-2 d-flex justify-content-start align-items-center p-2">
-                                <input class="form-control border-none bg-white p-1" id="period_count" style="text-align: center; width:50px; font-size: 14px;" disabled>
-                                <div class="row justify-content-start align-items-center px-1" style="color: #000; font-size: 14px; width:100px;">일</div>
                             </div>
                         </div>
-
-                        <!-- 자리비움 전용필드 -->
-                        <div id="afk_datefield" class="d-none m-0 px-2" style="height: 40px; display: flex;">
+                        
+                        <div class="d-flex align-items-center m-0 px-2" style="height: 40px;">
                             <div class="col-1 d-flex justify-content-start align-items-center p-2">
-                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">자리비움 시간</div>
+                                <div class="row justify-content-center align-items-center" style="color: #000; font-size: 14px; width:100px;">출장 차량</div>
                             </div>
-                            <div class="col-7 d-flex justify-content-start align-items-center p-2">
-                                <div class="d-flex select_period">
-                                    <div class="d-flex align-items-center">
-                                        <input id="away_from" placeholder="시작 날짜" class="form-control bg-white" name="away_from" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                        <input id="away_from_time" type="time" class="form-control bg-white" style="font-size: 14px; border-radius: 0 6px 6px 0;" disabled>
-                                    </div>
-                                    <div class="row justify-content-start align-items-center mx-2" style="color: #000; font-size: 18px; width:10px;">~</div>
-                                    <div class="d-flex align-items-center">
-                                        <input id="away_to" placeholder="종료 날짜" class="form-control bg-white" name="away_to" autocomplete="off" style="font-size: 14px; width:150px; border-radius: 6px 0 0 6px;" type="text" disabled/>
-                                        <input id="away_to_time" type="time" class="form-control bg-white" style="font-size: 14px; border-radius: 0 6px 6px 0;" disabled>
-                                    </div>
-                                </div>
+                            <div class="col-5 d-flex justify-content-start align-items-center p-2">
+                                <div id="vehicle_select"></div>
                             </div>
                         </div>
 
@@ -243,32 +209,31 @@
         doc_title = data.doc_title;
         doc_no = data.doc_no;
         
-        let leave_reason = data.leave_reason;
-        if (leave_reason === "자리비움") {
-            $('#default_datefield').addClass('d-none');
-            $('#afk_datefield').removeClass('d-none');
-            $('#away_from').val(data.period_from);
-            let timeFrom = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
-            $('#away_from_time').val(timeFrom);
-            $('#away_to').val(data.period_to);
-            let timeTo = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
-            $('#away_to_time').val(timeTo);
-        } else {
-            $('#default_datefield').removeClass('d-none');
-            $('#afk_datefield').addClass('d-none');
+        let period_from_time = new Date(data.period_from_datetime).toTimeString().slice(0, 5);
+        let period_to_time = new Date(data.period_to_datetime).toTimeString().slice(0, 5);
+        let vehicle_select = "사용 안함";
+        if (data.related_info === "CQM3") {
+            vehicle_select = "QM3";
+        } else if (data.related_info === "CSPO") {
+            vehicle_select = "스포티지";
+        } else if (data.related_info === "CETC") {
+            vehicle_select = "기타(렌트차량)";
+        } else if (data.related_info === "ETC") {
+            vehicle_select = "모닝";
         }
+                
 
         document.getElementById('doc_title').value = data.doc_title;
         document.getElementById('doc_no').value = data.doc_no;
         document.getElementById('create_date').value = data.updated_at;
         document.getElementById('username_md').value = data.created_by.username + ' ' + data.created_by.job_position;
         document.getElementById('team').value = data.created_by.department_position;
-        document.getElementById('leave_reason').value = data.leave_reason;
-        document.getElementById('period_from').value = data.period_from;
-        document.getElementById('period_from_half').value = data.period_from_half;
-        document.getElementById('period_to').value = data.period_to;
-        document.getElementById('period_to_half').value = data.period_to_half;
-        document.getElementById('period_count').value = data.period_count;
+        document.getElementById('related_project').innerText = data.related_project;
+        document.getElementById('vehicle_select').innerText = vehicle_select;
+        document.getElementById('period_from_date').value = data.period_from;
+        document.getElementById('period_from_time').value = period_from_time;
+        document.getElementById('period_to_date').value = data.period_to;
+        document.getElementById('period_to_time').value = period_to_time;
         document.getElementById('special_comment').value = data.special_comment;
 
         adjustTextareaHeight();
