@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db import transaction, DatabaseError
 from django.db.models import Q, OuterRef, Subquery, Max
-from scripts.regsetup import description
 
 from .models import ApvMaster, ApvComment, ApvSubItem, ApvApprover, ApvCC, ApvCategory, UserMaster, ApvAttachments, \
     ApvReadStatus, NotiCenter, EventMaster, CodeMaster, BoardMaster
