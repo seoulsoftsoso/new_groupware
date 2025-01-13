@@ -14,7 +14,7 @@
     .flatpickr-calendar {
         box-shadow: 0 0 0 0 !important;
     }
-    
+
     .animate-slide-in {
         animation: slide-in 0.5s forwards;
     }
@@ -430,7 +430,7 @@
                           <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
                             <div>
                               <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1 d-none">등록</button>
-                              <button class="btn btn-primary me-sm-3 me-1" id="approvalButton">전자결재 이동</button>
+                              <button class="btn btn-primary me-sm-3 me-1" id="approvalButton">전자결재 열기</button>
                               <button
                                 type="reset"
                                 class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
@@ -812,17 +812,17 @@
         let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
         window.open(url, '_blank', 'width=1500,height=1000,scrollbars=yes,resizable=yes');
     });{% endcomment %}
-    
+
     document.getElementById('approvalButton').addEventListener('click', function () {
         if (!apvIdCate || !apvId) {
             showToast('전자결재 문서를 찾을 수 없습니다.');
             document.getElementById('hide_offcanvas').click();
             return;
         }
-    
+
         let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
         let newWindow = window.open(url, '_blank', 'width=1500,height=1000,scrollbars=yes,resizable=yes');
-    
+
         fetch(`/admins/apv/detail/?apv_id=${apvId}`)
             .then(response => {
             if (response.status === 403) {
@@ -832,8 +832,8 @@
             }
         })
     });
-    
-    
+
+
     // 토스트 팝업 생성 함수
     function showToast(message, options = {}) {
         const {
@@ -841,9 +841,9 @@
             delay = 1500,
             width = '350px',
         } = options;
-    
+
         const toastId = `toast_${Date.now()}`;
-    
+
         $('#toast_popup_area').append(`
             <div id="${toastId}" class="toast position-fixed animate-slide-in" style="${position} z-index: 10000; width: ${width}; border: 1px solid rgba(0, 0, 0, 0.1);">
               <div class="toast-header bg-dark text-white p-2">
@@ -854,11 +854,11 @@
               </div>
             </div>
         `);
-    
+
         const toastElement = $(`#${toastId}`);
         toastElement.toast({ delay });
         toastElement.toast('show');
-    
+
         setTimeout(function () {
             toastElement
                 .removeClass('animate-slide-in')

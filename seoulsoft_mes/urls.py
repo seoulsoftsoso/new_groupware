@@ -60,6 +60,7 @@ from api.weekly_report.views_ceo import *
 from web.views import *
 from api.story import *
 from api.approval import *
+from api.annual_leave import *
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -223,6 +224,17 @@ urlpatterns = [
     path('admins/create_adjust_holiday', create_adjust_holiday, name="createAdjustHoliday"),
     path('admins/update_adjust_holiday', update_adjust_holiday, name="updateAdjustHoliday"),
     path('admins/delete_adjust_holiday', delete_adjust_holiday, name="deleteAdjustHoliday"),
+
+    # 휴가관리 신규모듈
+    path('admins/leave_manage', leave_manage, name="leave_manage"),
+    path('admins/leave_history', leave_history, name="leave_history"),
+
+    path('admins/leave_manage_list', LeaveManageList.as_view(), name="LeaveManageList"),
+    path('admins/leave_create', LeaveManageCreate.as_view(), name="LeaveManageCreate"),
+    path('admins/leave_update', LeaveManageUpdate.as_view(), name="LeaveManageUpdate"),
+    path('admins/leave_delete', LeaveManageDelete.as_view(), name="LeaveManageDelete"),
+
+    path('admins/leave_history_list', LeaveHistoryList.as_view(), name="LeaveHistoryList"),
 
     # ADMINS
     # 가입승인/탈퇴

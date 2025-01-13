@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+
+    th, td {
+        white-space: nowrap;
+        {% comment %}overflow: hidden;
+        text-overflow: ellipsis;{% endcomment %}
+    }
+
+    tr, td, th {
+        font-size: 14px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    td[id="status_badge"] span {
+        font-size: 12px;
+    }
+
+    input[type="text"] {
+        text-align: center;
+    }
+
+    ::placeholder {
+        text-align: center;
+    }
+
+    .custom-dropdown-arrow {
+        position: absolute;
+        font-size: 12px;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #778292;
+    }
+
+    .table tr.clicked {
+      background-color: #96e6fa;
+      font-weight: bolder;
+    }
+    
+    .page-link {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+        #search_filter {
+            flex-grow: 1;
+            padding-right: 4px;
+        }
+
+        input[id="all_sch"] {
+            width: 100% !important;
+        }
+
+        th[id="list_no"],
+        td[name="list_no"],
+        th[id="department"],
+        td[name="department"],
+        th[id="period_to"],
+        td[name="period_to"],
+        th[id="apv_status"],
+        td[name="apv_status"],
+        th[id="etc"],
+        td[name="etc"] {
+            display: none !important;
+        }
+        tr, td, th {
+            font-size: 12px !important;
+        }
+        .page-link {
+            font-size: 10px !important;
+        }
+        #a_table_div {
+            margin-top: 8px;
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page">
+            {% include 'admins/topnav.html' %}
+
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2"
+                 style="padding: 0 2%;">
+                <div>
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'leave_history' %}">
+                            <strong style="color: #000; font-size: x-large;">
+                                <i class="fa-solid fa-house-laptop me-2"></i>연차 통계
+                            </strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between" style="padding: 0 2%; height: 40px;">
+                <div class="d-flex justify-content-between h-100" style="gap: 10px;">
+                    <div id="date_filter" class="h-100">
+                        <div class="d-flex h-100 tooltip_top" data-tooltip="기준년도">
+                            <select class="form-control m-0 h-100 btn-outline-secondary" id="a_year_filter" style="width: 100px;" onchange="a_search()">
+                                <option value="2025">2025년</option>
+                                <option value="2026">2026년</option>
+                                <option value="2027">2027년</option>
+                                <option value="2028">2028년</option>
+                            </select>
+                            <span class="custom-dropdown-arrow">▼</span>
+                        </div>
+                    </div>
+
+                    <div class="h-100" id="search_filter">
+                        <div class="d-flex position-relative h-100 tooltip_tr" data-tooltip="이름으로 검색">
+                            <input type="text" class="form-control btn-outline-secondary h-100" placeholder="이름으로 검색"
+                                   id="all_sch" style="width: 200px; border-radius: 6px 0 0 6px;">
+                            <button class="btn btn-secondary h-100"
+                                    style="width:60px; border-radius: 0 6px 6px 0;"
+                                    onclick="a_search()">
+                                <span class="bx bx-search-alt"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between h-100" style="gap: 4px;">
+                    <div class="d-none d-xl-inline btn btn-info px-3 mx-0 mx-md-1 text-nowrap h-100" style="height: 36px;" onclick="open_leave_rules_popup()">
+                        <i class="fa-regular fa-calendar-check"></i><span class="d-none d-xl-inline m-0 p-0 ms-2">연차정책</span></div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start" id="a_table_div" style="overflow-x: auto; padding: 1% 2%">
+                <table class="dt-multilingual table border-top table table-hover" style="border-left: none; border-right: none; table-layout: fixed; width: 100%; min-width: 1000px;">
+                    <thead>
+                        <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                            <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">순번</th>
+                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">이름</th>
+                            <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">입사일</th>
+                            <th id="working_years" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; border-right: 1px solid #d9dee3;">근속년수</th>
+                            <th id="initial_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">이월</th>
+                            <th id="m01" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">1월</th>
+                            <th id="m02" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">2월</th>
+                            <th id="m03" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">3월</th>
+                            <th id="m04" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">4월</th>
+                            <th id="m05" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">5월</th>
+                            <th id="m06" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">6월</th>
+                            <th id="m07" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">7월</th>
+                            <th id="m08" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">8월</th>
+                            <th id="m09" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">9월</th>
+                            <th id="m10" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">10월</th>
+                            <th id="m11" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">11월</th>
+                            <th id="m12" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">12월</th>
+                            <th id="leave_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">잔여</th>
+                        </tr>
+                    </thead>
+                    <tbody id="a_tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<script src="{% static 'js/core.js' %}"></script>
+<script>
+    // Table info Start
+    let a_click_id;
+    let a_click_event_type;
+    let a_click_period_count;
+    let a_click_period_from;
+    let a_click_period_to;
+    let a_click_user_name;
+    let a_click_etc;
+    let request_user = '{{ request.user }}';
+    let request_user_id = '{{ request.user.id }}';
+    let request_user_is_superuser = '{{ request.user.is_superuser }}';
+
+    let a_year_filter = '';
+    let all_sch = '';
+    // Table info End
+
+    document.getElementById("all_sch").addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            a_search();  // 엔터를 눌렀을 때 실행할 함수
+        }
+    });
+
+    $(function () {
+        main();
+    });
+
+    function main() {
+        set_autocomplete('off');
+        select_this_year();
+        
+        a_search();
+    }
+    
+    function select_this_year() {
+        let selectElement = document.getElementById("a_year_filter");
+        let currentYear = new Date().getFullYear();
+
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == currentYear) {
+                selectElement.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
+    
+    function a_search() {
+        all_sch = $('#all_sch').val();
+        a_year_filter = $("#a_year_filter").val();
+        let query = "?year_sch=" + a_year_filter + "&all_sch=" + all_sch;
+
+        api_gp("/admins/leave_history_list" + query, "get", {}, (done) => {
+            a_draw_table(done);
+        });
+    }
+    
+
+    function a_draw_table(done) {
+        // console.log("a_draw_table: ", done);
+
+        let data = done.summary;
+        if (data.length === 0) {
+            let emptyRow = `
+            <tr>
+                <tr><td colspan="99" style="background-color: white; text-align:center;">등록된 데이터가 없습니다.</td></tr>
+            </tr>`;
+            $('#a_tbody').html(emptyRow);
+            return;
+        }
+
+        let num = 1;
+
+        let rows = "";
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+    
+            let createLink = (count, detail) => {
+                if (!count) return "";
+            
+                let year = detail.year; // details 배열에서 연도 가져오기
+                let month = detail.month; // details 배열에서 월 가져오기
+                let userName = encodeURIComponent(item.create_by); // 사용자 이름 인코딩
+            
+                return `<a href="#" onclick="openAndExecuteScript(${year}, ${month}, '${userName}'); return false;">${count}</a>`;
+            };
+    
+            let row = `
+            <tr id='${item.details[0].year}_${item.create_by}'>
+                <td name="list_no" class="" style="text-align:center;">${num + i}</td>
+                <td name='user_name' style="text-align:center;">${item.create_by}</td>
+                <td name='working_years' style="text-align:center;">${item.employment_date}</td>
+                <td name='employment_date' style="text-align:center; border-right: 1px solid #d9dee3;">${item.working_years + "년차"}</td>
+                <td name='initial_balance' style="text-align:center; border-right: 1px solid #d9dee3;">${item.initial_balance}</td>
+                ${item.details.map(detail => `
+                    <td name='m${String(detail.month).padStart(2, '0')}' style="text-align:center; border-right: 1px solid #d9dee3;">
+                        ${createLink(detail.total_period_count, detail)}
+                    </td>`).join('')}
+                <td name='leave_balance' style="text-align:center;">${item.leave_balance}</td>
+            </tr>`;
+    
+            rows += row;
+        }
+    
+        $('#a_tbody').html(rows);
+    }
+    
+    
+    function openAndExecuteScript(year, month, userName) {
+        let newWindow = window.open(`/admins/leave_manage?year=${year}&month=${month}&user_name=${userName}`, '_blank', 'width=1199,height=800');
+    
+        newWindow.onload = function () {
+            let doc = newWindow.document;
+            let firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
+            let lastDate = new Date(year, month, 0).getDate();
+            let lastDay = `${year}-${String(month).padStart(2, '0')}-${lastDate}`;
+    
+            doc.querySelector('#a_page_size').value = 200;
+            doc.querySelector('#date_sch_from').value = firstDay;
+            doc.querySelector('#date_sch_to').value = lastDay;
+            doc.querySelector('#all_sch').value = decodeURIComponent(userName);
+    
+            let searchButton = doc.querySelector('#all_sch_btn');
+            if (searchButton) {
+                searchButton.click();
+            } else {
+                console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
+            }
+        };
+    }
+
+    
+    function open_leave_rules_popup() {
+        const holidayInfoUrl = "{% url 'holidayInfo' %}";
+        window.open(holidayInfoUrl, '_blank', 'width=1199,height=1000');
+    }
+</script>

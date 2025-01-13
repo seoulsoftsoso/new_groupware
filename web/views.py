@@ -592,3 +592,17 @@ def apv_print_page(request, category_no, document_id):
         'approver_list': approver_choices,
     }
     return render(request, detail_template, context)
+
+
+def leave_manage(request):
+    user_list = (UserMaster.objects.filter(is_staff='1').exclude(id__in=[1, 2, 1111])
+                     .order_by('department_position', 'username'))
+    user_choices = [(user.department_position, user.username, user.id) for user in user_list]
+    context = {
+        'user_list': user_choices,
+    }
+    return render(request, 'annual_leave/leave_manage.html', context)
+
+def leave_history(request):
+    context = {}
+    return render(request, 'annual_leave/leave_history.html', context)

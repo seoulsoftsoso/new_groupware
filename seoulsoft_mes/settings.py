@@ -27,6 +27,7 @@ SECRET_KEY = '@z1q*9^eeo&me*fg-8357)&#%83_k7&1twx)mhssc=8!w^b8ju'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['192.168.0.35']
 
 AUTH_USER_MODEL = 'api.UserMaster'
 

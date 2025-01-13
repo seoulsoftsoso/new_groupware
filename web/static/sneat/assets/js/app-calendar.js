@@ -330,6 +330,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (apvStatus === "완료") {
           apvStatusLogo = '✔';
         }
+        if (!apvStatus) {
+          apvStatusLogo = '';
+        }
 
         if (eventType === "business") {
           eventType = "출장"
@@ -356,8 +359,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // event.title = `${event.title} ${apvStatusLogo}`;
 
-        if (!event.title.includes(apvStatusLogo)) {
+        if (!apvId) {
+          event.title = `${eventallday} ${eventType} (${eventuser} ${guests}) ${apvStatusLogo}`.trim();
+        } else {
+          if (!event.title.includes(apvStatusLogo)) {
             event.title = `${event.title} ${apvStatusLogo}`.trim();
+          }
         }
 
         return event;

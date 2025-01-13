@@ -191,6 +191,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
     profile_image = models.ImageField(upload_to='profile_image/', null=True, blank=True,
                                       default='profile_image/profile_default.png', verbose_name="프로필사진")
     cs_admin = models.BooleanField(default=0, verbose_name='CS관리자')
+    birthday = models.DateField(null=True, verbose_name='생일')
 
     def __str__(self):
         return self.username

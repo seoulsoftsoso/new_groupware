@@ -548,6 +548,7 @@ class ApvCreate(View):
                     description=description,
                     apv_id=ApvMaster_obj.id,
                     period_count=period_count,
+                    location=leave_reason,
                 )
 
             # 출장신청시 캘린더에 자동 등록
@@ -844,8 +845,7 @@ class ApvUpdate(View):
                     description=description,
                     apv_id=obj.id,
                     period_count=period_count,
-                    # location=request.POST.get('eventLocation'),
-                    # vehicle=selected_vehicle
+                    location=leave_reason,
                 )
 
             # 출장신청 수정시 캘린더 데이터 삭제 후 재등록

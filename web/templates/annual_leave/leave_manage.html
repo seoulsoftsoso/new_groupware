@@ -1,0 +1,741 @@
+{% load static %}
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+<style>
+    /* 모바일웹 텍스트 줄바꿈 방지 */
+    .table td, .table th {
+        white-space: nowrap;
+    }
+
+    th, td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    tr, td, th {
+        font-size: 14px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .pagination a {
+        cursor: pointer; /* 손모양 커서 */
+    }
+
+    td[id="status_badge"] span {
+        font-size: 12px;
+    }
+
+    input[type="text"] {
+        text-align: center;
+    }
+
+    ::placeholder {
+        text-align: center;
+    }
+
+    .custom-dropdown-arrow {
+        position: absolute;
+        font-size: 12px;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #778292;
+    }
+
+    .table tr.clicked {
+      background-color: #96e6fa;
+      font-weight: bolder;
+    }
+    
+    .page-link {
+        white-space: nowrap;
+    }
+    
+    @media (max-width: 1199px) {
+        th[id="department"],
+        td[name="department"] {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 900px) {
+        #search_filter {
+            flex-grow: 1;
+            padding-right: 4px;
+        }
+
+        input[id="all_sch"] {
+            width: 100% !important;
+        }
+
+        div[id="page_size_filter"],
+        div[id="date_filter"],
+        th[id="list_no"],
+        td[name="list_no"],
+        th[id="department"],
+        td[name="department"],
+        th[id="period_to"],
+        td[name="period_to"],
+        th[id="apv_status"],
+        td[name="apv_status"],
+        th[id="etc"],
+        td[name="etc"] {
+            display: none !important;
+        }
+        tr, td, th {
+            font-size: 12px !important;
+        }
+        .page-link {
+            font-size: 10px !important;
+        }
+        #a_table_div {
+            margin-top: 8px;
+        }
+    }
+</style>
+<body>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page">
+            {% include 'admins/topnav.html' %}
+
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2"
+                 style="padding: 0 2%;">
+                <div>
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'leave_manage' %}">
+                            <strong style="color: #000; font-size: x-large;">
+                                <i class="fa-solid fa-house-user me-2"></i>연차 관리
+                            </strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between" style="padding: 0 2%; height: 40px;">
+                <div class="d-flex justify-content-between h-100" style="gap: 10px;">
+                    <div id="page_size_filter" class="d-flex h-100 tooltip_top" data-tooltip="페이지당 보여줄 목록 수 설정">
+                        <select class="form-control m-0 h-100 btn-outline-secondary" id="a_page_size" style="width: 85px;" onchange="a_search_click()">
+                            <option value="10">10개</option>
+                            <option value="20" selected>20개</option>
+                            <option value="50">50개</option>
+                            <option value="100">100개</option>
+                            <option value="200">200개</option>
+                        </select>
+                        <span class="custom-dropdown-arrow">▼</span>
+                    </div>
+
+                    <div id="date_filter" class="h-100">
+                        <div class="input-group input-daterange h-100 tooltip_top" style="width:300px;" data-tooltip="휴가일자로 검색">
+                            <input id="date_sch_from" placeholder="휴가 시작일" class="form-control btn-outline-secondary h-100"
+                                   autocomplete="off" onchange="a_search_click()"
+                                   style="text-align: center; height: 36px;" type="text"/>
+                            <input id="date_sch_to" placeholder="휴가 종료일" class="form-control btn-outline-secondary h-100"
+                                   autocomplete="off" onchange="a_search_click()"
+                                   style="text-align: center; height: 36px;" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="h-100" id="search_filter">
+                        <div class="d-flex position-relative h-100 tooltip_tr" data-tooltip="이름 / 부서 / 휴가종류 / 결재상태 등 검색">
+                            <input type="text" class="form-control btn-outline-secondary h-100" placeholder="검색어 입력"
+                                   id="all_sch" style="width: 200px; border-radius: 6px 0 0 6px;">
+                            <button class="btn btn-secondary h-100" id="all_sch_btn"
+                                    style="width:60px; border-radius: 0 6px 6px 0;"
+                                    onclick="a_search_click()">
+                                <span class="bx bx-search-alt"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between h-100" style="gap: 4px;">
+                    <div class="d-none d-xl-inline btn btn-info px-3 mx-0 mx-md-1 text-nowrap h-100" style="height: 36px;" onclick="open_leave_rules_popup()">
+                        <i class="fa-regular fa-calendar-check"></i><span class="d-none d-xl-inline m-0 p-0 ms-2">연차정책</span></div>
+                    {% if request.user.is_superuser %}
+                    <div class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="height: 36px;" onclick="a_modal_create_in()">
+                        <i class="fa-solid fa-plus"></i><span class="d-none d-xl-inline m-0 p-0 ms-2">등록</span></div>
+                    <div class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="height: 36px;" onclick="a_modal_update_in()">
+                        <i class="fa-regular fa-pen-to-square"></i><span class="d-none d-xl-inline m-0 p-0 ms-2">수정</span></div>
+                    <div class="btn btn-danger px-3 mx-0 mx-md-1 text-nowrap ml-1 h-100" style="height: 36px;" onclick="a_modal_del()">
+                        <i class="fa-regular fa-trash-can"></i><span class="d-none d-xl-inline m-0 p-0 ms-2">삭제</span></div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start" id="a_table_div" style="padding: 1% 2%">
+                <table class="dt-multilingual table border-top table table-hover" style="border-left: none; border-right: none; table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                            <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">순번</th>
+                            <th id="department" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">부서</th>
+                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">이름</th>
+                            <th id="leave_reason" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">휴가 종류</th>
+                            <th id="period_from" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">휴가 시작일</th>
+                            <th id="period_to" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">휴가 종료일</th>
+                            <th id="period_count" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 6%;">일수</th>
+                            <th id="apv_status" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">결재 상태</th>
+                            <th id="etc" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 20%;">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody id="a_tbody"></tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center" style="padding: 1% 2% 1% 2%;">
+                <div id="a_nation_id"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal-Create -->
+<div class="modal fade" id="a_md_create" tabindex="-1" role="dialog" aria-labelledby="ml_add"
+     data-bs-backdrop="static" data-bs-keyboard="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="margin-top: 20vh;">
+        <div class="modal-content">
+
+            <div class="modal-header d-flex justify-content-between align-items-center p-2" style="background: #5b6269; cursor: move;">
+                <h5 class="modal-title text-white mx-2">연차관리 <i class="fa-solid fa-angle-right px-1"></i> 등록</h5>
+                <div>
+                    <i class="fa-solid fa-rotate-right fa-lg text-white mx-2" title="초기화" style="cursor: pointer;" onclick="a_modal_create_reset()"></i>
+                    <i class="fa-solid fa-xmark fa-xl text-white mx-2" title="닫기" style="cursor: pointer;" data-bs-dismiss="modal"></i>
+                </div>
+            </div>
+
+            <div class="modal-body w-100 d-flex">
+                <!-- 좌측 -->
+                <div class="col-12">
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">연차 조정 <strong>*</strong></div>
+                        <select class="text-left form-control" id="event_type" style="width: 50%;">
+                            <option value="plus">연차 추가</option>
+                            <option value="minus">연차 삭감</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 대상 <strong>*</strong></div>
+                        <input list="user_list" class="form-control" id="user_id" style="width: 50%;">
+                            <datalist id="user_list">
+                                {% for position, name, id in user_list %}
+                                    <option value="{{ name }} ({{ position }})" data-user-id="{{ id }}"></option>
+                                {% endfor %}
+                            </datalist>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 기준일 <strong>*</strong></div>
+                        <input class="text-left form-control datepicker" id="start_date" style="width: 50%;">
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 일수 <strong>*</strong></div>
+                        <input class="text-left form-control" id="period_count" oninput="validateDecimalInput(this)" style="width: 50%;">
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 내용 메모</div>
+                        <input class="text-left form-control" id="etc" style="width: 50%;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-end p-2" style="border-top: 1px solid #f4f5f6;">
+                <div class="col-8 d-flex justify-content-end">
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" onclick="a_modal_create_reset()">초기화</div>
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" onclick="a_modal_create()">등록</div>
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" data-bs-dismiss="modal">닫기</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal-Update -->
+<div class="modal fade" id="a_md_update" tabindex="-1" role="dialog" aria-labelledby="ml_mod"
+     data-bs-backdrop="static" data-bs-keyboard="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="margin-top: 20vh;">
+        <div class="modal-content">
+
+            <div class="modal-header d-flex justify-content-between align-items-center p-2" style="background: #5b6269; cursor: move;">
+                <h5 class="modal-title text-white mx-2">연차관리 <i class="fa-solid fa-angle-right px-1"></i> 수정</h5>
+                <div>
+                    <i class="fa-solid fa-rotate-right fa-lg text-white mx-2" title="초기화" style="cursor: pointer;" onclick="a_modal_update_reset()"></i>
+                    <i class="fa-solid fa-xmark fa-xl text-white mx-2" title="닫기" style="cursor: pointer;" data-bs-dismiss="modal"></i>
+                </div>
+            </div>
+
+            <div class="modal-body w-100 d-flex">
+                <!-- 좌측 -->
+                <div class="col-12">
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">연차 조정 <strong>*</strong></div>
+                        <input class="text-left form-control" id="event_type" style="width: 50%;" disabled>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 대상 <strong>*</strong></div>
+                        <input class="text-left form-control" id="user_name" style="width: 50%;" disabled>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 기준일 <strong>*</strong></div>
+                        <input class="text-left form-control datepicker" id="start_date" style="width: 50%;" disabled>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 일수 <strong>*</strong></div>
+                        <input class="text-left form-control" id="period_count" oninput="validateDecimalInput(this)" style="width: 50%;">
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center m-2">
+                        <div style="width: 30%;">조정 내용 메모</div>
+                        <input class="text-left form-control" id="etc" style="width: 50%;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-end p-2" style="border-top: 1px solid #f4f5f6;">
+                <div class="col-8 d-flex justify-content-end">
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" onclick="a_modal_update_reset()">초기화</div>
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" onclick="a_modal_update()">수정</div>
+                    <div type="button" class="btn btn-secondary px-3 mx-0 mx-md-1 text-nowrap h-100" style="min-width: 80px;" data-bs-dismiss="modal">닫기</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+{% include 'admins/admin_footer.html' %}
+
+<script src="{% static 'js/api_paginations.js' %}"></script>
+<script src="{% static 'js/core.js' %}"></script>
+<script>
+    // Table info Start
+    let a_click_id;
+    let a_click_event_type;
+    let a_click_period_count;
+    let a_click_period_from;
+    let a_click_period_to;
+    let a_click_user_name;
+    let a_click_etc;
+    let request_user = '{{ request.user }}';
+    let request_user_id = '{{ request.user.id }}';
+    let request_user_is_superuser = '{{ request.user.is_superuser }}';
+
+    let date_sch_from = '';
+    let date_sch_to = '';
+    let all_sch = '';
+    // Table info End
+
+    // Pagination Set Start
+    let a_nation_data = {
+        cname: 'a_nation',  // 인스턴스 명과 일치해야함
+        nation_id: 'a_nation_id',
+        range: 5,
+        page_size: 20,  // 세로 Row 수
+    };
+    let a_nation = new Nations(a_nation_data, a_search); // 인스턴스 명
+    a_nation.nation_display({});
+    // Pagination Set End
+
+    $(function () {
+        $("#date_sch_from, #date_sch_to, #a_md_create #start_date").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+    });
+
+    document.getElementById("all_sch").addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            a_search_click();  // 엔터를 눌렀을 때 실행할 함수
+        }
+    });
+
+    $(function () {
+        main();
+    });
+
+
+    function main() {
+        set_autocomplete('off');
+        $("#date_sch_from, #date_sch_to").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+
+        a_search();
+    }
+
+
+    function a_search_click() {
+        a_click_id = null;
+        a_nation.page = 1;
+        a_nation_data.page_size = document.getElementById("a_page_size").value;
+
+        date_sch_from = $("#date_sch_from").val();
+        date_sch_to = $("#date_sch_to").val();
+        all_sch = $('#all_sch').val();
+
+        a_search();
+    }
+
+    function a_search() {
+        let query = "?page=" + a_nation.page + "&page_size=" + a_nation_data.page_size;
+        query += "&date_sch_from=" + date_sch_from;
+        query += "&date_sch_to=" + date_sch_to;
+        query += "&all_sch=" + all_sch;
+
+        api_gp("/admins/leave_manage_list" + query, "get", {}, (done) => {
+            a_draw_table(done);
+        });
+    }
+
+    function a_draw_table(done) {
+        console.log("a_draw_table: ", done);
+
+        let data = done.results;
+        if (data.length === 0) {
+            let emptyRow = `
+            <tr>
+                <tr><td colspan="8" style="background-color: white; text-align:center;">등록된 데이터가 없습니다.</td></tr>
+            </tr>`;
+            $('#a_tbody').html(emptyRow);
+            return;
+        }
+
+        let num = (((a_nation.page * 1) - 1) * a_nation_data.page_size) + 1;
+
+        let rows = "";
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+
+            let badgeColor = 'bg-secondary';
+            if (item.apv_status === '진행') {
+                badgeColor = 'bg-primary';
+            } else if (item.apv_status === '완료') {
+                badgeColor = 'bg-success';
+            } else {
+                badgeColor = 'bg-danger';
+            }
+
+            let period_to = item.period_to;
+            let period_count = item.period_count;
+            if (item.leave_reason === "연차 추가") {
+                period_to = "";
+                period_count = "+" + item.period_count;
+            } else if (item.leave_reason === "연차 삭감") {
+                period_to = "";
+                period_count = "-" + item.period_count;
+            }
+
+            let row = `
+            <tr id='${item.id}' style='cursor:pointer;'>
+                <td name="list_no" class="" style="text-align:center;">${num + i}</td>
+                <td name='department' style="text-align:center;">${item.create_by.department_position}</td>
+                <td name='create_by' style="text-align:center;">${item.create_by.username}</td>
+                <td name='leave_reason' style="text-align:center;">${item.leave_reason}</td>
+                <td name='period_from' style="text-align:center;">${item.period_from}</td>
+                <td name='period_to' style="text-align:center;">${period_to}</td>
+                <td name='period_count' style="text-align:center;">${period_count}</td>
+                <td name='apv_status' id="status_badge" style="text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
+                <td name='etc' style="text-align:center;">${item.etc}</td>
+                <td name='event_type' class="d-none">${item.event_type}</td>
+            </tr>`;
+
+            rows += row;
+        }
+
+        a_nation.nation_display(done);
+        $('#a_tbody').html(rows);
+
+        // 클릭한 행 유지
+        if (a_click_id != null) {
+            $("#a_tbody #" + a_click_id).addClass('clicked');
+        }
+
+        $('#a_tbody > tr').on('click', function () {
+            // table click highlight
+            $(this).parent().find('tr').removeClass('clicked');
+            $(this).addClass('clicked');
+
+            a_click_id = $(this).attr("id");
+            a_click_period_count = $(this).find("[name='period_count']").text(); // 입고일자
+            a_click_period_from = $(this).find("[name='period_from']").text(); // 거래처_id
+            a_click_period_to = $(this).find("[name='period_to']").text();
+            a_click_event_type = $(this).find("[name='event_type']").text();
+            a_click_user_name = $(this).find("[name='create_by']").text();
+            a_click_etc = $(this).find("[name='etc']").text();
+        });
+
+        $('#a_tbody > tr').on('dblclick', function () {
+            a_modal_update_in();
+        });
+    }
+    
+    
+    function a_modal_create_in() {
+        a_modal_create_reset('popup_off');
+
+        $('#a_md_create').modal("show");
+    }
+
+
+    function a_modal_create() {
+        if (is_empty($('#a_md_create #event_type').val()) === true) {
+            alert("연차 조정을 선택하세요");
+            return;
+        }
+        
+        if (is_empty($('#a_md_create #user_id').val()) === true) {
+            alert("조정 대상을 선택하세요");
+            return;
+        }
+        
+        if (is_empty($('#a_md_create #start_date').val()) === true) {
+            alert("조정 기준일을 선택하세요");
+            return;
+        }
+        
+        if (is_empty($('#a_md_create #period_count').val()) === true) {
+            alert("조정 일수를 입력하세요");
+            return;
+        }
+        
+        let userInput = document.getElementById('user_id');
+        let selectedOption = [...document.querySelectorAll('#user_list option')].find(
+            option => option.value === userInput.value
+        );
+        
+        if (!selectedOption) {
+            // 유효하지 않은 입력 처리
+            alert("목록에 없는 사용자입니다.");
+            return;
+        }
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            
+            event_type: nullapply($('#a_md_create #event_type').val()),
+            user_id: selectedOption.getAttribute('data-user-id'),
+            start_date: nullapply($('#a_md_create #start_date').val()),
+            period_count: nullapply($('#a_md_create #period_count').val()),
+            etc: nullapply($('#a_md_create #etc').val()),
+        };
+
+        api_gp('/admins/leave_create', 'post', api_data, (done) => {
+            $('#a_md_create').modal("hide");
+
+            a_nation.page = 1;  // 첫페이지로
+            a_search();
+            alert(txt.create_ed);
+        });
+    }
+
+
+    function a_modal_create_reset(popup_off) {
+        let today = new Date().toISOString().split('T')[0];
+        $('#a_md_create #event_type').val('plus');
+        $('#a_md_create #start_date').val(today);
+        $('#a_md_create #period_count').val('');
+        $('#a_md_create #user_name').val('');
+        $('#a_md_create #etc').val('');
+
+        // 토스트 팝업
+        if (!popup_off) {
+            $('#a_md_create').append('<div id="reset_toast" style="position: absolute; top: 35%; left: 50%; transform: translateX(-50%); background-color: #5c636a; color: white; padding: 10px; border-radius: 5px; z-index: 10000;">입력된 내용을 모두 초기화 하였습니다</div>');
+            setTimeout(function () {
+                $('#reset_toast').fadeOut(function () {
+                    $(this).remove();
+                });
+            }, 1000);
+        }
+    }
+
+
+    function a_modal_update_in() {
+        if (request_user_is_superuser === "False") {
+            return;
+        }
+
+        if (a_click_id == null) {
+            alert(txt.update_select);
+            return;
+        }
+
+        a_modal_update_reset('popup_off');
+
+        $('#a_md_update').modal("show");
+    }
+
+
+    function a_modal_update() {
+        if (is_empty($('#a_md_update #period_count').val()) === true) {
+            alert("조정 일수를 입력하세요");
+            return;
+        }
+
+        let api_data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            pk: a_click_id,
+            
+            period_count: nullapply($('#a_md_update #period_count').val()),
+            etc: nullapply($('#a_md_update #etc').val()),
+        };
+
+        api_gp('/admins/leave_update', 'post', api_data, (done) => {
+            $('#a_md_update').modal("hide");
+
+            a_search();
+            alert(txt.update_ed);
+        });
+    }
+
+
+    function a_modal_update_reset(popup_off) {
+        if (a_click_event_type === "Holiday") {
+            a_click_event_type = "연차";
+        } else if (a_click_event_type === "Family") {
+            a_click_event_type = "연차(반차)";
+        } else if (a_click_event_type === "plus") {
+            a_click_event_type = "연차 추가";
+        } else if (a_click_event_type === "minus") {
+            a_click_event_type = "연차 삭감";
+        }
+
+        $('#a_md_update #event_type').val(a_click_event_type);
+        $('#a_md_update #start_date').val(a_click_period_from);
+        $('#a_md_update #period_count').val(Math.abs(a_click_period_count));
+        $('#a_md_update #user_name').val(a_click_user_name);
+        $('#a_md_update #etc').val(a_click_etc);
+
+        // 토스트 팝업
+        if (!popup_off) {
+            $('#a_md_update').append('<div id="reset_toast" style="position: absolute; top: 35%; left: 50%; transform: translateX(-50%); background-color: #5c636a; color: white; padding: 10px; border-radius: 5px; z-index: 10000;">입력된 내용을 모두 초기화 하였습니다</div>');
+            setTimeout(function () {
+                $('#reset_toast').fadeOut(function () {
+                    $(this).remove();
+                });
+            }, 1000);
+        }
+    }
+
+
+    function a_modal_del() {
+        if (request_user_is_superuser === "False") {
+            return;
+        }
+        
+        if (a_click_id == null) {
+            alert(txt.delete_select);
+            return;
+        }
+
+        let res = prompt("캘린더에 등록된 연차 데이터를 삭제할 경우,\n캘린더에서도 함께 삭제됩니다.\n\n" +
+            txt.delete_will_check);
+        if (txt.delete_check.includes(res)) {
+
+            let api_data = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                pk: a_click_id,
+            }
+
+            api_gp('/admins/leave_delete', 'post', api_data, (done) => {
+                a_nation.page = 1;
+                a_click_id = null;
+
+                a_search();
+                alert(txt.delete_ed);
+            });
+        } else {
+            alert(txt.cancel);
+        }
+    }
+
+
+    function makeModalDraggable(modalElement) {
+        const header = modalElement.querySelector('.modal-header');
+        const modalDialog = modalElement.querySelector('.modal-dialog');
+
+        if (!header || !modalDialog) return;
+
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        header.style.cursor = 'move';
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - modalElement.getBoundingClientRect().left;
+            offsetY = e.clientY - modalElement.getBoundingClientRect().top;
+
+            modalElement.style.position = 'absolute';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            const x = e.clientX - offsetX;
+            const y = e.clientY - offsetY;
+
+            modalElement.style.left = `${x}px`;
+            modalElement.style.top = `${y}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+            }
+        });
+    }
+
+    const modalConfigs = [
+        { modalId: 'a_md_create' },
+        { modalId: 'a_md_update' },
+    ];
+
+    modalConfigs.forEach(({ modalId }) => {
+        const modalElement = document.getElementById(modalId);
+
+        if (modalElement) {
+            // 드래그 가능하도록 설정
+            makeModalDraggable(modalElement);
+
+            // 모달 닫힐 때 위치 초기화
+            modalElement.addEventListener('hidden.bs.modal', () => {
+                modalElement.style.left = '';
+                modalElement.style.top = '';
+            });
+        }
+    });
+
+    function open_leave_rules_popup() {
+        const holidayInfoUrl = "{% url 'holidayInfo' %}";
+        window.open(holidayInfoUrl, '_blank', 'width=1199,height=1000');
+    }
+
+    function validateDecimalInput(input) {
+        // 숫자와 소수점만 허용 (단, 소수점은 하나만 가능)
+        input.value = input.value.replace(/[^0-9.]/g, ''); // 숫자와 소수점 외 제거
+        if ((input.value.match(/\./g) || []).length > 1) {
+            input.value = input.value.slice(0, input.value.lastIndexOf('.')); // 마지막 소수점 제거
+        }
+    }
+
+</script>
