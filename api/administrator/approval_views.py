@@ -30,7 +30,7 @@ class ApprovalDeletePageView(ListView):
         result = queryset.values(
             'id', 'user_id', 'code', 'username', 'email', 'is_master', 'is_active', 'is_staff',
             'created_at', 'department_position__name', 'job_position__name', 'employment_date', 'postal_code', 'address',
-            'etc', 'tel', 'research_num', 'place_of_work__name'
+            'etc', 'tel', 'research_num', 'place_of_work__name', 'birthday',
         ).order_by('-id')
 
         return result
@@ -62,6 +62,7 @@ def user_approval(request):
             phone_num = request.POST.get('phone_num')
             research_num = request.POST.get('research_num')
             place_of_work = request.POST.get('place_of_work')
+            birthday = request.POST.get('birthday')
             update_user_id = request.user.id
             user = UserMaster.objects.get(id=update_user_id)
 
@@ -94,6 +95,8 @@ def user_approval(request):
             usermaster.tel = phone_num
             usermaster.research_num = research_num
             usermaster.place_of_work_id = place_of_work
+            if birthday:
+                usermaster.birthday = birthday
             usermaster.is_staff = True
             usermaster.is_active = True
             usermaster.created_by_id = user
@@ -113,6 +116,9 @@ def user_approval(request):
             usermaster.tel = request.POST.get('phone_num')
             usermaster.place_of_work_id = request.POST.get('place_of_work')
             usermaster.research_num = request.POST.get('research_num')
+            birthday = request.POST.get('birthday')
+            if birthday:
+                usermaster.birthday = datetime.strptime(birthday, "%Y-%m-%d").date()
             usermaster.save()
 
             return JsonResponse({'status': 'success'})

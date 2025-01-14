@@ -85,8 +85,8 @@
                                         <td><button type="button" class="btn btn-label-success"
                                                     onclick="approval_suc_btn('{{ obj.id }}','{{ obj.employment_date }}',
                                                             '{{ obj.department_position__name }}', '{{ obj.job_position__name }}',
-                                                            '{{ obj.tel }}', '{{ obj.research_num }}', '{{ obj.place_of_work__name }}'
-                                                            )">승인 완료</button></td>
+                                                            '{{ obj.tel }}', '{{ obj.research_num }}', '{{ obj.place_of_work__name }}',
+                                                            '{{ obj.birthday }}')">승인 완료</button></td>
                                     {% else %}
                                         <td>
                                             <button type="button"
@@ -207,12 +207,13 @@
         })
     });
 
-    function approval_suc_btn(id, employment_date, department_name, job_position_name, tel, research_num, place_of_work) {
+    function approval_suc_btn(id, employment_date, department_name, job_position_name, tel, research_num, place_of_work, birthday) {
         $("#approval_btn").hide();
         $("#approval_edit_btn").show();
         $('#employment_date').val(employment_date)
         $('#phone_num').val(tel)
         $('#research_num').val(research_num)
+        $('#birthday').val(birthday)
         userId = id
         console.log(userId)
 
@@ -241,6 +242,18 @@
     }
 
     $('#approval_edit_btn').click(function () {
+        let birthday = $("#birthday").val();
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+        if (!dateRegex.test(birthday)) {
+            const parsedBirthday = moment(birthday, "YYYY년 MM월 DD일", true);
+            if (parsedBirthday.isValid()) {
+                birthday = parsedBirthday.format("YYYY-MM-DD");
+            } else {
+                birthday = null;
+            }
+        }
+         
         $.ajax({
             url: '{% url "userApproval" %}',
             type: 'POST',
@@ -253,6 +266,7 @@
                 'phone_num': $("#phone_num").val(),
                 'research_num': $("#research_num").val(),
                 'place_of_work': $("#placeOfWork_select").val(),
+                'birthday': birthday,
             },
             success: function (response) {
                 Swal.fire({

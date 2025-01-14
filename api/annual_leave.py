@@ -113,9 +113,10 @@ def get_obj(obj):
         'period_count': obj.period_count if obj.period_count is not None else '',
         'description': obj.description,
         'event_type': obj.event_type,
-        'apv_id': obj.apv.id if obj.apv is not None else '',
         'leave_reason': leave_reason,
+        'apv_id': obj.apv.id if obj.apv is not None else '',
         'apv_status': obj.apv.apv_status if obj.apv is not None else '',
+        'apv_category_id': obj.apv.apv_category_id if obj.apv and obj.apv.apv_category else None,
         'etc': obj.etc if obj.etc is not None else '',
         'create_by': {
             'id': obj.create_by.id,

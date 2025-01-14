@@ -56,7 +56,11 @@
                         <label for="research_num" class="form-label">* 과학기술인번호</label>
                         <input type="number" class="form-control" id="research_num" pattern="\d*" placeholder="과학기술인번호를 입력해주세요." required>
                     </div>
-
+                    
+                    <div class="col-md-12 col-12 mb-3">
+                        <label for="birthday" class="form-label">생일 (생일연차 부여시 필요)</label>
+                        <input type="text" class="form-control flatpickr-input active" placeholder="연-월-일" id="birthday">
+                    </div>
                 </div>
 
 
@@ -73,7 +77,7 @@
 <script>
 
      $(function () {
-        $("#employment_date").flatpickr({
+        $("#employment_date, #birthday").flatpickr({
             dateFormat: 'Y-m-d',
             enableTime: false
         });
@@ -81,6 +85,13 @@
 
      $('#approval_btn').click(function (event) {
          event.preventDefault();
+
+         let birthday = $("#birthday").val();
+         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+         if (!dateRegex.test(birthday)) {
+             birthday = null;
+         }
 
          $.ajax({
              url: '{% url "userApproval" %}',
@@ -94,6 +105,7 @@
                  'phone_num': $("#phone_num").val(),
                  'research_num': $("#research_num").val(),
                  'place_of_work': $("#placeOfWork_select").val(),
+                 'birthday': birthday,
              },
              headers: {"X-CSRFToken": '{{ csrf_token }}'},
              success: function (response) {

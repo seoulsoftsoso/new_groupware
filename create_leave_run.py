@@ -40,8 +40,14 @@ def create_birthday_events(all_users):
     for user in birthday_users:
         title = "연차 추가"
         event_type = "plus"
-        etc = f"{today.year} 생일연차 ({user['birthday']})"
-        user_instance = UserMaster.objects.get(id=user['id'])
+        birthday_formatted = user['birthday'].strftime("%m/%d")
+        etc = f"{today.year} 생일연차 ({birthday_formatted})"
+
+        try:
+            user_instance = UserMaster.objects.get(id=user['id'])
+        except UserMaster.DoesNotExist:
+            print(f"UserMaster 조회 실패: {user['id']}")
+            continue
 
         # 중복 여부 확인 (특정 user_id와 생일연차 관련 내용으로 검색)
         if EventMaster.objects.filter(
@@ -87,12 +93,12 @@ def create_annual_leave_events(all_users):
         working_years = today.year - user['employment_date'].year
         period_count = Holiday.objects.filter(workYear=working_years).first().law_holiday
 
-        etc = f"{today.year} 연차생성 ({user['employment_date']}, {working_years}년차)"
+        etc = f"{today.year} 연간연차 ({user['employment_date']}, {working_years}년차)"
         user_instance = UserMaster.objects.get(id=user['id'])
 
         # 중복 여부 확인 (특정 user_id와 연차생성 관련 내용으로 검색)
         if EventMaster.objects.filter(
-                Q(create_by=user_instance) & Q(etc__contains=str(today.year)) & Q(etc__contains="연차생성")
+                Q(create_by=user_instance) & Q(etc__contains=str(today.year)) & Q(etc__contains="연간연차")
         ).exists():
             print(f"이미 올해의 연차가 생성됨: {user['username']} {user['employment_date']}")
             continue
@@ -133,7 +139,8 @@ def main():
         job_thread.start()  # (DB가 끊기는 경우 방지)
 
     schedule.every(20).minutes.do(run_threaded, db_polling_job)  # DB 연결 유지 (DB가 끊기는 경우 방지)
-    schedule.every().day.at("01:00").do(run_threaded, current_staff_list)  # 매일 새벽 1시에 생일연차 및 연간연차 자동생성
+    # schedule.every().day.at("00:01").do(run_threaded, current_staff_list)  # 매일 자정에 생일연차 및 연간연차 자동생성
+    schedule.every().day.at("11:00").do(run_threaded, current_staff_list)  # 테스트용
     # schedule.every(5).seconds.do(run_threaded, current_staff_list)  # 테스트용
 
     while True:
