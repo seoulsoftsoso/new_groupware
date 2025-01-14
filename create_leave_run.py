@@ -140,7 +140,7 @@ def main():
 
     schedule.every(20).minutes.do(run_threaded, db_polling_job)  # DB 연결 유지 (DB가 끊기는 경우 방지)
     # schedule.every().day.at("00:01").do(run_threaded, current_staff_list)  # 매일 자정에 생일연차 및 연간연차 자동생성
-    schedule.every().day.at("15:03").do(run_threaded, current_staff_list)  # 테스트용
+    schedule.every().day.at("15:06").do(run_threaded, current_staff_list)  # 테스트용
     # schedule.every(5).seconds.do(run_threaded, current_staff_list)  # 테스트용
 
     while True:
