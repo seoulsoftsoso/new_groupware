@@ -253,6 +253,7 @@ urlpatterns = [
     path('admins/change_password', change_password, name="changePassword"),
     path('admins/signature_img_upload', signature_img_upload, name="signatureImgUpload"),
     path('admins/profile_img_upload/', profile_img_upload, name='profile_img_upload'),
+    path('admins/basic_avatar_select/', basic_avatar_select, name='basic_avatar_select'),
 
     # 메인페이지
     path('menu/<str:menu_num>/', SubView, name='sub'),

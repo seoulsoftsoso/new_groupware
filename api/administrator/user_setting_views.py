@@ -67,4 +67,14 @@ def profile_img_upload(request):
         else:
             return JsonResponse({'error': 'No file uploaded'}, status=400)
 
-    return JsonResponse({'error': 'fail'}, status=400)
+def basic_avatar_select(request):
+    if request.method == 'POST':
+        selected_avatar_url = request.POST.get('selected_avatar_url')
+        if selected_avatar_url:
+            employee = UserMaster.objects.get(id=request.user.id)
+            employee.profile_image = selected_avatar_url
+            employee.save()
+            return JsonResponse({'success': 'Avatar updated successfully.'}, status=200)
+        else:
+            return JsonResponse({'error': 'No avatar URL provided.'}, status=400)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)

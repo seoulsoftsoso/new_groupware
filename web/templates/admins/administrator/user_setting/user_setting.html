@@ -10,6 +10,14 @@
         white-space: nowrap;
     }
 
+    .basic_avatar {
+        width: 45px;
+        border: 3px solid #bbbbbb;
+        border-radius: 100%;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
     @media (max-width: 767px) {
         .col-md-3 {
             margin-top: 10px; /* 더 작은 화면에 대한 상단 여백 조절 */
@@ -106,11 +114,30 @@
                                             </div>
                                         </div>
                                         <div class="d-flex">
-                                            <input type="file" class="form-control w-75" id="id_profile_img" style="margin-right: 15px;"
+                                            <input type="file" class="form-control w-75" id="id_profile_img"
+                                                   style="margin-right: 15px;"
                                                    name="profile_image" required onchange="previewProfile(event)"/>
                                             <button class="btn btn-primary" type="submit">업로드</button>
                                         </div>
                                     </form>
+                                    <div class="d-flex justify-content-around flex-wrap my-2 py-2"></div>
+                                    <h5 class="pb-2 border-bottom mb-3">기본 아바타 선택</h5>
+                                    <div>
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_mouse.jpg" alt="쥐" onclick="setAvatar('mouse')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_bear.jpg" alt="곰" onclick="setAvatar('bear')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_panda.jpg" alt="팬더" onclick="setAvatar('panda')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_lion.jpg" alt="사자" onclick="setAvatar('lion')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_tiger.jpg" alt="호랑이" onclick="setAvatar('tiger')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_rabbit.jpg" alt="토끼" onclick="setAvatar('rabbit')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_fox.jpg" alt="여우" onclick="setAvatar('fox')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_dog.jpg" alt="강아지" onclick="setAvatar('dog')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_huskey.jpg" alt="허스키" onclick="setAvatar('huskey')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_bulldog.jpg" alt="불독" onclick="setAvatar('bulldog')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_owl.jpg" alt="부엉이" onclick="setAvatar('owl')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_kowl.jpg" alt="올빼미" onclick="setAvatar('kowl')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_penguin.jpg" alt="펭귄" onclick="setAvatar('penguin')">
+                                        <img class="m-1 basic_avatar" src="/data/animal_avatar/ss_avt_dolphin.jpg" alt="돌고래" onclick="setAvatar('dolphin')">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -382,5 +409,70 @@
             }
         });
     });
+
+    function setAvatar(animal) {
+        let selected_avatar_url;
+
+        switch (animal) {
+            case 'mouse':
+                selected_avatar_url = "animal_avatar/ss_avt_mouse.jpg";
+                break;
+            case 'bear':
+                selected_avatar_url = "animal_avatar/ss_avt_bear.jpg";
+                break;
+            case 'panda':
+                selected_avatar_url = "animal_avatar/ss_avt_panda.jpg";
+                break;
+            case 'lion':
+                selected_avatar_url = "animal_avatar/ss_avt_lion.jpg";
+                break;
+            case 'tiger':
+                selected_avatar_url = "animal_avatar/ss_avt_tiger.jpg";
+                break;
+            case 'rabbit':
+                selected_avatar_url = "animal_avatar/ss_avt_rabbit.jpg";
+                break;
+            case 'fox':
+                selected_avatar_url = "animal_avatar/ss_avt_fox.jpg";
+                break;
+            case 'dog':
+                selected_avatar_url = "animal_avatar/ss_avt_dog.jpg";
+                break;
+            case 'huskey':
+                selected_avatar_url = "animal_avatar/ss_avt_huskey.jpg";
+                break;
+            case 'bulldog':
+                selected_avatar_url = "animal_avatar/ss_avt_bulldog.jpg";
+                break;
+            case 'owl':
+                selected_avatar_url = "animal_avatar/ss_avt_owl.jpg";
+                break;
+            case 'kowl':
+                selected_avatar_url = "animal_avatar/ss_avt_kowl.jpg";
+                break;
+            case 'penguin':
+                selected_avatar_url = "animal_avatar/ss_avt_penguin.jpg";
+                break;
+            case 'dolphin':
+                selected_avatar_url = "animal_avatar/ss_avt_dolphin.jpg";
+                break;
+            default:
+                console.error("Unknown animal: " + animal);
+                return;
+        }
+        
+        let api_data = {
+            selected_avatar_url: selected_avatar_url
+        };
+        
+        api_gp('/admins/basic_avatar_select/', 'post', api_data, (done) => {
+            if (done) {
+                window.location.reload();
+            } else {
+                console.error("API 요청 실패");
+            }
+        });
+    }
+    
 </script>
 </html>
