@@ -76,14 +76,14 @@
         listItem.href = "javascript:void(0);";
         listItem.style.border = "1px solid #ddd";
         listItem.style.borderRadius = "6px";
-        listItem.style.padding = "15px";
+        listItem.style.padding = "10px 14px";
         listItem.style.marginBottom = "10px";
         listItem.style.display = "block";
 
         listItem.innerHTML = `
             <i class="fa-regular fa-file" style="margin-right: 5px;"></i>
             <span style="font-weight: bold;">${category.name}</span>
-            <div class="category-description" style="font-size: 14px; margin-top: 10px;">${category.desc}</div>
+            <div class="category-description" style="font-size: 13px; margin-top: 5px;">${category.desc}</div>
         `;
 
         listItem.onclick = function () {

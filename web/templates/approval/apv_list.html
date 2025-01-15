@@ -14,13 +14,19 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    
+    tr, td, th {
+        font-size: 14px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
 
     .pagination a {
         cursor: pointer; /* 손모양 커서 */
     }
 
     td[id="status_badge"] span {
-        font-size: 15px;
+        font-size: 12px;
     }
 
     input[type="text"] {
@@ -30,7 +36,7 @@
     ::placeholder {
         text-align: center;
     }
-
+    
     /* 필터 버튼 */
     .apv_status_sch:hover[data-status="임시"],
     .apv_status_sch.active[data-status="임시"] {
@@ -121,12 +127,13 @@
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             width: 80% !important;
+            font-size: 12px !important;
         }
 
         th[id="apv_status_wocc"],
         td[name="apv_status_wocc"] {
             display: table-cell !important;
-            width: 20% !important;
+            width: 12% !important;
         }
 
         div[id="printPage"] {
@@ -226,9 +233,9 @@
                        style="border-left: none; border-right: none; table-layout: fixed; width: 100%;">
                     <thead>
                     <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                        <th id="check_box" style="text-align: center; width: 5%;"><input type="checkbox"
-                                                                                         style="width: 18px; height: 18px;"
-                                                                                         id="select_all"></th>
+                        <th id="check_box" style="text-align: center; vertical-align: middle; width: 5%;">
+                            <input type="checkbox" id="select_all"
+                                   style="width: 18px; height: 18px; text-align: center; vertical-align: middle; cursor: pointer;"></th>
                         <th id="updated_at"
                             style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
                             최종 수정일
@@ -253,8 +260,8 @@
                             style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 12%;">
                             결재 상태
                         </th>
-                        <th id="apv_status_wocc"
-                            style="color: #000; font-size: medium; font-weight: bold; width: 10%; display: none">상태
+                        <th id="apv_status_wocc" class="px-1"
+                            style="color: #000; text-align: center; font-size: medium; font-weight: bold; width: 10%; display: none">상태
                         </th>
                         <th id="apv_next_approver"
                             style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">
@@ -394,6 +401,7 @@
     });
 
     $(function () {
+        set_autocomplete('off');
         search_apv_data();
     });
 
@@ -423,7 +431,7 @@
     }
 
     function draw_apv_table(done) {
-        console.log("draw_apv_table: ", done);
+        // console.log("draw_apv_table: ", done);
         total_unread = done.unread_docs;
         total_next_approver = done.waiting_docs;
 
@@ -456,8 +464,8 @@
 
             let row = `
             <tr id='${item.id}' apv_status='${item.apv_status}' apv_category_id='${item.apv_category.id}' class='${unreadClass}' style='cursor:pointer;'>
-            <td name="check_box" style="text-align: center; height: 50px; display: flex; align-items: center; justify-content: center;">
-                <input type="checkbox" class="select_doc" style="width: 18px; height: 18px;" value="${item.id}" data-apv-category="${item.apv_category.id}"></td>
+            <td name="check_box" style="text-align: center; vertical-align: middle; cursor: default !important;">
+                <input type="checkbox" class="select_doc" style="width: 18px; height: 18px; text-align: center; vertical-align: middle; cursor: pointer !important;" value="${item.id}" data-apv-category="${item.apv_category.id}"></td>
             <td name="no" class="d-none" style="text-align:center;">${num + i}</td>
             <td name='updated_at' class="clickable" style="text-align:center;">${item.updated_at}</td>
             <td name='doc_no' class="clickable" style="text-align:center;">${item.doc_no}</td>
@@ -465,7 +473,7 @@
             <td name='doc_title' class="clickable">${docTitle}</td>
             <td name='created_by' class="clickable" style="text-align:center;">${item.created_by.username}</td>
             <td name='apv_status' class="clickable" id="status_badge" style="text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span>${ccBadge}</td>
-            <td name='apv_status_wocc' style="display: none;" class="clickable" style="text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
+            <td name='apv_status_wocc' class="clickable px-1" style="display: none; text-align:center;"><span class="badge ${badgeColor}">${item.apv_status}</span></td>
             <td name='apv_next_approver' class="clickable" style="text-align:center;">${item.next_approver}</td>
             </tr>`;
 
@@ -597,10 +605,14 @@
         let unreadBtn_el = document.getElementById('unreadBtn');
         if (window.innerWidth <= 900) {
             apvwaitBtn_el.setAttribute('data-tooltip', ' ');
+            apvwaitBtn_el.classList.remove('tooltip_tr');
             unreadBtn_el.setAttribute('data-tooltip', ' ');
+            unreadBtn_el.classList.remove('tooltip_tr');
         } else {
             apvwaitBtn_el.setAttribute('data-tooltip', '내가 결재해야하는 문서만 보여주는 필터버튼입니다.');
+            apvwaitBtn_el.classList.add('tooltip_tr');
             unreadBtn_el.setAttribute('data-tooltip', '내가 아직 읽지않은 문서만 보여주는 필터버튼입니다.');
+            unreadBtn_el.classList.add('tooltip_tr');
         }
     }
     window.addEventListener('load', updateTooltip);
