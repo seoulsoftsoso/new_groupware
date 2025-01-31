@@ -323,16 +323,44 @@ def organization_page(request):
     ).exclude(
         Q(department_position_id=99) | Q(department_position_id=55)
     ).prefetch_related('job_position').order_by(
-        F('department_position_id').asc(nulls_last=True),
+        F('department_position_id').asc(nulls_last=True),  # 부서별 정렬 유지
+        F('orgchart_order').asc(nulls_last=True),  # 부서 내에서 orgchart_order 적용
         F('job_position_id').asc(nulls_last=True),
         F('id').asc(nulls_last=True),
-    ).values('id', 'username', 'department_position_id', 'job_position__explain')
+    ).values(
+        'id', 'username', 'department_position_id', 'job_position__name', 'profile_image'
+    )
+
+    # 프로필 이미지 URL 생성
+    for user in users:
+        if user['profile_image']:
+            if user['profile_image'].startswith('/'):
+                user['profile_image_url'] = request.build_absolute_uri(user['profile_image']).replace('/admins', '/data')
+            else:
+                user['profile_image_url'] = request.build_absolute_uri(f'/data/{user["profile_image"]}').replace('/admins','')
+        else:
+            user['profile_image_url'] = request.build_absolute_uri('/data/profile_image/profile_default.png')
+
+    # print("Depart Data:", list(depart))
+    # print("Users Data:", list(users))
+
     context = {
         'departs': depart,
         'users': users
     }
 
     return render(request, 'admins/organization.html', context)
+
+
+def employee_list_page(request):
+    employee_list = UserMaster.objects.filter(is_staff=True).exclude(etc="no_leave").order_by('department_position_id', 'orgchart_order')
+
+    context = {
+        'employee_list': employee_list,
+    }
+
+    return render(request, 'admins/employee_list.html', context)
+
 
 
 def get_project_data(userid):

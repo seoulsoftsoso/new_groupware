@@ -192,6 +192,7 @@ class UserMaster(AbstractBaseUser, PermissionsMixin):
                                       default='profile_image/profile_default.png', verbose_name="프로필사진")
     cs_admin = models.BooleanField(default=0, verbose_name='CS관리자')
     birthday = models.DateField(null=True, verbose_name='생일')
+    orgchart_order = models.IntegerField(null=True, verbose_name='조직도순서')
 
     def __str__(self):
         return self.username

@@ -1,136 +1,269 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    {% include 'admins/admin_header.html' %}
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
 
-</head>
-<body>
+<style>
+    .employee-card {
+        display: flex;
+        align-items: center;
+        width: 200px;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-left: 6px solid #007bff;
+    }
+    
+    .employee-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px !important;
+        margin-left: 8px !important;
+    }
+    
+    .employee-info {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+    
+    .employee-name {
+        text-align: left;
+        font-weight: bold;
+        font-size: 16px;
+        color: #000;
+    }
+    
+    .department-name, .ceo-position {
+        text-align: center !important;
+    }
+    
+    .employee-position {
+        text-align: left;
+        font-size: 14px;
+        color: #6c757d;
+    }
+    
+    .employee-department {
+        font-size: 14px;
+        color: #6c757d;
+    }
+    
+    .google-visualization-orgchart-nodesel {
+        width: 200px !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+</style>
+
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
 
         {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
-        <div class="layout-page" style="">
-            {% include 'admins/index_header.html' %}
+        <div class="layout-page">
+            {% include 'admins/topnav.html' %}
 
-            <div class="card" style="width: 97%; margin-left: 26px; margin-top: 30px; padding-bottom: 30px;">
-                <div class="card-body d-flex flex-column flex-md-row justify-content-between p-0 pt-4">
-                    <div class="app-academy-md-25 card-body py-0">
-
-                      <img src="{% static 'sneat/assets/img/illustrations/bulb-light.png' %}" class="img-fluid app-academy-img-height scaleX-n1-rtl" alt="Bulb in hand" data-app-light-img="illustrations/bulb-light.png" data-app-dark-img="illustrations/bulb-dark.png" height="90">
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2"
+                 style="padding: 0 2%;">
+                <div>
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'Organization' %}">
+                            <strong style="color: #000; font-size: x-large;">
+                                <i class="fa-solid fa-sitemap me-2"></i>조직 관리
+                            </strong>
+                        </a>
                     </div>
-                    <div class="app-academy-md-50 card-body d-flex align-items-md-center flex-column text-md-center">
-                      <h3 class="card-title mb-4 lh-sm px-md-5 text-center">
-
-                        <span class="text-primary fw-medium text-nowrap">서울소프트 현황</span>
-                      </h3>
-                      <p class="mb-4">
-                        Grow your skill with the most reliable online courses and certifications in marketing,
-                        information technology, programming, and data science.
-                      </p>
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div id="chart_div"></div>
-                      </div>
-                    </div>
-                    <div class="app-academy-md-25 d-flex align-items-end justify-content-end">
-                      <img src="{% static 'sneat/assets/img/illustrations/pencil-rocket.png' %}" alt="pencil rocket" height="188" class="scaleX-n1-rtl">
-                    </div>
-                  </div>
-
+                </div>
             </div>
-            {% include 'admins/index_footer.html' %}
+
+            <div class="d-flex justify-content-center" style="padding: 2%;">
+                <div id="chart_div"></div>
+            </div>
         </div>
     </div>
 </div>
-</body>
+
+
 {% include 'admins/admin_footer.html' %}
 
-<script type="text/javascript">
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
     let add_list = [];
-    let first_text;
-    let depart_list = [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:oblique; width: 100px;">대표이사</div>'},
-           '',''];
-    add_list.push(depart_list);
-    // 부서목록 만들기
-    {% for depart in departs %}
 
-        add_list.push([{'v':'{{ depart.id }}', 'f':'<div style="color:blue; font-style:bold; width: 100px;">{{ depart.name }}</div>'},
-           'ceo',''])
+    function generateStyledName(name, position, department, imgUrl, isDepartment = false) {
+        if (isDepartment) {
+            return `
+                <div class="employee-card">
+                    <div class="employee-info">
+                        <div class="employee-name department-name">${name}</div>
+                        <div class="employee-position ceo-position">${position}</div>
+                    </div>
+                </div>`;
+        } else {
+            return `
+                <div class="employee-card">
+                    <img class="employee-img" src="${imgUrl}" alt="${name}">
+                    <div class="employee-info">
+                        <div class="employee-name">${name}</div>
+                        <div class="employee-position">${position}</div>
+                        <div class="employee-department">${department}</div>
+                    </div>
+                </div>`;
+        }
+    }
 
+    function loadDepartmentData() {
+        let depart_list = [
+            {
+                'v': 'ceo',
+                'f': generateStyledName('노병진', '대표이사', '', '', true)
+            }, '', ''
+        ];
+        add_list.push(depart_list);
+    
+        {% for depart in departs %}
+            add_list.push([
+                {
+                    'v': '{{ depart.id }}',
+                    'f': generateStyledName('{{ depart.name }}', '{{ depart.position_name }}', '{{ depart.department_name }}', '', true)  // ✅ 이미지 없이 표시
+                },
+                'ceo', ''
+            ]);
+        {% endfor %}
+    }
 
-    {% endfor %}
-
-    //부서 직원 목록 만들기
-    {% for user in users %}
-        second_text = ''
-
-        {% if forloop.first %}
-        first_text = '{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>'
-        position_text = '{{ user.department_position_id }}'
-
-        add_list.push([first_text, position_text, ''])
-        {% else %}
-
-            current_podition = '{{ user.department_position_id }}'
-            second_text = '{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>'
-            if (position_text == current_podition){
-
-                add_list.push([second_text, first_text, ''])
-            }else{
-                add_list.push(['{{ user.username }}<div style="color:red; font-style:italic;">{{ user.job_position__explain }}</div>', '{{ user.department_position_id }}', ''])
+    function loadUserData() {
+        let first_text = "";
+        let position_text = "";
+    
+        {% for user in users %}
+            var userName = '{{ user.username }}';
+            var userPosition = '{{ user.job_position__name }}';
+            var userDepartment = '{{ user.department.name }}';
+            var currentPosition = '{{ user.department_position_id }}';
+            var profileImage = '{{ user.profile_image_url }}'; // 이미지 URL 필드 추가
+            var userHtml = generateStyledName(userName, userPosition, userDepartment, profileImage);
+    
+            if (!first_text) {
+                first_text = userHtml;
+                position_text = currentPosition;
+                add_list.push([first_text, position_text, '']);
+            } else {
+                if (position_text === currentPosition) {
+                    add_list.push([userHtml, first_text, '']);
+                } else {
+                    add_list.push([userHtml, currentPosition, '']);
+                }
+                first_text = userHtml;
+                position_text = currentPosition;
             }
-            first_text = second_text;
-            position_text = current_podition;
-        {% endif %}
+        {% endfor %}
+    }
 
+    function drawChart() {
+        google.charts.load('current', {packages: ["orgchart"]});
+        google.charts.setOnLoadCallback(function () {
+            let data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('string', 'Manager');
+            data.addColumn('string', 'ToolTip');
+    
+            data.addRows(add_list);
+    
+            let chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+    
+            // ✅ 기본 양식 제거하고 allowHtml 적용
+            chart.draw(data, {
+                'allowHtml': true,
+                'size': 'medium',  // 사이즈 조정 (small, medium, large 가능)
+                'nodeClass': 'org-node'  // 스타일을 적용할 클래스 추가
+            });
+        });
+        
+        document.querySelectorAll('.google-visualization-orgchart-nodesel').forEach(node => {
+            node.classList.remove('google-visualization-orgchart-nodesel');
+        });
+    }
 
-    {% endfor %}
-
-      google.charts.load('current', {packages:["orgchart"]});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-
-
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Name');
-        data.addColumn('string', 'Manager');
-        data.addColumn('string', 'ToolTip');
-
-        data.addRows(add_list);
-        // For each orgchart box, provide the name, manager, and tooltip to show.
-        {% comment %}data.addRows([
-          [{'v':'ceo', 'f':'노병진<div style="color:red; font-style:italic">대표이사</div>'},
-           '', 'The CEO'],
-          [{'v':'D1', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>전략기획본부</span></div>'},
-           'ceo', ''],
-          [{'v':'D2', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>스마트사업본부</span></div>'},
-           'ceo', ''],
-          [{'v':'D3', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>개발1팀</span></div>'},
-           'ceo', ''],
-          [{'v':'D4', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>개발2팀</span></div>'},
-           'ceo', ''],
-          [{'v':'D5', 'f':'<div style="color:blueviolet; font-style:italic; width: 100px"><span>모빌리티본부</span></div>'},
-           'ceo', ''],
-          [{'v':'F0', 'f':'김보미<div style="color:red; font-style:italic; width: 100px">Team Manger</div>'},
-           'ceo', ''],
-
-            ['고성호<div style="color:red; font-style:italic;">General Manger</div>', 'D1', ''],
-            ['김목화<div style="color:red; font-style:italic;">Team Manger</div>', '고성호<div style="color:red; font-style:italic;">General Manger</div>', ''],
-            ['김진란', '김목화<div style="color:red; font-style:italic;">Team Manger</div>', '']
-        ]);{% endcomment %}
+    // 데이터 로드 후 차트 생성
+    loadDepartmentData();
+    loadUserData();
+    drawChart();
+</script>
 
 
 
-        // Create the chart.
-        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
-        // Draw the chart, setting the allowHtml option to true for the tooltips.
-        chart.draw(data, {'allowHtml':true});
-      }
-   </script>
-</html>
+{% comment %}
+<script>
+    let add_list = [];
+
+    function generateStyledName(name, style, position) {
+        return `<div style="${style}">${name}<br><span style="color:red; font-style:italic;">${position}</span></div>`;
+    }
+
+    function loadDepartmentData() {
+        let depart_list = [{'v': 'ceo', 'f': generateStyledName('노병진', 'color:red; font-style:oblique; width: 100px;', '대표이사')}, '', ''];
+        add_list.push(depart_list);
+
+        {% for depart in departs %}
+            add_list.push([
+                {'v': '{{ depart.id }}', 'f': generateStyledName('{{ depart.name }}', 'color:blue; font-weight:bold; width: 100px;', '')},
+                'ceo', ''
+            ]);
+        {% endfor %}
+    }
+
+    function loadUserData() {
+        let first_text = "";
+        let position_text = "";
+
+        {% for user in users %}
+            var userName = '{{ user.username }}';  // ✅ 'let' 대신 'var' 사용
+            var userPosition = '{{ user.job_position__explain }}';  // ✅ 'let' 대신 'var' 사용
+            var currentPosition = '{{ user.department_position_id }}';  // ✅ 'let' 대신 'var' 사용
+            var userHtml = generateStyledName(userName, 'color:black;', userPosition);
+
+            if (!first_text) {
+                first_text = userHtml;
+                position_text = currentPosition;
+                add_list.push([first_text, position_text, '']);
+            } else {
+                if (position_text === currentPosition) {
+                    add_list.push([userHtml, first_text, '']);
+                } else {
+                    add_list.push([userHtml, currentPosition, '']);
+                }
+                first_text = userHtml;
+                position_text = currentPosition;
+            }
+        {% endfor %}
+    }
+
+    function drawChart() {
+        google.charts.load('current', {packages: ["orgchart"]});
+        google.charts.setOnLoadCallback(function () {
+            let data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('string', 'Manager');
+            data.addColumn('string', 'ToolTip');
+
+            data.addRows(add_list);
+
+            let chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+            chart.draw(data, {'allowHtml': true});
+        });
+    }
+
+    // 데이터 로드 후 차트 생성
+    loadDepartmentData();
+    loadUserData();
+    drawChart();
+</script>
+{% endcomment %}

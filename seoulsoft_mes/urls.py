@@ -182,6 +182,7 @@ urlpatterns = [
 
     # 조직도
     path('admins/organization', organization_page, name='Organization'),
+    path('admins/employee_list', employee_list_page, name='employee_list_page'),
 
     # 프로젝트관리
     path('admins/project_main', project_main_page, name="ProjectMain"),

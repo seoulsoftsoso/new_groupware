@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
+
+<style>
+    .table td, .table th {
+        white-space: nowrap;
+    }
+
+    th, td {
+        white-space: nowrap;
+    }
+
+    tr, td, th {
+        font-size: 14px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+</style>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+        {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page">
+            {% include 'admins/topnav.html' %}
+
+            <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2"
+                 style="padding: 0 2%;">
+                <div>
+                    <div class="d-flex svg-illustration mb-2 gap-2">
+                        <a href="{% url 'employee_list_page' %}">
+                            <strong style="color: #000; font-size: x-large;">
+                                <i class="fa-regular fa-address-book me-2"></i>직원 목록
+                            </strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start" id="a_table_div" style="overflow-x: auto; padding: 1% 2%">
+                <table class="dt-multilingual table border-top table table-hover" style="border-left: none; border-right: none; table-layout: fixed; width: 100%; min-width: 1000px;">
+                    <thead>
+                        <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
+                            <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 2%;">순번</th>
+                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">이름</th>
+                            <th id="job_position" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">직급</th>
+                            <th id="department_position" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">부서</th>
+                            <th id="place_of_work" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">근무지</th>
+                            <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">입사일</th>
+                            <th id="email" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">이메일</th>
+                        </tr>
+                    </thead>
+                    <tbody id="a_tbody">
+                        {% for employee in employee_list %}
+                            <tr>
+                                <td style="text-align: center;">{{ forloop.counter }}</td>
+                                <td class="d-flex align-items-center" style="text-align: center;">
+                                    <img src="{{ employee.profile_image.url }}" alt="프로필 이미지"
+                                         style="width: 32px; height: 32px; border-radius: 50%;">
+                                    <div class="ms-3">{{ employee.username }}</div>
+                                </td>
+                                <td style="text-align: center;">{{ employee.job_position }}</td>
+                                <td style="text-align: center;">{{ employee.department_position }}</td>
+                                <td style="text-align: center;">{{ employee.place_of_work }}</td>
+                                <td style="text-align: center;">{{ employee.employment_date }}</td>
+                                <td style="text-align: center;">{{ employee.email }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'admins/admin_footer.html' %}
+
+
+<script>
+
+</script>

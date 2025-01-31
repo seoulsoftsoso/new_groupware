@@ -251,11 +251,34 @@
 {#            </a>#}
 {#        </li>#}
 
-        <li class="menu-item">
+        {% comment %}<li class="menu-item">
             <a href="{% url 'Organization' %}" class="menu-link">
                 <i class='bx bx-customize'></i>
                 <div class="text-truncate" style="margin-left: 10px;" data-i18n="조직관리">조직관리</div>
             </a>
+        </li>{% endcomment %}
+    
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class='bx bx-customize'></i>
+                <div class="text-truncate" style="margin-left: 10px;" data-i18n="조직관리">조직관리</div>
+            </a>
+            
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'employee_list_page' %}" class="menu-link">
+                            <div class="text-truncate" data-i18n="직원목록">직원목록</div>
+                        </a>
+                    </li>
+                </ul>
+            
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'Organization' %}" class="menu-link">
+                            <div class="text-truncate" data-i18n="조직도">조직도</div>
+                        </a>
+                    </li>
+                </ul>
         </li>
 
         <li class="menu-item">
@@ -263,6 +286,7 @@
                 <i class='bx bx-show-alt'></i>
                 <div class="text-truncate" style="margin-left: 10px;" data-i18n="ADMINS">ADMINS</div>
             </a>
+        
             {% if request.user.is_superuser %}
                 <ul class="menu-sub">
                     <li class="menu-item">
@@ -272,6 +296,7 @@
                     </li>
                 </ul>
             {% endif %}
+        
             <ul class="menu-sub">
                 <li class="menu-item">
                     <a href="{% url 'userSettingsPage' %}" class="menu-link">
@@ -279,15 +304,7 @@
                     </a>
                 </li>
             </ul>
-{#            <ul class="menu-sub">#}
-{#                <li class="menu-item">#}
-{#                    <a href="{% url 'userAuthorityPage' %}" class="menu-link">#}
-{#                        <div class="text-truncate" data-i18n="권한관리">권한관리</div>#}
-{#                    </a>#}
-{#                </li>#}
-{#            </ul>#}
 
-{#            {% if request.user.is_superuser %}#}
             {% if request.user.cs_admin %}
                 <ul class="menu-sub">
                     <li class="menu-item">
@@ -297,15 +314,7 @@
                     </li>
                 </ul>
             {% endif %}
-            {% comment %}{% if request.user.is_superuser %}
-                <ul class="menu-sub">
-                    <li class="menu-item">
-                        <a href="{% url 'apv_list' %}" class="menu-link">
-                            <div class="text-truncate" data-i18n="전자결재 개발중">test</div>
-                        </a>
-                    </li>
-                </ul>
-            {% endif %}{% endcomment %}
+        
         </li>
     
         <div id="toast_popup_area"></div>
