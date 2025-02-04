@@ -50,6 +50,32 @@
         margin-top: -5px; /* 불릿 세로 위치 조정 */
     }
 
+    {#2025지원사업 팝업#}
+    .popup-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid black;
+        box-shadow: 0 0 10px gray;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+    .popup-image {
+        width: 100%;
+        height: 300px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .popup-checkbox {
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+
     @media (max-width: 1000px) {
         .layout-content-navbar {
             width : 1500px;
@@ -383,6 +409,78 @@
         window.open('/menu/010801/', 'popup', 'width=1700,height=1000,scrollbars=yes,resizable=yes');
         return false;
     }
+
+
+
+    {#2025 지원사업 팝업 영역#}
+
+    function getToday() {
+        let today = new Date();
+        return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    }
+
+    function closePopup(popupId, storageKey) {
+        localStorage.setItem(storageKey, getToday()); // 오늘 날짜 저장
+        document.getElementById(popupId).remove(); // 팝업 닫기
+    }
+
+    function closePopupNoSave(popupId) {
+        document.getElementById(popupId).remove(); // 팝업 닫기
+    }
+
+    function openPopupWindow(url) {
+        window.open(url, "_blank", "width=1200,height=1000,scrollbars=yes,resizable=yes");
+    }
+
+    function createPopup(popupId, storageKey, imgSrc, linkUrl, position) {
+        let lastClosedDate = localStorage.getItem(storageKey);
+        if (lastClosedDate === getToday()) {
+            return; // 오늘 이미 닫았으면 팝업 생성 안 함
+        }
+        
+        let popup = document.createElement("div");
+        popup.id = popupId;
+        popup.classList.add("popup-container");
+
+        // 팝업 위치 지정
+        popup.style.top = position.top;
+        popup.style.left = position.left;
+        popup.style.width = position.width;
+        popup.style.transform = "translate(-50%, -50%)";
+
+        popup.innerHTML = `
+            <div class="popup-image" style="background-image: url('${imgSrc}'); cursor: pointer;"
+                 onclick="openPopupWindow('${linkUrl}')">
+            </div>
+            <div class="popup-content d-flex justify-content-between align-items-center px-3 w-100">
+                <label class="popup-checkbox">
+                    <input type="checkbox" id="doNotShow_${popupId}" onclick="closePopup('${popupId}', '${storageKey}')">
+                    오늘 하루 열지 않음
+                </label>
+                <div class="btn btn-sm btn-secondary" style="height: 30px;" onclick="closePopupNoSave('${popupId}')">닫기</div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+    }
+
+    window.onload = function () {
+        createPopup(
+            "2025_popup_1",
+            "popupClosedDate_1",
+            "/static/img/2025_popup_1.jpg",
+            "https://docs.google.com/forms/d/e/1FAIpQLSdX389nEmgAAz1jPIeVzEcaslqVNkE_LrRwbKs3QFhfbWF0xw/viewform",
+            { top: "40%", left: "40%", width: "300px" } // 첫 번째 팝업 위치
+        );
+        createPopup(
+            "2025_popup_2",
+            "popupClosedDate_2",
+            "/static/img/2025_popup_2.jpg",
+            "https://blog.naver.com/seoul-soft/223746306586",
+            { top: "40%", left: "60%", width: "280px" } // 두 번째 팝업 위치
+        );
+    };
+
 
 </script>
 </html>
