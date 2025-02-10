@@ -500,7 +500,7 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
         }
     
         ajax_gp("/get_company_ip_info/", "get", {}, (done) => {
-            console.log("company_ip_info: ", done);
+            // console.log("company_ip_info: ", done);
     
             let matchingItems = done.company_ip_info.filter(item => item.name.includes(currentIP));
             let matchingList = document.getElementById('current_ip');

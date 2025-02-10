@@ -113,8 +113,17 @@
                                 <td>{{ obj.extendTime|date:"H:i" }}</td>
                                 <td>{{ obj.latenessTime|date:"H:i" }}</td>
                                 <td>{{ obj.earlyleaveTime|date:"H:i" }}</td>
-                                <td>{{ obj.attendance_ip }}</td>
-                                <td>{{ obj.offwork_ip | default_if_none:'' }}</td>
+                                {% if obj.attendance_ip is not none %}
+                                    <td>{{ obj.att_ip_name|default:obj.attendance_ip }}</td>
+                                {% else %}
+                                    <td>{{ obj.attendance_ip|default_if_none:'' }}</td>
+                                {% endif %}
+                                
+                                {% if obj.offwork_ip is not none %}
+                                    <td>{{ obj.off_ip_name|default:obj.offwork_ip }}</td>
+                                {% else %}
+                                    <td>{{ obj.offwork_ip|default_if_none:'' }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

@@ -330,7 +330,7 @@
     function openAndExecuteScript(year, month, userName) {
         let newWindow = window.open(`/admins/leave_manage?year=${year}&month=${month}&user_name=${userName}`, '_blank', 'width=1199,height=800');
     
-        newWindow.onload = function () {
+        {% comment %}newWindow.onload = function () {
             let doc = newWindow.document;
             let firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
             let lastDate = new Date(year, month, 0).getDate();
@@ -347,7 +347,7 @@
             } else {
                 console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
             }
-        };
+        };{% endcomment %}
     }
 
     

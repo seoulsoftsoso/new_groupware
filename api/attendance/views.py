@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
-from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch
+from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch, F
 from django.db.models.expressions import RawSQL, Exists
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
     cal_workTime_check, PaginatorManager, cal_latenessTime
@@ -161,7 +161,7 @@ def check_out(request):
 
 class admin_work_schedule_page(ListView):
     template_name = 'admins/attendance/work_schedule.html'
-    paginate_by = 15
+    paginate_by = 20
 
     def get_queryset(self):
         search_to = self.request.GET.get('search-to')
@@ -180,6 +180,15 @@ class admin_work_schedule_page(ListView):
 
         if search_title == 'name' and search_content:
             attendance_queryset = attendance_queryset.filter(create_by__username__contains=str(search_content))
+
+        attendance_queryset = attendance_queryset.annotate(
+            att_ip_name=Subquery(
+                CodeMaster.objects.filter(name=OuterRef('attendance_ip')).values('explain')[:1]
+            ),
+            off_ip_name=Subquery(
+                CodeMaster.objects.filter(name=OuterRef('offwork_ip')).values('explain')[:1]
+            )
+        )
 
         return attendance_queryset
 

@@ -21,7 +21,7 @@ body { max-width: 520px; margin: 0 auto; padding: 0; }
 .container .content .menu-box .logo a { display: block; width: 150px; height: 54px; margin: 13px 0; background: url(../img/logo.png) no-repeat; text-indent: -9999px; }
 .container .content .menu-box .md1 { width: 100%; position: absolute; top: 80px; left: -1000px; z-index: 9999; background: #222; margin: 0; padding: 20px 0 20px 0; list-style: none; margin: 0; }
 .container .content .menu-box .ml { float: left; width: 100%;  }
-.container .content .menu-box .ml .mla { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 12%; color: #fff; fon-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.container .content .menu-box .ml .mla { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 12%; color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .container .content .menu-box .ml .md2 { float: left; width: 100%; list-style: none; margin: 0; padding: 0; }
 .container .content .menu-box .ml .md2 .cl { float: left; width: 100%; }
 .container .content .menu-box .ml .md2 .cl .cla { float: left; width: 100%; margin-top: 8px; margin-bottom: 8px; padding-left: 15%; color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
@@ -33,7 +33,7 @@ body { max-width: 520px; margin: 0 auto; padding: 0; }
 .container .content .content-box { width: 100%; margin: 0; padding: 10px 10px; border-top: solid 1px #dfdfdf; }
 .container .content .content-box .tab-content { width: 100%; padding: 0; }
 .container .content .content-box .tab-content .tab-pane { width: 100%; padding: 0; }
-.container .content .content-box .tab-content .tab-pane .search { margin: 10px; 10px; }
+.container .content .content-box .tab-content .tab-pane .search { margin: 10px 10px; }
 .container .content .content-box .tab-content .tab-pane .mobile-none { display: none; }
 
 .container .content .content-box .tab-content .tab-pane .search form {  }
