@@ -385,7 +385,7 @@
             todayHighlight: true,
         });
 
-        a_search();
+        {% comment %}a_search();{% endcomment %}  // 마지막 onload 함수와 중복되므로 중지처리함
     }
 
 
@@ -393,7 +393,7 @@
         a_click_id = null;
         a_nation.page = 1;
         a_nation_data.page_size = document.getElementById("a_page_size").value;
-    
+
         if (firstDay && lastDay && userName) {
             date_sch_from = firstDay;
             date_sch_to = lastDay;
@@ -403,10 +403,10 @@
             date_sch_to = $("#date_sch_to").val();
             all_sch = $('#all_sch').val();
         }
-    
+
         a_search();
     }
-    
+
     {% comment %}function a_search_click() {
         a_click_id = null;
         a_nation.page = 1;
@@ -780,30 +780,30 @@
         let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
         let newWindow = window.open(url, '_blank', 'width=1199,height=1000,scrollbars=yes,resizable=yes');
     }
-    
-    
+
+
 {% comment %}    window.onload = function () {
         function getQueryParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
-    
+
         // 파라미터 값 가져오기
         const year = getQueryParam('year');
         const month = getQueryParam('month');
         const userName = getQueryParam('user_name');
-    
+
         // 날짜 범위 계산
         if (year && month) {
             let firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
             let lastDate = new Date(year, month, 0).getDate();
             let lastDay = `${year}-${String(month).padStart(2, '0')}-${lastDate}`;
-    
+
             // 날짜 필터 적용
             document.querySelector('#date_sch_from').value = firstDay;
             document.querySelector('#date_sch_to').value = lastDay;
         }
-    
+
         // 연도 선택 필터 적용
         if (year) {
             let yearSelect = document.querySelector('#a_year_filter');
@@ -811,7 +811,7 @@
                 yearSelect.value = year;
             }
         }
-    
+
         // 이름 검색 필터 적용
         if (userName) {
             let nameInput = document.querySelector('#all_sch');
@@ -819,7 +819,7 @@
                 nameInput.value = decodeURIComponent(userName);
             }
         }
-    
+
         // 검색 버튼 자동 클릭
         let searchButton = document.querySelector('#all_sch_btn');
         if (searchButton) {
@@ -830,31 +830,33 @@
             console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
         }
     };{% endcomment %}
-    
+
     window.onload = function () {
         function getQueryParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name) || null; // 값이 없으면 null 반환
         }
-    
+
         // 파라미터 값 가져오기
         const year = getQueryParam('year');
         const month = getQueryParam('month');
         const userName = getQueryParam('user_name');
-    
+
         let firstDay = null;
         let lastDay = null;
-    
+
         if (year && month) {
             firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
             let lastDate = new Date(year, month, 0).getDate();
             lastDay = `${year}-${String(month).padStart(2, '0')}-${lastDate}`;
         }
-    
+
         document.querySelector('#date_sch_from').value = firstDay;
         document.querySelector('#date_sch_to').value = lastDay;
         document.querySelector('#all_sch').value = userName;
         a_search_click(firstDay, lastDay, userName);
+        
+        {% comment %}a_search_init(firstDay, lastDay, userName);{% endcomment %}
     };
 
 </script>
