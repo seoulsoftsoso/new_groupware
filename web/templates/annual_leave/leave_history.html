@@ -52,6 +52,36 @@
         white-space: nowrap;
     }
 
+    .progress-container {
+        width: 100%;
+        height: 20px;
+        background-color: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background-color: lightskyblue;
+        width: 0;
+        transition: width 1s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-text {
+        font-size: 12px;
+        color: #000000;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+    }
+
     @media (max-width: 900px) {
         #search_filter {
             flex-grow: 1;
@@ -163,6 +193,7 @@
                             <th id="m11" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">11월</th>
                             <th id="m12" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">12월</th>
                             <th id="leave_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">잔여</th>
+                            <th id="leave_rate" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">잔여율</th>
                         </tr>
                     </thead>
                     <tbody id="a_tbody"></tbody>
@@ -235,7 +266,7 @@
     
 
     function a_draw_table(done) {
-        // console.log("a_draw_table: ", done);
+        console.log("a_draw_table: ", done);
 
         let data = done.summary;
         if (data.length === 0) {
@@ -248,14 +279,19 @@
         }
 
         let num = 1;
+        let annual_leave_count = [11, 15, 16, 18, 19, 21, 22, 24, 25];
 
         let rows = "";
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
+
+            // 연차소모율 계산
+            let user_annual_leave_count = item.working_years > 8 ? 25 : annual_leave_count[item.working_years];
+            let leaveRate = (item.leave_balance / user_annual_leave_count * 100).toFixed(0);
     
             let createLink = (count, detail) => {
                 if (!count) return "";
-            
+
                 let year = detail.year; // details 배열에서 연도 가져오기
                 let month = detail.month; // details 배열에서 월 가져오기
                 let userName = encodeURIComponent(item.create_by); // 사용자 이름 인코딩
@@ -275,6 +311,13 @@
                         ${createLink(detail.total_period_count, detail)}
                     </td>`).join('')}
                 <td name='leave_balance' style="text-align:center;">${item.leave_balance}</td>
+                {% comment %}<td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">${leaveRate}</td>{% endcomment %}
+                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">
+                    <div class="progress-container">
+                        <span class="progress-text">${leaveRate}%</span>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" data-rate="${leaveRate}"></div>
+                    </div>
+                </td>
             </tr>`;
     
             rows += row;
@@ -312,4 +355,12 @@
         const holidayInfoUrl = "{% url 'holidayInfo' %}";
         window.open(holidayInfoUrl, '_blank', 'width=1199,height=1000');
     }
+
+    // Progress bar 애니메이션 적용
+    setTimeout(() => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            let rate = bar.getAttribute('data-rate');
+            bar.style.width = rate + '%';
+        });
+    }, 100);
 </script>

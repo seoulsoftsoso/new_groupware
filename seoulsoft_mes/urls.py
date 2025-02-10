@@ -127,6 +127,7 @@ urlpatterns = [
     path('check-in/', check_in, name='check_in'),
     path('check-out/', check_out, name='check_out'),
     path('last_attendance/', last_attendance, name='last_attendance'),
+    path('get_company_ip_info/', get_company_ip_info, name="get_company_ip_info"),
 
     # 공지사항
     path('admins/notice', admin_notice_page.as_view(), name="adminNotice"),

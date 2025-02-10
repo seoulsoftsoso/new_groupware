@@ -19,10 +19,22 @@
     .menu-toggle::after {
         display: none;
    }
+    
+    .progress-text {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        text-align: center;
+        font-size: 10px;
+        color: black;
+        z-index: 10;
+    }
 </style>
 <body>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo">
+    <div class="app-brand demo d-flex justify-content-center">
         <a href="{% url 'adminIndex' %}" class="app-brand-link main-page">
             <img id="index_logo" src="{% static 'img/logo.jpg' %}">
         </a>
@@ -35,26 +47,59 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
-        <!-- Dashboards -->
-        <div class="menu-item" style="padding-left: 40px;">
-            <div style="margin-bottom: 20px; text-align: left">
-                <span id="currentDate"></span>
+        <!-- 출퇴근 영역 -->
+        <div class="menu-item d-flex flex-column mt-3" style="padding-left: 30px;">
+            <div class="p-3" style="background-color: #f3f3f7; border-radius: 8px; width: 200px;">
+                <div class="d-flex align-items-center" style="font-weight: bold;">
+                    <i class='bx bx-alarm me-1'></i>
+                    <div>근태 현황</div>
+                </div>
+                
+                <div class="d-flex my-2" style="font-size: small;">
+                    <div id="current_ip"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                </div>
+    
+                <div class="my-2" style="font-size: small;">
+                    <div>일일 근무시간</div>
+                    <div class="progress mt-1 position-relative" style="height: 20px;">
+                        <div id="todayProgressBar" class="progress-bar bg-info-subtle" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <span id="todayWorkTime" class="progress-text"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                    </div>
+                </div>
+                
+                <div class="my-2" style="font-size: small;">
+                    <div>주간 근무시간</div>
+                    <div class="progress mt-1 position-relative" style="height: 20px;">
+                        <div id="weekProgressBar" class="progress-bar bg-success-subtle" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <span id="weekWorkTime" class="progress-text"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                    </div>
+                </div>
+    
+                <div class="work-check d-flex justify-content-between mt-4">
+                    <button class="btn btn-secondary me-2 text-nowrap" id="checkInBtn">출 근</button>
+                    <button class="btn btn-secondary text-nowrap" id="checkOutBtn">퇴 근</button>
+                </div>
             </div>
-            <div style="margin-top: -20px; margin-bottom: 20px; width: 100%; text-align: left">
-                <strong style="font-size: large;">나의 근태 현황</strong>
+        </div>
+    
+    
+        {% comment %}<div class="menu-item mt-3" style="padding-left: 40px;">
+            <div>
+                <div>나의 근태 현황</div>
+                <div id="currentDate"></div>
             </div>
 
             <div>
                 <div style="margin-top: 10px">
                     <span>🕒 오늘 총 근무 시간</span>
                     <div style="text-align: left; margin-left: 25px">
-                        <h10 id="todayWorkTime">0h 0m 0s</h10>
+                        <span id="todayWorkTime">0h 0m 0s</span>
                     </div>
                 </div>
                 <div style="margin-top: 10px; width: auto">
                     <span>🕒 이번주 누적 시간</span>
                     <div style="text-align: left; margin-left: 25px">
-                        <h10 id="weekWorkTime">0h 0m 0s</h10>
+                        <span id="weekWorkTime">0h 0m 0s</span>
                     </div>
                 </div>
             </div>
@@ -63,7 +108,7 @@
                 <button class="btn btn-outline-primary me-2" id="checkInBtn">출근</button>
                 <button class="btn btn-outline-primary" id="checkOutBtn">퇴근</button>
             </div>
-        </div>
+        </div>{% endcomment %}
 
         <!-- workspace -->
         <div class="menu-header small text-uppercase">
@@ -264,14 +309,14 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
     let dayInterval;
     let weekInterval;
 
-    function getCurrentDate() {
+{% comment %}    function getCurrentDate() {
         var year = today.getFullYear();
         var month = (today.getMonth() + 1).toString().padStart(2, '0');
         var day = today.getDate().toString().padStart(2, '0');
 
         return year + '-' + month + '-' + day;
     }
-    document.getElementById('currentDate').innerHTML = getCurrentDate();
+    document.getElementById('currentDate').innerHTML = getCurrentDate();{% endcomment %}
 
     function getCookie(name) {
         const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -294,7 +339,7 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
         let minutes = Math.floor((sec % 3600) / 60);
         let seconds = sec % 60;
 
-        return `${hours}h ${minutes}m ${seconds}s`;
+        return `${hours}시간 ${minutes}분 ${seconds}초`;
     }
 
      $('#checkInBtn').click(() => {
@@ -378,7 +423,8 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
              }
          });
     }
-
+    
+    
     document.addEventListener('DOMContentLoaded', function () {
         // 페이지 로드 시 사용자의 마지막 출퇴근 기록을 요청
         $.ajax({
@@ -395,6 +441,9 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
                 startDate = new Date(response.startDate);
                 nextSunday = new Date(response.nextSunday);
                 weeklyWorkTime = parseFloat(response.weeklyWorkTime);
+                
+                const dailyMax = 9 * 3600; // 하루 최대 근무시간 (8시간)
+                const weeklyMax = 40 * 3600; // 주간 최대 근무시간 (40시간)
 
                 if (response.is_offwork) {
                     checkInBtn.disabled = false;
@@ -404,6 +453,8 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
                     checkOutBtn.disabled = false;
 
                     var dailyWorkTime = (endDate - attendanceTime) / 1000;
+                    let dailyPercent = (dailyWorkTime / dailyMax) * 100;
+                    let weeklyPercent = (weeklyWorkTime / weeklyMax) * 100;
 
                     weeklyWorkTime += dailyWorkTime;
 
@@ -412,15 +463,86 @@ document.getElementById('layout-menu').addEventListener('mouseout', function() {
 
                     dayInterval = setInterval(function () {
                         dailyWorkTime++;
+                        dailyPercent = (dailyWorkTime / dailyMax) * 100;
                         document.getElementById('todayWorkTime').innerHTML = formatTime(dailyWorkTime);
+                        document.getElementById("todayProgressBar").style.width = dailyPercent + "%";
                     }, 1000);
 
                     weekInterval = setInterval(function () {
                         weeklyWorkTime++;
+                        weeklyPercent = (weeklyWorkTime / weeklyMax) * 100;
                         document.getElementById('weekWorkTime').innerHTML = formatTime(weeklyWorkTime);
+                        document.getElementById("weekProgressBar").style.width = weeklyPercent + "%";
                     }, 1000);
                 }
             }
         });
     });
+    
+    function ajax_gp(url, method, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                callback(JSON.parse(xhr.responseText));
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+    
+    
+    async function load_IP_code(data_ip) {
+        let currentIP = data_ip;
+        if (!currentIP) return;
+        if (isMobileIP(currentIP)) {
+            currentIP = "모바일 네트워크";
+        }
+    
+        ajax_gp("/get_company_ip_info/", "get", {}, (done) => {
+            console.log("company_ip_info: ", done);
+    
+            let matchingItems = done.company_ip_info.filter(item => item.name.includes(currentIP));
+            let matchingList = document.getElementById('current_ip');
+            matchingList.innerHTML = ''; // 기존 리스트 초기화
+    
+            if (matchingItems.length > 0) {
+                matchingList.innerHTML = matchingItems.map(item => 
+                    `<div>${item.explain} (${item.name})</div>`
+                ).join('');
+            } else {
+                matchingList.innerHTML = `<div>미등록 IP (${currentIP})</div>`;
+            }
+        });
+    }
+    
+    
+    function isMobileIP(ip) {
+        // 모바일 네트워크에서 많이 사용되는 IPv6 대역 (2001: / 2400:)
+        if (ip.startsWith("2001:") || ip.startsWith("2400:")) {
+            return true;
+        }
+    
+        // IPv4 사설 IP 대역 (Wi-Fi 사용 가능, 모바일 네트워크 아님)
+        if (/^(10\.|172\.1[6-9]\.|172\.2[0-9]\.|172\.3[0-1]\.|192\.168\.)/.test(ip)) {
+            return false;
+        }
+    
+        return false;
+    }
+
+    window.onload = fetchIPAddress;
+    
+    // 외부 API를 호출하여 IP 주소를 가져오는 함수
+    async function fetchIPAddress() {
+        try {
+            let response = await fetch('https://api64.ipify.org?format=json');
+            let data = await response.json();
+            load_IP_code(data.ip);
+        } catch (error) {
+            console.error('Error fetching IP address:', error);
+            document.getElementById('current_ip').textContent = 'Failed to load IP address';
+        }
+    }
+
 </script>

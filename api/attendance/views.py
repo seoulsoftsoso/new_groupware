@@ -10,7 +10,7 @@ from django.db.models import Sum, Value, OuterRef, Subquery, Prefetch
 from django.db.models.expressions import RawSQL, Exists
 from api.attendance.common import DayOfTheWeek, cal_workTime_holiday, cal_workTime, cal_earlyleaveTime, cal_extendTime, \
     cal_workTime_check, PaginatorManager, cal_latenessTime
-from api.models import Attendance, CodeMaster, UserMaster, EventMaster
+from api.models import Attendance, CodeMaster, UserMaster, EventMaster, GroupCodeMaster
 
 
 def last_attendance(request):
@@ -339,3 +339,11 @@ class work_history_search(ListView):
         context['eventmaster'] = EventMaster.objects.all()
         return context
 
+
+def get_company_ip_info(request):
+    company_ip_info = CodeMaster.objects.filter(group_id=9).values()
+
+    context = {}
+    context['company_ip_info'] = list(company_ip_info)
+
+    return JsonResponse(context, safe=False)
