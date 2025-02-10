@@ -538,11 +538,11 @@
 
             let imageStyle = '';
             if (status === '승인' || status === '완료') {
-                imageStyle = 'border: 6px solid #71DD37;';
+                imageStyle = 'border: 4px solid #71DD37;';
             } else if (status === '대기') {
-                imageStyle = 'border: 6px solid #696CFF;';
+                imageStyle = 'border: 4px solid #696CFF;';
             } else if (status === '반려') {
-                imageStyle = 'border: 6px solid #FF3E1D;';
+                imageStyle = 'border: 4px solid #FF3E1D;';
             }
 
             return `
@@ -552,7 +552,7 @@
                      style="border-radius: 50%; width: 80px; height: 80px; object-fit: cover; display: block; margin: 0 auto; ${imageStyle}">
                 <div class="my-0" style="font-weight: bold; white-space: nowrap;">${name}</div>
                 <div class="my-0" style="font-size: 14px; color: #555;">${date}</div>
-                <div class="my-2" style="font-size: 20px; color: #555;"><span class="badge ${statusBadge}">${status}</span></div>
+                <div class="my-2" style="font-size: 16px; color: #555;"><span class="badge ${statusBadge}">${status}</span></div>
             </div>
         `;
         };

@@ -266,7 +266,7 @@
     
 
     function a_draw_table(done) {
-        console.log("a_draw_table: ", done);
+        // console.log("a_draw_table: ", done);
 
         let data = done.summary;
         if (data.length === 0) {
@@ -311,11 +311,11 @@
                         ${createLink(detail.total_period_count, detail)}
                     </td>`).join('')}
                 <td name='leave_balance' style="text-align:center;">${item.leave_balance}</td>
-                {% comment %}<td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">${leaveRate}</td>{% endcomment %}
-                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">
-                    <div class="progress-container">
+                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;" class="tooltip_top" data-tooltip="초록색 : 3개월 이내 연차 충전\n하늘색: 6개월 이내 연차 충전\n노란색: 9개월 이내 연차 충전\n빨간색: 12개월 이내 연차 충전">
+                    <div class="progress-container" style="cursor: help;">
                         <span class="progress-text">${leaveRate}%</span>
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" data-rate="${leaveRate}"></div>
+                        <div class="progress-bar ${getProgressBarColor(item.employment_date)}" 
+                             data-rate="${leaveRate}" style="width: ${leaveRate}%;"></div>
                     </div>
                 </td>
             </tr>`;
@@ -326,28 +326,31 @@
         $('#a_tbody').html(rows);
     }
     
+    function getProgressBarColor(employmentDate) {
+        let today = new Date();
+        let hireDate = new Date(employmentDate);
+        
+        // 입사일의 월/일과 현재 날짜 비교
+        if (today.getMonth() > hireDate.getMonth() || 
+           (today.getMonth() === hireDate.getMonth() && today.getDate() >= hireDate.getDate())) {
+            // 입사일이 현재 날짜보다 과거라면 다음 해를 기준으로 계산
+            hireDate.setFullYear(today.getFullYear() + 1);
+        } else {
+            // 입사일이 현재 날짜보다 미래라면 올해 기준
+            hireDate.setFullYear(today.getFullYear());
+        }
+    
+        let diffMonths = (hireDate.getFullYear() - today.getFullYear()) * 12 + (hireDate.getMonth() - today.getMonth());
+    
+        if (diffMonths < 3) return "bg-success-subtle";  // 3개월 이내
+        if (diffMonths < 6) return "bg-info-subtle";     // 3~6개월
+        if (diffMonths < 9) return "bg-warning-subtle";  // 6~9개월
+        return "bg-danger-subtle";                       // 9~12개월
+    }
+    
     
     function openAndExecuteScript(year, month, userName) {
         let newWindow = window.open(`/admins/leave_manage?year=${year}&month=${month}&user_name=${userName}`, '_blank', 'width=1199,height=800');
-    
-        {% comment %}newWindow.onload = function () {
-            let doc = newWindow.document;
-            let firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
-            let lastDate = new Date(year, month, 0).getDate();
-            let lastDay = `${year}-${String(month).padStart(2, '0')}-${lastDate}`;
-    
-            doc.querySelector('#a_page_size').value = 200;
-            doc.querySelector('#date_sch_from').value = firstDay;
-            doc.querySelector('#date_sch_to').value = lastDay;
-            doc.querySelector('#all_sch').value = decodeURIComponent(userName);
-    
-            let searchButton = doc.querySelector('#all_sch_btn');
-            if (searchButton) {
-                searchButton.click();
-            } else {
-                console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
-            }
-        };{% endcomment %}
     }
 
     
@@ -355,12 +358,4 @@
         const holidayInfoUrl = "{% url 'holidayInfo' %}";
         window.open(holidayInfoUrl, '_blank', 'width=1199,height=1000');
     }
-
-    // Progress bar 애니메이션 적용
-    setTimeout(() => {
-        document.querySelectorAll('.progress-bar').forEach(bar => {
-            let rate = bar.getAttribute('data-rate');
-            bar.style.width = rate + '%';
-        });
-    }, 100);
 </script>

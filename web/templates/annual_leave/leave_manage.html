@@ -806,7 +806,9 @@
         // 검색 버튼 자동 클릭
         let searchButton = document.querySelector('#all_sch_btn');
         if (searchButton) {
-            searchButton.click();
+            setTimeout(() => {
+                searchButton.click();
+            }, 500);
         } else {
             console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
         }
