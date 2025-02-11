@@ -193,7 +193,8 @@
                             <th id="m11" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">11월</th>
                             <th id="m12" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">12월</th>
                             <th id="leave_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">잔여</th>
-                            <th id="leave_rate" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">잔여율</th>
+                            <th id="leave_rate" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">잔여율<i class="fa-regular fa-circle-question fa-sm mx-1" style="vertical-align: super;"
+                            data-toggle="tooltip" data-placement="top" title="초록색 : 3개월 이내 연차 충전<br>하늘색: 6개월 이내 연차 충전<br>노란색: 9개월 이내 연차 충전<br>빨간색: 12개월 이내 연차 충전"></i></th>
                         </tr>
                     </thead>
                     <tbody id="a_tbody"></tbody>
@@ -311,8 +312,8 @@
                         ${createLink(detail.total_period_count, detail)}
                     </td>`).join('')}
                 <td name='leave_balance' style="text-align:center;">${item.leave_balance}</td>
-                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;" class="tooltip_top" data-tooltip="초록색 : 3개월 이내 연차 충전\n하늘색: 6개월 이내 연차 충전\n노란색: 9개월 이내 연차 충전\n빨간색: 12개월 이내 연차 충전">
-                    <div class="progress-container" style="cursor: help;">
+                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">
+                    <div class="progress-container">
                         <span class="progress-text">${leaveRate}%</span>
                         <div class="progress-bar ${getProgressBarColor(item.employment_date)}" 
                              data-rate="${leaveRate}" style="width: ${leaveRate}%;"></div>

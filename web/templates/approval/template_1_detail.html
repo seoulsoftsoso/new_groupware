@@ -9,19 +9,6 @@
         white-space: nowrap;
     }
 
-    .status-banner {
-        position: absolute;
-        top: 90px;
-        right: 50px;
-        font-size: 60px;
-        font-weight: bold;
-        color: red;
-        border: 10px double red;
-        padding: 10px 20px;
-        transform: rotate(10deg);
-        background-color: rgba(255, 0, 0, 0.2);
-    }
-
     .attached_hover:hover {
         text-decoration: underline;
         color: midnightblue !important;
@@ -133,12 +120,6 @@
             display: none;
         }
 
-        .status-banner {
-            position: absolute;
-            top: 90px;
-            right: 20px;
-            font-size: 24px;
-        }
         input[id="away_from"],
         input[id="away_to"] {
             width: 120px !important;
@@ -160,8 +141,6 @@
         <!-- header -->
         <div class="layout-page" style="">
             {% include 'admins/topnav.html' %}
-
-            <div class="status-banner d-none" id="document_status"></div>
 
             <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column pb-2" style="padding: 0 2% 0 2%;">
                 <div>
@@ -215,8 +194,9 @@
                                 </div>
                                 <div class="approval_info_area" style="border: 1px solid #ddd; margin: auto 20px auto 0;">
                                     <div class="d-flex justify-content-start" style="height:237px;">
-                                        <div class="justify-content-start align-items-center px-3" id="approval_flow" style="display: flex; width: 100%; overflow-x: auto; white-space: nowrap;">
-                                        </div>
+                                        <div class="d-flex flex-column px-4 mx-2" id="approval_status"></div>
+                                        <div class="d-flex justify-content-start align-items-center my-5" style="border-right: 1px solid #dddddd;"></div>
+                                        <div class="justify-content-start align-items-center px-3" id="approval_flow" style="display: flex; width: 100%; overflow-x: auto; white-space: nowrap;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -386,7 +366,7 @@
     }
 
     function draw_apv_detail(done) {
-        console.log("draw_apv_detail: ", done);
+        // console.log("draw_apv_detail: ", done);
         
         let data = done.results[0];
         next_approver = done.next_approver;
@@ -433,16 +413,34 @@
         document.getElementById('period_to_half').value = data.period_to_half;
         document.getElementById('period_count').value = data.period_count;
         document.getElementById('special_comment').value = data.special_comment;
-        if (data.apv_status !== "진행") {
-            document.getElementById('document_status').classList.remove('d-none');
-            document.getElementById('document_status').textContent = '결재 ' + data.apv_status;
-        }
 
         draw_apv_approval_flow(data);
         draw_apv_cc_users(data);
         draw_apv_attached_files(data);
         draw_comments(data);
+        draw_apv_status(data);
     }
+    
+    
+    function draw_apv_status(data) {
+        if (data.apv_status == "완료") {
+            document.getElementById('approval_status').innerHTML = '';
+            document.getElementById('approval_status').innerHTML = `
+            <img src="{% static 'img/apv_approved.gif'%}" width="100px" height="100px" style="margin: auto auto 6px auto;">
+            <span class="badge text-bg-success" style="margin: 6px auto auto auto; font-size: 20px;">결재 완료</span>`
+        } else if (data.apv_status === "진행") {
+            document.getElementById('approval_status').innerHTML = '';
+            document.getElementById('approval_status').innerHTML = `
+            <img src="{% static 'img/apv_progress.gif'%}" width="100px" height="100px" style="margin: auto auto 6px auto;">
+            <span class="badge text-bg-primary" style="margin: 6px auto auto auto; font-size: 20px;">결재 진행중</span>`
+        } else if (data.apv_status === "반려") {
+            document.getElementById('approval_status').innerHTML = '';
+            document.getElementById('approval_status').innerHTML = `
+            <img src="{% static 'img/apv_rejected.gif'%}" width="100px" height="100px" style="margin: auto auto 6px auto;">
+            <span class="badge text-bg-danger" style="margin: 6px auto auto auto; font-size: 20px;">결재 반려</span>`
+        }
+    }
+    
 
     function draw_apv_attached_files(data) {
         let attachedFilesDiv = document.getElementById('attached_files');

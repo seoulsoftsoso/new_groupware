@@ -407,17 +407,6 @@
         a_search();
     }
 
-    {% comment %}function a_search_click() {
-        a_click_id = null;
-        a_nation.page = 1;
-        a_nation_data.page_size = document.getElementById("a_page_size").value;
-
-        date_sch_from = $("#date_sch_from").val();
-        date_sch_to = $("#date_sch_to").val();
-        all_sch = $('#all_sch').val();
-
-        a_search();
-    }{% endcomment %}
 
     function a_search() {
         let query = "?page=" + a_nation.page + "&page_size=" + a_nation_data.page_size;
@@ -430,6 +419,7 @@
         });
     }
 
+    
     function a_draw_table(done) {
         // console.log("a_draw_table: ", done);
 
@@ -782,55 +772,6 @@
     }
 
 
-{% comment %}    window.onload = function () {
-        function getQueryParam(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        // 파라미터 값 가져오기
-        const year = getQueryParam('year');
-        const month = getQueryParam('month');
-        const userName = getQueryParam('user_name');
-
-        // 날짜 범위 계산
-        if (year && month) {
-            let firstDay = `${year}-${String(month).padStart(2, '0')}-01`;
-            let lastDate = new Date(year, month, 0).getDate();
-            let lastDay = `${year}-${String(month).padStart(2, '0')}-${lastDate}`;
-
-            // 날짜 필터 적용
-            document.querySelector('#date_sch_from').value = firstDay;
-            document.querySelector('#date_sch_to').value = lastDay;
-        }
-
-        // 연도 선택 필터 적용
-        if (year) {
-            let yearSelect = document.querySelector('#a_year_filter');
-            if (yearSelect) {
-                yearSelect.value = year;
-            }
-        }
-
-        // 이름 검색 필터 적용
-        if (userName) {
-            let nameInput = document.querySelector('#all_sch');
-            if (nameInput) {
-                nameInput.value = decodeURIComponent(userName);
-            }
-        }
-
-        // 검색 버튼 자동 클릭
-        let searchButton = document.querySelector('#all_sch_btn');
-        if (searchButton) {
-            setTimeout(() => {
-                searchButton.click();
-            }, 500);
-        } else {
-            console.error('id="all_sch_btn" 버튼을 찾을 수 없습니다.');
-        }
-    };{% endcomment %}
-
     window.onload = function () {
         function getQueryParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -855,8 +796,6 @@
         document.querySelector('#date_sch_to').value = lastDay;
         document.querySelector('#all_sch').value = userName;
         a_search_click(firstDay, lastDay, userName);
-        
-        {% comment %}a_search_init(firstDay, lastDay, userName);{% endcomment %}
     };
 
 </script>

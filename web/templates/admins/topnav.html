@@ -369,4 +369,12 @@
 
     updateTime();
     setInterval(updateTime, 1000);
+    
+    // 부트스트랩 툴팁 적용 : data-toggle="tooltip" data-placement="top" title="툴팁내용입력" //
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            html: true
+        });
+    });
+
 </script>
