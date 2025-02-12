@@ -7,7 +7,7 @@ body.login #content { width: 300px; margin: 0 350px; }
 
 #header { height: 66px !important; background: #fff; border-bottom: solid 3px #dfdfdf; color: #000; }
 #header #user-tools a { color: #000; }
-#header #site-name a { display: block; width: 150px; height: 66px; background: url(../img/logo.jpg); color: #000; text-indent: -9999px; }
+#header #site-name a { display: block; width: 150px; height: 66px; background: url(../img/logo_m.png); color: #000; text-indent: -9999px; }
 
 div.breadcrumbs { border-bottom: solid 1px #dfdfdf; }
 .module h2, .module caption, .inline-group h2 {background: #404040;}

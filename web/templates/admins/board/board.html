@@ -381,7 +381,16 @@
         });
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        // 현재 URL에서 cm_id 값 추출
+        let urlParts = window.location.pathname.split('/');  // URL을 '/' 기준으로 나눔
+        let cm_id = urlParts[urlParts.length - 1];  // URL의 마지막 값을 cm_id로 사용
 
+        // cm_id가 숫자인지 확인 후 실행
+        if (!isNaN(cm_id) && cm_id.trim() !== "") {
+            renderlist(cm_id);
+        }
+    });
 
 
 </script>

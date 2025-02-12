@@ -71,6 +71,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: none;
     }
 
     .progress-text {
@@ -119,8 +120,8 @@
 
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
-
-        {% include 'admins/index_sidemenu.html' %}
+    
+    {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
         <div class="layout-page">
@@ -175,25 +176,25 @@
                 <table class="dt-multilingual table border-top table table-hover" style="border-left: none; border-right: none; table-layout: fixed; width: 100%; min-width: 1000px;">
                     <thead>
                         <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
-                            <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">순번</th>
-                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">이름</th>
-                            <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">입사일</th>
-                            <th id="working_years" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; border-right: 1px solid #d9dee3;">근속년수</th>
-                            <th id="initial_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">이월</th>
-                            <th id="m01" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">1월</th>
-                            <th id="m02" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">2월</th>
-                            <th id="m03" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">3월</th>
-                            <th id="m04" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">4월</th>
-                            <th id="m05" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">5월</th>
-                            <th id="m06" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">6월</th>
-                            <th id="m07" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">7월</th>
-                            <th id="m08" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">8월</th>
-                            <th id="m09" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">9월</th>
-                            <th id="m10" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">10월</th>
-                            <th id="m11" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">11월</th>
-                            <th id="m12" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; border-right: 1px solid #d9dee3;">12월</th>
-                            <th id="leave_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">잔여</th>
-                            <th id="leave_rate" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%;">잔여율<i class="fa-regular fa-circle-question fa-sm mx-1" style="vertical-align: super;"
+                            <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 4%; padding: 4px;">순번</th>
+                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; padding: 4px;">이름</th>
+                            <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; padding: 4px;">입사일</th>
+                            <th id="working_years" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; padding: 4px; border-right: 1px solid #d9dee3;">근속년수</th>
+                            <th id="initial_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">이월</th>
+                            <th id="m01" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">1월</th>
+                            <th id="m02" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">2월</th>
+                            <th id="m03" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">3월</th>
+                            <th id="m04" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">4월</th>
+                            <th id="m05" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">5월</th>
+                            <th id="m06" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">6월</th>
+                            <th id="m07" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">7월</th>
+                            <th id="m08" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">8월</th>
+                            <th id="m09" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">9월</th>
+                            <th id="m10" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">10월</th>
+                            <th id="m11" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">11월</th>
+                            <th id="m12" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px; border-right: 1px solid #d9dee3;">12월</th>
+                            <th id="leave_balance" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%; padding: 4px;">잔여</th>
+                            <th id="leave_rate" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 8%; padding: 4px;">잔여율<i class="fa-regular fa-circle-question fa-sm mx-1" style="vertical-align: super;"
                             data-toggle="tooltip" data-placement="top" title="초록색 : 3개월 이내 연차 충전<br>하늘색: 6개월 이내 연차 충전<br>노란색: 9개월 이내 연차 충전<br>빨간색: 12개월 이내 연차 충전"></i></th>
                         </tr>
                     </thead>
@@ -302,17 +303,17 @@
     
             let row = `
             <tr id='${item.details[0].year}_${item.create_by}'>
-                <td name="list_no" class="" style="text-align:center;">${num + i}</td>
-                <td name='user_name' style="text-align:center;">${item.create_by}</td>
-                <td name='working_years' style="text-align:center;">${item.employment_date}</td>
-                <td name='employment_date' style="text-align:center; border-right: 1px solid #d9dee3;">${item.working_years + "년차"}</td>
-                <td name='initial_balance' style="text-align:center; border-right: 1px solid #d9dee3;">${item.initial_balance}</td>
+                <td name="list_no" class="" style="text-align:center; padding: 4px;">${num + i}</td>
+                <td name='user_name' style="text-align:center; padding: 4px;">${item.create_by}</td>
+                <td name='working_years' style="text-align:center; padding: 4px;">${item.employment_date}</td>
+                <td name='employment_date' style="text-align:center; border-right: 1px solid #d9dee3; padding: 4px;">${item.working_years + "년차"}</td>
+                <td name='initial_balance' style="text-align:center; border-right: 1px solid #d9dee3; padding: 4px;">${item.initial_balance}</td>
                 ${item.details.map(detail => `
-                    <td name='m${String(detail.month).padStart(2, '0')}' style="text-align:center; border-right: 1px solid #d9dee3;">
+                    <td name='m${String(detail.month).padStart(2, '0')}' style="text-align:center; border-right: 1px solid #d9dee3; padding: 4px;">
                         ${createLink(detail.total_period_count, detail)}
                     </td>`).join('')}
-                <td name='leave_balance' style="text-align:center;">${item.leave_balance}</td>
-                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3;">
+                <td name='leave_balance' style="text-align:center; padding: 4px;">${item.leave_balance}</td>
+                <td name='leave_rate' style="text-align:center; border-right: 1px solid #d9dee3; padding: 4px;">
                     <div class="progress-container">
                         <span class="progress-text">${leaveRate}%</span>
                         <div class="progress-bar ${getProgressBarColor(item.employment_date)}" 

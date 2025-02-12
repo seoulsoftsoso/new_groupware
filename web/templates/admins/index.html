@@ -2,15 +2,18 @@
 
 {% load static %}
 <!DOCTYPE html>
-<html lang="ko">
-<head>
 
-    {% include 'admins/admin_header.html' %}
+<meta charset="UTF-8">
+{% include 'admins/admin_header.html' %}
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
     <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
 
-</head>
 <style>
+    .card {
+        box-shadow: 0 0 0 1px #c2c5c8;
+        height: 100%;
+    }
+    
     .flatpickr-calendar {
         box-shadow: 0 0 0 0 !important;
     }
@@ -41,430 +44,464 @@
             opacity: 0;
         }
     }
+    
+    .apv_hover:hover {
+        color: white !important;
+        background-color: #2a3040;
+        padding: 6px 8px;
+        border-radius: 6px;
+    }
+    
+    .flatpickr-days {
+        border: none !important;    
+    }
+    
 </style>
+
 <body>
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
-
-       {% include 'admins/index_sidemenu.html' %}
+    {% include 'admins/index_sidemenu.html' %}
 
         <!-- header -->
-        <div class="layout-page" style="">
-            {% include 'admins/index_header.html' %}
+        <div class="layout-page">
+            {% include 'admins/topnav.html' %}
 
-            <!-- body1 -->
-            <div class="col-12 row mb-3" style="padding-top: 30px; padding-left: 25px;">
-                <div class="col-md-6 col-lg-6 mb-3">
-                    <div class="card" style="height: 100%">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-header">💬 오늘의 이야기</h5>
-                            <div class="card-header dropdown">
-                                <button type="button"
-                                        class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);" onclick="edit_item_func()">
-                                        <i class="bx bx-edit-alt me-1"></i> 편집</a>
+            <!-- 대시보드 첫번째 행 -->
+            <div class="col-12 row" style="padding-top: 20px; padding-left: 25px;">
+            
+                <!-- 내 정보 -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold">
+                            <a href="{% url 'userSettingsPage' %}" style="color: inherit;">
+                                <i class="fa-regular fa-face-smile fa-bounce me-2"></i>환영합니다, {{ request.user.username }} {{ request.user.job_position.name }}님!
+                            </a>
+                        </h5>
+                        <div class="card-body" style="max-height: 150px; overflow: hidden;">
+                            <div class="d-flex">
+                                <div class="ms-1">
+                                    <img src="/data/{{ request.user.profile_image }}" style="width: 90px; height: 90px; border-radius: 100%;" alt="profile_image">
+                                    <div id="employment_years" class="mt-1" style="color: black; font-size: 12px;">&nbsp;</div>
+                                    <div class="progress position-relative" style="height: 12px;">
+                                        <div id="levelProgressBar" class="progress-bar bg-secondary" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <span id="workingDaysRate" class="progress-text"></span>
+                                    </div>
+                                </div>
+                                <div class="py-2 ms-4 w-100">
+                                    <div class="fw-bold" style="color: black; font-size: 24px;">{{ request.user.username }}</div>
+                                    <div class="text-muted">{{ request.user.department_position.name }} {{ request.user.job_position.name }}</div>
+                                    <hr class="w-100" style="color: #8491a2;">
+                                    <div class="d-flex" style="font-size: 14px;">
+                                        <div class="me-3">
+                                            <i class="fa-solid fa-user-tie me-1" data-toggle="tooltip" data-placement="top" title="근무일 수"></i>
+                                            <span id="working_days"></span>
+                                        </div>
+                                        <div>
+                                            <i class="fa-solid fa-user-clock me-1" data-toggle="tooltip" data-placement="top" title="연차 충전까지"></i>
+                                            <span id="leave_refill_days"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <blockquote class="blockquote mb-0">
-                                <h6 id="editableQuote">
-                                    {{ today_about.content }}
-                                </h6>
-                                <footer class="blockquote-footer" style="display:flex; justify-content: end">
-                                    <cite title="Source Title" id="editableCite">{{ today_about.title }}</cite>
-                                </footer>
-                            </blockquote>
-                        </div>
-                        <div class="card-body justify-content-end btn_div" style="display: none;">
-                            <button type="button" class="btn btn-primary" id="save_btn">저장</button>
-                            <button type="button" class="btn btn-danger" id="cancle_btn" onclick="cancel_edit_func()">취소</button>
+                    </div>
+                </div>              
+                
+                <!-- 내 전자결재 -->
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold">
+                            <a href="{% url 'apv_list' %}" style="color: inherit;">
+                                <i class="fa-regular fa-file-lines me-2"></i>나의 결재
+                            </a>
+                        </h5>
+                        <div class="card-body d-flex justify-content-center align-items-center px-0" style="max-height: 150px; overflow: hidden;">
+                            <div class="d-flex justify-content-center align-items-center w-100">
+                                <div class="col-4 d-flex flex-column align-items-center text-center p-1">
+                                    <a href="#" class="apv_waiting_docs">
+                                        <div class="position-relative d-inline-flex flex-column align-items-center p-2">
+                                        {% if waiting_docs is 0 %}
+                                            <i class="fa-solid fa-envelope-open-text text-muted mb-2" style="font-size: 36px;"></i>
+                                            <span class="apv_hover text-muted text-nowrap" style="font-size: 14px;">미결재 문서</span>
+                                        {% else %}
+                                            <i class="fa-solid fa-envelope-open-text text-dark mb-2" style="font-size: 36px;"></i>
+                                            <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                             style="font-size: 12px; width: 22px; height: 22px; top: 15%; left: 70%; display: flex; align-items: center; justify-content: center;">{{ waiting_docs }}</span>
+                                            <span class="apv_hover text-dark fw-bold text-nowrap" style="font-size: 14px;">미결재 문서</span>
+                                        {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-4 d-flex flex-column align-items-center text-center p-1">
+                                    <a href="#" class="apv_unread_docs">
+                                        <div class="position-relative d-inline-flex flex-column align-items-center p-2">
+                                        {% if unread_docs is 0 %}
+                                            <i class="fa-solid fa-envelope text-muted mb-2" style="font-size: 36px;"></i>
+                                            <span class="apv_hover text-muted text-nowrap" style="font-size: 14px;">읽지않은 문서</span>
+                                        {% else %}
+                                            <i class="fa-solid fa-envelope text-dark mb-2" style="font-size: 36px;"></i>
+                                            <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                             style="font-size: 14px; width: 22px; height: 22px; top: 15%; left: 70%; display: flex; align-items: center; justify-content: center;">{{ unread_docs }}</span>
+                                            <span class="apv_hover text-dark fw-bold text-nowrap" style="font-size: 14px;">읽지않은 문서</span>
+                                        {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-4 d-flex flex-column align-items-center text-center p-1">
+                                    <a href="#" class="apv_my_temp_docs">
+                                        <div class="position-relative d-inline-flex flex-column align-items-center p-2">
+                                        {% if my_temp_docs is 0 %}
+                                            <i class="fa-solid fa-file-pen text-muted mb-2" style="font-size: 36px;"></i>
+                                            <span class="apv_hover text-muted text-nowrap" style="font-size: 14px;">작성중인 문서</span>
+                                        {% else %}
+                                            <i class="fa-solid fa-file-pen text-dark mb-2" style="font-size: 36px;"></i>
+                                            <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                             style="font-size: 14px; width: 22px; height: 22px; top: 15%; left: 70%; display: flex; align-items: center; justify-content: center;">{{ my_temp_docs }}</span>
+                                            <span class="apv_hover text-dark fw-bold text-nowrap" style="font-size: 14px;">작성중인 문서</span>
+                                        {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 col-lg-6 mb-3">
-                    <div class="card" style="height: 100%;">
-                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
-                                <span style="margin-right: 10px;">🎡️ 오늘 연차 : </span>
+                </div> 
+                
+                
+                <!-- 근태 현황-->
+                <div class="col-md-12 col-lg-4 mb-4">
+                    <div class="card" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold">
+                            <a href="{% url 'adminWorkSchedule' %}" style="color: inherit;">
+                                <i class="fa-solid fa-users me-2"></i>근태 현황
+                            </a>
+                        </h5>
+                        <div class="card-body" style="max-height: 150px; overflow: hidden;">
+                            <div class="d-flex align-items-center pb-1 mb-2 text-truncate" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 1px dotted gray;">
+                                <i class="fa-solid fa-house-user" style="margin-right: 5px;"></i>
+                                <strong class="me-1">연차 |</strong>
                                 {% for event in events %}
                                     {% if event.event_type == "Holiday" %}
-                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
+                                        <span class="ms-1">{{ event.create_by }}</span>{% if not forloop.last %},&nbsp;{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
-                                <span style="margin-right: 10px;">🎠 오늘 반차 : </span>
+                            <div class="d-flex align-items-center pb-1 mb-2 text-truncate" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 1px dotted gray;">
+                                <i class="fa-solid fa-person-shelter" style="margin-right: 7px;"></i>
+                                <strong class="me-1">반차 |</strong>
                                 {% for event in events %}
                                     {% if event.event_type == "Family" %}
-                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
+                                        <span class="ms-1">{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
-                                <span style="margin-right: 10px;">💼 오늘 출장 : </span>
+                            <div class="d-flex align-items-center pb-1 mb-2 text-truncate" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 1px dotted gray;">
+                                <i class="fa-solid fa-person-walking-luggage" style="margin-right: 6px;"></i>
+                                <strong class="me-1">출장 |</strong>
                                 {% for event in events %}
                                     {% if event.event_type == "Business" %}
-                                        <span>{{ event.create_by }}</span>,
+                                        <span class="ms-1">{{ event.create_by }}</span>,
                                         {% for participant in event.participant_set.all %}
-                                            <span>{{ participant.cuser }}</span>{% if not forloop.last %},{% endif %}
+                                            <span class="ms-1">{{ participant.cuser }}</span>{% if not forloop.last %},{% endif %}
                                         {% endfor %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
-                                <span style="margin-right: 10px;">🚗 법인차량 사용 : </span>
+                            <div class="d-flex align-items-center pb-1 mb-2 text-truncate" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <i class="fa-solid fa-car-side" style="margin-right: 5px;"></i>
+                                <strong class="me-1">차량 |</strong>
                                 {% for obj in events %}
                                     {% if obj.vehicle %}
-                                        <span>{{ obj.vehicle }}({{ obj.create_by }})</span>{% if not forloop.last %},{% endif %}
+                                        <span class="ms-1">{{ obj.vehicle }}({{ obj.create_by }})</span>{% if not forloop.last %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- body2 -->
-            <div class="col-12 row " style="padding-left: 25px;">
-                <div class="col-md-6 col-lg-2 mb-3">
-                    <div class="card" style="height: 100%;">
-                        <a href="/admins/apv" style="color: inherit;">
-                            <h5 class="card-header">📝 나의 결재</h5></a>
-                        <div class="card-body" style="padding-top: 30px;">
-                            <blockquote class="blockquote mb-0">
-                                <a href="#" class="apv_waiting_docs">
-                                    {% if waiting_docs is 0 %}
-                                        <h6>미결재 문서 : 없음</h6>
-                                    {% else %}
-                                        <h6 style="color: darkred; font-weight: bold;">미결재 문서 : {{ waiting_docs }}건</h6>
-                                    {% endif %}
-                                </a>
-                                <hr>
-                                <a href="#" class="apv_unread_docs">
-                                    {% if unread_docs is 0 %}
-                                        <h6>읽지않은 문서 : 없음</h6>
-                                    {% else %}
-                                        <h6 style="color: darkred; font-weight: bold;">읽지않은 문서 : {{ unread_docs }}건</h6>
-                                    {% endif %}
-                                </a>
-                                <hr>
-                                <a href="#" class="apv_my_temp_docs">
-                                    {% if my_temp_docs is 0 %}
-                                        <h6>작성중인 문서 : 없음</h6>
-                                    {% else %}
-                                        <h6 style="color: darkred; font-weight: bold;">작성중인 문서 : {{ my_temp_docs }}건</h6>
-                                    {% endif %}
-                                </a>
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="card" style="height: 100%;">
-                        <h5 class="card-header">📢 공지사항 최신글</h5>
-                        <div class="card-body">
-                            <blockquote class="blockquote mb-0">
-                                {% for obj in fixed_notice %}
-                                    <a href="{% url 'noticeDetail' obj.id %}">
-                                        <h6>* {{ obj.title }}</h6>
-                                    </a>
-                                {% endfor %}
-                            </blockquote>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="card" style="height: 100%;">
-                        <h5 class="card-header">📢 전사게시판 최신글</h5>
-                        <div class="card-body">
-                            <blockquote class="blockquote mb-0">
-                               {% for obj in fixed_board %}
-                                    <a href="{% url 'boardDetail' obj.id  %}">
-                                        <h6>* {{ obj.title }}</h6>
-                                    </a>
-                                {% endfor %}
-                            </blockquote>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!--body3-->
-            <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
-
-            <div class="container-fluid flex-grow-1 container-p-y">
-              <div class="card app-calendar-wrapper">
-                <div class="row g-0">
-                  <!-- Calendar Sidebar -->
-                  <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" style="width: 18%">
-                    <div class="border-bottom p-4 my-sm-0 mb-3">
-                      <div class="d-grid">
-                          <div style="height: 39px;"> </div>
-                        {% comment %}<button
-                          class="btn btn-outline-primary btn-toggle-sidebar"
-                          style="width: 255px; margin-left: -5px;"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#addEventSidebar"
-                          aria-controls="addEventSidebar">
-                          <i class="bx bx-plus me-1"></i>
-                          <span class="align-middle">일정 추가</span>
-                        </button>{% endcomment %}
-                      </div>
-                    </div>
-                    <div class="p-4">
-                      <!-- inline calendar (flatpicker) -->
-                      <div class="ms-n2">
-                        <div class="inline-calendar"></div>
-                      </div>
-
-                      <hr class="container-m-nx my-4" />
-
-                      <!-- Filter -->
-                      <div class="mb-4">
-                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-                      </div>
-
-                      <div class="form-check mb-2">
-                        <input
-                          class="form-check-input select-all"
-                          type="checkbox"
-                          id="selectAll"
-                          data-value="all"
-                          checked />
-                        <label class="form-check-label" for="selectAll">전체</label>
-                      </div>
-
-                        <div class="app-calendar-events-filter">
-                            <div class="form-check form-check-danger mb-2">
-                                <input
-                                        class="form-check-input input-filter"
-                                        type="checkbox"
-                                        id="select-personal"
-                                        data-value="personal"
-                                        checked/>
-                                <label class="form-check-label" for="select-personal">자리비움</label>
-                            </div>
-
-                            <div class="form-check form-check-warning mb-2">
-                                <input
-                                        class="form-check-input input-filter"
-                                        type="checkbox"
-                                        id="select-family"
-                                        data-value="family"
-                                        checked/>
-                                <label class="form-check-label" for="select-family">반차</label>
-                            </div>
-                            <div class="form-check form-check-success mb-2">
-                                <input
-                                        class="form-check-input input-filter"
-                                        type="checkbox"
-                                        id="select-holiday"
-                                        data-value="holiday"
-                                        checked/>
-                                <label class="form-check-label" for="select-holiday">연차</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input
-                                        class="form-check-input input-filter"
-                                        type="checkbox"
-                                        id="select-business"
-                                        data-value="business"
-                                        checked/>
-                                <label class="form-check-label" for="select-business">출장</label>
-                            </div>
-{#                            <div class="form-check form-check-info">#}
-{#                                <input#}
-{#                                        class="form-check-input input-filter"#}
-{#                                        type="checkbox"#}
-{#                                        id="select-etc"#}
-{#                                        data-value="etc"#}
-{#                                        checked/>#}
-{#                                <label class="form-check-label" for="select-etc">차량(QM3)</label>#}
-{#                            </div>#}
-{#                            <div class="form-check form-check-info" style="margin-top: 8px;">#}
-{#                                <input#}
-{#                                        class="form-check-input input-filter"#}
-{#                                        type="checkbox"#}
-{#                                        id="select-etc"#}
-{#                                        data-value="spotage"#}
-{#                                        checked/>#}
-{#                                <label class="form-check-label" for="select-etc">차량(스포티지)</label>#}
-{#                            </div>#}
+            <!-- 대시보드 두번째 행 -->
+            <div class="col-12 row" style="padding-left: 25px;">
+                
+                <!-- 공지사항 -->
+                <div class="col-md-6 col-lg-6 mb-4">
+                    <div class="card" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold">
+                            <a href="{% url 'adminNotice' %}" style="color: inherit;">
+                                <i class="fa-solid fa-volume-high me-2"></i>공지사항
+                            </a>
+                        </h5>
+                        <div class="card-body" style="max-height: 150px; overflow: hidden;">
+                            {% for obj in fixed_notice %}
+                                <a href="{% url 'noticeDetail' obj.id %}" style="color: inherit; text-decoration: none;">
+                                    <div class="d-flex align-items-center mb-1 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                                        <i class="fa-solid fa-circle me-2" style="font-size: 5px;"></i>
+                                        <span class="flex-grow-1" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">{{ obj.title }}</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
                         </div>
                     </div>
-                  </div>
-                  <!-- /Calendar Sidebar -->
-
-                  <!-- Calendar & Modal -->
-                  <div class="col app-calendar-content">
-                    <div class="card shadow-none border-0">
-                      <div class="card-body pb-0">
-                        <!-- FullCalendar -->
-                        <div id="calendar" style="margin-top: 3px;"></div>
-                      </div>
-                    </div>
-                    <div class="app-overlay"></div>
-                    <!-- FullCalendar Offcanvas -->
-                    <div
-                      class="offcanvas offcanvas-end event-sidebar"
-                      tabindex="-1"
-                      id="addEventSidebar"
-                      aria-labelledby="addEventSidebarLabel">
-                      <div class="offcanvas-header border-bottom">
-                        <h5 class="offcanvas-title mb-2" id="addEventSidebarLabel">일정 추가</h5>
-                        <button
-                          type="button"
-                          class="btn-close text-reset"
-                          data-bs-dismiss="offcanvas"
-                          aria-label="Close"></button>
-                      </div>
-                      <div class="offcanvas-body">
-                        <form class="event-form pt-0" id="eventForm" onsubmit="return false" method="post">
-                            {% csrf_token %}
-                          <div class="mb-3">
-                            <label class="form-label" for="eventTitle">제목</label>
-                            <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" required/>
-                          </div>
-
-                            <div class="mb-3">
-                            <label class="form-label" for="eventStartDate">시작날짜</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="eventStartDate"
-                              name="eventStartDate"
-                              placeholder="시작 날짜" />
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label" for="eventEndDate">종료날짜</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="eventEndDate"
-                              name="eventEndDate"
-                              placeholder="End Date" />
-                          </div>
-                          <div class="mb-3">
-                            <label class="switch">
-                              <input type="checkbox" class="switch-input allDay-switch" />
-                              <span class="switch-toggle-slider">
-                                <span class="switch-on"></span>
-                                <span class="switch-off"></span>
-                              </span>
-                              <span class="switch-label">All Day</span>
-                            </label>
-                          </div>
-
-                          <div class="mb-3">
-                            <label class="form-label" for="eventLabel">구분</label>
-                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                              <option data-label="success" value="Holiday" selected>연차</option>
-                              <option data-label="warning" value="Family">반차</option>
-                              <option data-label="primary" value="Business" id="Business">출장</option>
-                              <option data-label="danger" value="Personal">자리비움</option>
-                            </select>
-                          </div>
-                            <!--이벤트타입 차량 선택 시 활성화-->
-                            <div class="col mb-3" id="radioCheck">
-                                <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
-                                <div class="form-check custom-option custom-option-basic checked">
-                                    <label class="form-check-label custom-option-content" for="customCheckTemp3">
-                                        <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
-                                        <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
-                                    </label>
-                                </div>
-                            </div>
-
-
-                            <div class="mb-3" id="carCheck">
-                                <!-- Basic Custom Radios -->
-                                <div class="col mb-3">
-                                    <label for="nameBasic" class="form-label">*사용차량</label>
-                                    <select
-                                            class="select2 select-event-guests form-select"
-                                            style="width: 250px;"
-                                            id="vehicle_select"
-                                            name="vehicle_select"
-                                            data-placeholder="차량을 선택하세요.">
-                                    </select>
-                                </div>
-                                <!-- /Basic Custom Radios -->
-                            </div>
-                            {% if request.user.is_superuser %}
-                                <div class="mb-3 select2-primary">
-                                    <label class="form-label" for="employee_select">작성자 (관리자 전용)</label>
-                                    <select id="employee_select"
-                                            class="select2 form-select form-select-lg select2-hidden-accessible"
-                                            data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
-                                            aria-hidden="true">
-                                        {% for obj in employee_list %}
-                                            <option data-select2-id="2" value="{{ obj.id }}">
-                                                {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            {% endif %}
-                          <div class="mb-3 select2-primary">
-                            <label class="form-label" for="eventGuests">참석자</label>
-                              <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label" for="eventLocation">장소</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="eventLocation"
-                              name="eventLocation"
-                              placeholder="장소" />
-                          </div>
-                          <div class="mb-3">
-                            <label class="form-label" for="eventDescription">설명</label>
-                            <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
-                          </div>
-                          <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
-                            <div>
-                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1 d-none">등록</button>
-                              <button class="btn btn-primary me-sm-3 me-1" id="approvalButton">전자결재 열기</button>
-                              <button
-                                type="reset"
-                                class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
-                                id="hide_offcanvas"
-                                data-bs-dismiss="offcanvas">
-                                돌아가기
-                              </button>
-                            </div>
-
-                                <div><button id="delete_btn" class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
-
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- /Calendar & Modal -->
                 </div>
-              </div>
+                
+                <!-- 전사게시판 -->
+                <div class="col-md-6 col-lg-6 mb-4">
+                    <div class="card" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold">
+                            <a href="{% url 'adminBoard' %}" style="color: inherit;">
+                                <i class="fa-solid fa-volume-low me-2"></i>전사게시판
+                            </a>
+                        </h5>
+                        <div class="card-body" style="max-height: 150px; overflow: hidden;">
+                            {% for obj in fixed_board %}
+                                <a href="{% url 'boardDetail' obj.id  %}" style="color: inherit; text-decoration: none;">
+                                    <div class="d-flex align-items-center mb-1 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                                        <i class="fa-solid fa-circle me-2" style="font-size: 5px;"></i>
+                                        <span class="flex-grow-1" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">{{ obj.title }}</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- 대시보드 세번째 행 -->
+            <div class="col-12 row" style="padding-left: 25px;">
+                <div class="col-12 mb-4">
+                    <div class="card app-calendar-wrapper" style="color: #2a3040;">
+                        <!-- Calendar Sidebar -->
+                        <div class="row g-0">
+                            <div class="app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" style="width: 280px;">
+                                <div class="p-4 my-sm-0 mb-3">
+                                    <div class="d-grid">
+                                        <div style="height: 10px;"> </div>
+                                        {% comment %}<button
+                                          class="btn btn-outline-primary btn-toggle-sidebar"
+                                          style="width: 255px; margin-left: -5px;"
+                                          data-bs-toggle="offcanvas"
+                                          data-bs-target="#addEventSidebar"
+                                          aria-controls="addEventSidebar">
+                                          <i class="bx bx-plus me-1"></i>
+                                          <span class="align-middle">일정 추가</span>
+                                        </button>{% endcomment %}
+                                    </div>
+                                </div>
+                                
+                                <!-- inline calendar (flatpicker) -->
+                                <div class="py-3 px-2">
+                                    <div class="inline-calendar" style="margin: auto;"></div>
+                                    
+                                    <!-- Filter -->
+                                    <div class="p-3 mt-3">
+                                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
+                                            <div class="form-check form-check-dark my-2">
+                                                <input
+                                                    class="form-check-input select-all"
+                                                    type="checkbox"
+                                                    id="selectAll"
+                                                    data-value="all"
+                                                    checked />
+                                                <label class="form-check-label" for="selectAll">전체</label>
+                                            </div>
+                                            
+                                        <div class="app-calendar-events-filter">
+                                            <div class="form-check form-check-danger my-2">
+                                                <input
+                                                    class="form-check-input input-filter"
+                                                    type="checkbox"
+                                                    id="select-personal"
+                                                    data-value="personal"
+                                                    checked/>
+                                                <label class="form-check-label" for="select-personal">자리비움</label>
+                                            </div>
+                
+                                            <div class="form-check form-check-warning my-2">
+                                                <input
+                                                    class="form-check-input input-filter"
+                                                    type="checkbox"
+                                                    id="select-family"
+                                                    data-value="family"
+                                                    checked/>
+                                                <label class="form-check-label" for="select-family">반차</label>
+                                            </div>
+                                            
+                                            <div class="form-check form-check-success my-2">
+                                                <input
+                                                    class="form-check-input input-filter"
+                                                    type="checkbox"
+                                                    id="select-holiday"
+                                                    data-value="holiday"
+                                                    checked/>
+                                                <label class="form-check-label" for="select-holiday">연차</label>
+                                            </div>
+                                            
+                                            <div class="form-check my-2">
+                                                <input
+                                                    class="form-check-input input-filter"
+                                                    type="checkbox"
+                                                    id="select-business"
+                                                    data-value="business"
+                                                    checked/>
+                                                <label class="form-check-label" for="select-business">출장</label>
+                                            </div>
+                                        </div>
+                                  
+                                        {% comment %}<div class="form-check form-check-info">
+                                            <input
+                                                class="form-check-input input-filter"
+                                                type="checkbox"
+                                                id="select-etc"
+                                                data-value="etc"
+                                                checked/>
+                                            <label class="form-check-label" for="select-etc">차량(QM3)</label>
+                                        </div>
+                                        
+                                        <div class="form-check form-check-info" style="margin-top: 8px;">
+                                            <input
+                                                class="form-check-input input-filter"
+                                                type="checkbox"
+                                                id="select-etc"
+                                                data-value="spotage"
+                                                checked/>
+                                            <label class="form-check-label" for="select-etc">차량(스포티지)</label>
+                                        </div>{% endcomment %}
+                                    </div>
+                                </div>
+                        </div>
+                        <!-- /Calendar Sidebar -->
+        
+                        <!-- Calendar & Modal -->
+                        <div class="col app-calendar-content">
+                            <div class="card shadow-none border-0">
+                                <div class="card-body pb-0">
+                                
+                                    <!-- FullCalendar -->
+                                    <div id="calendar" style="margin-top: 3px;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="app-overlay"></div>
+                            
+                            <!-- FullCalendar Offcanvas -->
+                            <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar" aria-labelledby="addEventSidebarLabel">
+                                <div class="offcanvas-header border-bottom">
+                                    <h5 class="offcanvas-title mb-2" id="addEventSidebarLabel">일정 추가</h5>
+                                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                
+                                <div class="offcanvas-body">
+                                    <form class="event-form pt-0" id="eventForm" onsubmit="return false" method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventTitle">제목</label>
+                                        <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventStartDate">시작날짜</label>
+                                        <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="시작 날짜" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventEndDate">종료날짜</label>
+                                        <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="End Date" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="switch">
+                                            <input type="checkbox" class="switch-input allDay-switch" />
+                                            <span class="switch-toggle-slider">
+                                                <span class="switch-on"></span>
+                                                <span class="switch-off"></span>
+                                            </span>
+                                            <span class="switch-label">All Day</span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventLabel">구분</label>
+                                        <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+                                            <option data-label="success" value="Holiday" selected>연차</option>
+                                            <option data-label="warning" value="Family">반차</option>
+                                            <option data-label="primary" value="Business" id="Business">출장</option>
+                                            <option data-label="danger" value="Personal">자리비움</option>
+                                        </select>
+                                    </div>
+                                    <!--이벤트타입 차량 선택 시 활성화-->
+                                    <div class="col mb-3" id="radioCheck">
+                                        <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
+                                        <div class="form-check custom-option custom-option-basic checked">
+                                            <label class="form-check-label custom-option-content" for="customCheckTemp3">
+                                                <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
+                                                <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3" id="carCheck">
+                                        <!-- Basic Custom Radios -->
+                                        <div class="col mb-3">
+                                            <label for="nameBasic" class="form-label">*사용차량</label>
+                                            <select
+                                                    class="select2 select-event-guests form-select"
+                                                    style="width: 250px;"
+                                                    id="vehicle_select"
+                                                    name="vehicle_select"
+                                                    data-placeholder="차량을 선택하세요.">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {% if request.user.is_superuser %}
+                                    <div class="mb-3 select2-primary">
+                                        <label class="form-label" for="employee_select">작성자 (관리자 전용)</label>
+                                        <select id="employee_select"
+                                                class="select2 form-select form-select-lg select2-hidden-accessible"
+                                                data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                                aria-hidden="true">
+                                            {% for obj in employee_list %}
+                                                <option data-select2-id="2" value="{{ obj.id }}">
+                                                    {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mb-3 select2-primary">
+                                        <label class="form-label" for="eventGuests">참석자</label>
+                                        <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventLocation">장소</label>
+                                        <input type="text" class="form-control" id="eventLocation" name="eventLocation" placeholder="장소" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="eventDescription">설명</label>
+                                        <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
+                                    </div>
+                                    <div class="my-4 d-flex justify-content-start">
+                                        <button type="submit" class="btn btn-primary btn-add-event me-3 d-none">등록</button>
+                                        <button class="btn btn-dark me-3" id="approvalButton">전자결재 열기</button>
+                                        <button type="reset" class="btn btn-label-secondary btn-cancel me-3"
+                                                id="hide_offcanvas" data-bs-dismiss="offcanvas">돌아가기</button>
+                                        <button id="delete_btn" class="btn btn-label-danger btn-delete-event me-3 d-none">Delete</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Calendar & Modal -->
+                    </div>
+                    </div>
+                </div>
             <!-- / Content -->
+            </div>
         </div>
-
-
-
-    </div>
-
     </div>
 </div>
 
 </body>
-</html>
 
-<!--footer-->
+<!-- footer -->
 {% include 'admins/admin_footer.html' %}
 
 <!-- Vendors JS -->
@@ -479,14 +516,11 @@
 <!-- Page JS -->
 <script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
 <script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
-<script type="text/javascript">
-    var request_isSuperuser = {{ request.user.is_superuser|lower }};
-    var request_userId = {{ request.user.id }};
-</script>
 <script>
+    let request_isSuperuser = {{ request.user.is_superuser|lower }};
+    let request_userId = {{ request.user.id }};
 
     $(function (event) {
-
         setTimeout(function() {
             calendar.refetchEvents();
         }, 1500);
@@ -512,7 +546,6 @@
 
     var input = document.querySelector('input[name=TagifyUserList]');
     var tagify = new Tagify(input);
-
 
     $(document).on('click', '.btn-add-event', function(e) {
         e.preventDefault();
@@ -709,7 +742,6 @@
 
         document.getElementById('editableQuote').contentEditable = "true";
         document.getElementById('editableCite').contentEditable = "true";
-
         document.getElementById('editableQuote').focus();
 
         $('#save_btn').click(function () {
@@ -858,5 +890,33 @@
             }, 500); // 애니메이션 시간(0.5초) 후 삭제
         }, delay);
     }
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        let employmentDateStr = '{{ request.user.employment_date|date:'Y-m-d' }}';
+        let employmentDate = new Date(employmentDateStr);
+        let today = new Date();
+
+        let workingDays = Math.floor((today - employmentDate) / (1000 * 60 * 60 * 24));  // 근무일수
+        let workingYears = Math.floor(workingDays / 365);  // 레벨
+        
+        let nextAnniversary = new Date(today.getFullYear(), employmentDate.getMonth(), employmentDate.getDate());
+        if (nextAnniversary < today) {
+            nextAnniversary.setFullYear(today.getFullYear() + 1);
+        }
+        let leave_refill_days = Math.ceil((nextAnniversary - today) / (1000 * 60 * 60 * 24));
+        
+        let workingDaysPer = (((workingDays / 365) - workingYears) * 100).toFixed(1);  // 경험치
+
+        document.getElementById("employment_years").textContent = 'Lv ' + workingYears;
+        document.getElementById("working_days").textContent = '+' + workingDays + ' days';
+        document.getElementById("leave_refill_days").textContent = '-' + leave_refill_days + ' days';
+        document.getElementById("workingDaysRate").textContent = workingDaysPer + '%';
+        
+        // Progress Bar 업데이트
+        let progressBar = document.getElementById("levelProgressBar");
+        progressBar.style.width = workingDaysPer + "%";
+        progressBar.setAttribute("aria-valuenow", workingDaysPer);
+    });
 </script>
 

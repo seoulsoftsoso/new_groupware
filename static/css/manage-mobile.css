@@ -33,7 +33,7 @@ body { max-width: 520px; margin: 0 auto; padding: 0; }
 .container .content .content-box { width: 100%; margin: 0; padding: 10px 10px; border-top: solid 1px #dfdfdf; }
 .container .content .content-box .tab-content { width: 100%; padding: 0; }
 .container .content .content-box .tab-content .tab-pane { width: 100%; padding: 0; }
-.container .content .content-box .tab-content .tab-pane .search { margin: 10px; 10px; }
+.container .content .content-box .tab-content .tab-pane .search { margin: 10px 10px; }
 .container .content .content-box .tab-content .tab-pane .mobile-none { display: none; }
 
 .container .content .content-box .tab-content .tab-pane .search form {  }

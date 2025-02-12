@@ -1,0 +1,862 @@
+<!-- 대시보드 캘린더 -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    {% include 'admins/admin_header.html' %}
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'sneat/assets/vendor/libs/flatpickr/flatpickr.css' %}"/>
+
+</head>
+<style>
+    .flatpickr-calendar {
+        box-shadow: 0 0 0 0 !important;
+    }
+
+    .animate-slide-in {
+        animation: slide-in 0.5s forwards;
+    }
+    .animate-slide-out {
+        animation: slide-out 0.5s forwards;
+    }
+    @keyframes slide-in {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slide-out {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+</style>
+<body>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+
+       {% include 'admins/index_sidemenu.html' %}
+
+        <!-- header -->
+        <div class="layout-page" style="">
+            {% include 'admins/index_header.html' %}
+
+            <!-- body1 -->
+            <div class="col-12 row mb-3" style="padding-top: 30px; padding-left: 25px;">
+                <div class="col-md-6 col-lg-6 mb-3">
+                    <div class="card" style="height: 100%">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-header">💬 오늘의 이야기</h5>
+                            <div class="card-header dropdown">
+                                <button type="button"
+                                        class="btn p-0 dropdown-toggle hide-arrow"
+                                        data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="edit_item_func()">
+                                        <i class="bx bx-edit-alt me-1"></i> 편집</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <h6 id="editableQuote">
+                                    {{ today_about.content }}
+                                </h6>
+                                <footer class="blockquote-footer" style="display:flex; justify-content: end">
+                                    <cite title="Source Title" id="editableCite">{{ today_about.title }}</cite>
+                                </footer>
+                            </blockquote>
+                        </div>
+                        <div class="card-body justify-content-end btn_div" style="display: none;">
+                            <button type="button" class="btn btn-primary" id="save_btn">저장</button>
+                            <button type="button" class="btn btn-danger" id="cancle_btn" onclick="cancel_edit_func()">취소</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 mb-3">
+                    <div class="card" style="height: 100%;">
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🎡️ 오늘 연차 : </span>
+                                {% for event in events %}
+                                    {% if event.event_type == "Holiday" %}
+                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🎠 오늘 반차 : </span>
+                                {% for event in events %}
+                                    {% if event.event_type == "Family" %}
+                                        <span>{{ event.create_by }}</span>{% if not forloop.last %},{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">💼 오늘 출장 : </span>
+                                {% for event in events %}
+                                    {% if event.event_type == "Business" %}
+                                        <span>{{ event.create_by }}</span>,
+                                        {% for participant in event.participant_set.all %}
+                                            <span>{{ participant.cuser }}</span>{% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-body d-flex flex-row py-3" style="border-bottom: lightgrey 1px solid;">
+                                <span style="margin-right: 10px;">🚗 법인차량 사용 : </span>
+                                {% for obj in events %}
+                                    {% if obj.vehicle %}
+                                        <span>{{ obj.vehicle }}({{ obj.create_by }})</span>{% if not forloop.last %},{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- body2 -->
+            <div class="col-12 row " style="padding-left: 25px;">
+                <div class="col-md-6 col-lg-2 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <a href="/admins/apv" style="color: inherit;">
+                            <h5 class="card-header">📝 나의 결재</h5></a>
+                        <div class="card-body" style="padding-top: 30px;">
+                            <blockquote class="blockquote mb-0">
+                                <a href="#" class="apv_waiting_docs">
+                                    {% if waiting_docs is 0 %}
+                                        <h6>미결재 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">미결재 문서 : {{ waiting_docs }}건</h6>
+                                    {% endif %}
+                                </a>
+                                <hr>
+                                <a href="#" class="apv_unread_docs">
+                                    {% if unread_docs is 0 %}
+                                        <h6>읽지않은 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">읽지않은 문서 : {{ unread_docs }}건</h6>
+                                    {% endif %}
+                                </a>
+                                <hr>
+                                <a href="#" class="apv_my_temp_docs">
+                                    {% if my_temp_docs is 0 %}
+                                        <h6>작성중인 문서 : 없음</h6>
+                                    {% else %}
+                                        <h6 style="color: darkred; font-weight: bold;">작성중인 문서 : {{ my_temp_docs }}건</h6>
+                                    {% endif %}
+                                </a>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-5 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <h5 class="card-header">📢 공지사항 최신글</h5>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% for obj in fixed_notice %}
+                                    <a href="{% url 'noticeDetail' obj.id %}">
+                                        <h6>* {{ obj.title }}</h6>
+                                    </a>
+                                {% endfor %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-5 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <h5 class="card-header">📢 전사게시판 최신글</h5>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                               {% for obj in fixed_board %}
+                                    <a href="{% url 'boardDetail' obj.id  %}">
+                                        <h6>* {{ obj.title }}</h6>
+                                    </a>
+                                {% endfor %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--body3-->
+            <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-fluid flex-grow-1 container-p-y">
+              <div class="card app-calendar-wrapper">
+                <div class="row g-0">
+                  <!-- Calendar Sidebar -->
+                  <div class="col-3 app-calendar-sidebar d-none d-md-block" id="app-calendar-sidebar" style="width: 18%">
+                    <div class="border-bottom p-4 my-sm-0 mb-3">
+                      <div class="d-grid">
+                          <div style="height: 39px;"> </div>
+                        {% comment %}<button
+                          class="btn btn-outline-primary btn-toggle-sidebar"
+                          style="width: 255px; margin-left: -5px;"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#addEventSidebar"
+                          aria-controls="addEventSidebar">
+                          <i class="bx bx-plus me-1"></i>
+                          <span class="align-middle">일정 추가</span>
+                        </button>{% endcomment %}
+                      </div>
+                    </div>
+                    <div class="p-4">
+                      <!-- inline calendar (flatpicker) -->
+                      <div class="ms-n2">
+                        <div class="inline-calendar"></div>
+                      </div>
+
+                      <hr class="container-m-nx my-4" />
+
+                      <!-- Filter -->
+                      <div class="mb-4">
+                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
+                      </div>
+
+                      <div class="form-check mb-2">
+                        <input
+                          class="form-check-input select-all"
+                          type="checkbox"
+                          id="selectAll"
+                          data-value="all"
+                          checked />
+                        <label class="form-check-label" for="selectAll">전체</label>
+                      </div>
+
+                        <div class="app-calendar-events-filter">
+                            <div class="form-check form-check-danger mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-personal"
+                                        data-value="personal"
+                                        checked/>
+                                <label class="form-check-label" for="select-personal">자리비움</label>
+                            </div>
+
+                            <div class="form-check form-check-warning mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-family"
+                                        data-value="family"
+                                        checked/>
+                                <label class="form-check-label" for="select-family">반차</label>
+                            </div>
+                            <div class="form-check form-check-success mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-holiday"
+                                        data-value="holiday"
+                                        checked/>
+                                <label class="form-check-label" for="select-holiday">연차</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input
+                                        class="form-check-input input-filter"
+                                        type="checkbox"
+                                        id="select-business"
+                                        data-value="business"
+                                        checked/>
+                                <label class="form-check-label" for="select-business">출장</label>
+                            </div>
+{#                            <div class="form-check form-check-info">#}
+{#                                <input#}
+{#                                        class="form-check-input input-filter"#}
+{#                                        type="checkbox"#}
+{#                                        id="select-etc"#}
+{#                                        data-value="etc"#}
+{#                                        checked/>#}
+{#                                <label class="form-check-label" for="select-etc">차량(QM3)</label>#}
+{#                            </div>#}
+{#                            <div class="form-check form-check-info" style="margin-top: 8px;">#}
+{#                                <input#}
+{#                                        class="form-check-input input-filter"#}
+{#                                        type="checkbox"#}
+{#                                        id="select-etc"#}
+{#                                        data-value="spotage"#}
+{#                                        checked/>#}
+{#                                <label class="form-check-label" for="select-etc">차량(스포티지)</label>#}
+{#                            </div>#}
+                        </div>
+                    </div>
+                  </div>
+                  <!-- /Calendar Sidebar -->
+
+                  <!-- Calendar & Modal -->
+                  <div class="col app-calendar-content">
+                    <div class="card shadow-none border-0">
+                      <div class="card-body pb-0">
+                        <!-- FullCalendar -->
+                        <div id="calendar" style="margin-top: 3px;"></div>
+                      </div>
+                    </div>
+                    <div class="app-overlay"></div>
+                    <!-- FullCalendar Offcanvas -->
+                    <div
+                      class="offcanvas offcanvas-end event-sidebar"
+                      tabindex="-1"
+                      id="addEventSidebar"
+                      aria-labelledby="addEventSidebarLabel">
+                      <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title mb-2" id="addEventSidebarLabel">일정 추가</h5>
+                        <button
+                          type="button"
+                          class="btn-close text-reset"
+                          data-bs-dismiss="offcanvas"
+                          aria-label="Close"></button>
+                      </div>
+                      <div class="offcanvas-body">
+                        <form class="event-form pt-0" id="eventForm" onsubmit="return false" method="post">
+                            {% csrf_token %}
+                          <div class="mb-3">
+                            <label class="form-label" for="eventTitle">제목</label>
+                            <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="일정 제목" required/>
+                          </div>
+
+                            <div class="mb-3">
+                            <label class="form-label" for="eventStartDate">시작날짜</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventStartDate"
+                              name="eventStartDate"
+                              placeholder="시작 날짜" />
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label" for="eventEndDate">종료날짜</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventEndDate"
+                              name="eventEndDate"
+                              placeholder="End Date" />
+                          </div>
+                          <div class="mb-3">
+                            <label class="switch">
+                              <input type="checkbox" class="switch-input allDay-switch" />
+                              <span class="switch-toggle-slider">
+                                <span class="switch-on"></span>
+                                <span class="switch-off"></span>
+                              </span>
+                              <span class="switch-label">All Day</span>
+                            </label>
+                          </div>
+
+                          <div class="mb-3">
+                            <label class="form-label" for="eventLabel">구분</label>
+                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+                              <option data-label="success" value="Holiday" selected>연차</option>
+                              <option data-label="warning" value="Family">반차</option>
+                              <option data-label="primary" value="Business" id="Business">출장</option>
+                              <option data-label="danger" value="Personal">자리비움</option>
+                            </select>
+                          </div>
+                            <!--이벤트타입 차량 선택 시 활성화-->
+                            <div class="col mb-3" id="radioCheck">
+                                <label for="nameBasic" class="form-label">*법인차량 사용여부</label>
+                                <div class="form-check custom-option custom-option-basic checked">
+                                    <label class="form-check-label custom-option-content" for="customCheckTemp3">
+                                        <input class="form-check-input" type="checkbox" value="" id="customCheckTemp3" checked="">
+                                        <span class="custom-option-header"><span class="h6 mb-0">사용</span></span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3" id="carCheck">
+                                <!-- Basic Custom Radios -->
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">*사용차량</label>
+                                    <select
+                                            class="select2 select-event-guests form-select"
+                                            style="width: 250px;"
+                                            id="vehicle_select"
+                                            name="vehicle_select"
+                                            data-placeholder="차량을 선택하세요.">
+                                    </select>
+                                </div>
+                                <!-- /Basic Custom Radios -->
+                            </div>
+                            {% if request.user.is_superuser %}
+                                <div class="mb-3 select2-primary">
+                                    <label class="form-label" for="employee_select">작성자 (관리자 전용)</label>
+                                    <select id="employee_select"
+                                            class="select2 form-select form-select-lg select2-hidden-accessible"
+                                            data-allow-clear="true" data-select2-id="select2Basic" tabindex="-1"
+                                            aria-hidden="true">
+                                        {% for obj in employee_list %}
+                                            <option data-select2-id="2" value="{{ obj.id }}">
+                                                {{ obj.department_position__name }} {{ obj.username }} {{ obj.job_position__name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                          <div class="mb-3 select2-primary">
+                            <label class="form-label" for="eventGuests">참석자</label>
+                              <input id="TagifyUserList" name="TagifyUserList" class="form-control"/>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label" for="eventLocation">장소</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventLocation"
+                              name="eventLocation"
+                              placeholder="장소" />
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label" for="eventDescription">설명</label>
+                            <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
+                          </div>
+                          <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                            <div>
+                              <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1 d-none">등록</button>
+                              <button class="btn btn-primary me-sm-3 me-1" id="approvalButton">전자결재 열기</button>
+                              <button
+                                type="reset"
+                                class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
+                                id="hide_offcanvas"
+                                data-bs-dismiss="offcanvas">
+                                돌아가기
+                              </button>
+                            </div>
+
+                                <div><button id="delete_btn" class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Calendar & Modal -->
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+        </div>
+
+
+
+    </div>
+
+    </div>
+</div>
+
+</body>
+</html>
+
+<!--footer-->
+{% include 'admins/admin_footer.html' %}
+
+<!-- Vendors JS -->
+<script src="{% static 'sneat/assets/vendor/libs/fullcalendar/fullcalendar.js' %}"></script>
+
+<!-- Main JS -->
+<script src="{% static 'sneat/assets/js/main.js' %}"></script>
+<script src="{% static 'sneat/assets/vendor/libs/tagify/tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-tagify.js' %}"></script>
+<script src="{% static 'sneat/assets/js/forms-typeahead.js' %}"></script>
+
+<!-- Page JS -->
+<script src="{% static 'sneat/assets/js/app-calendar-events.js' %}"></script>
+<script src="{% static 'sneat/assets/js/app-calendar.js' %}"></script>
+<script type="text/javascript">
+    var request_isSuperuser = {{ request.user.is_superuser|lower }};
+    var request_userId = {{ request.user.id }};
+</script>
+<script>
+
+    $(function (event) {
+
+        setTimeout(function() {
+            calendar.refetchEvents();
+        }, 1500);
+    });
+
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": '{{ csrf_token }}' }
+    });
+
+    $(document).ready(function () {
+        toggleRadioGroup($('#eventLabel').val());
+
+        $('#eventLabel, #customCheckTemp3').change(function () {
+            toggleRadioGroup($('#eventLabel').val());
+        });
+        $('#delete_btn').css('display', 'none');
+    });
+
+    function toggleRadioGroup(selectedValue) {
+        $('#radioCheck').toggle(selectedValue === 'Business');
+        $('#carCheck').toggle(selectedValue === 'Business' && $('#customCheckTemp3').is(":checked"));
+    }
+
+    var input = document.querySelector('input[name=TagifyUserList]');
+    var tagify = new Tagify(input);
+
+
+    $(document).on('click', '.btn-add-event', function(e) {
+        e.preventDefault();
+        console.log('guest', tagify.value)
+
+         if ($("#eventTitle").val()===''){
+              Swal.fire({
+                title: 'Fail!',
+                text: '일정제목을 입력해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+         }
+
+        var checkbox = document.querySelector('.allDay-switch');
+        var startdate = $("#eventStartDate").val();
+        var enddate = $("#eventEndDate").val();
+
+        if (startdate > enddate){
+             Swal.fire({
+                title: 'Fail!',
+                text: '종료날짜를 확인해주세요!',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
+        if (!checkbox.checked) {
+            if (startdate.length===10  || enddate.length===10){
+                Swal.fire({
+                    title: 'Fail!',
+                    text: '날짜를 클릭하여 시간을 선택해주세요!',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                })
+                return false;
+            }
+        }
+
+        var formData = {
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: startdate,
+            eventEndDate: enddate,
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList : JSON.stringify(tagify.value),
+            employee_select : $('#employee_select').val()
+        };
+
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")){
+            formData.vehicleSelect = $("#vehicle_select").val();
+        }
+
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
+        console.log('f', formData)
+
+        api_gp("{% url 'get_eventDataAll' %}", "POST", formData, () => {
+                Swal.fire({
+                title: 'Success',
+                text: '일정이 등록되었습니다!',
+                icon: 'success',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                 });
+        });
+
+    })
+
+
+    $(document).on('click', '.btn-update-event', function (e) {
+        e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
+        }
+
+        eventData = {
+            updateEventId: updateEventId,
+            eventTitle: $("#eventTitle").val(),
+            eventLabel: $("#eventLabel").val(),
+            eventStartDate: $("#eventStartDate").val(),
+            eventEndDate: $("#eventEndDate").val(),
+            allDay: $(".allDay-switch").prop("checked") === true,
+            eventURL: $("#eventURL").val(),
+            eventGuests: $("#eventGuests").val(),
+            eventLocation: $("#eventLocation").val(),
+            eventDescription: $("#eventDescription").val(),
+            tagList: JSON.stringify(tagify.value),
+            employee_select: $('#employee_select').val()
+        };
+
+        if ($("#eventLabel").val() === "Business" && $('#customCheckTemp3').is(":checked")) {
+            eventData.vehicleSelect = $("#vehicle_select").val();
+        } else {
+            eventData.vehicleSelect = null
+        }
+
+        if ($("#eventLabel").val() === null) {
+            Swal.fire({
+                title: 'Fail!',
+                text: '구분에 일정타입을 선택해주세요 ex)연차,반차,출장..',
+                icon: 'error',
+                confirmButtonText: '확인'
+            })
+            return false;
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(eventData),
+            success: function () {
+                // console.log('수정데이터', eventData);
+                Swal.fire({
+                    title: 'Success!',
+                    text: '일정이 수정되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                var responseJson = JSON.parse(xhr.responseText);
+                var errorMessage = responseJson.error;
+
+                Swal.fire({
+                    title: '오류 발생!',
+                    text: '에러 메시지: ' + errorMessage,
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                });
+            }
+        });
+
+    });
+
+
+    $(".btn-delete-event").click(function(e) {
+        e.preventDefault();
+        if (!(request_isSuperuser === true || request_userId === event_creat_id)) {
+            alert('수정 및 삭제 권한이 없습니다.');
+            return false;
+        }
+
+        var formData = {
+            eventId: updateEventId
+        }
+
+        $.ajax({
+            url: "{% url 'get_eventDataAll' %}",
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function () {
+                // console.log('삭제 아이디', formData);
+                Swal.fire({
+                     title: 'Success!',
+                     text: '일정이 삭제되었습니다.',
+                     icon: 'success',
+                     confirmButtonText: '확인'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.reload();
+                     }
+                });
+            }
+        });
+
+    });
+
+    function edit_item_func() {
+        $('.btn_div').show();
+
+        document.getElementById('editableQuote').contentEditable = "true";
+        document.getElementById('editableCite').contentEditable = "true";
+
+        document.getElementById('editableQuote').focus();
+
+        $('#save_btn').click(function () {
+            var quoteText = document.getElementById('editableQuote').innerText;
+            var citeText = document.getElementById('editableCite').innerText;
+
+            $.ajax({
+                url: "{% url 'today_about' %}",
+                type: 'POST',
+                data: {
+                    title: citeText,
+                    content: quoteText,
+                },
+                success: function (response) {
+                    $('#editableQuote').text(quoteText);
+                    $('#editableCite').text(citeText);
+
+                    document.getElementById('editableQuote').contentEditable = "false";
+                    document.getElementById('editableCite').contentEditable = "false";
+                    $('.btn_div').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert("저장에 실패했습니다. 다시 시도해주세요.");
+                }
+            });
+        })
+    }
+
+    function cancel_edit_func() {
+        document.getElementById('editableQuote').contentEditable = "false";
+        document.getElementById('editableCite').contentEditable = "false";
+        $('.btn_div').hide();
+    }
+
+    $(document).ready(function () {
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function getLoginInfo() {
+            const loginInfo = {
+                username: getCookie('username'),
+                user_id: getCookie('user_id'),
+                token: getCookie('Authorization'),
+                is_superuser: getCookie('is_superuser'),
+                story_admin: getCookie('story_admin'),
+            };
+            return loginInfo;
+        }
+
+        function displayLoginInfo() {
+            const loginInfo = getLoginInfo();
+            // console.log("로그인 정보:");
+            for (let key in loginInfo) {
+                if (loginInfo[key]) {
+                    // console.log(`${key}: ${loginInfo[key]}`);
+                } else {
+                    // console.log(`${key}: 정보가 없습니다`);
+                }
+            }
+        }
+
+        displayLoginInfo();
+    })
+
+    // 미결재문서 바로가기
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector('.apv_waiting_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_waiting_docs=true";
+        })
+        document.querySelector('.apv_unread_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_unread_docs=true";
+        });
+        document.querySelector('.apv_my_temp_docs').addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/admins/apv/?apv_my_temp_docs=true";
+        });
+        const selectAllCheckbox = document.getElementById('selectAll');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.click();
+            setTimeout(function () {
+                selectAllCheckbox.click();
+            }, 1000);
+        }
+    });
+
+
+    document.getElementById('approvalButton').addEventListener('click', function () {
+        if (!apvIdCate || !apvId) {
+            showToast('관련 전자결재 문서를 찾을 수 없습니다.');
+            document.getElementById('hide_offcanvas').click();
+            return;
+        }
+
+        let url = `/admins/apv/progress/${apvIdCate}/${apvId}/`;
+        let newWindow = window.open(url, '_blank', 'width=1199,height=1000,scrollbars=yes,resizable=yes');
+
+        fetch(`/admins/apv/detail/?apv_id=${apvId}`)
+            .then(response => {
+            if (response.status === 403) {
+                newWindow.close();
+                showToast('해당 전자결재 문서에 접근 권한이 없습니다.');
+                document.getElementById('hide_offcanvas').click();
+            }
+        })
+    });
+
+
+    // 토스트 팝업 생성 함수
+    function showToast(message, options = {}) {
+        const {
+            position = 'bottom: 1rem; left: 1rem;',
+            delay = 2000,
+            width = '350px',
+        } = options;
+
+        const toastId = `toast_${Date.now()}`;
+
+        $('#toast_popup_area').append(`
+            <div id="${toastId}" class="toast position-fixed animate-slide-in" style="${position} z-index: 10000; width: ${width}; border: 1px solid rgba(0, 0, 0, 0.1);">
+              <div class="toast-header bg-dark text-white p-2">
+                <strong class="mx-2" style="font-size: 13px; font-family: sans-serif;"><i class="fa-solid fa-bell me-2"></i>알림</strong>
+              </div>
+              <div class="toast-body" style="color: #2b2d30; font-size: 12px; font-family: sans-serif;">
+                ${message}
+              </div>
+            </div>
+        `);
+
+        const toastElement = $(`#${toastId}`);
+        toastElement.toast({ delay });
+        toastElement.toast('show');
+
+        setTimeout(function () {
+            toastElement
+                .removeClass('animate-slide-in')
+                .addClass('animate-slide-out');
+            setTimeout(function () {
+                toastElement.remove();
+            }, 500); // 애니메이션 시간(0.5초) 후 삭제
+        }, delay);
+    }
+</script>
+

@@ -8,107 +8,76 @@
        background-color: #9da8b5;
    }
 
-{% comment %}   .selected {
+   .selected {
        background-color: #f5f5f9;
-   }{% endcomment %}
+   }
 
    .menu-sub {
-       width: 100%;
-   }
-   
-   .menu-toggle::after {
-       display: none;
+       width : 90%;
    }
 
-   .progress-text {
-       position: absolute;
-       width: 100%;
-       top: 50%;
-       left: 0;
-       transform: translateY(-50%);
-       text-align: center;
-       font-size: 10px;
-       color: black;
-       z-index: 10;
+    .menu-toggle::after {
+        display: none;
    }
-   
-   .menu-link {
-       color: white !important;
-   }
-
-   {% comment %}.menu-link:hover {
-       background-color: white !important;
-   }{% endcomment %}
-
-   .menu-item:hover {
-       background-color: rgba(255, 255, 255, 0.1) !important;
-   }
-
-   .selected {
-       background-color: rgba(255, 255, 255, 0.2) !important;
-   }
-
-   .no-hover:hover {
-       background-color: #2a3040 !important;
-   }
-
-   .rotate-180 {
-       transform: rotate(180deg);
-       transition: transform 0.3s ease;
-   }
+    
+    .progress-text {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        text-align: center;
+        font-size: 10px;
+        color: black;
+        z-index: 10;
+    }
 </style>
-
-
-
 <body>
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="background-color: #2a3041 !important;">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo d-flex justify-content-center">
         <a href="{% url 'adminIndex' %}" class="app-brand-link main-page">
-            <img id="index_logo" src="{% static 'img/logo_m.png' %}" style="max-width: 100%; height: auto;">
+            <img id="index_logo" src="{% static 'img/logo.jpg' %}">
         </a>
 
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto bg-dark" id="sidebar_small_btn">
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto bg-secondary" id="sidebar_small_btn">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
         </a>
     </div>
 
     <div class="menu-inner-shadow"></div>
 
-    <ul class="menu-inner py-1" style="overflow-x: hidden !important;">
+    <ul class="menu-inner py-1">
         <!-- 출퇴근 영역 -->
-        <div class="menu-item no-hover d-flex flex-column mt-3" style="padding-left: 30px;">
-            <div class="p-3" style="background-color: white; border-radius: 8px; width: 200px;">
-                <div class="d-flex justify-content-between align-items-center" style="font-weight: bold; color: #2a3040;">
-                    <div><i class='bx bx-alarm me-1'></i>근태 현황</div>
-                    <div style="cursor:pointer;">
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
+        <div class="menu-item d-flex flex-column mt-3" style="padding-left: 30px;">
+            <div class="p-3" style="background-color: #f3f3f7; border-radius: 8px; width: 200px; border: 1px solid #d9dee3">
+                <div class="d-flex align-items-center" style="font-weight: bold;">
+                    <i class='bx bx-alarm me-1'></i>
+                    <div>근태 현황</div>
                 </div>
                 
-                <div class="my-3 work-div" style="font-size: small;">
-                    <div style="color: black;">접속중인 IP주소</div>
-                    <div style="color: gray" id="current_ip"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                <div class="d-flex my-2" style="font-size: small; color: black;">
+                    <div id="current_ip"><i class="fa-solid fa-spinner fa-spin"></i></div>
                 </div>
     
-                <div class="my-3 work-div" style="font-size: small;">
-                    <div style="color: black;">일일 근무시간</div>
+                <div class="my-2" style="font-size: small;">
+                    <div>일일 근무시간</div>
                     <div class="progress mt-1 position-relative" style="height: 20px;">
-                        <div id="todayProgressBar" class="progress-bar bg-warning-subtle" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="todayProgressBar" class="progress-bar bg-info-subtle" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         <span id="todayWorkTime" class="progress-text">{% comment %}<i class="fa-solid fa-spinner fa-spin"></i>{% endcomment %}</span>
                     </div>
                 </div>
                 
-                <div class="my-3 work-div" style="font-size: small;">
-                    <div style="color: black;">주간 근무시간</div>
+                <div class="my-2" style="font-size: small;">
+                    <div>주간 근무시간</div>
                     <div class="progress mt-1 position-relative" style="height: 20px;">
                         <div id="weekProgressBar" class="progress-bar bg-success-subtle" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         <span id="weekWorkTime" class="progress-text">{% comment %}<i class="fa-solid fa-spinner fa-spin"></i>{% endcomment %}</span>
                     </div>
                 </div>
     
-                <div class="work-check work-div d-flex justify-content-end mt-3">
-                    <button class="btn btn-sm btn-secondary me-2 text-nowrap" id="checkInBtn">출 근</button>
-                    <button class="btn btn-sm btn-secondary text-nowrap" id="checkOutBtn">퇴 근</button>
+                <div class="work-check d-flex justify-content-between mt-4">
+                    <button class="btn btn-secondary me-2 text-nowrap" id="checkInBtn">출 근</button>
+                    <button class="btn btn-secondary text-nowrap" id="checkOutBtn">퇴 근</button>
                 </div>
             </div>
         </div>
@@ -142,7 +111,7 @@
         </div>{% endcomment %}
 
         <!-- workspace -->
-        <div class="menu-header small text-uppercase" style="color: white;">
+        <div class="menu-header small text-uppercase">
             <span class="menu-header-text" data-i18n="workspace">workspace</span>
         </div>
     
@@ -300,42 +269,33 @@
 </aside>
 </body>
 <script>
-    var index_logo = document.getElementById('index_logo');
-    var html_tag = document.documentElement;
-    
-    $('#sidebar_small_btn').click(() => {
-        html_tag.addEventListener('transitionend', function() {
-            if (html_tag.classList.contains('layout-menu-collapsed')) {
-                index_logo.src = "{% static 'img/logo.png' %}";
-            } else {
-                index_logo.src = "{% static 'img/logo_m.png' %}";
-            }
-        }, { once: true });
-    });
-    
-    window.addEventListener("DOMContentLoaded", function () {
-        let targetDiv = document.getElementById("layout-menu");
-        if (targetDiv) {
-            let divWidth = targetDiv.offsetWidth;
-            if (divWidth <= 100) {
-                index_logo.src = "{% static 'img/logo.png' %}";
-            }
+var index_logo = document.getElementById('index_logo');
+var html_tag = document.documentElement;
+
+$('#sidebar_small_btn').click(() => {
+    html_tag.addEventListener('transitionend', function() {
+        if (html_tag.classList.contains('layout-menu-collapsed')) {
+            index_logo.src = "{% static 'img/logo.png' %}";
+        } else {
+            index_logo.src = "{% static 'img/logo.jpg' %}";
         }
-    });
-    
-    document.getElementById('layout-menu').addEventListener('mouseover', function() {
-       index_logo.src = "{% static 'img/logo_m.png' %}";
-    });
-    
-    document.getElementById('layout-menu').addEventListener('mouseout', function() {
-       if (html_tag.classList.contains('layout-menu-collapsed')) {
-           index_logo.src = "{% static 'img/logo.png' %}";
-       } else {
-           index_logo.src = "{% static 'img/logo_m.png' %}";
-       }
-    });
+    }, { once: true });
+});
 
 
+document.getElementById('layout-menu').addEventListener('mouseover', function() {
+   index_logo.src = "{% static 'img/logo.jpg' %}";
+});
+
+document.getElementById('layout-menu').addEventListener('mouseout', function() {
+   if (html_tag.classList.contains('layout-menu-collapsed')) {
+       index_logo.src = "{% static 'img/logo.png' %}";
+   } else {
+       index_logo.src = "{% static 'img/logo.jpg' %}";
+   }
+});
+</script>
+<script>
     const checkInBtn = document.getElementById('checkInBtn');
     const checkOutBtn = document.getElementById('checkOutBtn');
     const token = '0f811adef337d3';
@@ -584,19 +544,5 @@
             document.getElementById('current_ip').textContent = 'Failed to load IP address';
         }
     }
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggleButton = document.querySelector(".fa-chevron-down");
-        const workDivs = document.querySelectorAll(".work-div");
-        
-        toggleButton.addEventListener("click", function () {
-            workDivs.forEach(div => {
-                div.classList.toggle("d-none");
-            });
-    
-            // 아이콘 회전 효과 추가
-            toggleButton.classList.toggle("rotate-180");
-        });
-    });
 
 </script>

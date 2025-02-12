@@ -52,10 +52,10 @@ def admin_index_page(request):
         start_date__lte=today, end_date__gte=today, event_type__in=["Business", "Holiday", "Family"], delete_flag="N")
 
     # 공지사항
-    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").order_by('-id')[:4]
+    fixed_notice = BoardMaster.objects.filter(boardcode_id=9, delete_flag="N").order_by('-id')[:5]
 
     # 전사게시판
-    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").order_by('-id')[:4]
+    fixed_board = BoardMaster.objects.filter(boardcode__code="RSA", delete_flag="N").order_by('-id')[:5]
 
     # 오늘의 이야기
     today_about = BoardMaster.objects.filter(boardcode__code="G02", delete_flag='N').last()
