@@ -928,47 +928,49 @@
         progressBar.style.width = workingDaysPer + "%";
         progressBar.setAttribute("aria-valuenow", workingDaysPer);
     });
-    
-    
+
+
     function checkUserBirthday() {
         let userBirthdayStr = '{{ request.user.birthday|date:"Y-m-d" }}';
         if (!userBirthdayStr) return; // 생일 정보가 없을 경우 함수 종료
-    
+
         let userBirthday = new Date(userBirthdayStr);
         let today = new Date();
-    
+
         // 사용자의 생일과 오늘의 월/일을 비교
         if (userBirthday.getMonth() === today.getMonth() && userBirthday.getDate() === today.getDate()) {
             is_birthday = true;
             let backgroundImageUrl = "{% static 'img/firework4.gif' %}";
             let profileBorderUrl = "{% static 'img/border_birthday.png' %}";
-            
+
             // 메인 텍스트
             $('#profile_card_text').text("생일을 축하합니다")
-            
+
             // 경험치바 스타일
             $('.event_bar_bg').css('background-color', '#e67d8c');
             $('#levelProgressBar').removeClass('bg-secondary');
             $('#levelProgressBar').css('background-color', 'darkred');
-            
+
             // 메인 텍스트 스타일
             document.querySelectorAll('.event_text_main').forEach(el => {
                 el.style.color = 'darkred';
             });
-            
+
             // 서브 텍스트 스타일
             document.querySelectorAll('.event_text_sub').forEach(el => {
                 el.style.color = '#b66470';
             });
-    
+
             // 카드 배경
             document.querySelectorAll('.event_card_bg').forEach(el => {
-                el.style.backgroundColor = 'lightpink';
+                el.style.backgroundColor = '#ffd0cc';
                 el.style.backgroundImage = `url('${backgroundImageUrl}')`;
                 el.style.backgroundSize = 'cover';
                 el.style.backgroundPosition = 'center';
             });
-            
+            $('.event_card_bg').css('border', '3px solid #e67d8c')
+            $('.event_card_bg').css('box-shadow', 'none')
+
             // 이미지 프레임
             let profileBorder = document.getElementById('profile_border');
             if (profileBorder) {
@@ -977,46 +979,46 @@
             }
         }
     }
-    
-    
+
+
     function checkUserJoinday() {
         let userJoindayStr = '{{ request.user.employment_date|date:"Y-m-d" }}';
         if (!userJoindayStr) return; // 생일 정보가 없을 경우 함수 종료
-    
+
         let userJoinday = new Date(userJoindayStr);
         let today = new Date();
-    
+
         // 신규 입사
         if (userJoinday.getFullYear() === today.getFullYear() && userJoinday.getMonth() === today.getMonth() && userJoinday.getDate() === today.getDate()) {
             let backgroundImageUrl = "{% static 'img/firework3.gif' %}";
             let profileBorderUrl = "{% static 'img/border_goldleaf.png' %}";
-            
+
             // 메인 텍스트
             $('#profile_card_text').text("입사를 축하합니다")
-            
+
             // 경험치바 스타일
             {% comment %}$('.event_bar_bg').css('background-color', '#bbb');
             $('#levelProgressBar').removeClass('bg-secondary');
             $('#levelProgressBar').css('background-color', 'darkgray');{% endcomment %}
-            
+
             // 메인 텍스트 스타일
             document.querySelectorAll('.event_text_main').forEach(el => {
                 el.style.color = '#f0f0f0';
             });
-            
+
             // 서브 텍스트 스타일
             document.querySelectorAll('.event_text_sub').forEach(el => {
                 el.style.color = '#bbb';
             });
-    
+
             // 카드 배경
             document.querySelectorAll('.event_card_bg').forEach(el => {
-                el.style.backgroundColor = '#191914';
+                el.style.backgroundColor = '#1e232e';
                 el.style.backgroundImage = `url('${backgroundImageUrl}')`;
                 el.style.backgroundSize = 'cover';
                 el.style.backgroundPosition = 'center';
             });
-            
+
             // 이미지 프레임
             let profileBorder = document.getElementById('profile_border');
             if (profileBorder) {
@@ -1024,38 +1026,38 @@
                 profileBorder.style.display = 'block';
             }
         }
-        
+
         // 매년 입사일
         else if (userJoinday.getMonth() === today.getMonth() && userJoinday.getDate() === today.getDate()) {
             let backgroundImageUrl = "{% static 'img/firework3.gif' %}";
             let profileBorderUrl = "{% static 'img/border_goldleaf.png' %}";
-            
+
             // 메인 텍스트
             $('#profile_card_text').text("레벨업을 축하합니다")
-            
+
             // 경험치바 스타일
             {% comment %}$('.event_bar_bg').css('background-color', '#bbb');
             $('#levelProgressBar').removeClass('bg-secondary');
             $('#levelProgressBar').css('background-color', 'darkgray');{% endcomment %}
-            
+
             // 메인 텍스트 스타일
             document.querySelectorAll('.event_text_main').forEach(el => {
                 el.style.color = '#f0f0f0';
             });
-            
+
             // 서브 텍스트 스타일
             document.querySelectorAll('.event_text_sub').forEach(el => {
                 el.style.color = '#bbb';
             });
-    
+
             // 카드 배경
             document.querySelectorAll('.event_card_bg').forEach(el => {
-                el.style.backgroundColor = '#191914';
+                el.style.backgroundColor = '#1e232e';
                 el.style.backgroundImage = `url('${backgroundImageUrl}')`;
                 el.style.backgroundSize = 'cover';
                 el.style.backgroundPosition = 'center';
             });
-            
+
             // 이미지 프레임
             let profileBorder = document.getElementById('profile_border');
             if (profileBorder) {
