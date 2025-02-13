@@ -441,8 +441,16 @@
         document.getElementById('apvwaitBtn').text = '결재 대기 (' + total_next_approver + ')';
 
         let rows = "";
-        if (data.length === 0) {
+        {% comment %}if (data.length === 0) {
             rows = `<tr><td colspan="9" class="text-center">불러올 문서가 없습니다</td></tr>`;
+        }{% endcomment %}
+        
+        let visibleColumns = Array.from(document.querySelectorAll("table thead tr th"))
+            .filter(th => th.offsetWidth > 0) // 실제로 보이는 열만 필터링
+            .length;
+        
+        if (data.length === 0) {
+            rows = `<tr><td colspan="${visibleColumns}" class="text-center">불러올 문서가 없습니다</td></tr>`;
         }
 
         for (let i = 0; i < data.length; i++) {

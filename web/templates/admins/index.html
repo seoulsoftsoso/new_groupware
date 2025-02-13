@@ -55,7 +55,6 @@
     .flatpickr-days {
         border: none !important;    
     }
-    
 </style>
 
 <body>
@@ -72,27 +71,32 @@
             
                 <!-- 내 정보 -->
                 <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card" style="color: #2a3040;">
-                        <h5 class="card-header fw-bold">
+                    <div class="card event_card_bg" style="color: #2a3040;">
+                        <h5 class="card-header fw-bold event_text_main">
                             <a href="{% url 'userSettingsPage' %}" style="color: inherit;">
-                                <i class="fa-regular fa-face-smile fa-bounce me-2"></i>환영합니다, {{ request.user.username }} {{ request.user.job_position.name }}님!
+                                <i class="fa-regular fa-face-smile fa-bounce me-1"></i>
+                                <span id="profile_card_text">환영합니다</span>, {{ request.user.username }} {{ request.user.job_position.name }}님!
                             </a>
                         </h5>
-                        <div class="card-body" style="max-height: 150px; overflow: hidden;">
+                        <div class="card-body" style="max-height: 150px; overflow: visible;">
                             <div class="d-flex">
                                 <div class="ms-1">
-                                    <img src="/data/{{ request.user.profile_image }}" style="width: 90px; height: 90px; border-radius: 100%;" alt="profile_image">
-                                    <div id="employment_years" class="mt-1" style="color: black; font-size: 12px;">&nbsp;</div>
-                                    <div class="progress position-relative" style="height: 12px;">
-                                        <div id="levelProgressBar" class="progress-bar bg-secondary" role="progressbar" style="width: 0; box-shadow: none;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    {% comment %}<img src="/data/{{ request.user.profile_image }}" style="width: 90px; height: 90px; border-radius: 100%;" alt="profile_image">{% endcomment %}
+                                    <div style="position: relative; width: 90px; height: 90px;">
+                                        <img id="profile_border" src="" style="width: 120px; height: 120px; position: absolute; top: -20px; left: -15px; border-radius: 50%; z-index: 2; display: none;">
+                                        <img src="/data/{{ request.user.profile_image }}" style="width: 90px; height: 90px; border-radius: 100%; position: absolute; top: 0; left: 0; z-index: 1;" alt="profile_image">
+                                    </div>
+                                    <div id="employment_years" class="mt-1 event_text_main" style="color: black; font-size: 12px;">&nbsp;</div>
+                                    <div class="progress position-relative event_bar_bg" style="height: 12px; background-color: #ddd;">
+                                        <div id="levelProgressBar" class="progress-bar bg-secondary" role="progressbar" style="width: 0; box-shadow: none; border-radius: 12px" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                         <span id="workingDaysRate" class="progress-text"></span>
                                     </div>
                                 </div>
                                 <div class="py-2 ms-4 w-100">
-                                    <div class="fw-bold" style="color: black; font-size: 24px;">{{ request.user.username }}</div>
-                                    <div class="text-muted">{{ request.user.department_position.name }} {{ request.user.job_position.name }}</div>
-                                    <hr class="w-100" style="color: #8491a2;">
-                                    <div class="d-flex" style="font-size: 14px;">
+                                    <div class="fw-bold event_text_main" style="color: black; font-size: 24px;">{{ request.user.username }}</div>
+                                    <div class="event_text_sub" style="color: #8491a2;">{{ request.user.department_position.name }} {{ request.user.job_position.name }}</div>
+                                    <hr class="w-100 event_text_sub" style="color: #8491a2;">
+                                    <div class="d-flex event_text_main" style="font-size: 14px;">
                                         <div class="me-3">
                                             <i class="fa-solid fa-user-tie me-1" data-toggle="tooltip" data-placement="top" title="근무일 수"></i>
                                             <span id="working_days"></span>
@@ -519,6 +523,7 @@
 <script>
     let request_isSuperuser = {{ request.user.is_superuser|lower }};
     let request_userId = {{ request.user.id }};
+    let is_birthday;
 
     $(function (event) {
         setTimeout(function() {
@@ -537,6 +542,11 @@
             toggleRadioGroup($('#eventLabel').val());
         });
         $('#delete_btn').css('display', 'none');
+        
+        checkUserBirthday();
+        if (!is_birthday) {
+            checkUserJoinday();
+        }
     });
 
     function toggleRadioGroup(selectedValue) {
@@ -918,5 +928,141 @@
         progressBar.style.width = workingDaysPer + "%";
         progressBar.setAttribute("aria-valuenow", workingDaysPer);
     });
+    
+    
+    function checkUserBirthday() {
+        let userBirthdayStr = '{{ request.user.birthday|date:"Y-m-d" }}';
+        if (!userBirthdayStr) return; // 생일 정보가 없을 경우 함수 종료
+    
+        let userBirthday = new Date(userBirthdayStr);
+        let today = new Date();
+    
+        // 사용자의 생일과 오늘의 월/일을 비교
+        if (userBirthday.getMonth() === today.getMonth() && userBirthday.getDate() === today.getDate()) {
+            is_birthday = true;
+            let backgroundImageUrl = "{% static 'img/firework4.gif' %}";
+            let profileBorderUrl = "{% static 'img/border_birthday.png' %}";
+            
+            // 메인 텍스트
+            $('#profile_card_text').text("생일을 축하합니다")
+            
+            // 경험치바 스타일
+            $('.event_bar_bg').css('background-color', '#e67d8c');
+            $('#levelProgressBar').removeClass('bg-secondary');
+            $('#levelProgressBar').css('background-color', 'darkred');
+            
+            // 메인 텍스트 스타일
+            document.querySelectorAll('.event_text_main').forEach(el => {
+                el.style.color = 'darkred';
+            });
+            
+            // 서브 텍스트 스타일
+            document.querySelectorAll('.event_text_sub').forEach(el => {
+                el.style.color = '#b66470';
+            });
+    
+            // 카드 배경
+            document.querySelectorAll('.event_card_bg').forEach(el => {
+                el.style.backgroundColor = 'lightpink';
+                el.style.backgroundImage = `url('${backgroundImageUrl}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+            });
+            
+            // 이미지 프레임
+            let profileBorder = document.getElementById('profile_border');
+            if (profileBorder) {
+                profileBorder.src = profileBorderUrl;
+                profileBorder.style.display = 'block';
+            }
+        }
+    }
+    
+    
+    function checkUserJoinday() {
+        let userJoindayStr = '{{ request.user.employment_date|date:"Y-m-d" }}';
+        if (!userJoindayStr) return; // 생일 정보가 없을 경우 함수 종료
+    
+        let userJoinday = new Date(userJoindayStr);
+        let today = new Date();
+    
+        // 신규 입사
+        if (userJoinday.getFullYear() === today.getFullYear() && userJoinday.getMonth() === today.getMonth() && userJoinday.getDate() === today.getDate()) {
+            let backgroundImageUrl = "{% static 'img/firework3.gif' %}";
+            let profileBorderUrl = "{% static 'img/border_goldleaf.png' %}";
+            
+            // 메인 텍스트
+            $('#profile_card_text').text("입사를 축하합니다")
+            
+            // 경험치바 스타일
+            {% comment %}$('.event_bar_bg').css('background-color', '#bbb');
+            $('#levelProgressBar').removeClass('bg-secondary');
+            $('#levelProgressBar').css('background-color', 'darkgray');{% endcomment %}
+            
+            // 메인 텍스트 스타일
+            document.querySelectorAll('.event_text_main').forEach(el => {
+                el.style.color = '#f0f0f0';
+            });
+            
+            // 서브 텍스트 스타일
+            document.querySelectorAll('.event_text_sub').forEach(el => {
+                el.style.color = '#bbb';
+            });
+    
+            // 카드 배경
+            document.querySelectorAll('.event_card_bg').forEach(el => {
+                el.style.backgroundColor = '#191914';
+                el.style.backgroundImage = `url('${backgroundImageUrl}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+            });
+            
+            // 이미지 프레임
+            let profileBorder = document.getElementById('profile_border');
+            if (profileBorder) {
+                profileBorder.src = profileBorderUrl;
+                profileBorder.style.display = 'block';
+            }
+        }
+        
+        // 매년 입사일
+        else if (userJoinday.getMonth() === today.getMonth() && userJoinday.getDate() === today.getDate()) {
+            let backgroundImageUrl = "{% static 'img/firework3.gif' %}";
+            let profileBorderUrl = "{% static 'img/border_goldleaf.png' %}";
+            
+            // 메인 텍스트
+            $('#profile_card_text').text("레벨업을 축하합니다")
+            
+            // 경험치바 스타일
+            {% comment %}$('.event_bar_bg').css('background-color', '#bbb');
+            $('#levelProgressBar').removeClass('bg-secondary');
+            $('#levelProgressBar').css('background-color', 'darkgray');{% endcomment %}
+            
+            // 메인 텍스트 스타일
+            document.querySelectorAll('.event_text_main').forEach(el => {
+                el.style.color = '#f0f0f0';
+            });
+            
+            // 서브 텍스트 스타일
+            document.querySelectorAll('.event_text_sub').forEach(el => {
+                el.style.color = '#bbb';
+            });
+    
+            // 카드 배경
+            document.querySelectorAll('.event_card_bg').forEach(el => {
+                el.style.backgroundColor = '#191914';
+                el.style.backgroundImage = `url('${backgroundImageUrl}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+            });
+            
+            // 이미지 프레임
+            let profileBorder = document.getElementById('profile_border');
+            if (profileBorder) {
+                profileBorder.src = profileBorderUrl;
+                profileBorder.style.display = 'block';
+            }
+        }
+    }
 </script>
 

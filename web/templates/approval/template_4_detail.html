@@ -13,6 +13,10 @@
     .desktop_hide {
         display: none;
     }
+    
+    .note-frame {
+        margin: 0.25rem !important; /* m-1 */
+    }
 
     @media (max-width: 900px) {
 
@@ -201,7 +205,7 @@
 
                                 <div class="d-flex justify-content-start my-3 px-2 flex-wrap">
                                     <div class="row justify-content-center align-items-center m-1 mobile_align_left" style="color: #000; font-size: 16px; width:100px;">신청 내용</div>
-                                    <div id="special_comment" aria-label="special_comment"></div>
+                                    <div class="m-1" id="special_comment" aria-label="special_comment"></div>
 {#                                    <textarea class="form-control" id="special_comment" style="max-width:90%; height:100px;" disabled></textarea></textarea>#}
                                 </div>
 
@@ -266,7 +270,7 @@
 
     $(document).ready(function () {
         $('#special_comment').summernote({
-            width: 1200,
+            width: '80%',
             toolbar: [],
         });
     });
