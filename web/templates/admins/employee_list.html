@@ -52,6 +52,10 @@
                             <th id="department_position" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">부서</th>
                             <th id="place_of_work" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">근무지</th>
                             <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">입사일</th>
+                            {% if request.user.is_superuser %}
+                            <th id="birthday" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">생일</th>
+                            <th id="contact" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">연락처</th>
+                            {% endif %}
                             <th id="email" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">이메일</th>
                         </tr>
                     </thead>
@@ -59,15 +63,18 @@
                         {% for employee in employee_list %}
                             <tr>
                                 <td style="text-align: center;">{{ forloop.counter }}</td>
-                                <td class="d-flex align-items-center" style="text-align: center;">
-                                    <img src="{{ employee.profile_image.url }}" alt="프로필 이미지"
-                                         style="width: 32px; height: 32px; border-radius: 50%;">
+                                <td class="d-flex justify-content-center align-items-center" style="text-align: center;">
+                                    <img src="{{ employee.profile_image.url }}" alt="프로필 이미지" style="width: 32px; height: 32px; border-radius: 50%;">
                                     <div class="ms-3">{{ employee.username }}</div>
                                 </td>
                                 <td style="text-align: center;">{{ employee.job_position }}</td>
                                 <td style="text-align: center;">{{ employee.department_position }}</td>
                                 <td style="text-align: center;">{{ employee.place_of_work }}</td>
                                 <td style="text-align: center;">{{ employee.employment_date }}</td>
+                                {% if request.user.is_superuser %}
+                                <td style="text-align: center;">{{ employee.birthday }}</td>
+                                <td style="text-align: center;">{{ employee.tel }}</td>
+                                {% endif %}
                                 <td style="text-align: center;">{{ employee.email }}</td>
                             </tr>
                         {% endfor %}
