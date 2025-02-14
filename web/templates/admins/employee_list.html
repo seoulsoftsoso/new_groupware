@@ -47,35 +47,37 @@
                     <thead>
                         <tr style="text-align: start; width: auto; height: auto; background-color: #edf0f5">
                             <th id="list_no" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 2%;">순번</th>
-                            <th id="username" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">이름</th>
-                            <th id="job_position" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">직급</th>
-                            <th id="department_position" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">부서</th>
-                            <th id="place_of_work" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">근무지</th>
-                            <th id="employment_date" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">입사일</th>
+                            <th id="username" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">이름</th>
+                            <th id="job_position" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">직급</th>
+                            <th id="department_position" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">부서</th>
+                            <th id="place_of_work" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">근무지</th>
+                            <th id="employment_date" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">입사일</th>
                             {% if request.user.is_superuser %}
-                            <th id="birthday" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">생일</th>
-                            <th id="contact" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 5%;">연락처</th>
+                            <th id="birthday" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">생일<i class="fa-regular fa-circle-question fa-sm mx-1" style="vertical-align: super;"
+                            data-toggle="tooltip" data-placement="top" title="관리자 전용"></i></th>
+                            <th id="contact" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 5%;">연락처<i class="fa-regular fa-circle-question fa-sm mx-1" style="vertical-align: super;"
+                            data-toggle="tooltip" data-placement="top" title="관리자 전용"></i></th>
                             {% endif %}
-                            <th id="email" style="text-align: center; color: #000; font-size: medium; font-weight: bold; width: 10%;">이메일</th>
+                            <th id="email" style="text-align: left; color: #000; font-size: medium; font-weight: bold; width: 10%;">이메일</th>
                         </tr>
                     </thead>
                     <tbody id="a_tbody">
                         {% for employee in employee_list %}
                             <tr>
                                 <td style="text-align: center;">{{ forloop.counter }}</td>
-                                <td class="d-flex justify-content-center align-items-center" style="text-align: center;">
+                                <td class="d-flex justify-content-start align-items-center" style="text-align: center;">
                                     <img src="{{ employee.profile_image.url }}" alt="프로필 이미지" style="width: 32px; height: 32px; border-radius: 50%;">
                                     <div class="ms-3">{{ employee.username }}</div>
                                 </td>
-                                <td style="text-align: center;">{{ employee.job_position }}</td>
-                                <td style="text-align: center;">{{ employee.department_position }}</td>
-                                <td style="text-align: center;">{{ employee.place_of_work }}</td>
-                                <td style="text-align: center;">{{ employee.employment_date }}</td>
+                                <td style="text-align: left;">{{ employee.job_position }}</td>
+                                <td style="text-align: left;">{{ employee.department_position }}</td>
+                                <td style="text-align: left;">{{ employee.place_of_work }}</td>
+                                <td style="text-align: left;">{{ employee.employment_date }}</td>
                                 {% if request.user.is_superuser %}
-                                <td style="text-align: center;">{{ employee.birthday }}</td>
-                                <td style="text-align: center;">{{ employee.tel }}</td>
+                                <td style="text-align: left;">{{ employee.birthday }}</td>
+                                <td style="text-align: left;">{{ employee.tel }}</td>
                                 {% endif %}
-                                <td style="text-align: center;">{{ employee.email }}</td>
+                                <td style="text-align: left;">{{ employee.email }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
